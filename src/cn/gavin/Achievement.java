@@ -14,6 +14,7 @@ public enum Achievement {
     click50000("点击高手", "点击次数达到50000次", 0, 0, 0, 4),
     click100000("点击达人", "点击次数达到100000次", 0, 0, 0, 6),
     click100("点击新手", "点击次数达到100次", 0, 0, 0, 0),
+    unbeaten("不败", "连胜次数达到100", 10, 0, 0, 0),
     EMPTY("", "", 0, 0, 0, 0);
     private int addStrength;
     private int addPower;
@@ -43,6 +44,7 @@ public enum Achievement {
         hero.addLife(addPower);
         hero.addAgility(addAgility);
         hero.addClickAward(click);
+        MainGameActivity.context.addMessage("-----------------","|获得成就：" + name() + "|", "-----------------");
     }
 
     public void disable(Hero hero) {

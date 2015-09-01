@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,22 +39,23 @@ import cn.gavin.Hero;
 import cn.gavin.Maze;
 import cn.gavin.R;
 import cn.gavin.Sword;
+import cn.gavin.alipay.Alipay;
 
 public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener {
     private static final String TAG = "MainGameActivity";
 
     // 战斗刷新速度
     private long refreshInfoSpeed = 500;
-public long getRefreshInfoSpeed(){
-    return refreshInfoSpeed;
-}
-    //界面刷新速度
-    private long refresh = 50;
+
+    public long getRefreshInfoSpeed() {
+        return refreshInfoSpeed;
+    }
+
+
     // 战斗信息
     private ScrollView mainInfoSv;
     private LinearLayout mainInfoPlatform;
     private int fightInfoTotalCount = 50;
-    private int fightInfoSize = 20;
 
     // 英雄
     private cn.gavin.Hero heroN;
@@ -85,26 +87,32 @@ public long getRefreshInfoSpeed(){
     private boolean pause;
     private AchievementAdapter adapter;
     private boolean gameThreadRunning;
-    private final MainGameActivity context = this;
+    public static MainGameActivity context;
     private GameThread gameThread;
-
-    private LinkedList<String> messages = new LinkedList<String>();
+    private Alipay alipay;
 
     public boolean isGameThreadRunning() {
         return gameThreadRunning;
     }
-public boolean isPause(){
-    return pause;
-}
 
-    public void addMessage(String msg) {
-        messages.add(msg);
-        handler.sendEmptyMessage(10);
+    public boolean isPause() {
+        return pause;
+    }
+
+    public void addMessage(String... msg) {
+        Message message = Message.obtain();
+        message.what = 10;
+        Bundle bundle = message.getData();
+        bundle.putStringArray("msg", msg);
+        handler.sendMessage(message);
     }
 
     public void addMessages(List<String> msgs) {
-        this.messages.addAll(msgs);
-        handler.sendEmptyMessage(10);
+        Message message = Message.obtain();
+        message.what = 10;
+        Bundle bundle = message.getData();
+        bundle.putStringArray("msg", msgs.toArray(new String[msgs.size()]));
+        handler.sendMessage(message);
     }
 
     private Handler handler = new Handler() {
@@ -130,22 +138,27 @@ public boolean isPause(){
                     heroPic.setBackgroundResource(R.drawable.h_2);
                     break;
                 case 10:
-                    if (!messages.isEmpty()) {
-                        if (messages.size() >= 2) {
-                            heroPic.setBackgroundResource(R.drawable.h_3);
-                        } else {
-                            heroPic.setBackgroundResource(R.drawable.h_1);
+                    Bundle bundle = msg.peekData();
+                    if (bundle != null && !bundle.isEmpty()) {
+                        String[] messages = bundle.getStringArray("msg");
+                        for (String str : messages) {
+                            if (str.matches(".*遇到了.*")) {
+                                heroPic.setBackgroundResource(R.drawable.h_3);
+                            } else if (str.matches(".*击败了.*")) {
+                                heroPic.setBackgroundResource(R.drawable.h_2);
+                            } else if (str.matches(".*被.*打败了.*")) {
+                                heroPic.setBackgroundResource(R.drawable.h_1);
+                            }
+                            TextView oneKickInfo = new TextView(MainGameActivity.this);
+                            // 将一次信息数据显示到页面中
+                            oneKickInfo.setText(str);
+                            mainInfoPlatform.addView(oneKickInfo);
+                            scrollToBottom(mainInfoSv, mainInfoPlatform);
                         }
-                        TextView oneKickInfo = new TextView(MainGameActivity.this);
-                        // 将一次信息数据显示到页面中
-                        oneKickInfo.setText(messages.poll());
-                        mainInfoPlatform.addView(oneKickInfo);
-                        scrollToBottom(mainInfoSv, mainInfoPlatform);
                     }
                     if (mainInfoPlatform.getChildCount() > fightInfoTotalCount) {
                         mainInfoPlatform.removeViewAt(0);
                     }
-
                     // mainInfoSv.fullScroll(ScrollView.FOCUS_DOWN);
                     break;
             }
@@ -185,7 +198,7 @@ public boolean isPause(){
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_gameview);
-
+        context = this;
         Log.i(TAG, "start game~");
 
         initGameData();
@@ -321,6 +334,7 @@ public boolean isPause(){
         if (!load()) {
             heroN = new cn.gavin.Hero("ly");
             maze = new Maze(heroN);
+            alipay = new Alipay(0);
         }
         // 左侧战斗信息
         mainInfoSv = (ScrollView) findViewById(R.id.main_info_sv);
@@ -360,6 +374,7 @@ public boolean isPause(){
         resetButton.setOnClickListener(this);
         buyButton = (Button) findViewById(R.id.buy_button);
         buyButton.setOnClickListener(this);
+//        buyButton.setEnabled(false);
         refresh();
     }
 
@@ -392,6 +407,9 @@ public boolean isPause(){
             addagi.setEnabled(false);
         }
         itembarContri.setText(heroN.getName() + "\n迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
+        heroPic.setText(heroN.getSword() + "\n\n\n\n\n                " + heroN.getArmor());
+        heroPic.setGravity(Gravity.TOP | Gravity.START);
+        heroPic.setTextSize(6);
     }
 
     private long saveTime = 0;
@@ -409,7 +427,6 @@ public boolean isPause(){
                 }
                 if (!pause) {
                     saveTime += refreshInfoSpeed;
-                    handler.sendEmptyMessage(10);
                     if (saveTime >= refreshInfoSpeed * 200)
                         save();
                 }
@@ -417,16 +434,22 @@ public boolean isPause(){
         }
     }
 
-    private class MoveThread extends  Thread{
-       public void run(){
-           maze.move(context);
-       }
+    private class MoveThread extends Thread {
+        public void run() {
+            maze.move(context);
+        }
     }
 
     @Override
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.buy_button:
+                if(alipay.pay()){
+                    heroN.addMaterial(100000);
+                    heroN.addPoint(5);
+                }
+                break;
             case R.id.character_itembar_contribute:
                 showNameDialog();
                 break;
@@ -593,6 +616,7 @@ public boolean isPause(){
             }
             sb.append("_");
             sb.append(maze.getLev());
+            sb.append("_").append(alipay.getPayTime());
             fos.write(sb.toString().getBytes("UTF-8"));
             fos.flush();
             fos.close();
@@ -615,7 +639,7 @@ public boolean isPause(){
             fis.close();
             String save = baos.toString("UTF-8");
             String[] atts = save.split("_");
-            if (atts.length >= 19) {
+            if (atts.length >= 20) {
                 heroN = new Hero(atts[0]);
                 heroN.setHp(Integer.parseInt(atts[1]));
                 heroN.setUpperHp(Integer.parseInt(atts[2]));
@@ -644,6 +668,7 @@ public boolean isPause(){
                         Achievement.values()[i].enable();
                     }
                 }
+                alipay = new Alipay(Integer.parseInt(atts[19]));
                 return true;
             } else {
                 return false;
