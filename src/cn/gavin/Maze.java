@@ -72,6 +72,9 @@ public class Maze {
                 }
                 if (monster.getHp() <= 0) {
                     streaking++;
+                    if(streaking >= 100){
+                        Achievement.unbeaten.enable(hero);
+                    }
                     context.addMessage(hero.getName() + "击败了" + monster.getName() + "， 获得了" + monster.getMaterial() + "份锻造材料。");
                     hero.addMaterial(monster.getMaterial());
                 } else {
@@ -102,7 +105,7 @@ public class Maze {
                 context.addMessage(hero.getName() + "休息了一会，恢复了" + hel + "点HP");
                 hero.addHp(hel);
                 context.addMessage("-------------------");
-            } else if (random.nextInt(9000) > 9007) {
+            } else if (random.nextInt(9000) > 8707) {
                 step = 0;
                 int levJ = random.nextInt(hero.getMaxMazeLev() + 5) + 1;
                 context.addMessage(hero.getName() + "踩到了传送门，被传送到了迷宫第" + levJ + "层");

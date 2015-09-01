@@ -27,7 +27,7 @@ public class Monster {
         Random random = new Random();
         Monster monster = new Monster("第" + maze.getLev() + "层", "守护", "者",
                 hero.getUpperHp() * (random.nextInt(maze.getLev() + 1) + 1),
-                hero.getDefenseValue() + maze.getLev() + random.nextInt(hero.getAttackValue() + maze.getLev()));
+                hero.getDefenseValue() + maze.getLev() + random.nextInt(hero.getAttackValue()/3 + maze.getLev()));
         monster.material = random.nextInt(maze.getLev() + monster.atk + 1);
         return monster;
     }
@@ -51,9 +51,9 @@ public class Monster {
         secondName = secondNames[second];
         lastName = lastNames[last];
         if (hero.getAttackValue() != 0) hp += random.nextInt(hero.getAttackValue() + 1);
-        if (hero.getPower() != 0) atk += random.nextInt(hero.getPower() + maze.getLev() + 1);
+        if (hero.getPower() != 0) atk += random.nextInt(hero.getPower()/10 + maze.getLev() + 1);
         hp += maze.getLev() * random.nextInt(hero.getUpperHp() / 2 + 1);
-        material = random.nextInt(hp + 1) / 2 + 5;
+        material = random.nextInt(hp + 1) / 10 + 5;
     }
 
     public int getAtk() {
