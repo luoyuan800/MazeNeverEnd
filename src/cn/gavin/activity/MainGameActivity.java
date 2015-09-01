@@ -448,6 +448,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 if(alipay.pay()){
                     heroN.addMaterial(100000);
                     heroN.addPoint(5);
+                    handler.sendEmptyMessage(0);
+                    Achievement.richer.enable(heroN);
                 }
                 break;
             case R.id.character_itembar_contribute:
@@ -669,6 +671,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     }
                 }
                 alipay = new Alipay(Integer.parseInt(atts[19]));
+                Achievement.linger.enable(heroN);
                 return true;
             } else {
                 return false;
