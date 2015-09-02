@@ -81,26 +81,25 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:layout_gravity="center">
 
                             <Button
                                 android:id="@+id/hero_pic"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="top" />
+                                android:gravity="right"
+                                android:textSize="6sp"
+                                />
 
                             <TextView
                                 android:id="@+id/hero_pic_click_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
+                                android:layout_gravity="center"
                                 android:textSize="15sp" />
                         </LinearLayout>
-
-                        <View
-                            android:layout_width="10dp"
-                            android:layout_height="fill_parent"
-                            android:background="#ffc2cbff" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -109,40 +108,49 @@
 
                             <Button
                                 android:id="@+id/life_skill"
-                                android:layout_width="32dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="32dp"
-                                android:background="@drawable/life"
+                                android:drawableStart="@drawable/life"
+                                android:textSize="6sp"
+                                android:gravity="center"
+                                android:alpha="80"
                                 />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="恢复技能和体力值相关"
-                                android:textSize="8sp" />
+                                android:textSize="6sp" />
 
                             <Button
                                 android:id="@+id/hit_skill"
-                                android:layout_width="32dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="32dp"
-                                android:background="@drawable/hit" />
+                                android:drawableStart="@drawable/hit"
+                                android:textSize="6sp"
+                                android:alpha="70"
+                                android:gravity="center"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="重击技能和力量值相关"
-                                android:textSize="8sp" />
+                                android:textSize="6sp" />
 
                             <Button
                                 android:id="@+id/mul_skill"
-                                android:layout_width="32dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="32dp"
-                                android:background="@drawable/mui" />
+                                android:drawableStart="@drawable/mui"
+                                android:textSize="6sp"
+                                android:alpha="70"
+                                android:gravity="center"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="群攻技能和敏捷值相关"
-                                android:textSize="8sp" />
+                                android:textSize="6sp" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -258,7 +266,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="力"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:layout_weight="1"/>
 
                         <Button
                             android:id="@+id/main_contri_add_pow"
@@ -266,7 +275,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="体"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:layout_weight="1"/>
 
                         <Button
                             android:id="@+id/main_contri_add_agi"
@@ -274,7 +284,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="敏"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:layout_weight="1"/>
                     </LinearLayout>
 
 
