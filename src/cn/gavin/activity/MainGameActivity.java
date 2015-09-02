@@ -7,9 +7,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,8 +37,10 @@ import cn.gavin.Armor;
 import cn.gavin.Hero;
 import cn.gavin.Maze;
 import cn.gavin.R;
+import cn.gavin.Skill;
 import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
+import cn.gavin.alipay.PayResult;
 
 public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener {
     private static final String TAG = "MainGameActivity";
@@ -82,6 +84,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private Button achievementButton;
     private Button resetButton;
     private Button buyButton;
+    private Button lifeSkillButton;
+    private Button hitSkillButton;
+    private Button mulSkillButton;
 
     private boolean pause;
     private AchievementAdapter adapter;
@@ -96,6 +101,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     public boolean isPause() {
         return pause;
+    }
+
+    public Handler getHandler() {
+        return handler;
     }
 
     public void addMessage(String... msg) {
@@ -120,6 +129,17 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         public void handleMessage(Message msg) {
             refresh();
             switch (msg.what) {
+                case 100:
+                    PayResult payResult = new PayResult((String) msg.obj);
+                    String resultStatus = payResult.getResultStatus();
+                    // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        heroN.addMaterial(100000);
+                        heroN.addPoint(20);
+                        alipay.addPayTime();
+                        Achievement.richer.enable(heroN);
+                    }
+                    break;
                 case 1:
                     if (pause) {
                         pause = false;
@@ -333,7 +353,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         if (!load()) {
             heroN = new cn.gavin.Hero("ly");
             maze = new Maze(heroN);
-            alipay = new Alipay(0);
+            alipay = new Alipay(this, 0);
         }
         // 左侧战斗信息
         mainInfoSv = (ScrollView) findViewById(R.id.main_info_sv);
@@ -373,7 +393,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         resetButton.setOnClickListener(this);
         buyButton = (Button) findViewById(R.id.buy_button);
         buyButton.setOnClickListener(this);
-//        buyButton.setEnabled(false);
+        lifeSkillButton = (Button) findViewById(R.id.life_skill);
+        lifeSkillButton.setOnClickListener(this);
+        hitSkillButton = (Button) findViewById(R.id.hit_skill);
+        hitSkillButton.setOnClickListener(this);
+        mulSkillButton = (Button) findViewById(R.id.mul_skill);
+        mulSkillButton.setOnClickListener(this);
         refresh();
     }
 
@@ -406,9 +431,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             addagi.setEnabled(false);
         }
         itembarContri.setText(heroN.getName() + "\n迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
-        heroPic.setText(heroN.getSword() + "\n\n\n\n\n                " + heroN.getArmor());
-        heroPic.setGravity(Gravity.TOP | Gravity.START);
-        heroPic.setTextSize(6);
+        heroPic.setText(heroN.getSword() + "\n\n\n " + heroN.getArmor());
+        lifeSkillButton.setText(heroN.getSkill(Skill.治疗).getCount()+ "");
+        hitSkillButton.setText(heroN.getSkill(Skill.重击).getCount() + "");
+        mulSkillButton.setText(heroN.getSkill(Skill.多重攻击).getCount() + "");
     }
 
     private long saveTime = 0;
@@ -443,49 +469,78 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
-            case R.id.buy_button:
-                if (alipay.pay()) {
-                    heroN.addMaterial(100000);
-                    heroN.addPoint(5);
-                    handler.sendEmptyMessage(0);
-                    Achievement.richer.enable(heroN);
+            case R.id.life_skill:
+                Skill health = heroN.getSkill(Skill.治疗);
+                if(health!=null){
+                    health.addCount();
                 }
+                handler.sendEmptyMessage(0);
+                heroN.click(false);
+                break;
+            case R.id.hit_skill:
+                Skill hit = heroN.getSkill(Skill.重击);
+                if(hit!=null){
+                    hit.addCount();
+                }
+                handler.sendEmptyMessage(0);
+                heroN.click(false);
+                break;
+            case R.id.mul_skill:
+                Skill mul = heroN.getSkill(Skill.多重攻击);
+                if(mul!=null){
+                    mul.addCount();
+                }
+                handler.sendEmptyMessage(0);
+                heroN.click(false);
+                break;
+            case R.id.buy_button:
+                alipay.pay();
+                heroN.click(false);
                 break;
             case R.id.character_itembar_contribute:
                 showNameDialog();
+                heroN.click(false);
                 break;
             case R.id.reset_button:
                 reset();
                 handler.sendEmptyMessage(0);
+                heroN.click(false);
                 break;
             case R.id.pause_button:
                 handler.sendEmptyMessage(1);
+                heroN.click(false);
                 break;
             case R.id.achieve_button:
                 showAchievement();
+                heroN.click(false);
                 break;
             case R.id.up_armor:
                 heroN.upgradeArmor();
                 handler.sendEmptyMessage(0);
+                heroN.click(false);
                 break;
             case R.id.up_sword:
                 heroN.upgradeSword();
                 handler.sendEmptyMessage(0);
+                heroN.click(false);
                 break;
             case R.id.main_contri_add_agi:
                 heroN.addAgility();
                 handler.sendEmptyMessage(0);
+                heroN.click(false);
                 break;
             case R.id.main_contri_add_pow:
                 heroN.addLife();
                 handler.sendEmptyMessage(0);
+                heroN.click(false);
                 break;
             case R.id.main_contri_add_str:
                 heroN.addStrength();
                 handler.sendEmptyMessage(0);
+                heroN.click(false);
                 break;
             case R.id.hero_pic:
-                heroN.click();
+                heroN.click(true);
                 if (heroN.getClick() % 2 == 0) {
                     handler.sendEmptyMessage(4);
                 } else {
@@ -678,7 +733,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 heroN.setClickAward(Integer.parseInt(atts[16]));
                 heroN.setSword(Sword.valueOf(atts[10]));
                 heroN.setArmor(Armor.valueOf(atts[11]));
-                if(atts.length>=24) {
+                if (atts.length >= 24) {
                     heroN.setDeathCount(Integer.parseInt(atts[20]));
                     heroN.getExistSkill().get(0).setCount(Integer.parseInt(atts[21]));
                     heroN.getExistSkill().get(1).setCount(Integer.parseInt(atts[22]));
@@ -695,7 +750,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         Achievement.values()[i].enable();
                     }
                 }
-                alipay = new Alipay(Integer.parseInt(atts[19]));
+                alipay = new Alipay(this, Integer.parseInt(atts[19]));
                 Achievement.linger.enable(heroN);
                 return true;
             } else {

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Skill {
-
+public static final int 重击 = 1, 多重攻击 = 2, 治疗 = 3;
     private int id;
     private String name;
     private int type;
@@ -148,7 +148,7 @@ public class Skill {
         return msg;
     }
 
-    private void addCount() {
+    public void addCount() {
         count ++;
         if(count >= 1000){
             switch (id){
@@ -163,6 +163,14 @@ public class Skill {
 
             }
         }
+        if(count % 1001 == 0){
+            levelUp();
+        }
+    }
+
+    private void levelUp() {
+        occurProbability += 1;
+        harm *= 1.1;
     }
 
     public int getCount() {

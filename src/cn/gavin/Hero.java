@@ -325,7 +325,7 @@ public class Hero {
         return click;
     }
 
-    public void click() {
+    public void click(boolean award) {
         if (click < Integer.MAX_VALUE - 10) {
             if (this.click % 1000 == 0) {
                 point += random.nextInt(15);
@@ -436,5 +436,14 @@ public class Hero {
 
     public int getClickAward() {
         return clickAward;
+    }
+
+    public Skill getSkill(int id){
+        for(Skill skill : existSkill){
+            if(skill.getId() == id){
+                return skill;
+            }
+        }
+        return null;
     }
 }

@@ -91,7 +91,7 @@ public enum Achievement {
 
     public static List<MainGameActivity.AchievementList> getAchievementListAdp() {
         List<MainGameActivity.AchievementList> rs = new ArrayList<MainGameActivity.AchievementList>(values().length / 3);
-        for (int i = 0; i < values().length; i += 3) {
+        for (int i = 0; i < values().length; i += 4) {
             Achievement a0 = values()[i];
             Achievement a1 = i + 1 < values().length ? values()[i + 1] : EMPTY;
             Achievement a2 = i + 2 < values().length ? values()[i + 2] : EMPTY;
