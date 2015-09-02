@@ -150,7 +150,7 @@ public static final int 重击 = 1, 多重攻击 = 2, 治疗 = 3;
 
     public void addCount() {
         count ++;
-        if(count >= 1000){
+        if(count >= 10000){
             switch (id){
                 case 1:
                     Achievement.hitter.enable(null);
