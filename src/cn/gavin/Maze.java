@@ -88,6 +88,7 @@ public class Maze {
             } else if (random.nextInt(1000) > 795 || step > random.nextInt(30) || random.nextInt(streaking + 1) > 10) {
                 step = 0;
                 level++;
+                mazeLevelDetect();
                 int point = 2 + random.nextInt(level + 1) / 2;
                 context.addMessage(hero.getName() + "进入了" + level + "层迷宫， 获得了" + point + "点数奖励");
                 if (level > hero.getMaxMazeLev()) {
@@ -113,6 +114,7 @@ public class Maze {
                 if (level > hero.getMaxMazeLev()) {
                     hero.setMaxMazeLev(level);
                 }
+                mazeLevelDetect();
                 context.addMessage("-------------------");
             }
             try {
@@ -122,6 +124,32 @@ public class Maze {
             }
         }
         moving = false;
+    }
+
+    private void mazeLevelDetect() {
+        switch (level){
+            case 50:
+                Achievement.maze50.enable(hero);
+                break;
+            case 100:
+                Achievement.maze100.enable(hero);
+                break;
+            case 500:
+                if(hero.getArmorLev() == 0 && hero.getSwordLev() == 0){
+
+                }
+                Achievement.maze500.enable(hero);
+                break;
+            case 1000:
+                Achievement.maze1000.enable(hero);
+                break;
+            case 10000 :
+                Achievement.maze10000.enable(hero);
+                break;
+            case 50000:
+                Achievement.maze50000.enable(hero);
+                break;
+        }
     }
 
     public int getLev() {
