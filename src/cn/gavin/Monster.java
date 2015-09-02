@@ -53,6 +53,7 @@ public class Monster {
         if (hero.getAttackValue() != 0) hp += random.nextInt(hero.getAttackValue() + 1);
         if (hero.getPower() != 0)
             atk += random.nextInt(hero.getPower() / 10 + 1) * random.nextInt(maze.getLev() + 1);
+        atk += random.nextInt(hero.getDefenseValue()/2 + 1);
         hp += maze.getLev() * random.nextInt(hero.getUpperHp() / 2 + 1);
         material = random.nextInt(hp + 1) / 10 + 5;
     }

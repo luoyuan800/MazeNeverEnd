@@ -85,7 +85,7 @@ public class Maze {
                     hero.restore();
                 }
                 context.addMessage("-----------------------------");
-            } else if (random.nextInt(1000) > 795 || step > random.nextInt(30) || random.nextInt(streaking + 1) > 10) {
+            } else if (random.nextInt(1000) > 795 || step > random.nextInt(22) || random.nextInt(streaking + 1) > 10) {
                 step = 0;
                 level++;
                 mazeLevelDetect();
