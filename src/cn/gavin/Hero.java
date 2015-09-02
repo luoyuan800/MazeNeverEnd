@@ -34,6 +34,14 @@ public class Hero {
     private int maxMazeLev = 0;
     private Random random;
     private int clickAward = 1;
+    private int deathCount;
+
+    public int getDeathCount(){
+        return deathCount;
+    }
+    public void setDeathCount(int deathCount){
+        this.deathCount = deathCount;
+    }
 
     public void addClickAward(int num) {
         clickAward += num;
@@ -55,6 +63,10 @@ public class Hero {
         if (hp < 0) {
             if (this.hp + hp < 0) {
                 this.hp = 0;
+                deathCount++;
+                if(deathCount==10000){
+                    Achievement.maltreat.enable(this);
+                }
             } else {
                 this.hp += hp;
             }
@@ -72,7 +84,11 @@ public class Hero {
     }
 
     public int getUpperDef() {
-        return defenseValue + armorLev + armor.getBase();
+        int def = defenseValue + armorLev + armor.getBase();
+        if(def >= 10000){
+            Achievement.fearDeath.enable(this);
+        }
+        return def;
     }
 
     public int getAttackValue() {
@@ -92,6 +108,7 @@ public class Hero {
         if (random.nextInt(100) > 96) {
             defend *= 1.5;
         }
+
         return defend;
     }
 
@@ -262,6 +279,9 @@ public class Hero {
                 Achievement.master.enable(this);
             }
         }
+        if(agility >= 10000){
+            Achievement.skilldness.enable(this);
+        }
     }
 
     public void addAgility(int agi) {
@@ -276,6 +296,7 @@ public class Hero {
         }
         if (agility < 0) agility = 0;
         if (defenseValue < 0) defenseValue = 0;
+        if(agility >= 10000) Achievement.skilldness.enable(this);
     }
 
     public void restore() {
