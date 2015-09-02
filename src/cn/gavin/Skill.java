@@ -16,6 +16,7 @@ public class Skill {
     private float harm; //伤害加成
     private boolean isGroup = false;
     private boolean isRestore = false;
+    private int count;
 
     public int getId() {
         return id;
@@ -143,6 +144,32 @@ public class Skill {
                 }
                 msg.add(hero.getName() + "使用了技能"+name+"，恢复了" + v + "点HP");
         }
+        addCount();
         return msg;
+    }
+
+    private void addCount() {
+        count ++;
+        if(count >= 1000){
+            switch (id){
+                case 1:
+                    Achievement.hitter.enable(null);
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    Achievement.doctor.enable(null);
+                    break;
+
+            }
+        }
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }

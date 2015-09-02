@@ -29,7 +29,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -445,7 +444,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
             case R.id.buy_button:
-                if(alipay.pay()){
+                if (alipay.pay()) {
                     heroN.addMaterial(100000);
                     heroN.addPoint(5);
                     handler.sendEmptyMessage(0);
@@ -502,11 +501,13 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         Achievement a0;
         Achievement a1;
         Achievement a2;
+        Achievement a3;
 
-        public AchievementList(Achievement a0, Achievement a1, Achievement a2) {
+        public AchievementList(Achievement a0, Achievement a1, Achievement a2, Achievement a3) {
             this.a0 = a0;
             this.a1 = a1;
             this.a2 = a2;
+            this.a3 = a3;
         }
     }
 
@@ -558,6 +559,13 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         achievementDesc.setText(getItem(position).a2.getDesc());
                     }
                 });
+                holder.name3 = (Button) convertView.findViewById(R.id.achieve_name_3);
+                holder.name3.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        achievementDesc.setText(getItem(position).a3.getDesc());
+                    }
+                });
                 convertView.setTag(holder);
             } else {
                 holder = (AchievementViewHolder) convertView.getTag();
@@ -581,6 +589,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             } else {
                 holder.name2.setEnabled(true);
             }
+            holder.name3.setText(item.a3.getName());
+            if (!item.a3.isEnable()) {
+                holder.name3.setEnabled(false);
+            } else {
+                holder.name3.setEnabled(true);
+            }
             return convertView;
         }
 
@@ -590,6 +604,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         Button name;
         Button name1;
         Button name2;
+        Button name3;
     }
 
     @Override
@@ -619,6 +634,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             sb.append("_");
             sb.append(maze.getLev());
             sb.append("_").append(alipay.getPayTime());
+            sb.append("_").append(heroN.getDeathCount());
+            sb.append("_").append(heroN.getExistSkill().get(0).getCount());
+            sb.append("_").append(heroN.getExistSkill().get(1).getCount());
+            sb.append("_").append(heroN.getExistSkill().get(2).getCount());
             fos.write(sb.toString().getBytes("UTF-8"));
             fos.flush();
             fos.close();
@@ -659,6 +678,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 heroN.setClickAward(Integer.parseInt(atts[16]));
                 heroN.setSword(Sword.valueOf(atts[10]));
                 heroN.setArmor(Armor.valueOf(atts[11]));
+                if(atts.length>=24) {
+                    heroN.setDeathCount(Integer.parseInt(atts[20]));
+                    heroN.getExistSkill().get(0).setCount(Integer.parseInt(atts[21]));
+                    heroN.getExistSkill().get(1).setCount(Integer.parseInt(atts[22]));
+                    heroN.getExistSkill().get(2).setCount(Integer.parseInt(atts[23]));
+                }
                 maze = new Maze(heroN);
                 maze.setLevel(Integer.parseInt(atts[18]));
                 if (maze.getLev() > heroN.getMaxMazeLev()) {

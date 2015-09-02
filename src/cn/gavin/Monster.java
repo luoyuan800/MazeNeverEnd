@@ -6,15 +6,15 @@ import java.util.Random;
  * Created by gluo on 8/26/2015.
  */
 public class Monster {
-    private final static String[] firstNames = {"普通", "怪异", "稀有", "神奇"};
-    private final static int[] firstAdditionHP = {15, 25, 1000, 2000};
-    private final static int[] firstAdditionAtk = {3, 25, 400, 1800};
-    private final static String[] secondNames = {"小", "中", "大"};
-    private final static int[] secondAdditionHP = {15, 25, 100};
-    private final static int[] secondAdditionAtk = {5, 25, 100};
-    private final static String[] lastNames = {"蟑螂", "猪", "老鼠", "蛇", "野牛", "龟", "刺猬", "狼", "精灵", "僵尸", "骷髅", "龙", "作者"};
-    private final static int[] baseHP = {3, 25, 75, 95, 115, 220, 280, 350, 380, 450, 530, 1000, 50000};
-    private final static int[] baseAtk = {2, 15, 55, 75, 105, 200, 250, 310, 350, 400, 430, 1000, 50000};
+    private final static String[] firstNames = {"普通", "怪异", "飞翔", "稀有", "发狂", "神奇", "神经"};
+    private final static int[] firstAdditionHP = {15, 25, 400, 1000, 500, 2000, 10000};
+    private final static int[] firstAdditionAtk = {3, 25, 350, 800, 4000, 3800, 5000};
+    private final static String[] secondNames = {"小", "中", "大", "大大", "红色", "绿色", "人面"};
+    private final static int[] secondAdditionHP = {15, 25, 100, 500, 1003, 2000, 3000};
+    private final static int[] secondAdditionAtk = {5, 25, 100, 200, 400, 100, 2000};
+    private final static String[] lastNames = {"蟑螂", "猪", "老鼠", "蛇", "野牛", "龟", "刺猬", "狼", "精灵", "僵尸", "骷髅", "凤凰", "龙", "作者"};
+    private final static int[] baseHP = {3, 25, 75, 95, 115, 520, 280, 350, 380, 450, 530, 4000, 1000, 50000};
+    private final static int[] baseAtk = {2, 15, 55, 75, 105, 200, 250, 310, 350, 400, 1430, 3000, 5000, 50000};
     private String firstName;
     private String secondName;
     private String lastName;
@@ -27,7 +27,7 @@ public class Monster {
         Random random = new Random();
         Monster monster = new Monster("第" + maze.getLev() + "层", "守护", "者",
                 hero.getUpperHp() * (random.nextInt(maze.getLev() + 1) + 1),
-                hero.getDefenseValue() + maze.getLev() + random.nextInt(hero.getAttackValue()/3 + maze.getLev()));
+                hero.getDefenseValue() + maze.getLev() + random.nextInt(hero.getAttackValue() / 3 + maze.getLev()));
         monster.material = random.nextInt(maze.getLev() + monster.atk + 1);
         return monster;
     }
@@ -51,7 +51,8 @@ public class Monster {
         secondName = secondNames[second];
         lastName = lastNames[last];
         if (hero.getAttackValue() != 0) hp += random.nextInt(hero.getAttackValue() + 1);
-        if (hero.getPower() != 0) atk += random.nextInt(hero.getPower()/10 + maze.getLev() + 1);
+        if (hero.getPower() != 0)
+            atk += random.nextInt(hero.getPower() / 10 + 1) * random.nextInt(maze.getLev() + 1);
         hp += maze.getLev() * random.nextInt(hero.getUpperHp() / 2 + 1);
         material = random.nextInt(hp + 1) / 10 + 5;
     }
