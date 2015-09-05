@@ -330,8 +330,10 @@ public class Hero {
             if (this.click % 1000 == 0) {
                 point += random.nextInt(15);
             }
-            this.material += clickAward;
-            this.click++;
+            if(award) {
+                this.material += clickAward;
+                this.click++;
+            }
             switch (click) {
                 case 100:
                     Achievement.click100.enable(this);

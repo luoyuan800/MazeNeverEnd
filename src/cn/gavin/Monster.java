@@ -50,11 +50,10 @@ public class Monster {
         firstName = firstNames[first];
         secondName = secondNames[second];
         lastName = lastNames[last];
-        if (hero.getAttackValue() != 0) hp += random.nextInt(hero.getAttackValue() + 1);
+        if (hero.getAttackValue() != 0) hp += maze.getLev() * random.nextInt(hero.getAttackValue()/1540 + 1);
         if (hero.getPower() != 0)
             atk += random.nextInt(hero.getPower() / 10 + 1) * random.nextInt(maze.getLev() + 1);
-        atk += random.nextInt(hero.getDefenseValue()/2 + 1);
-        hp += maze.getLev() * random.nextInt(hero.getUpperHp() / 2 + 1);
+        atk += random.nextInt(hero.getDefenseValue()/1100 + 1) * random.nextInt(maze.getLev() +1);
         material = random.nextInt(hp + 1) / 10 + 5;
     }
 
