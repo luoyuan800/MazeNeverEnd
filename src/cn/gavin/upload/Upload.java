@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import cn.gavin.Achievement;
 import cn.gavin.Hero;
 
 /**
@@ -29,6 +30,7 @@ public class Upload {
                     return true;
                 }
             }
+            Achievement.uploader.enable(hero);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {

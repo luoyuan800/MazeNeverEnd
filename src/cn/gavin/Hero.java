@@ -203,7 +203,7 @@ public class Hero {
         if (point < 0 || this.point < (Integer.MAX_VALUE - point - 5000))
             this.point += point;
         if (this.point < 0) this.point = 0;
-        if (point >= 5000) Achievement.lazy.enable(this);
+        if (this.point >= 5000) Achievement.lazy.enable(this);
     }
 
     public int getStrength() {

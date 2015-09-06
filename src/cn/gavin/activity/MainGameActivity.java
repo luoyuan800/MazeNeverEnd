@@ -625,6 +625,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         break;
                     case 1:
                         dialog.dismiss();
+                        Achievement.updater.enable(heroN);
                         save();
                         installAPK();
                         break;
