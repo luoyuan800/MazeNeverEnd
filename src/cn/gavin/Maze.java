@@ -31,7 +31,7 @@ public class Maze {
             }
             moving = true;
             step++;
-            if (random.nextInt(1000) > 795 || step > random.nextInt(22) || random.nextInt(streaking + 1) > 10) {
+            if (random.nextInt(1000) > 895 || step > random.nextInt(22) || random.nextInt(streaking + 1) > 20) {
                 step = 0;
                 level++;
                 mazeLevelDetect();

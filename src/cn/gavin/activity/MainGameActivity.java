@@ -151,7 +151,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
         @Override
         public void handleMessage(Message msg) {
-            refresh();
             switch (msg.what) {
                 case 101:
                     new Thread(new Runnable(){
@@ -223,7 +222,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     // mainInfoSv.fullScroll(ScrollView.FOCUS_DOWN);
                     break;
             }
-
+            refresh();
             super.handleMessage(msg);
         }
 
@@ -526,7 +525,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 try {
                     PackageInfo pInfo = getPackageManager().getPackageInfo(
                             getPackageName(), 0);
-                    currentVersion = pInfo.versionName;
+                    currentVersion = pInfo.versionName.trim();
                     // 构造URL
                     URL url = new URL(VERSION_CHECK_URL);
                     // 打开连接
@@ -538,18 +537,20 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
                     int curVersionCode = pInfo.versionCode;
-                    updateVersion = br.readLine();
-                    if (updateVersion.equals(currentVersion)) {
+                    updateVersion = br.readLine().replace((char)65279, ' ').trim();
+
+                    if (updateVersion.equalsIgnoreCase(currentVersion)) {
                         handler.sendEmptyMessage(201);
-                    }
-                    String info = br.readLine();
-                    versionUpdateInfo = new StringBuilder("updateVersion:" + updateVersion);
-                    while (info != null && info.isEmpty()) {
-                        versionUpdateInfo.append("\n").append(info);
-                        info = br.readLine();
+                    }else {
+                        String info = br.readLine();
+                        versionUpdateInfo = new StringBuilder("updateVersion:" + updateVersion);
+                        while (info != null && info.isEmpty()) {
+                            versionUpdateInfo.append("\n").append(info);
+                            info = br.readLine();
+                        }
+                        handler.sendEmptyMessage(202);
                     }
                     br.close();
-                    handler.sendEmptyMessage(202);
                 } catch (Exception e) {
                     e.printStackTrace();
                     handler.sendEmptyMessage(201);

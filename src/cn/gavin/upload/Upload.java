@@ -1,6 +1,8 @@
 package cn.gavin.upload;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,7 +21,14 @@ public class Upload {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
             con.connect();
-            return true;
+            InputStreamReader reader = new InputStreamReader(con.getInputStream());
+            BufferedReader bReader = new BufferedReader(reader);
+            String line = null;
+            while((line = bReader.readLine())!=null){
+                if(line.matches(".*success.*")){
+                    return true;
+                }
+            }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
