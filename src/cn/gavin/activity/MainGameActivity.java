@@ -11,51 +11,24 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import cn.gavin.*;
+import cn.gavin.alipay.Alipay;
+import cn.gavin.upload.Upload;
+import com.bmob.pay.tool.BmobPay;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Random;
-
-import cn.gavin.Achievement;
-import cn.gavin.Armor;
-import cn.gavin.Hero;
-import cn.gavin.Maze;
-import cn.gavin.R;
-import cn.gavin.Skill;
-import cn.gavin.Sword;
-import cn.gavin.alipay.Alipay;
-import cn.gavin.alipay.PayResult;
-import cn.gavin.upload.Upload;
 
 public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener {
     private static final String TAG = "MainGameActivity";
@@ -153,10 +126,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 101:
-                    new Thread(new Runnable(){
-                        public void run(){
+                    new Thread(new Runnable() {
+                        public void run() {
                             Upload upload = new Upload();
-                            if(upload.upload(heroN)){
+                            if (upload.upload(heroN)) {
                                 lastUploadLev = heroN.getMaxMazeLev();
                             }
                         }
@@ -171,15 +144,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     updateButton.setText("升级V" + updateVersion);
                     break;
                 case 100:
-                    PayResult payResult = new PayResult((String) msg.obj);
-                    String resultStatus = payResult.getResultStatus();
-                    // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
-                    if (TextUtils.equals(resultStatus, "9000")) {
-                        heroN.addMaterial(100000);
-                        heroN.addPoint(20);
-                        alipay.addPayTime();
-                        Achievement.richer.enable(heroN);
-                    }
+
+                    heroN.addMaterial(100000);
+                    heroN.addPoint(20);
+                    alipay.addPayTime();
+                    Achievement.richer.enable(heroN);
                     break;
                 case 1:
                     if (pause) {
@@ -260,9 +229,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         setContentView(R.layout.main_gameview);
         context = this;
         Log.i(TAG, "start game~");
-
+        BmobPay.init(context, "4de7673ec85955af7568cfa1494c6498");
         initGameData();
-
         gameThreadRunning = true;
         gameThread = new GameThread();
         gameThread.start();
@@ -481,12 +449,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         lifeSkillButton.setText(heroN.getSkill(Skill.治疗).getCount() + "");
         hitSkillButton.setText(heroN.getSkill(Skill.重击).getCount() + "");
         mulSkillButton.setText(heroN.getSkill(Skill.多重攻击).getCount() + "");
-        if(lastUploadLev + 100 <= heroN.getMaxMazeLev()) {
+        if (lastUploadLev + 100 <= heroN.getMaxMazeLev()) {
             uploadButton.setEnabled(true);
             uploadButton.setText("上传角色信息");
-        }else{
+        } else {
             uploadButton.setEnabled(false);
-            uploadButton.setText("" + (100 - heroN.getMaxMazeLev()+lastUploadLev));
+            uploadButton.setText("" + (100 - heroN.getMaxMazeLev() + lastUploadLev));
         }
     }
 
@@ -520,7 +488,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private void checkUpdate() {
-        new Thread(new Runnable(){
+        new Thread(new Runnable() {
             public void run() {
                 try {
                     PackageInfo pInfo = getPackageManager().getPackageInfo(
@@ -537,11 +505,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
                     int curVersionCode = pInfo.versionCode;
-                    updateVersion = br.readLine().replace((char)65279, ' ').trim();
+                    updateVersion = br.readLine().replace((char) 65279, ' ').trim();
 
                     if (updateVersion.equalsIgnoreCase(currentVersion)) {
                         handler.sendEmptyMessage(201);
-                    }else {
+                    } else {
                         String info = br.readLine();
                         versionUpdateInfo = new StringBuilder("updateVersion:" + updateVersion);
                         while (info != null && info.isEmpty()) {
@@ -579,11 +547,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             int len;
             // 输出的文件流
             File file = new File(APK_PATH + "/MazeNeverEnd.apk");
-            if(file.exists()){
+            if (file.exists()) {
                 file.delete();
             }
             File path = new File(APK_PATH);
-            if(!path.exists()){
+            if (!path.exists()) {
                 path.mkdirs();
             }
             file.createNewFile();
@@ -610,7 +578,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         return false;
     }
 
-    private TextView progressText ;
+    private TextView progressText;
 
     private void showDownload() {
         final AlertDialog dialog = new Builder(this).create();
@@ -618,6 +586,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         dialog.setView(progressText);
         final Handler handlerD = new Handler() {
             private int maxSize = 100;
+
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case -1:
@@ -631,12 +600,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         break;
                     case 2:
                         maxSize = msg.arg1;
-                        if(maxSize == 0){
+                        if (maxSize == 0) {
                             maxSize = 100;
                         }
                         break;
                     case 3:
-                        progressText.setText((msg.arg1/maxSize) + "%");
+                        progressText.setText((msg.arg1 / maxSize) + "%");
                         break;
                 }
             }
@@ -658,21 +627,22 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             }
         }).start();
     }
+
     private void showUpload() {
         final AlertDialog dialog = new Builder(this).create();
-        TextView info  = new TextView(this);
+        TextView info = new TextView(this);
         info.setText("上传勇者角色信息到服务器，下个版本您的角色将会作为迷宫的守护者拦截各个挑战的勇者。\n" +
                 "上传成功后，下一次上传必须是再前进100层迷宫之后。");
         dialog.setView(info);
         dialog.setTitle("上传角色信息");
-        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener(){
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 handler.sendEmptyMessage(101);
                 dialog.dismiss();
             }
         });
-        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener(){
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -680,9 +650,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         });
         dialog.show();
     }
+
     private void installAPK() {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(new File(APK_PATH+"/MazeNeverEnd.apk")),
+        intent.setDataAndType(Uri.fromFile(new File(APK_PATH + "/MazeNeverEnd.apk")),
                 "application/vnd.android.package-archive");
         context.startActivity(intent);
     }
