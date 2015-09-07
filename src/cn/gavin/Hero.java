@@ -36,10 +36,11 @@ public class Hero {
     private int clickAward = 1;
     private int deathCount;
 
-    public int getDeathCount(){
+    public int getDeathCount() {
         return deathCount;
     }
-    public void setDeathCount(int deathCount){
+
+    public void setDeathCount(int deathCount) {
         this.deathCount = deathCount;
     }
 
@@ -61,18 +62,18 @@ public class Hero {
 
     public void addHp(int hp) {
         if (hp < 0) {
-            if (this.hp + hp < 0) {
-                this.hp = 0;
-                deathCount++;
-                if(deathCount==10000){
-                    Achievement.maltreat.enable(this);
-                }
-            } else {
-                this.hp += hp;
-            }
+            this.hp += hp;
         } else if (this.hp < (Integer.MAX_VALUE - hp - 100)) {
             this.hp += hp;
         }
+        if (this.hp <= 0) {
+            this.hp = 0;
+            deathCount++;
+            if (deathCount == 10000) {
+                Achievement.maltreat.enable(this);
+            }
+        }
+        if (this.hp > upperHp) this.hp = upperHp;
     }
 
     public int getBaseAttackValue() {
@@ -85,7 +86,7 @@ public class Hero {
 
     public int getUpperDef() {
         int def = defenseValue + armorLev + armor.getBase();
-        if(def >= 10000){
+        if (def >= 10000) {
             Achievement.fearDeath.enable(this);
         }
         return def;
@@ -175,6 +176,9 @@ public class Hero {
                 if (armor != armor.levelUp(armorLev)) {
                     armor = armor.levelUp(armorLev);
                     armorLev = 0;
+                    if (armor == Armor.金甲) {
+                        Achievement.goldColor.enable(this);
+                    }
                 }
                 return true;
             } else {
@@ -191,7 +195,7 @@ public class Hero {
         if (this.material < 0 || this.material < (Integer.MAX_VALUE - material - 1000))
             this.material += material;
         if (this.material < 0) this.material = 0;
-        if(this.material >= 5000000) Achievement.rich.enable(this);
+        if (this.material >= 5000000) Achievement.rich.enable(this);
     }
 
     public int getPoint() {
@@ -202,7 +206,7 @@ public class Hero {
         if (point < 0 || this.point < (Integer.MAX_VALUE - point - 5000))
             this.point += point;
         if (this.point < 0) this.point = 0;
-        if(point >= 5000) Achievement.lazy.enable(this);
+        if (this.point >= 5000) Achievement.lazy.enable(this);
     }
 
     public int getStrength() {
@@ -215,8 +219,8 @@ public class Hero {
             strength++;
             if (attackValue < (Integer.MAX_VALUE - ATR_RISE - 500))
                 attackValue += ATR_RISE;
-            else{
-               attackValue = Integer.MAX_VALUE;
+            else {
+                attackValue = Integer.MAX_VALUE;
                 Achievement.extreme.enable(this);
             }
         }
@@ -227,7 +231,7 @@ public class Hero {
             strength += str;
             if (str < 0 || attackValue < (Integer.MAX_VALUE - ATR_RISE * str))
                 attackValue += ATR_RISE * str;
-             else{
+            else {
                 attackValue = Integer.MAX_VALUE;
                 Achievement.extreme.enable(this);
             }
@@ -274,12 +278,12 @@ public class Hero {
             agility++;
             if (defenseValue < (Integer.MAX_VALUE - DEF_RISE))
                 defenseValue += DEF_RISE;
-            else{
+            else {
                 defenseValue = Integer.MAX_VALUE;
                 Achievement.master.enable(this);
             }
         }
-        if(agility >= 10000){
+        if (agility >= 10000) {
             Achievement.skilldness.enable(this);
         }
     }
@@ -289,14 +293,14 @@ public class Hero {
             agility += agi;
             if (agi < 0 || defenseValue < (Integer.MAX_VALUE - DEF_RISE * agi))
                 defenseValue += DEF_RISE * agi;
-            else{
+            else {
                 defenseValue = Integer.MAX_VALUE;
                 Achievement.master.enable(this);
             }
         }
         if (agility < 0) agility = 0;
         if (defenseValue < 0) defenseValue = 0;
-        if(agility >= 10000) Achievement.skilldness.enable(this);
+        if (agility >= 10000) Achievement.skilldness.enable(this);
     }
 
     public void restore() {
@@ -325,12 +329,14 @@ public class Hero {
         return click;
     }
 
-    public void click() {
+    public void click(boolean award) {
         if (click < Integer.MAX_VALUE - 10) {
             if (this.click % 1000 == 0) {
                 point += random.nextInt(15);
             }
-            this.material += clickAward;
+            if (award) {
+                this.material += clickAward;
+            }
             this.click++;
             switch (click) {
                 case 100:
@@ -436,5 +442,14 @@ public class Hero {
 
     public int getClickAward() {
         return clickAward;
+    }
+
+    public Skill getSkill(int id) {
+        for (Skill skill : existSkill) {
+            if (skill.getId() == id) {
+                return skill;
+            }
+        }
+        return null;
     }
 }

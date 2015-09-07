@@ -7,5 +7,25 @@
     <string name="attr_name">属性</string>
     <string name="atk_name">攻击</string>
     <string name="def_name">防御</string>
+    <string name="upload_label">上传角色</string>
+    <string name="reset_label">重置</string>
+    <string name="buy_label">10W材料(1￥)</string>
+    <string name="pause_label">暂停</string>
+    <string name="achievement_label">成就</string>
+    <string name="restore_desc">恢复技能和体力值相关</string>
+    <string name="hit_desc">重击技能和力量值相关</string>
+    <string name="mul_desc">群攻技能和敏捷值相关</string>
+    <string name="hp_label">HP</string>
+    <string name="material_label">锻造材料</string>
+    <string name="point_label">可用点数</string>
+    <string name="strength_label">力</string>
+    <string name="life_label">体</string>
+    <string name="agile_label">敏</string>
+    <string name="sword_label">武器</string>
+    <string name="armor_label">护具</string>
+    <string name="level_up">+</string>
+    <string name="version">version-1.0</string>
+    <string name="start_label">开 始 游 戏</string>
+    <string name="hero_name">勇者</string>
 
 </resources>

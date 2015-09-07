@@ -30,3 +30,6 @@ local.properties
 .idea/
 .idea/*/
 *.iml
+
+# log
+proguard_logs/

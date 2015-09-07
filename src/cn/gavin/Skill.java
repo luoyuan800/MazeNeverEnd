@@ -1,12 +1,11 @@
 package cn.gavin;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
 public class Skill {
-
+    public static final int 重击 = 1, 多重攻击 = 2, 治疗 = 3;
     private int id;
     private String name;
     private int type;
@@ -111,14 +110,15 @@ public class Skill {
         return random.nextInt(100) + 1 <= occur;
     }
 
-    private int diejia(int num){
+    private int diejia(int num) {
         String str = String.valueOf(num);
-        int result =0;
-        for(int i =0 ;i<str.length();i++){
+        int result = 0;
+        for (int i = 0; i < str.length(); i++) {
             result += Integer.parseInt(str.charAt(i) + "");
         }
         return result;
     }
+
     public List<String> release(Hero hero, Monster... monsters) {
         List<String> msg = new ArrayList<String>();
         int atk = 0;
@@ -126,7 +126,7 @@ public class Skill {
             case 1:
                 atk = hero.getAttackValue() * Math.round(getHarmAdditionValue());
                 monsters[0].addHp(-atk);
-                msg.add(hero.getName() + "使用了技能"+name+"，对" + monsters[0].getName() + "，造成了" + atk + "点伤害。");
+                msg.add(hero.getName() + "使用了技能" + name + "，对" + monsters[0].getName() + "，造成了" + atk + "点伤害。");
                 break;
             case 2:
                 atk = hero.getAttackValue() * Math.round(getHarmAdditionValue());
@@ -136,22 +136,22 @@ public class Skill {
                 }
                 break;
             case 3:
-                int v = Math.round(getHarmAdditionValue() * hero.getUpperHp() + new Random().nextInt(hero.getPower()!=0?hero.getPower():1));
+                int v = Math.round(getHarmAdditionValue() * hero.getUpperHp() + new Random().nextInt(hero.getPower() != 0 ? hero.getPower() : 1));
                 if (v + hero.getHp() > hero.getUpperHp()) {
                     hero.restore();
                 } else {
                     hero.addHp(v);
                 }
-                msg.add(hero.getName() + "使用了技能"+name+"，恢复了" + v + "点HP");
+                msg.add(hero.getName() + "使用了技能" + name + "，恢复了" + v + "点HP");
         }
         addCount();
         return msg;
     }
 
-    private void addCount() {
-        count ++;
-        if(count >= 1000){
-            switch (id){
+    public void addCount() {
+        count++;
+        if (count >= 10000) {
+            switch (id) {
                 case 1:
                     Achievement.hitter.enable(null);
                     break;
@@ -163,6 +163,15 @@ public class Skill {
 
             }
         }
+        if (count % 1001 == 0) {
+            levelUp();
+        }
+    }
+
+    private void levelUp() {
+        if (occurProbability < 50)
+            occurProbability += 1;
+        harm *= 1.1;
     }
 
     public int getCount() {

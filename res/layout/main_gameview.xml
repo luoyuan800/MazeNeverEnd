@@ -15,7 +15,7 @@
             android:layout_width="200dp"
 
             android:layout_height="fill_parent"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:fadeScrollbars="false">
 
             <LinearLayout
@@ -35,12 +35,12 @@
         <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_toRightOf="@id/main_info_sv">
+            android:layout_toEndOf="@id/main_info_sv">
 
             <LinearLayout
                 android:id="@+id/root_item_character"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
                 android:orientation="vertical">
 
@@ -53,7 +53,7 @@
 
                     <TextView
                         android:id="@+id/character_itembar_contribute"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
                         android:background="#7a31ff"
@@ -61,10 +61,7 @@
                         android:gravity="center"
                         android:textSize="15sp" />
 
-                    <!--<View
-                        android:layout_width="1dp"
-                        android:layout_height="fill_parent"
-                        android:background="#fff" />-->
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -81,26 +78,25 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:layout_gravity="center">
 
                             <Button
                                 android:id="@+id/hero_pic"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="top" />
+                                android:gravity="end"
+                                android:textSize="6sp"
+                                />
 
                             <TextView
                                 android:id="@+id/hero_pic_click_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
+                                android:layout_gravity="center"
                                 android:textSize="15sp" />
                         </LinearLayout>
-
-                        <View
-                            android:layout_width="10dp"
-                            android:layout_height="fill_parent"
-                            android:background="#ffc2cbff" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -109,40 +105,49 @@
 
                             <Button
                                 android:id="@+id/life_skill"
-                                android:layout_width="32dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="32dp"
-                                android:background="@drawable/life"
+                                android:drawableStart="@drawable/life"
+                                android:textSize="6sp"
+                                android:gravity="center"
+                                android:alpha="80"
                                 />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="恢复技能和体力值相关"
-                                android:textSize="8sp" />
+                                android:text="@string/restore_desc"
+                                android:textSize="6sp" />
 
                             <Button
                                 android:id="@+id/hit_skill"
-                                android:layout_width="32dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="32dp"
-                                android:background="@drawable/hit" />
+                                android:drawableStart="@drawable/hit"
+                                android:textSize="6sp"
+                                android:alpha="70"
+                                android:gravity="center"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="重击技能和力量值相关"
-                                android:textSize="8sp" />
+                                android:text="@string/hit_desc"
+                                android:textSize="6sp" />
 
                             <Button
                                 android:id="@+id/mul_skill"
-                                android:layout_width="32dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="32dp"
-                                android:background="@drawable/mui" />
+                                android:drawableStart="@drawable/mui"
+                                android:textSize="6sp"
+                                android:alpha="70"
+                                android:gravity="center"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="群攻技能和敏捷值相关"
-                                android:textSize="8sp" />
+                                android:text="@string/mul_desc"
+                                android:textSize="6sp" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -156,7 +161,7 @@
                             android:layout_width="80dp"
                             android:layout_height="fill_parent"
                             android:gravity="center_vertical"
-                            android:text="HP"
+                            android:text="@string/hp_label"
                             android:textSize="15sp" />
 
                         <TextView
@@ -216,7 +221,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:gravity="center_vertical"
-                            android:text="锻造材料"
+                            android:text="@string/material_label"
                             android:textSize="12sp" />
 
                         <TextView
@@ -236,7 +241,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:gravity="center_vertical"
-                            android:text="可用点数"
+                            android:text="@string/point_label"
                             android:textSize="12sp" />
 
                         <TextView
@@ -257,24 +262,27 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="力"
-                            android:textSize="12sp" />
+                            android:text="@string/strength_label"
+                            android:textSize="12sp"
+                            android:layout_weight="1"/>
 
                         <Button
                             android:id="@+id/main_contri_add_pow"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="体"
-                            android:textSize="12sp" />
+                            android:text="@string/life_label"
+                            android:textSize="12sp"
+                            android:layout_weight="1"/>
 
                         <Button
                             android:id="@+id/main_contri_add_agi"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="敏"
-                            android:textSize="12sp" />
+                            android:text="@string/agile_label"
+                            android:textSize="12sp"
+                            android:layout_weight="1"/>
                     </LinearLayout>
 
 
@@ -287,7 +295,7 @@
                             android:layout_width="80dp"
                             android:layout_height="fill_parent"
                             android:gravity="center_vertical"
-                            android:text="武器"
+                            android:text="@string/sword_label"
                             android:textSize="20sp" />
 
                         <TextView
@@ -302,7 +310,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:gravity="center"
-                            android:text="+"
+                            android:text="@string/level_up"
                             android:textSize="15sp" />
                     </LinearLayout>
 
@@ -315,7 +323,7 @@
                             android:layout_width="80dp"
                             android:layout_height="fill_parent"
                             android:gravity="center_vertical"
-                            android:text="护具"
+                            android:text="@string/armor_label"
                             android:textSize="20sp" />
 
                         <TextView
@@ -330,7 +338,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:gravity="center"
-                            android:text="+"
+                            android:text="@string/level_up"
                             android:textSize="15sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -355,7 +363,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="fill_horizontal"
-                                android:text="暂停"
+                                android:text="@string/pause_label"
+                                android:layout_weight="1"
                                 android:textSize="12sp" />
 
                             <Button
@@ -363,14 +372,15 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="fill_horizontal"
-                                android:text="成就"
+                                android:text="@string/achievement_label"
+                                android:layout_weight="1"
                                 android:textSize="12sp" />
                         </LinearLayout>
 
                         <View
                             android:layout_width="fill_parent"
                             android:layout_height="30dp"
-                            android:background="#ffff" />
+                            />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -382,7 +392,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="fill_horizontal"
-                                android:text="10W材料(1￥)"
+                                android:text="@string/buy_label"
+                                android:layout_weight="1"
                                 android:textSize="8sp" />
 
                             <Button
@@ -390,8 +401,31 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="fill_horizontal"
-                                android:text="重置"
+                                android:text="@string/reset_label"
+                                android:layout_weight="1"
                                 android:textSize="8sp" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/upload_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="fill_horizontal"
+                                android:text="@string/upload_label"
+                                android:layout_weight="1"
+                                android:textSize="12sp" />
+
+                            <Button
+                                android:id="@+id/update_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="fill_horizontal"
+                                android:layout_weight="1"
+                                android:textSize="12sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

@@ -20,7 +20,7 @@ public enum Achievement {
     maze100("新手", "到达迷宫100层", 0, 0, 20, 0),
     maze500("不是新人", "到达迷宫500层", 0, 20, 0, 0),
     maze1000("高手", "真难得，竟然到达迷宫1000层了", 20, 20, 20, 20),
-    maze10000("无敌", "到达迷宫1000层了……", -20, -20, -20, -20),
+    maze10000("无敌", "到达迷宫10000层了……", -20, -20, -20, -20),
     maze50000("无聊之人", "你真的好无聊，这么闷都玩到迷宫50000层了。", 1000, 1000, 1000, 1000),
     richer("有钱人", "你好帅好有钱哦，成功内购一次。", 0, 0, 0, 5),
     extreme("至尊", "偏科的典范，攻击力达到上限了", 0, 0, 0, 0),
@@ -31,8 +31,13 @@ public enum Achievement {
     skilldness("技能达人", "敏捷决定了释放技能几率，敏捷达到了10000才是技能达人。", 0, 0, 0, 0),
     speculator("投机者", "到达迷宫100层的时候武器和防具的等级均为0", 0, 0, 0, 0),
     fearDeath("怕死的人", "害怕失败，所以你把防御加了10000点以上", 0, 0, -20, 0),
-    doctor("医生", "使用了1000次以上的恢复技能", 0, 0, 0, 0),
-    hitter("重拳", "使用了1000次以上的重击技能", 0, 0, 0, 0),
+    doctor("医生", "使用了10000次以上的恢复技能", 0, 0, 0, 0),
+    hitter("重拳", "使用了10000次以上的重击技能", 0, 0, 0, 0),
+    uploader("守护者", "分享你创建的角色到服务，下个版本你就可以和自己战斗了。", 0, 0, 10, 0),
+    updater("更新", "更新了游戏版本，快去看看你上传的角色在不在某层迷宫的的某个角落呆着。", 0, 0, 10, 0),
+    crapGame("烂游戏", "这么差劲的游戏你也愿意出钱玩，内购了50次。", 10, 10, 10, 0),
+    goldColor("土豪金", "全身上下都是土豪金，防具升级为金。", 0, 0, 0, 0),
+    artifact("神器", "防具或者武器升级到最高级！", 0, 0, 0, 0),
     EMPTY("", "", 0, 0, 0, 0);
     private int addStrength;
     private int addPower;
@@ -65,7 +70,7 @@ public enum Achievement {
                 hero.addAgility(addAgility);
                 hero.addClickAward(click);
             }
-            MainGameActivity.context.addMessage("------------------------", "* 获得成就：" + name() + " *", "------------------------");
+            MainGameActivity.context.addMessage("------------------------", "* 获得成就：" + name + " *", "------------------------");
         }
     }
 
@@ -91,7 +96,7 @@ public enum Achievement {
 
     public static List<MainGameActivity.AchievementList> getAchievementListAdp() {
         List<MainGameActivity.AchievementList> rs = new ArrayList<MainGameActivity.AchievementList>(values().length / 3);
-        for (int i = 0; i < values().length; i += 3) {
+        for (int i = 0; i < values().length; i += 4) {
             Achievement a0 = values()[i];
             Achievement a1 = i + 1 < values().length ? values()[i + 1] : EMPTY;
             Achievement a2 = i + 2 < values().length ? values()[i + 2] : EMPTY;

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="120dp"
-        android:text="勇者闯迷宫"
+        android:text="@string/app_name"
         android:textSize="50sp" />
 
     <TextView
@@ -20,7 +20,7 @@
         android:layout_below="@id/menu_title_tv"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="version-1.0"
+        android:text="@string/version"
         android:textSize="20sp" />
 
     <Button
@@ -30,7 +30,7 @@
         android:layout_below="@id/menu_version_tv"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
-        android:text="开 始 游 戏"
+        android:text="@string/start_label"
         android:textSize="40sp" />
 
 </RelativeLayout>
