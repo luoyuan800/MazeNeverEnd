@@ -3,7 +3,7 @@ package cn.gavin;
 import java.util.Random;
 
 /**
- * Created by gluo on 8/26/2015.
+ * gluo on 8/26/2015.
  */
 public class Monster {
     private final static String[] firstNames = {"普通", "怪异", "飞翔", "稀有", "发狂", "神奇", "神经"};
@@ -25,10 +25,14 @@ public class Monster {
 
     public static Monster getBoss(Maze maze, Hero hero) {
         Random random = new Random();
+        int hp = hero.getDefenseValue() * (random.nextInt(maze.getLev() + 1) + 5) + random.nextInt(hero.getUpperHp() + 1) + maze.getLev();
+        int atk = hero.getDefenseValue() + maze.getLev() + random.nextInt(hero.getAttackValue() / 3 + maze.getLev() + 1);
+        if (hp <= 0) hp = Integer.MAX_VALUE - 10;
+        if (atk <= 0) hp = Integer.MAX_VALUE - 100;
         Monster monster = new Monster("第" + maze.getLev() + "层", "守护", "者",
-                hero.getUpperHp() * (random.nextInt(maze.getLev() + 1) + 1),
-                hero.getDefenseValue() + maze.getLev() + random.nextInt(hero.getAttackValue() / 3 + maze.getLev() + 1));
-        monster.material = random.nextInt(maze.getLev() + monster.atk + 1);
+                hp,
+                atk);
+        monster.material = random.nextInt(maze.getLev() + monster.atk + 1) / 3 + 5;
         return monster;
     }
 
@@ -50,11 +54,14 @@ public class Monster {
         firstName = firstNames[first];
         secondName = secondNames[second];
         lastName = lastNames[last];
-        if (hero.getAttackValue() != 0) hp += maze.getLev() * random.nextInt(hero.getAttackValue()/1540 + 1);
+        if (hero.getAttackValue() != 0)
+            hp += maze.getLev() * random.nextInt(hero.getAttackValue() / 1540 + 1);
         if (hero.getPower() != 0)
             atk += random.nextInt(hero.getPower() / 10 + 1) * random.nextInt(maze.getLev() + 1);
-        atk += random.nextInt(hero.getDefenseValue()/1100 + 1) * random.nextInt(maze.getLev() +1);
-        material = random.nextInt(hp + 1) / 10 + 5;
+        atk += random.nextInt(hero.getDefenseValue() / 1100 + 1) * random.nextInt(maze.getLev() + 1);
+        if (hp <= 0) hp = Integer.MAX_VALUE - 10;
+        if (atk <= 0) hp = Integer.MAX_VALUE - 100;
+        material = random.nextInt(hp + 1) / 20 + 5;
     }
 
     public int getAtk() {

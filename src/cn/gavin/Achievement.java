@@ -33,8 +33,11 @@ public enum Achievement {
     fearDeath("怕死的人", "害怕失败，所以你把防御加了10000点以上", 0, 0, -20, 0),
     doctor("医生", "使用了10000次以上的恢复技能", 0, 0, 0, 0),
     hitter("重拳", "使用了10000次以上的重击技能", 0, 0, 0, 0),
-    uploader("分享", "分享你创建的角色到服务，下个版本你就可以和自己战斗了。", 0, 0, 10, 0),
+    uploader("守护者", "分享你创建的角色到服务，下个版本你就可以和自己战斗了。", 0, 0, 10, 0),
     updater("更新", "更新了游戏版本，快去看看你上传的角色在不在某层迷宫的的某个角落呆着。", 0, 0, 10, 0),
+    crapGame("烂游戏", "这么差劲的游戏你也愿意出钱玩，内购了50次。", 10, 10, 10, 0),
+    goldColor("土豪金", "全身上下都是土豪金，防具升级为金。", 0, 0, 0, 0),
+    artifact("神器", "防具或者武器升级到最高级！", 0, 0, 0, 0),
     EMPTY("", "", 0, 0, 0, 0);
     private int addStrength;
     private int addPower;
@@ -67,7 +70,7 @@ public enum Achievement {
                 hero.addAgility(addAgility);
                 hero.addClickAward(click);
             }
-            MainGameActivity.context.addMessage("------------------------", "* 获得成就：" + name() + " *", "------------------------");
+            MainGameActivity.context.addMessage("------------------------", "* 获得成就：" + name + " *", "------------------------");
         }
     }
 

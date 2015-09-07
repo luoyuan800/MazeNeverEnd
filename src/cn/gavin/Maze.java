@@ -31,7 +31,7 @@ public class Maze {
             }
             moving = true;
             step++;
-            if (random.nextInt(1000) > 895 || step > random.nextInt(22) || random.nextInt(streaking + 1) > 20) {
+            if (random.nextInt(10000) > 9985 || step > random.nextInt(22) || random.nextInt(streaking + level + 1) > 20 + level) {
                 step = 0;
                 level++;
                 mazeLevelDetect();
@@ -43,17 +43,17 @@ public class Maze {
                 hero.addPoint(point);
                 hero.addHp(hero.getUpperHp() / (random.nextInt(level + 1) + 1) * (random.nextInt(level + 1) + 1));
                 context.addMessage("-------------------");
-            } else if (random.nextInt(100) > 90) {
-                int mate = random.nextInt(level * 2 + 1) + random.nextInt(hero.getAgility() + 1) + 5;
+            } else if (random.nextInt(100) > 95) {
+                int mate = random.nextInt(level * 2 + 1) + random.nextInt(hero.getAgility() + 1) + 2;
                 context.addMessage(hero.getName() + "找到了一个宝箱， 获得了" + mate + "材料");
                 hero.addMaterial(mate);
                 context.addMessage("-------------------");
-            } else if (random.nextInt(100) > 85) {
+            } else if (hero.getHp() < hero.getUpperHp() && random.nextInt(100) > 85) {
                 int hel = random.nextInt(hero.getUpperHp() + 1);
                 context.addMessage(hero.getName() + "休息了一会，恢复了" + hel + "点HP");
                 hero.addHp(hel);
                 context.addMessage("-------------------");
-            } else if (random.nextInt(9000) > 8707) {
+            } else if (random.nextInt(9000) > 8977) {
                 step = 0;
                 int levJ = random.nextInt(hero.getMaxMazeLev() + 5) + 1;
                 context.addMessage(hero.getName() + "踩到了传送门，被传送到了迷宫第" + levJ + "层");
@@ -65,7 +65,7 @@ public class Maze {
                 context.addMessage("-------------------");
             } else if (random.nextBoolean()) {
                 Monster monster;
-                if (random.nextInt(1000) > 893) {
+                if (random.nextInt(1000) > 899) {
                     monster = Monster.getBoss(this, hero);
                     step += 21;
                 } else {

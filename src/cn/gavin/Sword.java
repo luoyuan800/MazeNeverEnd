@@ -22,6 +22,8 @@ public enum Sword {
             int index = ordinal();
             if (index < values().length - 1) {
                 return values()[index + 1];
+            }else{
+                Achievement.artifact.enable(null);
             }
         }
         return this;

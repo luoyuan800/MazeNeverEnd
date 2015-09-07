@@ -176,6 +176,9 @@ public class Hero {
                 if (armor != armor.levelUp(armorLev)) {
                     armor = armor.levelUp(armorLev);
                     armorLev = 0;
+                    if (armor == Armor.金甲) {
+                        Achievement.goldColor.enable(this);
+                    }
                 }
                 return true;
             } else {

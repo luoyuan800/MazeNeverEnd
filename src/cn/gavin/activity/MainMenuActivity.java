@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.bmob.pay.tool.BmobPay;
+
 import cn.gavin.R;
 
 public class MainMenuActivity extends Activity implements OnClickListener {
@@ -19,7 +21,7 @@ public class MainMenuActivity extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-
+        BmobPay.init(MainMenuActivity.this, "4de7673ec85955af7568cfa1494c6498");
         menuStart = (Button) findViewById(R.id.menu_start);
         menuStart.setOnClickListener(this);
 

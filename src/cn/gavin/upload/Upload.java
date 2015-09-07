@@ -30,7 +30,6 @@ public class Upload {
                     return true;
                 }
             }
-            Achievement.uploader.enable(hero);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
