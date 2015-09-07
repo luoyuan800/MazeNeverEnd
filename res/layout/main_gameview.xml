@@ -79,6 +79,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
+                            android:layout_weight="1"
                             android:layout_gravity="center">
 
                             <Button
@@ -101,6 +102,7 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:orientation="vertical">
 
                             <Button
@@ -292,25 +294,27 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="80dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:gravity="center_vertical"
                             android:text="@string/sword_label"
+                            android:layout_weight="1"
                             android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/main_contri_level"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
-                            android:gravity="center_vertical"
+                            android:layout_weight="1"
                             android:textSize="12sp" />
 
                         <Button
                             android:id="@+id/up_sword"
                             android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
+                            android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="@string/level_up"
+                            android:layout_weight="1"
                             android:textSize="15sp" />
                     </LinearLayout>
 
@@ -320,24 +324,26 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="80dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:gravity="center_vertical"
                             android:text="@string/armor_label"
+                            android:layout_weight="1"
                             android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/main_armor_level"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
-                            android:gravity="center_vertical"
+                            android:layout_weight="1"
                             android:textSize="12sp" />
 
                         <Button
                             android:id="@+id/up_armor"
                             android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
+                            android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:layout_weight="1"
                             android:text="@string/level_up"
                             android:textSize="15sp" />
                     </LinearLayout>
