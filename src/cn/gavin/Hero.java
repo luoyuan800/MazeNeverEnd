@@ -153,7 +153,7 @@ public class Hero {
             return false;
         } else {
             if (material >= 100 + swordLev) {
-                material -= 100 + armorLev;
+                material -= (100 + armorLev);
                 swordLev++;
                 if (sword != sword.levelUp(swordLev)) {
                     sword = sword.levelUp(swordLev);
@@ -171,7 +171,7 @@ public class Hero {
             return false;
         } else {
             if (material >= 80 + armorLev) {
-                material -= 80 + armorLev;
+                material -= (80 + armorLev);
                 armorLev++;
                 if (armor != armor.levelUp(armorLev)) {
                     armor = armor.levelUp(armorLev);

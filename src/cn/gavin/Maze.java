@@ -3,6 +3,7 @@ package cn.gavin;
 import java.util.Random;
 
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.monster.Monster;
 
 /**
  * Created by gluo on 8/26/2015.
@@ -25,6 +26,7 @@ public class Maze {
     }
 
     public void move(MainGameActivity context) {
+        String heroName = "<font color=\"#800080\">" + hero.getName() + "</font>";
         while (context.isGameThreadRunning()) {
             if (context.isPause()) {
                 continue;
@@ -36,7 +38,7 @@ public class Maze {
                 level++;
                 mazeLevelDetect();
                 int point = 2 + random.nextInt(level + 1) / 2;
-                context.addMessage(hero.getName() + "进入了" + level + "层迷宫， 获得了" + point + "点数奖励");
+                context.addMessage(heroName + "进入了" + level + "层迷宫， 获得了<font color=\"green\">" + point + "</font>点数奖励");
                 if (level > hero.getMaxMazeLev()) {
                     hero.addMaxMazeLev();
                 }
@@ -45,18 +47,18 @@ public class Maze {
                 context.addMessage("-------------------");
             } else if (random.nextInt(100) > 95) {
                 int mate = random.nextInt(level * 2 + 1) + random.nextInt(hero.getAgility() + 1) + 2;
-                context.addMessage(hero.getName() + "找到了一个宝箱， 获得了" + mate + "材料");
+                context.addMessage(heroName + "找到了一个宝箱， 获得了<font color=\"blue\">" + mate + "</font>材料");
                 hero.addMaterial(mate);
                 context.addMessage("-------------------");
             } else if (hero.getHp() < hero.getUpperHp() && random.nextInt(100) > 85) {
                 int hel = random.nextInt(hero.getUpperHp() + 1);
-                context.addMessage(hero.getName() + "休息了一会，恢复了" + hel + "点HP");
+                context.addMessage(heroName + "休息了一会，恢复了<font color=\"green\">" + hel + "</font>点HP");
                 hero.addHp(hel);
                 context.addMessage("-------------------");
             } else if (random.nextInt(9000) > 8977) {
                 step = 0;
                 int levJ = random.nextInt(hero.getMaxMazeLev() + 5) + 1;
-                context.addMessage(hero.getName() + "踩到了传送门，被传送到了迷宫第" + levJ + "层");
+                context.addMessage(heroName + "踩到了传送门，被传送到了迷宫第" + levJ + "层");
                 level = levJ;
                 if (level > hero.getMaxMazeLev()) {
                     hero.setMaxMazeLev(level);
@@ -71,7 +73,7 @@ public class Maze {
                 } else {
                     monster = new Monster(hero, this);
                 }
-                context.addMessage(hero.getName() + "遇到了" + monster.getName());
+                context.addMessage(heroName + "遇到了" + monster.getName());
                 boolean atk = hero.getAgility() > monster.getHp() / 2 || random.nextBoolean();
                 while (monster.getHp() > 0 && hero.getHp() > 0) {
                     if (context.isPause()) {
@@ -83,7 +85,7 @@ public class Maze {
                             context.addMessages(skill.release(hero, monster));
                         } else {
                             monster.addHp(-(hero.getAttackValue()));
-                            context.addMessage(hero.getName() + "攻击了" + monster.getName() + "，造成了" + hero.getAttackValue() + "点伤害。");
+                            context.addMessage(heroName + "攻击了" + monster.getName() + "，造成了<font color=\"red\">" + hero.getAttackValue() + "</font>点伤害。");
                         }
                     } else {
                         int harm = monster.getAtk() - hero.getDefenseValue();
@@ -91,7 +93,7 @@ public class Maze {
                             harm = random.nextInt(level + 1);
                         }
                         hero.addHp(-harm);
-                        context.addMessage(monster.getName() + "攻击了" + hero.getName() + "，造成了" + harm + "点伤害。");
+                        context.addMessage(monster.getName() + "攻击了" + heroName + "，造成了<font color=\"red\">" + harm + "</font>点伤害。");
                     }
                     atk = !atk;
                     try {
@@ -105,12 +107,12 @@ public class Maze {
                     if (streaking >= 100) {
                         Achievement.unbeaten.enable(hero);
                     }
-                    context.addMessage(hero.getName() + "击败了" + monster.getName() + "， 获得了" + monster.getMaterial() + "份锻造材料。");
+                    context.addMessage(heroName + "击败了" + monster.getName() + "， 获得了<font color=\"blue\">" + monster.getMaterial() + "</font>份锻造材料。");
                     hero.addMaterial(monster.getMaterial());
                 } else {
                     streaking = 0;
                     step = 0;
-                    context.addMessage(hero.getName() + "被" + monster.getName() + "打败了，回到迷宫第一层。");
+                    context.addMessage(heroName + "被" + monster.getName() + "打败了，回到迷宫第一层。");
                     this.level = 1;
                     hero.restore();
                 }

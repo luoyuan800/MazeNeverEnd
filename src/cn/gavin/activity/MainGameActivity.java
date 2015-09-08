@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -163,7 +164,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     new Thread(new Runnable() {
                         public void run() {
                             Upload upload = new Upload();
-                            if (upload.upload(heroN)) {
+                            if (upload.upload(heroN, alipay.getPayTime())) {
                                 lastUploadLev = heroN.getMaxMazeLev();
                                 uploading = false;
                                 Achievement.uploader.enable(heroN);
@@ -219,7 +220,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                             }
                             TextView oneKickInfo = new TextView(MainGameActivity.this);
                             // 将一次信息数据显示到页面中
-                            oneKickInfo.setText(str);
+                            oneKickInfo.setText(Html.fromHtml(str));
                             mainInfoPlatform.addView(oneKickInfo);
                             scrollToBottom(mainInfoSv, mainInfoPlatform);
                         }
@@ -315,7 +316,32 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     //Popup dialog
+    private void showRestDialog() {
+        AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("是否确认重置角色信息？");
+        TextView tv = new TextView(context);
+        tv.setText("注意：重置角色信息后，所有的等级归零，包括迷宫记录。只会保留点击次数和内购次数。");
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
 
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        reset();
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.show();
+    }
     /**
      * 弹出退出程序提示框
      */
@@ -774,7 +800,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 heroN.click(false);
                 break;
             case R.id.reset_button:
-                reset();
+                showRestDialog();
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
                 break;

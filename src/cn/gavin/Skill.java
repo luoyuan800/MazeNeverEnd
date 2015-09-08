@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import cn.gavin.monster.Monster;
+
 public class Skill {
     public static final int 重击 = 1, 多重攻击 = 2, 治疗 = 3;
     private int id;
