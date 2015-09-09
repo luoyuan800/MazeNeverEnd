@@ -106,8 +106,8 @@ public class Hero {
 
     public int getDefenseValue() {
         int defend = defenseValue + random.nextInt(armor.getBase()) + random.nextInt(armorLev * 2 + 1);
-        if (random.nextInt(100) > 96) {
-            defend *= 1.5;
+        if (random.nextInt(100) + random.nextInt(agility + 1)/1000 > 96 + random.nextInt(strength +1)/1000) {
+            defend *= 3;
         }
 
         return defend;

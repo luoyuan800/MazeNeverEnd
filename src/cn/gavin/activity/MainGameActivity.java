@@ -57,7 +57,7 @@ import cn.gavin.upload.Upload;
 public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener {
     //Constants
     private static final String TAG = "MainGameActivity";
-    private static final String APK_PATH = Environment.getExternalStorageDirectory() + "/maze";
+    public static final String APK_PATH = Environment.getExternalStorageDirectory() + "/maze";
     private static final String VERSION_CHECK_URL = "http://7xk7ce.com1.z0.glb.clouddn.com/MazeNeverEndUpdate.jpg";
     private static final String PACKAGE_DOWNLOAD_URL = "http://7xk7ce.com1.z0.glb.clouddn.com/MazeNeverEnd.png";
 
