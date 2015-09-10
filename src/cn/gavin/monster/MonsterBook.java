@@ -12,9 +12,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +29,7 @@ import cn.gavin.activity.MainGameActivity;
  */
 public class MonsterBook {
     private MainGameActivity context;
-    private Set<String> names;
+    private Set<String> nameKeys;
 
     public MonsterBook(MainGameActivity context) {
         this.context = context;
@@ -38,26 +40,30 @@ public class MonsterBook {
     }
 
     public void addMonster(Monster monster) {
-        if (names == null) {
-            names = getMonsterNames();
+        if (nameKeys == null) {
+            nameKeys = getMonsterNameKeys();
         }
         String key = monster.getName() + "_" + monster.isDefeat();
-        if (!names.contains(key)) {
-            try {
-                FileOutputStream output = context.openFileOutput("monster.index", Activity.MODE_PRIVATE);
-                output.write(key.getBytes("UTF-8"));
-                output.write("\n".getBytes("UTF-8"));
-                output.flush();
-                output.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            names.add(key);
+        if (!nameKeys.contains(key)) {
+            writeToIndex(key);
+            nameKeys.add(key);
             writeIntoFile(key, monster);
+        }
+    }
+
+    private void writeToIndex(String key) {
+        try {
+            FileOutputStream output = context.openFileOutput("monster.index", Activity.MODE_PRIVATE);
+            output.write(key.getBytes("UTF-8"));
+            output.write("\n".getBytes("UTF-8"));
+            output.flush();
+            output.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -87,7 +93,7 @@ public class MonsterBook {
     }
 
     //从应用目录下读取index文件内容
-    public Set<String> getMonsterNames() {
+    public Set<String> getMonsterNameKeys() {
         Set<String> names = new HashSet<String>();
         try {
             FileInputStream inputStream = context.openFileInput("monster.index");
@@ -123,9 +129,18 @@ public class MonsterBook {
         Button name2;
     }
 
-    class AchievementAdapter extends BaseAdapter {
+    class MonsterAdapter extends BaseAdapter {
         private List<MonsterList> adapterData;
         private TextView textView;
+
+        public MonsterAdapter(TextView textView) {
+            this.textView = textView;
+            adapterData = new ArrayList<MonsterList>();
+            Set<String> names = getMonsterNameKeys();
+            for (int i = 0; i < names.size(); i += 3) {
+
+            }
+        }
 
         @Override
         public int getCount() {
@@ -201,17 +216,51 @@ public class MonsterBook {
 
     }
 
-    private  static class MonsterItem{
-        public boolean isDefeat(){
-            return true;
+    private static class MonsterItem {
+        private Boolean defeat;
+        private String desc;
+        private String name;
+
+        private void load() {
+            String key = name + defeat;
+            try {
+                File file = new File(MainGameActivity.APK_PATH + "/" + key);
+                if (!file.exists()) {
+                    return;
+                }
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                StringBuilder builder = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line).append("\n");
+                }
+                desc = builder.toString();
+                reader.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public boolean isDefeat() {
+            return defeat;
         }
 
         public String getDesc() {
-            return null;
+            if (desc == null) {
+                load();
+            }
+            return desc;
         }
 
         public String getName() {
-            return null;
+            return name;
+        }
+
+        public MonsterItem(String name, boolean defeat) {
+            this.name = name;
+            this.defeat = defeat;
         }
     }
 }
