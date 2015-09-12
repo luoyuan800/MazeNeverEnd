@@ -114,6 +114,12 @@ public class SkillDialog {
 
     private final Handler handler = new Handler(){
         public void handleMessage(android.os.Message message){
+            switch (message.what){
+                case 0 :
+                    for(Skill skill : skills){
+                        skill.refresh();
+                    }
+            }
             super.handleMessage(message);
         }
     };
