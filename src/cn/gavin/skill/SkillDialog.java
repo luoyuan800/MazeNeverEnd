@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 
@@ -22,6 +24,7 @@ public class SkillDialog {
     private TextView skillDesc;
     private TextView skillPoint;
     private List<Skill> skills;
+
     public SkillDialog(MainGameActivity context) {
         this.context = context;
     }
@@ -38,8 +41,16 @@ public class SkillDialog {
                     }
 
                 });
+
         LayoutInflater inflater = context.getLayoutInflater();
         View view = inflater.inflate(R.layout.skill_dialog, (ViewGroup) context.findViewById(R.id.skill_dialog));
+        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.skill_dialog);
+        ViewFlipper flipper = new ViewFlipper(context);
+        BaseSkill baseSkill = new BaseSkill(context);
+        LongSkill longSkill = new LongSkill(context);
+        flipper.addView(baseSkill);
+        flipper.addView(longSkill);
+        linearLayout.addView(flipper);
         dialog.setView(view);
         skillDesc = (TextView) view.findViewById(R.id.skill_description);
         skillPoint = (TextView) view.findViewById(R.id.skill_point);
@@ -112,19 +123,20 @@ public class SkillDialog {
         };
     }
 
-    private final Handler handler = new Handler(){
-        public void handleMessage(android.os.Message message){
-            switch (message.what){
-                case 0 :
-                    for(Skill skill : skills){
+    private final Handler handler = new Handler() {
+        public void handleMessage(android.os.Message message) {
+            switch (message.what) {
+                case 0:
+                    for (Skill skill : skills) {
                         skill.refresh();
                     }
+                    break;
             }
             super.handleMessage(message);
         }
     };
 
-    public Handler getHandler(){
+    public Handler getHandler() {
         return handler;
     }
 }

@@ -2,9 +2,10 @@ package cn.gavin.skill;
 
 import android.widget.Button;
 import cn.gavin.Hero;
+import cn.gavin.R;
 
 /**
- * Created by luoyuan on 9/12/15.
+ * luoyuan on 9/12/15.
  */
 public abstract class Skill {
     private long count;
@@ -14,6 +15,7 @@ public abstract class Skill {
     private Button skillButton;
     private Hero hero;
     private SkillDialog skillDialog;
+    private float probability;
 
     public boolean isEnable() {
         return true;
@@ -64,10 +66,20 @@ public abstract class Skill {
     }
 
     public void refresh() {
-        skillButton.setText(name);
-        skillButton.setEnabled(isEnable());
         skillButton.setOnClickListener(skillDialog.getClickListener(description()));
         skillButton.setOnLongClickListener(skillDialog.getLongClickListener(this));
+        skillButton.setText(count + "");
+        if(!isEnable()){
+            skillButton.setTextColor(skillButton.getResources().getColor(R.color.disable));
+        }else {
+            if(!active){
+                skillButton.setTextColor(skillButton.getResources().getColor(R.color.un_active));
+            }else if(!onUsed){
+                skillButton.setTextColor(skillButton.getResources().getColor(R.color.active));
+            }else{
+                skillButton.setTextColor(skillButton.getResources().getColor(R.color.onUse));
+            }
+        }
     }
 
     public Button getSkillButton() {
@@ -88,5 +100,13 @@ public abstract class Skill {
 
     public void setSkillDialog(SkillDialog skillDialog) {
         this.skillDialog = skillDialog;
+    }
+
+    public float getProbability() {
+        return probability;
+    }
+
+    public void setProbability(float probability) {
+        this.probability = probability;
     }
 }
