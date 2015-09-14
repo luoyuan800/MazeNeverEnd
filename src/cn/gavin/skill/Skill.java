@@ -2,6 +2,7 @@ package cn.gavin.skill;
 
 import android.widget.Button;
 import cn.gavin.Hero;
+import cn.gavin.Maze;
 import cn.gavin.R;
 
 /**
@@ -16,11 +17,16 @@ public abstract class Skill {
     private Hero hero;
     private SkillDialog skillDialog;
     private float probability;
+    private String description;
+    private Expression expression;
+    private Maze maze;
 
     public boolean isEnable() {
-        return true;
+        return expression.isEnable(hero, maze, null);
     }
-
+public void setEnableExpression(Expression exp){
+    expression = exp;
+}
     public boolean isOnUsed() {
         return onUsed;
     }
@@ -55,6 +61,10 @@ public abstract class Skill {
 
     public abstract String description();
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String toString() {
         return String.format("<font color=\"red\">%s</font>使用/点击次数:%s<br>%s<br>长按%s", name, count, description(),
                 !isActive() ? "激活" : isOnUsed() ? "卸下" : "装备");
@@ -69,14 +79,14 @@ public abstract class Skill {
         skillButton.setOnClickListener(skillDialog.getClickListener(description()));
         skillButton.setOnLongClickListener(skillDialog.getLongClickListener(this));
         skillButton.setText(count + "");
-        if(!isEnable()){
+        if (!isEnable()) {
             skillButton.setTextColor(skillButton.getResources().getColor(R.color.disable));
-        }else {
-            if(!active){
+        } else {
+            if (!active) {
                 skillButton.setTextColor(skillButton.getResources().getColor(R.color.un_active));
-            }else if(!onUsed){
+            } else if (!onUsed) {
                 skillButton.setTextColor(skillButton.getResources().getColor(R.color.active));
-            }else{
+            } else {
                 skillButton.setTextColor(skillButton.getResources().getColor(R.color.onUse));
             }
         }

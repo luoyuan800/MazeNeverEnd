@@ -3,20 +3,15 @@ package cn.gavin.skill;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Handler;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.*;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
-
-import java.util.List;
-
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
+
+import java.util.List;
 
 /**
  * Created by luoyuan on 9/12/15.
@@ -29,6 +24,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
     private List<Skill> skills;
     private ViewFlipper viewFlipper;
     private GestureDetector detector; //手势检测
+    private TextView sillNameText;
 
     public SkillDialog(MainGameActivity context) {
         this.context = context;
@@ -60,20 +56,50 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         dialog.setView(view);
         skillDesc = (TextView) view.findViewById(R.id.skill_description);
         skillPoint = (TextView) view.findViewById(R.id.skill_point);
+        sillNameText = (TextView) view.findViewById(R.id.skill_system_name);
+        sillNameText.setText(systemNames[0]);
         viewFlipper.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return detector.onTouchEvent(event);
             }
         });
+        Button pre = (Button) view.findViewById(R.id.prev_skill_system_button);
+        pre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewFlipper.showPrevious();
+                sillNameText.setText(getPrevSystemName());
+            }
+        });
+        Button next = (Button) view.findViewById(R.id.next_skill_system_button);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewFlipper.showNext();
+               sillNameText.setText(getPrevSystemName());
+            }
+        });
     }
 
+    int index =0;
+    String[] systemNames = {"勇者技能", "龙裔技能"};
 
-    public View setDialog(int layoutId, int rootGroupId) {
-        LayoutInflater inflater = context.getLayoutInflater();
-        View view = inflater.inflate(layoutId, (ViewGroup) context.findViewById(rootGroupId));
-        dialog.setView(view);
-        return view;
+    private String getNextSystemName() {
+        if (index >= systemNames.length - 1) {
+            index = 0;
+        }else{
+            index ++;
+        }
+        return systemNames[index];
+    }
+    private String getPrevSystemName() {
+        if (index <= 0) {
+            index = systemNames.length - 1;
+        }else{
+            index --;
+        }
+        return systemNames[index];
     }
 
     public void show() {

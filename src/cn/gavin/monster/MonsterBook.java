@@ -11,15 +11,14 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import cn.gavin.R;
+import cn.gavin.activity.MainGameActivity;
+import cn.gavin.db.DBHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import cn.gavin.R;
-import cn.gavin.activity.MainGameActivity;
-import cn.gavin.db.DBHelper;
 
 /**
  * gluo on 9/8/2015.
@@ -53,13 +52,17 @@ public class MonsterBook {
     }
 
     public void addMonster(Monster monster) {
-        if (nameKeys == null) {
-            nameKeys = getMonsterNameKeys();
-        }
-        String key = monster.getName() + "_" + monster.isDefeat();
-        if (!nameKeys.contains(key)) {
-            nameKeys.add(key);
-            writeIntoDB(monster);
+        try {
+            if (nameKeys == null) {
+                nameKeys = getMonsterNameKeys();
+            }
+            String key = monster.getName() + "_" + monster.isDefeat();
+            if (!nameKeys.contains(key)) {
+                nameKeys.add(key);
+                writeIntoDB(monster);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

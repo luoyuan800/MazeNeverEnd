@@ -21,4 +21,7 @@ public class BaseSkill extends SkillLayout {
         this.addView(view);
     }
 
+    private void init(Context context, View tView){
+
+    }
 }

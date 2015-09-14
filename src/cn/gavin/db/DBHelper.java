@@ -1,13 +1,13 @@
 package cn.gavin.db;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import cn.gavin.activity.MainGameActivity;
 
 import java.io.File;
-
-import cn.gavin.activity.MainGameActivity;
 
 /**
  * Created by gluo on 9/14/2015.
@@ -23,9 +23,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(MainGameActivity context) {
         super(context, DB_PATH + DB_NAME, null, DB_VERSION);
         File path = new File(DB_PATH);
-        if(!path.exists()){
+        if (!path.exists()) {
             path.mkdirs();
         }
+        this.context = context;
     }
 
     private boolean checkDBExist() {
@@ -62,15 +63,40 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor excuseSOL(String sql) {
-        Cursor cursor = getWritableDatabase().rawQuery(sql, null);
+        Cursor cursor = getDB().rawQuery(sql, null);
         cursor.moveToFirst();
         return cursor;
     }
 
     public void excuseSQLWithoutResult(String sql) {
-        getWritableDatabase().execSQL(sql);
+        getDB().execSQL(sql);
     }
 
+    private SQLiteDatabase openOrCreateInnerDB() {
+        database = context.openOrCreateDatabase("monster_book", Context.MODE_PRIVATE, null);
+        return database;
+    }
+
+    private SQLiteDatabase getDB() {
+        SQLiteDatabase db = database;
+        if (database == null) {
+            try {
+                db = getWritableDatabase();
+            } catch (Exception e) {
+                if (database == null || !database.isOpen()) {
+                    db = openOrCreateInnerDB();
+                    onCreate(db);
+                } else {
+                    return database;
+                }
+            }
+        }else{
+            if(!db.isOpen()){
+                db = openOrCreateInnerDB();
+            }
+        }
+        return db;
+    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
