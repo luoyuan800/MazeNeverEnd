@@ -70,7 +70,7 @@ public enum Achievement {
                 hero.addAgility(addAgility);
                 hero.addClickAward(click);
             }
-            MainGameActivity.context.addMessage("------------------------", "* 获得成就：" + name + " *", "------------------------");
+            MainGameActivity.context.addMessage("------------------------", "* 获得成就：<font color=\"#D2691E\">" + name + "</font> *", "------------------------");
         }
     }
 

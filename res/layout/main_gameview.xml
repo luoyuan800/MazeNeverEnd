@@ -381,6 +381,14 @@
                                 android:text="@string/achievement_label"
                                 android:layout_weight="1"
                                 android:textSize="12sp" />
+                            <Button
+                                android:id="@+id/book_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="fill_horizontal"
+                                android:text="@string/book_label"
+                                android:layout_weight="1"
+                                android:textSize="12sp" />
                         </LinearLayout>
 
                         <View

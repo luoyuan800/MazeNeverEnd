@@ -26,6 +26,8 @@ public class Monster {
     private int material;
     private int mazeLev;
     private boolean defeat;
+    private int maxHP;
+    private String formatName;
 
     public static Monster getBoss(Maze maze, Hero hero) {
         Random random = new Random();
@@ -37,12 +39,14 @@ public class Monster {
                 hp,
                 atk);
         monster.material = random.nextInt(maze.getLev() + monster.atk + 1) / 3 + 5;
+        monster.formatName(hero);
         return monster;
     }
 
     private Monster(String firstName, String secondName, String lastName, int hp, int atk) {
         this.atk = atk;
         this.hp = hp;
+        maxHP = hp;
         this.firstName = firstName;
         this.secondName = secondName;
         this.lastName = lastName;
@@ -66,8 +70,17 @@ public class Monster {
         if (hp <= 0) hp = Integer.MAX_VALUE - 10;
         if (atk <= 0) hp = Integer.MAX_VALUE - 100;
         material = random.nextInt(hp + 1) / 20 + 5;
+        maxHP = hp;
+        formatName(hero);
     }
 
+    private void formatName(Hero hero){
+        if(getAtk() > (hero.getUpperHp() + hero.getDefenseValue())/2){
+            setFormatName("<B><font color=\"red\">" + getName() + "</font></B>");
+        }else{
+            setFormatName(getName());
+        }
+    }
     public int getAtk() {
         return atk;
     }
@@ -102,5 +115,17 @@ public class Monster {
 
     public void setMazeLev(int mazeLev) {
         this.mazeLev = mazeLev;
+    }
+
+    public int getMaxHP() {
+        return maxHP;
+    }
+
+    public String getFormatName() {
+        return formatName;
+    }
+
+    public void setFormatName(String formatName) {
+        this.formatName = formatName;
     }
 }

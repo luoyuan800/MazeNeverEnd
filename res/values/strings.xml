@@ -27,5 +27,6 @@
     <string name="version">version-1.0</string>
     <string name="start_label">开 始 游 戏</string>
     <string name="hero_name">勇者</string>
+    <string name="book_label">图鉴</string>
 
 </resources>

@@ -52,6 +52,8 @@ import cn.gavin.R;
 import cn.gavin.Skill;
 import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
+import cn.gavin.monster.Monster;
+import cn.gavin.monster.MonsterBook;
 import cn.gavin.upload.Upload;
 
 public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener {
@@ -114,6 +116,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private boolean uploading = false;
     //Data
     private AchievementAdapter adapter;
+    private MonsterBook monsterBook;
+    private Button bookButton;
 
 
     //Get Function
@@ -377,12 +381,13 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         AlertDialog dialog = new Builder(this).create();
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
+        achievementDesc = new TextView(this);
+        linearLayout.addView(achievementDesc);
         ListView listView = new ListView(this);
         adapter = new AchievementAdapter();
         listView.setAdapter(adapter);
         linearLayout.addView(listView);
-        achievementDesc = new TextView(this);
-        linearLayout.addView(achievementDesc);
+
         dialog.setView(linearLayout);
         dialog.setTitle("成就");
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
@@ -527,10 +532,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private void initGameData() {
+        monsterBook = new MonsterBook(this);
         // 英雄
         if (!load()) {
             heroN = new cn.gavin.Hero("勇者");
-            maze = new Maze(heroN);
+            maze = new Maze(heroN, monsterBook);
             alipay = new Alipay(this, 0);
         }
         // 左侧战斗信息
@@ -582,6 +588,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         uploadButton.setOnClickListener(this);
         updateButton.setOnClickListener(this);
         updateButton.setEnabled(false);
+        bookButton = (Button) findViewById(R.id.book_button);
+        bookButton.setOnClickListener(this);
         refresh();
     }
 
@@ -761,6 +769,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.book_button:
+                monsterBook.showBook();
+                break;
             case R.id.update_button:
                 showDownload();
                 break;
@@ -932,7 +943,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 if (atts.length >= 25) {
                     lastUploadLev = Integer.parseInt(atts[24]);
                 }
-                maze = new Maze(heroN);
+                maze = new Maze(heroN, monsterBook);
                 maze.setLevel(Integer.parseInt(atts[18]));
                 if (maze.getLev() > heroN.getMaxMazeLev()) {
                     maze.setLevel(heroN.getMaxMazeLev());
