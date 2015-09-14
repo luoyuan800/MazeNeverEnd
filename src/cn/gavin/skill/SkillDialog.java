@@ -3,27 +3,32 @@ package cn.gavin.skill;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Handler;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
-import cn.gavin.R;
-import cn.gavin.activity.MainGameActivity;
 
 import java.util.List;
+
+import cn.gavin.R;
+import cn.gavin.activity.MainGameActivity;
 
 /**
  * Created by luoyuan on 9/12/15.
  */
-public class SkillDialog {
+public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
     private MainGameActivity context;
     private AlertDialog dialog;
     private TextView skillDesc;
     private TextView skillPoint;
     private List<Skill> skills;
+    private ViewFlipper viewFlipper;
+    private GestureDetector detector; //手势检测
 
     public SkillDialog(MainGameActivity context) {
         this.context = context;
@@ -45,16 +50,24 @@ public class SkillDialog {
         LayoutInflater inflater = context.getLayoutInflater();
         View view = inflater.inflate(R.layout.skill_dialog, (ViewGroup) context.findViewById(R.id.skill_dialog));
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.skill_dialog);
-        ViewFlipper flipper = new ViewFlipper(context);
+        viewFlipper = new ViewFlipper(context);
         BaseSkill baseSkill = new BaseSkill(context);
         LongSkill longSkill = new LongSkill(context);
-        flipper.addView(baseSkill);
-        flipper.addView(longSkill);
-        linearLayout.addView(flipper);
+        viewFlipper.addView(baseSkill);
+        viewFlipper.addView(longSkill);
+        linearLayout.addView(viewFlipper);
+        detector = new GestureDetector(context, this);
         dialog.setView(view);
         skillDesc = (TextView) view.findViewById(R.id.skill_description);
         skillPoint = (TextView) view.findViewById(R.id.skill_point);
+        viewFlipper.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return detector.onTouchEvent(event);
+            }
+        });
     }
+
 
     public View setDialog(int layoutId, int rootGroupId) {
         LayoutInflater inflater = context.getLayoutInflater();
@@ -138,5 +151,17 @@ public class SkillDialog {
 
     public Handler getHandler() {
         return handler;
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        if (e1.getX() - e2.getX() > 100) {
+            viewFlipper.showNext();//向右滑动
+            return true;
+        } else if (e1.getX() - e2.getY() < -100) {
+            viewFlipper.showPrevious();//向左滑动
+            return true;
+        }
+        return false;
     }
 }

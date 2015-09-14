@@ -40,7 +40,7 @@ public class Maze {
                 step = 0;
                 level++;
                 mazeLevelDetect();
-                int point = 2 + random.nextInt(level + 1) / 2;
+                int point = 1 + random.nextInt(level + 1) / 19;
                 context.addMessage(heroName + "进入了" + level + "层迷宫， 获得了<font color=\"#FF8C00\">" + point + "</font>点数奖励");
                 if (level > hero.getMaxMazeLev()) {
                     hero.addMaxMazeLev();

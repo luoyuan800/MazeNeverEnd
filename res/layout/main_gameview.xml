@@ -365,11 +365,11 @@
                             android:orientation="horizontal">
 
                             <Button
-                                android:id="@+id/pause_button"
+                                android:id="@+id/skill_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="fill_horizontal"
-                                android:text="@string/pause_label"
+                                android:text="@string/skill_label"
                                 android:layout_weight="1"
                                 android:textSize="12sp" />
 
@@ -423,6 +423,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
+                            <Button
+                                android:id="@+id/pause_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="fill_horizontal"
+                                android:text="@string/pause_label"
+                                android:layout_weight="1"
+                                android:textSize="12sp" />
 
                             <Button
                                 android:id="@+id/upload_button"

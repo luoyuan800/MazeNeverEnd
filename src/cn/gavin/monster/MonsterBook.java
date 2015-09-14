@@ -1,8 +1,8 @@
 package cn.gavin.monster;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +12,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,13 +19,15 @@ import java.util.Set;
 
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.db.DBHelper;
 
 /**
- * Created by gluo on 9/8/2015.
+ * gluo on 9/8/2015.
  */
 public class MonsterBook {
     private MainGameActivity context;
     private Set<String> nameKeys;
+    private Set<String> nameSet;
 
     public MonsterBook(MainGameActivity context) {
         this.context = context;
@@ -55,6 +48,7 @@ public class MonsterBook {
                 dialog.dismiss();
             }
         });
+        dialog.setTitle("怪物收集");
         dialog.show();
     }
 
@@ -64,73 +58,33 @@ public class MonsterBook {
         }
         String key = monster.getName() + "_" + monster.isDefeat();
         if (!nameKeys.contains(key)) {
-            writeToIndex(key);
             nameKeys.add(key);
-            writeIntoFile(monster);
+            writeIntoDB(monster);
         }
     }
 
-    private void writeToIndex(String key) {
-        try {
-            FileOutputStream output = context.openFileOutput("monster.index", Activity.MODE_APPEND);
-            output.write(key.getBytes("UTF-8"));
-            output.write("\n".getBytes("UTF-8"));
-            output.flush();
-            output.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void writeIntoDB(Monster monster) {
+        DBHelper helper = context.getDbHelper();
+        String sql = String.format("insert into monster_book (name, format_name, isDefeat, %s, %s, %s) values('%s', '%s', '%s', '%s', '%s', %s)",
+                monster.isDefeat() ? "hp1" : "hp", monster.isDefeat() ? "atk1" : "atk", monster.isDefeat() ? "maze_lv1" : "maze_lv",
+                monster.getName(), monster.getFormatName(), monster.isDefeat(), monster.getMaxHP(), monster.getAtk(), monster.getMazeLev());
+        helper.excuseSQLWithoutResult(sql);
     }
 
-    private void writeIntoFile(Monster monster) {
-        try {
-            File file = new File(MainGameActivity.APK_PATH + "/" + monster.getName());
-            File path = new File(MainGameActivity.APK_PATH);
-            if (!path.exists()) {
-                path.mkdirs();
-            }
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            FileOutputStream fos = new FileOutputStream(file, true);
-            StringBuilder sb = new StringBuilder();
-            sb.append(monster.getFormatName());
-            sb.append("--(").append(monster.isDefeat() ? "打败" : "相遇").append(")");
-            sb.append("--在第").append(monster.getMazeLev()).append("层");
-            sb.append("<br>生命值：").append(monster.getMaxHP());
-            sb.append("<br>攻击力：").append(monster.getAtk());
-            sb.append("<br>**************<br>");
-            fos.write(sb.toString().getBytes("UTF-8"));
-            fos.flush();
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    //从应用目录下读取index文件内容
     public Set<String> getMonsterNameKeys() {
-        Set<String> names = new HashSet<String>();
-        try {
-            FileInputStream inputStream = context.openFileInput("monster.index");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String name;
-            while ((name = reader.readLine()) != null) {
-                names.add(name);
-            }
-            reader.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        Set<String> keys = new HashSet<String>();
+        nameSet = new HashSet<String>();
+        DBHelper helper = context.getDbHelper();
+        String sql = "select name, isDefeat from monster_book";
+        Cursor cursor = helper.excuseSOL(sql);
+        while (!cursor.isAfterLast()) {
+            String key = cursor.getString(cursor.getColumnIndex("name")) + "_" + cursor.getString(cursor.getColumnIndex("isDefeat"));
+            keys.add(key);
+            nameSet.add(cursor.getString(cursor.getColumnIndex("name")));
+            cursor.moveToNext();
         }
-        return names;
+        nameKeys = keys;
+        return keys;
     }
 
     public static class MonsterList {
@@ -199,17 +153,19 @@ public class MonsterBook {
         public MonsterAdapter(TextView textView) {
             this.textView = textView;
             adapterData = new ArrayList<MonsterList>();
-            List<String> nameList = new ArrayList<String>(getMonsterNameKeys());
+            getMonsterNameKeys();
+            List<String> nameList = new ArrayList<String>(nameSet);
             for (int i = 0; i < nameList.size(); i += 3) {
                 MonsterList monsterList = new MonsterList();
                 for (int j = i; j < i + 3; j++) {
                     MonsterItem item = MonsterItem.EMPTY_MONSTER;
                     if (j < nameList.size()) {
                         String name = nameList.get(j);
-                        String[] name_key = name.split("_");
-                        if (name_key.length > 1) {
-                            item = new MonsterItem(name_key[0], Boolean.parseBoolean(name_key[1]));
+                        boolean isDefeat = false;
+                        if (nameKeys.contains(name + "_true")) {
+                            isDefeat = true;
                         }
+                        item = new MonsterItem(name, isDefeat, context.getDbHelper());
                     }
                     monsterList.addMonster(item);
                 }
@@ -262,26 +218,24 @@ public class MonsterBook {
         private Boolean defeat;
         private String desc;
         private String name;
+        private DBHelper helper;
 
         private void load() {
-            try {
-                File file = new File(MainGameActivity.APK_PATH + "/" + name);
-                if (!file.exists()) {
-                    return;
-                }
-                BufferedReader reader = new BufferedReader(new FileReader(file));
-                StringBuilder builder = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    builder.append(line).append("\n");
-                }
-                desc = builder.toString();
-                reader.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+            String sql = String.format("select * from monster_book where name = '%s'", name);
+            Cursor cursor = helper.excuseSOL(sql);
+            StringBuilder sb = new StringBuilder();
+            while (!cursor.isAfterLast()) {
+                sb.append(cursor.getString(cursor.getColumnIndex("format_name")));
+                sb.append("--(");
+                boolean isDefeat = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("isDefeat")));
+                sb.append(isDefeat ? "打败" : "相遇").append(")");
+                sb.append("--在第").append(cursor.getString(cursor.getColumnIndex(isDefeat ? "maze_lv1" : "maze_lv"))).append("层");
+                sb.append("<br>生命值：").append(cursor.getString(cursor.getColumnIndex(isDefeat ? "hp1" : "hp")));
+                sb.append("<br>攻击力：").append(cursor.getString(cursor.getColumnIndex(isDefeat ? "atk1" : "atk")));
+                sb.append("<br>**************<br>");
+                cursor.moveToNext();
             }
+            desc = sb.toString();
         }
 
         public boolean isDefeat() {
@@ -299,12 +253,13 @@ public class MonsterBook {
             return name;
         }
 
-        public MonsterItem(String name, boolean defeat) {
+        public MonsterItem(String name, boolean defeat, DBHelper helper) {
             this.name = name;
             this.defeat = defeat;
+            this.helper = helper;
         }
 
-        public final static MonsterItem EMPTY_MONSTER = new MonsterItem("", false) {
+        public final static MonsterItem EMPTY_MONSTER = new MonsterItem("", false, null) {
             public boolean isDefeat() {
                 return false;
             }

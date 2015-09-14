@@ -16,11 +16,7 @@ public class BaseSkill extends SkillLayout {
 
     public BaseSkill(Context context) {
         super(context);
-        ViewGroup.LayoutParams layoutParams = getLayoutParams();
-        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         LayoutInflater inflater = LayoutInflater.from(context);
-        setLayoutParams(layoutParams);
         View view = inflater.inflate(R.layout.skill_layout_base, (ViewGroup) this.findViewById(R.id.skill_dialog));
         this.addView(view);
     }

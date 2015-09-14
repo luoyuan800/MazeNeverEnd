@@ -52,8 +52,9 @@ import cn.gavin.R;
 import cn.gavin.Skill;
 import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
-import cn.gavin.monster.Monster;
+import cn.gavin.db.DBHelper;
 import cn.gavin.monster.MonsterBook;
+import cn.gavin.skill.SkillDialog;
 import cn.gavin.upload.Upload;
 
 public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener {
@@ -103,6 +104,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private Button lifeSkillButton;
     private Button hitSkillButton;
     private Button mulSkillButton;
+    private Button bookButton;
+    private Button skillsButton;
 
     private boolean pause;
     private boolean gameThreadRunning;
@@ -117,7 +120,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     //Data
     private AchievementAdapter adapter;
     private MonsterBook monsterBook;
-    private Button bookButton;
+    private DBHelper dbHelper;
+    private SkillDialog skillDialog;
 
 
     //Get Function
@@ -189,7 +193,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     heroN.addMaterial(100000);
                     heroN.addPoint(20);
                     alipay.addPayTime();
-                    if(alipay.getPayTime() == 50){
+                    if (alipay.getPayTime() == 50) {
                         Achievement.crapGame.enable();
                     }
                     Achievement.richer.enable(heroN);
@@ -277,6 +281,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         gameThreadRunning = true;
         gameThread = new GameThread();
         gameThread.start();
+        dbHelper = new DBHelper(this);
+        skillDialog = new SkillDialog(context);
+        skillDialog.init();
     }
 
     @Override
@@ -284,6 +291,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         super.onDestroy();
         save();
         gameThreadRunning = false;
+        dbHelper.close();
     }
 
     @Override
@@ -346,6 +354,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 });
         dialog.show();
     }
+
     /**
      * 弹出退出程序提示框
      */
@@ -590,6 +599,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         updateButton.setEnabled(false);
         bookButton = (Button) findViewById(R.id.book_button);
         bookButton.setOnClickListener(this);
+        skillsButton = (Button) findViewById(R.id.skill_button);
+        skillsButton.setOnClickListener(this);
         refresh();
     }
 
@@ -638,6 +649,14 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private long saveTime = 0;
+
+    public DBHelper getDbHelper() {
+        return dbHelper;
+    }
+
+    public void setDbHelper(DBHelper dbHelper) {
+        this.dbHelper = dbHelper;
+    }
 
     private class GameThread extends Thread {
 
@@ -769,6 +788,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.skill_button:
+                skillDialog.show();
+                break;
             case R.id.book_button:
                 monsterBook.showBook();
                 break;
