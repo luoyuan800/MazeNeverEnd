@@ -5,6 +5,7 @@ import java.util.Random;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.monster.Monster;
 import cn.gavin.monster.MonsterBook;
+import cn.gavin.skill.Skill;
 
 /**
  * Created by gluo on 8/26/2015.
@@ -79,25 +80,38 @@ public class Maze {
 
                 context.addMessage(heroName + "遇到了" + monster.getFormatName());
                 boolean atk = hero.getAgility() > monster.getHp() / 2 || random.nextBoolean();
-                while (monster.getHp() > 0 && hero.getHp() > 0) {
+                Skill skill;
+                boolean isJump = false;
+                while (!isJump && monster.getHp() > 0 && hero.getHp() > 0) {
                     if (context.isPause()) {
                         continue;
                     }
                     if (atk) {
-                        Skill skill = hero.useSkill();
-                        if (skill != null) {
-                            context.addMessages(skill.release(hero, monster));
-                        } else {
+                        skill = hero.useAttackSkill(monster);
+                        isJump = false;
+                        if(skill!=null){
+                            isJump = skill.release(monster);
+                        } else if(hero.getHp()< hero.getUpperHp()){
+                            skill = hero.useRestoreSkill();
+                            if(skill!=null){
+                                isJump = skill.release(monster);
+                            }
+                        } else{
                             monster.addHp(-(hero.getAttackValue()));
                             context.addMessage(heroName + "攻击了" + monster.getName() + "，造成了<font color=\"red\">" + hero.getAttackValue() + "</font>点伤害。");
                         }
                     } else {
-                        int harm = monster.getAtk() - hero.getDefenseValue();
-                        if (harm <= 0) {
-                            harm = random.nextInt(level + 1);
+                        skill = hero.useDefendSkill(monster);
+                        if(skill!=null){
+                            isJump = skill.release(monster);
+                        } else {
+                            int harm = monster.getAtk() - hero.getDefenseValue();
+                            if (harm <= 0) {
+                                harm = random.nextInt(level + 1);
+                            }
+                            hero.addHp(-harm);
+                            context.addMessage(monster.getName() + "攻击了" + heroName + "，造成了<font color=\"red\">" + harm + "</font>点伤害。");
                         }
-                        hero.addHp(-harm);
-                        context.addMessage(monster.getName() + "攻击了" + heroName + "，造成了<font color=\"red\">" + harm + "</font>点伤害。");
                     }
                     atk = !atk;
                     try {
@@ -106,6 +120,7 @@ public class Maze {
                         e.printStackTrace();
                     }
                 }
+                if(isJump) continue;
                 if (monster.getHp() <= 0) {
                     streaking++;
                     if (streaking >= 100) {

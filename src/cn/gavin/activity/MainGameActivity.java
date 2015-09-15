@@ -49,7 +49,7 @@ import cn.gavin.Armor;
 import cn.gavin.Hero;
 import cn.gavin.Maze;
 import cn.gavin.R;
-import cn.gavin.Skill;
+import cn.gavin.skill.Skill;
 import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
@@ -101,9 +101,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private Button achievementButton;
     private Button resetButton;
     private Button buyButton;
-    private Button lifeSkillButton;
-    private Button hitSkillButton;
-    private Button mulSkillButton;
+    private Button firstSkillButton;
+    private Button secondSkillButton;
+    private Button thirdSkillButton;
     private Button bookButton;
     private Button skillsButton;
 
@@ -122,6 +122,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private MonsterBook monsterBook;
     private DBHelper dbHelper;
     private SkillDialog skillDialog;
+    private Skill firstSkill;
+    private Skill secondSkill;
+    private Skill thirdSkill;
 
 
     //Get Function
@@ -586,12 +589,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         resetButton.setOnClickListener(this);
         buyButton = (Button) findViewById(R.id.buy_button);
         buyButton.setOnClickListener(this);
-        lifeSkillButton = (Button) findViewById(R.id.life_skill);
-        lifeSkillButton.setOnClickListener(this);
-        hitSkillButton = (Button) findViewById(R.id.hit_skill);
-        hitSkillButton.setOnClickListener(this);
-        mulSkillButton = (Button) findViewById(R.id.mul_skill);
-        mulSkillButton.setOnClickListener(this);
+        firstSkillButton = (Button) findViewById(R.id.first_skill);
+        firstSkillButton.setOnClickListener(this);
+        secondSkillButton = (Button) findViewById(R.id.secondary_skill);
+        secondSkillButton.setOnClickListener(this);
+        thirdSkillButton = (Button) findViewById(R.id.third_skill);
+        thirdSkillButton.setOnClickListener(this);
         uploadButton = (Button) findViewById(R.id.upload_button);
         updateButton = (Button) findViewById(R.id.update_button);
         uploadButton.setOnClickListener(this);
@@ -634,9 +637,27 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         }
         itembarContri.setText(heroN.getName() + "\n迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
         heroPic.setText(heroN.getSword() + "\n\n\n " + heroN.getArmor());
-        lifeSkillButton.setText(heroN.getSkill(Skill.治疗).getCount() + "");
-        hitSkillButton.setText(heroN.getSkill(Skill.重击).getCount() + "");
-        mulSkillButton.setText(heroN.getSkill(Skill.多重攻击).getCount() + "");
+        if(firstSkill!=null){
+            firstSkillButton.setText(firstSkill.getDisplayName());
+            firstSkillButton.setEnabled(true);
+        }else{
+            firstSkillButton.setText("");
+            firstSkillButton.setEnabled(false);
+        }
+        if(secondSkill!=null){
+            secondSkillButton.setText(secondSkill.getDisplayName());
+            secondSkillButton.setEnabled(true);
+        }else{
+            secondSkillButton.setText("");
+            secondSkillButton.setEnabled(false);
+        }
+        if(thirdSkill!=null){
+            thirdSkillButton.setText(thirdSkill.getDisplayName());
+            thirdSkillButton.setEnabled(true);
+        }else{
+            thirdSkillButton.setText("");
+            thirdSkillButton.setEnabled(false);
+        }
         if (!uploading) {
             if (lastUploadLev + 100 <= heroN.getMaxMazeLev()) {
                 uploadButton.setEnabled(true);
@@ -656,6 +677,18 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     public void setDbHelper(DBHelper dbHelper) {
         this.dbHelper = dbHelper;
+    }
+
+    public void setFirstSkill(Skill firstSkill) {
+        this.firstSkill = firstSkill;
+    }
+
+    public void setSecondSkill(Skill secondSkill) {
+        this.secondSkill = secondSkill;
+    }
+
+    public void setThirdSkill(Skill thirdSkill) {
+        this.thirdSkill = thirdSkill;
     }
 
     private class GameThread extends Thread {
@@ -789,7 +822,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
             case R.id.skill_button:
-                skillDialog.show();
+                skillDialog.show(heroN);
                 break;
             case R.id.book_button:
                 monsterBook.showBook();
@@ -800,26 +833,23 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             case R.id.upload_button:
                 showUpload();
                 break;
-            case R.id.life_skill:
-                Skill health = heroN.getSkill(Skill.治疗);
-                if (health != null) {
-                    health.addCount();
+            case R.id.first_skill:
+                if (firstSkill != null) {
+                    firstSkill.addCount();
                 }
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
                 break;
-            case R.id.hit_skill:
-                Skill hit = heroN.getSkill(Skill.重击);
-                if (hit != null) {
-                    hit.addCount();
+            case R.id.secondary_skill:
+                if (secondSkill != null) {
+                    secondSkill.addCount();
                 }
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
                 break;
-            case R.id.mul_skill:
-                Skill mul = heroN.getSkill(Skill.多重攻击);
-                if (mul != null) {
-                    mul.addCount();
+            case R.id.third_skill:
+                if (thirdSkill != null) {
+                    thirdSkill.addCount();
                 }
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
@@ -912,9 +942,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             sb.append(maze.getLev());
             sb.append("_").append(alipay.getPayTime());
             sb.append("_").append(heroN.getDeathCount());
-            sb.append("_").append(heroN.getExistSkill().get(0).getCount());
-            sb.append("_").append(heroN.getExistSkill().get(1).getCount());
-            sb.append("_").append(heroN.getExistSkill().get(2).getCount());
+            sb.append("_").append(heroN.getExistSkill().peek().getCount());
+            sb.append("_").append(heroN.getExistSkill().peek().getCount());
+            sb.append("_").append(heroN.getExistSkill().peek().getCount());
             sb.append("_").append(lastUploadLev);
             fos.write(sb.toString().getBytes("UTF-8"));
             fos.flush();
@@ -958,9 +988,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 heroN.setArmor(Armor.valueOf(atts[11]));
                 if (atts.length >= 24) {
                     heroN.setDeathCount(Integer.parseInt(atts[20]));
-                    heroN.getExistSkill().get(0).setCount(Integer.parseInt(atts[21]));
-                    heroN.getExistSkill().get(1).setCount(Integer.parseInt(atts[22]));
-                    heroN.getExistSkill().get(2).setCount(Integer.parseInt(atts[23]));
+//                    heroN.getExistSkill().get(0).setCount(Integer.parseInt(atts[21]));
+//                    heroN.getExistSkill().get(1).setCount(Integer.parseInt(atts[22]));
+//                    heroN.getExistSkill().get(2).setCount(Integer.parseInt(atts[23]));
                 }
                 if (atts.length >= 25) {
                     lastUploadLev = Integer.parseInt(atts[24]);

@@ -8,6 +8,6 @@ import cn.gavin.Hero;
 import cn.gavin.Maze;
 import cn.gavin.activity.MainGameActivity;
 
-public interface Expression {
+public interface EnableExpression {
     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context);
 }

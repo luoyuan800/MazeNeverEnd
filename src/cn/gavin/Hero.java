@@ -1,7 +1,15 @@
 package cn.gavin;
 
-import java.util.List;
+import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import cn.gavin.activity.MainGameActivity;
+import cn.gavin.monster.Monster;
+import cn.gavin.skill.type.AttackSkill;
+import cn.gavin.skill.type.DefendSkill;
+import cn.gavin.skill.type.RestoreSkill;
+import cn.gavin.skill.Skill;
 
 public class Hero {
     private static final String TAG = "Hero";
@@ -21,7 +29,7 @@ public class Hero {
     private int attackValue;
     private int defenseValue;
     public int level;
-    private List<Skill> existSkill; // 已有的技能
+    private Queue<Skill> existSkill; // 已有的技能
     private Sword sword;
     private Armor armor;
     private int swordLev;
@@ -35,6 +43,7 @@ public class Hero {
     private Random random;
     private int clickAward = 1;
     private int deathCount;
+    private int skillPoint;
 
     public int getDeathCount() {
         return deathCount;
@@ -106,7 +115,7 @@ public class Hero {
 
     public int getDefenseValue() {
         int defend = defenseValue + random.nextInt(armor.getBase()) + random.nextInt(armorLev * 2 + 1);
-        if (random.nextInt(100) + random.nextInt(agility + 1)/1000 > 96 + random.nextInt(strength +1)/1000) {
+        if (random.nextInt(100) + random.nextInt(agility + 1) / 1000 > 96 + random.nextInt(strength + 1) / 1000) {
             defend *= 3;
         }
 
@@ -117,8 +126,26 @@ public class Hero {
         this.defenseValue += defenseValue;
     }
 
-    public List<Skill> getExistSkill() {
+    public Queue<Skill> getExistSkill() {
         return existSkill;
+    }
+
+    public void addSkill(Skill skill) {
+        if (existSkill.size() >= 3) {
+            existSkill.poll();
+        }
+        existSkill.offer(skill);
+        switch (existSkill.size()){
+            case 1:
+                MainGameActivity.context.setFirstSkill(skill);
+                break;
+            case 2:
+                MainGameActivity.context.setSecondSkill(skill);
+                break;
+            case 3:
+                MainGameActivity.context.setThirdSkill(skill);
+                break;
+        }
     }
 
     private Hero(String name, int hp, int attackValue, int defenseValue, int level) {
@@ -129,7 +156,7 @@ public class Hero {
         this.defenseValue = defenseValue;
         this.level = level;
         this.upperHp = hp;
-        existSkill = cn.gavin.Skill.getAllSkills();
+        existSkill = new ConcurrentLinkedQueue<Skill>();
         sword = Sword.木剑;
         armor = Armor.破布;
     }
@@ -355,10 +382,32 @@ public class Hero {
         }
     }
 
-    public Skill useSkill() {
+    public Skill useAttackSkill(Monster monster) {
         for (Skill skill : existSkill) {
-            if (skill.use(this)) {
+            if (skill instanceof AttackSkill && skill.perform()) {
                 return skill;
+            }
+        }
+        return null;
+    }
+
+    public Skill useDefendSkill(Monster monster) {
+        for (Skill skill : existSkill) {
+            if (skill instanceof DefendSkill) {
+                if (skill.perform()) {
+                    return skill;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Skill useRestoreSkill() {
+        for (Skill skill : existSkill) {
+            if (skill instanceof RestoreSkill) {
+                if (skill.perform()) {
+                    return skill;
+                }
             }
         }
         return null;
@@ -444,12 +493,11 @@ public class Hero {
         return clickAward;
     }
 
-    public Skill getSkill(int id) {
-        for (Skill skill : existSkill) {
-            if (skill.getId() == id) {
-                return skill;
-            }
-        }
-        return null;
+    public int getSkillPoint() {
+        return skillPoint;
+    }
+
+    public void setSkillPoint(int skillPoint) {
+        this.skillPoint = skillPoint;
     }
 }
