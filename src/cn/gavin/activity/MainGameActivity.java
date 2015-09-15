@@ -701,6 +701,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         this.thirdSkill = thirdSkill;
     }
 
+    public Hero getHero() {
+        return heroN;
+    }
+
     private class GameThread extends Thread {
 
         @Override

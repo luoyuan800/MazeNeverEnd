@@ -27,7 +27,7 @@ public abstract class Skill {
     private UseExpression release;
 
     public boolean isEnable() {
-        return enableExpression.isEnable(hero, maze, null);
+        return enableExpression.isEnable(hero, maze, null, null);
     }
 
     public void setEnableExpression(EnableExpression exp) {
@@ -145,7 +145,7 @@ public abstract class Skill {
     }
 
     public boolean perform() {
-        return perform.isEnable(hero, maze, null);
+        return perform.isEnable(hero, maze, null, this);
     }
 
     public void setPerform(EnableExpression perform) {

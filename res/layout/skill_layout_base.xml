@@ -11,7 +11,7 @@
             android:layout_height="wrap_content"
             android:text="D"
             android:gravity="center"
-            android:id="@+id/button" android:layout_gravity="center"
+            android:id="@+id/base_skill_r_button" android:layout_gravity="center"
             android:typeface="serif"
             android:textStyle="bold|italic"
             android:textColor="@color/disable"/>

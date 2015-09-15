@@ -504,4 +504,8 @@ public class Hero {
     public void setSkillPoint(int skillPoint) {
         this.skillPoint = skillPoint;
     }
+
+    public Random getRandom() {
+        return random;
+    }
 }

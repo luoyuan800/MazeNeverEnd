@@ -13,6 +13,8 @@ import android.widget.ViewFlipper;
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.skill.system.BaseSkill;
+import cn.gavin.skill.system.LongSkill;
 import cn.gavin.skill.type.PropertySkill;
 
 import java.util.List;
@@ -52,7 +54,9 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.skill_dialog);
         viewFlipper = new ViewFlipper(context);
         BaseSkill baseSkill = new BaseSkill(context);
+        baseSkill.init(this);
         LongSkill longSkill = new LongSkill(context);
+        longSkill.init(this);
         viewFlipper.addView(baseSkill);
         viewFlipper.addView(longSkill);
         linearLayout.addView(viewFlipper);

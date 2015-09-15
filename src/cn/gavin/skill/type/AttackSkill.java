@@ -8,9 +8,18 @@ import cn.gavin.skill.Skill;
  */
 public class AttackSkill extends Skill {
 
+    private int baseHarm;
+    private int additionHarm;
     @Override
     protected void levelUp() {
 
     }
 
+    public int getBaseHarm() {
+        return baseHarm;
+    }
+
+    public int getAdditionHarm() {
+        return additionHarm;
+    }
 }
