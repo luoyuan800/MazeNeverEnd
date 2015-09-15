@@ -116,9 +116,9 @@
                                 />
 
                             <TextView
+                                android:id="@+id/first_skill_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/restore_desc"
                                 android:textSize="6sp" />
 
                             <Button
@@ -131,9 +131,9 @@
                                 android:gravity="center"/>
 
                             <TextView
+                                android:id="@+id/second_skill_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/hit_desc"
                                 android:textSize="6sp" />
 
                             <Button
@@ -146,9 +146,9 @@
                                 android:gravity="center"/>
 
                             <TextView
+                                android:id="@+id/third_skill_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/mul_desc"
                                 android:textSize="6sp" />
                         </LinearLayout>
 

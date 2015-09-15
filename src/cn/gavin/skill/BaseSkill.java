@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
 import cn.gavin.R;
 
 /**
@@ -14,14 +16,18 @@ public class BaseSkill extends SkillLayout {
         return "勇者";
     }
 
+    private View view;
+    private Context context;
+
     public BaseSkill(Context context) {
         super(context);
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.skill_layout_base, (ViewGroup) this.findViewById(R.id.skill_dialog));
         this.addView(view);
+        this.view = view;
+        this.context = context;
     }
 
-    private void init(Context context, View tView){
-
+    public void init(SkillDialog dialog) {
     }
 }

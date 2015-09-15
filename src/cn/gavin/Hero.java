@@ -6,10 +6,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.monster.Monster;
+import cn.gavin.skill.Skill;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.RestoreSkill;
-import cn.gavin.skill.Skill;
 
 public class Hero {
     private static final String TAG = "Hero";
@@ -135,7 +135,7 @@ public class Hero {
             existSkill.poll();
         }
         existSkill.offer(skill);
-        switch (existSkill.size()){
+        switch (existSkill.size()) {
             case 1:
                 MainGameActivity.context.setFirstSkill(skill);
                 break;
@@ -482,7 +482,11 @@ public class Hero {
     }
 
     public void setMaxMazeLev(int maxMazeLev) {
+        boolean notE = maxMazeLev != this.maxMazeLev;
         this.maxMazeLev = maxMazeLev;
+        if(notE && this.maxMazeLev % 101 == 0){
+            this.skillPoint += 2;
+        }
     }
 
     public void setClickAward(int clickAward) {

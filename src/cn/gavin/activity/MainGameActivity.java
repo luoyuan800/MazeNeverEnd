@@ -90,6 +90,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private TextView heroPointValue;
     private TextView mainContriCurMaterial;
     private TextView clickCount;
+    private TextView firstSkillName;
+    private TextView secondSkillName;
+    private TextView thirdSkillName;
     //按钮
     private Button addstr;
     private Button addpow;
@@ -125,6 +128,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private Skill firstSkill;
     private Skill secondSkill;
     private Skill thirdSkill;
+
 
 
     //Get Function
@@ -604,6 +608,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         bookButton.setOnClickListener(this);
         skillsButton = (Button) findViewById(R.id.skill_button);
         skillsButton.setOnClickListener(this);
+        firstSkillName = (TextView) findViewById(R.id.first_skill_name);
+        secondSkillName = (TextView) findViewById(R.id.second_skill_name);
+        thirdSkillName = (TextView) findViewById(R.id.third_skill_name);
         refresh();
     }
 
@@ -640,6 +647,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         if(firstSkill!=null){
             firstSkillButton.setText(firstSkill.getDisplayName());
             firstSkillButton.setEnabled(true);
+            firstSkillName.setText(firstSkill.getName());
         }else{
             firstSkillButton.setText("");
             firstSkillButton.setEnabled(false);
@@ -647,6 +655,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         if(secondSkill!=null){
             secondSkillButton.setText(secondSkill.getDisplayName());
             secondSkillButton.setEnabled(true);
+            secondSkillName.setText(secondSkill.getName());
         }else{
             secondSkillButton.setText("");
             secondSkillButton.setEnabled(false);
@@ -654,6 +663,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         if(thirdSkill!=null){
             thirdSkillButton.setText(thirdSkill.getDisplayName());
             thirdSkillButton.setEnabled(true);
+            thirdSkillName.setText(thirdSkill.getName());
         }else{
             thirdSkillButton.setText("");
             thirdSkillButton.setEnabled(false);
