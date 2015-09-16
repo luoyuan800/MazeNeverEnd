@@ -1,6 +1,5 @@
 package cn.gavin.skill.type;
 
-import cn.gavin.monster.Monster;
 import cn.gavin.skill.Skill;
 
 /**
@@ -11,6 +10,16 @@ public class RestoreSkill extends Skill {
     @Override
     protected void levelUp() {
 
+    }
+
+    @Override
+    public void save() {
+
+    }
+
+    @Override
+    public boolean load() {
+        return false;
     }
 
 }

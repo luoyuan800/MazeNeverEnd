@@ -4,7 +4,6 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import cn.gavin.activity.MainGameActivity;
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.type.AttackSkill;
@@ -43,7 +42,10 @@ public class Hero {
     private Random random;
     private int clickAward = 1;
     private int deathCount;
-    private int skillPoint;
+    private int skillPoint = 10;
+    private Skill firstSkill;
+    private Skill secondSkill;
+    private Skill thirdSkill;
 
     public int getDeathCount() {
         return deathCount;
@@ -131,20 +133,13 @@ public class Hero {
     }
 
     public void addSkill(Skill skill) {
-        if (existSkill.size() >= 3) {
-            existSkill.poll();
-        }
-        existSkill.offer(skill);
-        switch (existSkill.size()) {
-            case 1:
-                MainGameActivity.context.setFirstSkill(skill);
-                break;
-            case 2:
-                MainGameActivity.context.setSecondSkill(skill);
-                break;
-            case 3:
-                MainGameActivity.context.setThirdSkill(skill);
-                break;
+        if (firstSkill == null) firstSkill = skill;
+        else if (secondSkill == null) secondSkill = skill;
+        else if (thirdSkill == null) thirdSkill = skill;
+        else {
+            firstSkill = secondSkill;
+            secondSkill = thirdSkill;
+            thirdSkill = skill;
         }
     }
 
@@ -484,7 +479,7 @@ public class Hero {
     public void setMaxMazeLev(int maxMazeLev) {
         boolean notE = maxMazeLev != this.maxMazeLev;
         this.maxMazeLev = maxMazeLev;
-        if(notE && this.maxMazeLev % 101 == 0){
+        if (notE && this.maxMazeLev % 101 == 0) {
             this.skillPoint += 2;
         }
     }
@@ -507,5 +502,42 @@ public class Hero {
 
     public Random getRandom() {
         return random;
+    }
+
+    public void removeSkill(Skill skill) {
+        if(firstSkill == skill){
+            firstSkill = secondSkill;
+            secondSkill= thirdSkill;
+            thirdSkill = null;
+        }else if(secondSkill == skill){
+            secondSkill = thirdSkill;
+            thirdSkill = null;
+        }else if(thirdSkill == skill){
+            thirdSkill = null;
+        }
+    }
+
+    public Skill getFirstSkill() {
+        return firstSkill;
+    }
+
+    public void setFirstSkill(Skill firstSkill) {
+        this.firstSkill = firstSkill;
+    }
+
+    public Skill getSecondSkill() {
+        return secondSkill;
+    }
+
+    public void setSecondSkill(Skill secondSkill) {
+        this.secondSkill = secondSkill;
+    }
+
+    public Skill getThirdSkill() {
+        return thirdSkill;
+    }
+
+    public void setThirdSkill(Skill thirdSkill) {
+        this.thirdSkill = thirdSkill;
     }
 }

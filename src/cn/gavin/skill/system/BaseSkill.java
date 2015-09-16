@@ -4,8 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.Button;
+
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
@@ -35,10 +35,8 @@ public class BaseSkill extends SkillLayout {
     }
 
     public void init(SkillDialog dialog) {
-        Skill r = SkillFactory.getSkill("勇者之击", hero);
-        r.setSkillDialog(dialog);
+        Skill r = SkillFactory.getSkill("勇者之击", hero, dialog);
         Button rB = (Button) view.findViewById(R.id.base_skill_r_button);
         r.setSkillButton(rB);
-        rB.setOnClickListener(dialog.getClickListener(r.description()));
     }
 }

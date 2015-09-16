@@ -10,5 +10,5 @@ import cn.gavin.monster.Monster;
  * Created by gluo on 9/15/2015.
  */
 public interface UseExpression {
-    public boolean release(Hero hero, Monster monster, MainGameActivity context);
+    public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill);
 }

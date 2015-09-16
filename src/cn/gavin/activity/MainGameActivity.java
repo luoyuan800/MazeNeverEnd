@@ -30,12 +30,8 @@ import android.widget.TextView;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -49,11 +45,12 @@ import cn.gavin.Armor;
 import cn.gavin.Hero;
 import cn.gavin.Maze;
 import cn.gavin.R;
-import cn.gavin.skill.Skill;
 import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
 import cn.gavin.monster.MonsterBook;
+import cn.gavin.save.SaveHelper;
+import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.upload.Upload;
 
@@ -128,7 +125,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private Skill firstSkill;
     private Skill secondSkill;
     private Skill thirdSkill;
-
+    private SaveHelper saveHelper;
 
 
     //Get Function
@@ -288,9 +285,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         gameThreadRunning = true;
         gameThread = new GameThread();
         gameThread.start();
-        dbHelper = new DBHelper(this);
-        skillDialog = new SkillDialog(context);
-        skillDialog.init();
     }
 
     @Override
@@ -548,13 +542,20 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private void initGameData() {
+        dbHelper = new DBHelper(this);
         monsterBook = new MonsterBook(this);
+        saveHelper = new SaveHelper(this);
+
         // 英雄
         if (!load()) {
             heroN = new cn.gavin.Hero("勇者");
             maze = new Maze(heroN, monsterBook);
             alipay = new Alipay(this, 0);
         }
+        if (skillDialog == null) {
+            skillDialog = new SkillDialog(context);
+        }
+        saveHelper.loadSkill(heroN, skillDialog);
         // 左侧战斗信息
         mainInfoSv = (ScrollView) findViewById(R.id.main_info_sv);
         mainInfoPlatform = (LinearLayout) findViewById(R.id.main_info_ll);
@@ -644,27 +645,27 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         }
         itembarContri.setText(heroN.getName() + "\n迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
         heroPic.setText(heroN.getSword() + "\n\n\n " + heroN.getArmor());
-        if(firstSkill!=null){
-            firstSkillButton.setText(firstSkill.getDisplayName());
+        if (heroN.getFirstSkill() != null) {
+            firstSkillButton.setText(heroN.getFirstSkill().getDisplayName());
             firstSkillButton.setEnabled(true);
-            firstSkillName.setText(firstSkill.getName());
-        }else{
+            firstSkillName.setText(heroN.getFirstSkill().getName());
+        } else {
             firstSkillButton.setText("");
             firstSkillButton.setEnabled(false);
         }
-        if(secondSkill!=null){
-            secondSkillButton.setText(secondSkill.getDisplayName());
+        if (heroN.getSecondSkill() != null) {
+            secondSkillButton.setText(heroN.getSecondSkill().getDisplayName());
             secondSkillButton.setEnabled(true);
-            secondSkillName.setText(secondSkill.getName());
-        }else{
+            secondSkillName.setText(heroN.getSecondSkill().getName());
+        } else {
             secondSkillButton.setText("");
             secondSkillButton.setEnabled(false);
         }
-        if(thirdSkill!=null){
-            thirdSkillButton.setText(thirdSkill.getDisplayName());
+        if (heroN.getThirdSkill() != null) {
+            thirdSkillButton.setText(heroN.getThirdSkill().getDisplayName());
             thirdSkillButton.setEnabled(true);
-            thirdSkillName.setText(thirdSkill.getName());
-        }else{
+            thirdSkillName.setText(heroN.getThirdSkill().getName());
+        } else {
             thirdSkillButton.setText("");
             thirdSkillButton.setEnabled(false);
         }
@@ -703,6 +704,38 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     public Hero getHero() {
         return heroN;
+    }
+
+    public Maze getMaze() {
+        return maze;
+    }
+
+    public int getLastUploadLev() {
+        return lastUploadLev;
+    }
+
+    public Alipay getAlipay() {
+        return alipay;
+    }
+
+    public void setAlipay(Alipay alipay) {
+        this.alipay = alipay;
+    }
+
+    public void setLastUploadLev(int lastUploadLev) {
+        this.lastUploadLev = lastUploadLev;
+    }
+
+    public MonsterBook getMonsterBook() {
+        return monsterBook;
+    }
+
+    public void setHeroN(Hero heroN) {
+        this.heroN = heroN;
+    }
+
+    public void setMaze(Maze maze) {
+        this.maze = maze;
     }
 
     private class GameThread extends Thread {
@@ -836,6 +869,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
             case R.id.skill_button:
+                if(!skillDialog.isInit()){
+                    skillDialog.init();
+                }
                 skillDialog.show(heroN);
                 break;
             case R.id.book_button:
@@ -848,22 +884,22 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 showUpload();
                 break;
             case R.id.first_skill:
-                if (firstSkill != null) {
-                    firstSkill.addCount();
+                if (heroN.getFirstSkill() != null) {
+                    heroN.getFirstSkill().addCount();
                 }
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
                 break;
             case R.id.secondary_skill:
-                if (secondSkill != null) {
-                    secondSkill.addCount();
+                if (heroN.getSecondSkill() != null) {
+                    heroN.getSecondSkill().addCount();
                 }
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
                 break;
             case R.id.third_skill:
-                if (thirdSkill != null) {
-                    thirdSkill.addCount();
+                if (heroN.getThirdSkill() != null) {
+                    heroN.getThirdSkill().addCount();
                 }
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
@@ -934,102 +970,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private void save() {
-        try {
-            FileOutputStream fos = this.openFileOutput("yzcmg.ave", Activity.MODE_PRIVATE);
-            StringBuffer sb = new StringBuffer();
-            sb.append(heroN.getName()).append("_").append(heroN.getHp()).append("_").append(heroN.getUpperHp()).
-                    append("_").append(heroN.getBaseAttackValue()).append("_").append(heroN.getBaseDefense()).append("_").
-                    append(heroN.getClick()).append("_").append(heroN.getPoint()).append("_").append(heroN.getMaterial())
-                    .append("_").append(heroN.getSwordLev()).append("_").append(heroN.getArmorLev()).append("_").
-                    append(heroN.getSword()).append("_").append(heroN.getArmor()).append("_").append(heroN.getMaxMazeLev())
-                    .append("_").append(heroN.getStrength()).append("_").append(heroN.getPower()).append("_").
-                    append(heroN.getAgility()).append("_").append(heroN.getClickAward());
-            sb.append("_");
-            for (Achievement achievement : Achievement.values()) {
-                if (achievement.isEnable()) {
-                    sb.append(1);
-                } else {
-                    sb.append(0);
-                }
-            }
-            sb.append("_");
-            sb.append(maze.getLev());
-            sb.append("_").append(alipay.getPayTime());
-            sb.append("_").append(heroN.getDeathCount());
-            sb.append("_").append(heroN.getExistSkill().peek().getCount());
-            sb.append("_").append(heroN.getExistSkill().peek().getCount());
-            sb.append("_").append(heroN.getExistSkill().peek().getCount());
-            sb.append("_").append(lastUploadLev);
-            fos.write(sb.toString().getBytes("UTF-8"));
-            fos.flush();
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        saveHelper.save();
     }
 
     private boolean load() {
-        try {
-            FileInputStream fis = openFileInput("yzcmg.ave");
-            byte[] b = new byte[1];
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            while (fis.read(b) != -1) {
-                baos.write(b, 0, b.length);
-            }
-            baos.close();
-            fis.close();
-            String save = baos.toString("UTF-8");
-            String[] atts = save.split("_");
-            if (atts.length >= 20) {
-                heroN = new Hero(atts[0]);
-                heroN.setHp(Integer.parseInt(atts[1]));
-                heroN.setUpperHp(Integer.parseInt(atts[2]));
-                heroN.setAttackValue(Integer.parseInt(atts[3]));
-                heroN.setDefenseValue(Integer.parseInt(atts[4]));
-                heroN.setClick(Integer.parseInt(atts[5]));
-                heroN.setPoint(Integer.parseInt(atts[6]));
-                heroN.setMaterial(Integer.parseInt(atts[7]));
-                heroN.setSwordLev(Integer.parseInt(atts[8]));
-                heroN.setArmorLev(Integer.parseInt(atts[9]));
-                heroN.setMaxMazeLev(Integer.parseInt(atts[12]));
-                heroN.setStrength(Integer.parseInt(atts[13]));
-                heroN.setPower(Integer.parseInt(atts[14]));
-                heroN.setAgility(Integer.parseInt(atts[15]));
-                heroN.setClickAward(Integer.parseInt(atts[16]));
-                heroN.setSword(Sword.valueOf(atts[10]));
-                heroN.setArmor(Armor.valueOf(atts[11]));
-                if (atts.length >= 24) {
-                    heroN.setDeathCount(Integer.parseInt(atts[20]));
-//                    heroN.getExistSkill().get(0).setCount(Integer.parseInt(atts[21]));
-//                    heroN.getExistSkill().get(1).setCount(Integer.parseInt(atts[22]));
-//                    heroN.getExistSkill().get(2).setCount(Integer.parseInt(atts[23]));
-                }
-                if (atts.length >= 25) {
-                    lastUploadLev = Integer.parseInt(atts[24]);
-                }
-                maze = new Maze(heroN, monsterBook);
-                maze.setLevel(Integer.parseInt(atts[18]));
-                if (maze.getLev() > heroN.getMaxMazeLev()) {
-                    maze.setLevel(heroN.getMaxMazeLev());
-                }
-                for (int i = 0; i < atts[17].length() && i < Achievement.values().length; i++) {
-                    int enable = Integer.parseInt(atts[17].charAt(i) + "");
-                    if (enable == 1) {
-                        Achievement.values()[i].enable();
-                    }
-                }
-                alipay = new Alipay(this, Integer.parseInt(atts[19]));
-                Achievement.linger.enable(heroN);
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        return saveHelper.loadHero();
     }
 
     public static class AchievementList {

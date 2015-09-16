@@ -1,41 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/skill_dialog"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_gravity="center" android:background="@android:color/background_light">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/skill_dialog"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@android:color/background_light"
+    android:orientation="vertical">
+
     <LinearLayout
-            android:id="@+id/next_skill_system"
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
+        android:id="@+id/next_skill_system"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/prev_skill_system_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            >
-        <Button android:id="@+id/prev_skill_system_button"
-                android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_gravity="start"
-                android:text="&lt;" android:alpha="0.3" android:textColor="#0dc2fb"/>
+            android:layout_gravity="start"
+            android:alpha="0.5"
+            android:enabled="false"
+            android:text="&lt;"
+            android:textColor="#0dc2fb" />
+
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/skill_system_name" android:layout_gravity="center_horizontal"
-                android:layout_weight="1" android:gravity="center" android:textColor="@color/red"/>
-        <Button android:id="@+id/next_skill_system_button"
-                android:layout_height="fill_parent" android:layout_width="wrap_content"
-                android:text="&gt;" android:textColor="#0dc2fb" android:alpha="0.3" android:layout_gravity="right"/>
+            android:id="@+id/skill_system_name"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/red" />
+
+        <Button
+            android:id="@+id/next_skill_system_button"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="right"
+            android:alpha="0.5"
+            android:enabled="false"
+            android:text="&gt;"
+            android:textColor="#0dc2fb" />
     </LinearLayout>
+
     <TextView
-            android:id="@+id/skill_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="技能描述"/>
+        android:id="@+id/skill_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="技能描述" />
+
     <TextView
-            android:id="@+id/skill_point"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="技能点数"/>
+        android:id="@+id/skill_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="技能点数" />
 
 </LinearLayout>

@@ -4,11 +4,19 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
-import android.view.*;
+import android.text.Html;
+import android.view.GestureDetector;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
+
+import java.util.List;
 
 import cn.gavin.Hero;
 import cn.gavin.R;
@@ -16,8 +24,6 @@ import cn.gavin.activity.MainGameActivity;
 import cn.gavin.skill.system.BaseSkill;
 import cn.gavin.skill.system.LongSkill;
 import cn.gavin.skill.type.PropertySkill;
-
-import java.util.List;
 
 /**
  * Created by luoyuan on 9/12/15.
@@ -31,6 +37,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
     private ViewFlipper viewFlipper;
     private GestureDetector detector; //手势检测
     private TextView sillNameText;
+    private boolean isInit;
 
     public SkillDialog(MainGameActivity context) {
         this.context = context;
@@ -85,27 +92,29 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
             @Override
             public void onClick(View view) {
                 viewFlipper.showNext();
-               sillNameText.setText(getPrevSystemName());
+                sillNameText.setText(getPrevSystemName());
             }
         });
+        isInit = true;
     }
 
-    int index =0;
+    int index = 0;
     String[] systemNames = {"勇者技能", "龙裔技能", "魔王技能"};
 
     private String getNextSystemName() {
         if (index >= systemNames.length - 1) {
             index = 0;
-        }else{
-            index ++;
+        } else {
+            index++;
         }
         return systemNames[index];
     }
+
     private String getPrevSystemName() {
         if (index <= 0) {
             index = systemNames.length - 1;
-        }else{
-            index --;
+        } else {
+            index--;
         }
         return systemNames[index];
     }
@@ -118,11 +127,11 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         dialog.show();
     }
 
-    public View.OnClickListener getClickListener(final String desc) {
+    public View.OnClickListener getClickListener(final Skill skill) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                skillDesc.setText(desc);
+                skillDesc.setText(Html.fromHtml(skill.toString()));
             }
         };
     }
@@ -134,14 +143,17 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
                 if (skill.isEnable()) {
                     final AlertDialog dialog = new AlertDialog.Builder(context).create();
                     WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-                    layoutParams.alpha = 0.3f;
                     dialog.getWindow().setAttributes(layoutParams);
+                    TextView tv = new TextView(context);
+                    tv.setText(Html.fromHtml(skill.description()));
+                    dialog.setView(tv);
                     if (!(skill instanceof PropertySkill) && skill.isActive() && !skill.isOnUsed()) {
                         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "装备", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 skill.setOnUsed(true);
                                 dialogInterface.dismiss();
+                                handler.sendEmptyMessage(0);
                             }
                         });
                     } else if (!(skill instanceof PropertySkill) && skill.isActive()) {
@@ -150,14 +162,16 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 skill.setOnUsed(false);
                                 dialogInterface.dismiss();
+                                handler.sendEmptyMessage(0);
                             }
                         });
-                    } else if(!skill.isActive()){
+                    } else if (!skill.isActive()) {
                         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "激活", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 skill.setActive(true);
                                 dialogInterface.dismiss();
+                                handler.sendEmptyMessage(0);
                             }
                         });
                     }
@@ -182,6 +196,11 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
                     break;
                 case 0:
                     SkillFactory.refreshSkillStatus();
+                    skillDesc.setText("");
+                    Message msg = new Message();
+                    msg.arg1 = context.getHero().getSkillPoint();
+                    msg.what = 1;
+                    this.sendMessage(msg);
                     break;
             }
             super.handleMessage(message);
@@ -202,5 +221,9 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
             return true;
         }
         return false;
+    }
+
+    public boolean isInit() {
+        return isInit;
     }
 }

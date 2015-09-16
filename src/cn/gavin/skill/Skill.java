@@ -12,9 +12,9 @@ import cn.gavin.monster.Monster;
  * luoyuan on 9/12/15.
  */
 public abstract class Skill {
-    private long count;
+    protected long count;
     private String name;
-    private boolean active;
+    protected boolean active;
     private boolean onUsed;
     private Button skillButton;
     private Hero hero;
@@ -25,6 +25,13 @@ public abstract class Skill {
     private Maze maze;
     private EnableExpression perform;
     private UseExpression release;
+
+    public Skill(){
+
+    }
+    public Skill(String name){
+        load();
+    }
 
     public boolean isEnable() {
         return enableExpression.isEnable(hero, maze, null, null);
@@ -41,6 +48,8 @@ public abstract class Skill {
     public void setOnUsed(boolean onUsed) {
         if (!this.onUsed && onUsed) {
             hero.addSkill(this);
+        }else if(this.onUsed && !onUsed){
+            hero.removeSkill(this);
         }
         this.onUsed = onUsed;
     }
@@ -81,7 +90,7 @@ public abstract class Skill {
     }
 
     public String toString() {
-        return String.format("<font color=\"red\">%s</font>使用/点击次数:%s<br>%s<br>长按%s", name, count, description(),
+        return String.format("<font color=\"red\">%s</font>(使用/点击次数:%s)<br>%s<br>长按%s", name, count, description(),
                 !isActive() ? "激活" : isOnUsed() ? "卸下" : "装备");
     }
 
@@ -91,18 +100,19 @@ public abstract class Skill {
     }
 
     public void refresh() {
-        skillButton.setOnClickListener(skillDialog.getClickListener(description()));
-        skillButton.setOnLongClickListener(skillDialog.getLongClickListener(this));
-        skillButton.setText(count + "");
-        if (!isEnable()) {
-            skillButton.setTextColor(skillButton.getResources().getColor(R.color.disable));
-        } else {
-            if (!active) {
-                skillButton.setTextColor(skillButton.getResources().getColor(R.color.un_active));
-            } else if (!onUsed) {
-                skillButton.setTextColor(skillButton.getResources().getColor(R.color.active));
+        if(skillButton!=null) {
+            skillButton.setOnClickListener(skillDialog.getClickListener(this));
+            skillButton.setOnLongClickListener(skillDialog.getLongClickListener(this));
+            if (!isEnable()) {
+                skillButton.setTextColor(skillButton.getResources().getColor(R.color.disable));
             } else {
-                skillButton.setTextColor(skillButton.getResources().getColor(R.color.onUse));
+                if (!active) {
+                    skillButton.setTextColor(skillButton.getResources().getColor(R.color.un_active));
+                } else if (!onUsed) {
+                    skillButton.setTextColor(skillButton.getResources().getColor(R.color.active));
+                } else {
+                    skillButton.setTextColor(skillButton.getResources().getColor(R.color.onUse));
+                }
             }
         }
     }
@@ -176,10 +186,16 @@ public abstract class Skill {
      * @return
      */
     public boolean release(Monster monster) {
-        return release.release(hero, monster, MainGameActivity.context);
+        return release.release(hero, monster, MainGameActivity.context, this);
     }
 
     public void setRelease(UseExpression release) {
         this.release = release;
     }
+
+    public abstract void save();
+
+    public abstract boolean load();
+
+
 }

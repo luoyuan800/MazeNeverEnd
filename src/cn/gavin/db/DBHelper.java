@@ -5,9 +5,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import cn.gavin.activity.MainGameActivity;
 
 import java.io.File;
+
+import cn.gavin.activity.MainGameActivity;
 
 /**
  * Created by gluo on 9/14/2015.
@@ -15,7 +16,7 @@ import java.io.File;
 public class DBHelper extends SQLiteOpenHelper {
     private static String DB_PATH = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze/data/";
     private static String DB_NAME = "mazeNeverEnd";
-    private static int DB_VERSION = 1;
+    private static int DB_VERSION = 5;
 
     private MainGameActivity context;
     private SQLiteDatabase database;
@@ -74,24 +75,22 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private SQLiteDatabase openOrCreateInnerDB() {
         database = context.openOrCreateDatabase("monster_book", Context.MODE_PRIVATE, null);
+        if (database.getVersion() == 0) {
+            onCreate(database);
+        }
+        if(database.getVersion() < DB_VERSION){
+            onUpgrade(database, database.getVersion(), DB_VERSION);
+        }
+        database.setVersion(DB_VERSION);
         return database;
     }
 
     private SQLiteDatabase getDB() {
         SQLiteDatabase db = database;
-        if (database == null) {
+        if (db == null || !db.isOpen()) {
             try {
                 db = getWritableDatabase();
             } catch (Exception e) {
-                if (database == null || !database.isOpen()) {
-                    db = openOrCreateInnerDB();
-                    onCreate(db);
-                } else {
-                    return database;
-                }
-            }
-        }else{
-            if(!db.isOpen()){
                 db = openOrCreateInnerDB();
             }
         }
@@ -100,22 +99,48 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTable = "CREATE TABLE monster_book(" +
-                "name TEXT NOT NULL," +
-                "format_name TEXT," +
-                "isDefeat CHAR(50) NOT NULL," +
-                "hp TEXT," +
-                "atk TEXT," +
-                "maze_lv INTEGER," +
-                "hp1 TEXT," +
-                "atk1 TEXT," +
-                "maze_lv1 INTEGER" +
-                ")";
-        db.execSQL(createTable);
+        try {
+            String createTable = "CREATE TABLE monster_book(" +
+                    "name TEXT NOT NULL," +
+                    "format_name TEXT," +
+                    "isDefeat CHAR(50) NOT NULL," +
+                    "hp TEXT," +
+                    "atk TEXT," +
+                    "maze_lv INTEGER," +
+                    "hp1 TEXT," +
+                    "atk1 TEXT," +
+                    "maze_lv1 INTEGER" +
+                    ")";
+
+            db.execSQL(createTable);
+            createTable = "CREATE TABLE skill(" +
+                    "name TEXT NOT NULL," +
+                    "is_active CHAR(50)," +
+                    "is_on_use CHAR(5)," +
+                    "probability TEXT," +
+                    "count TEXT," +
+                    "base_harm TEXT," +
+                    "addition_harm TEXT" +
+                    ")";
+            db.execSQL(createTable);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if (oldVersion < newVersion) {
+            String createTable = "CREATE TABLE skill(" +
+                    "name TEXT NOT NULL," +
+                    "is_active CHAR(50)," +
+                    "is_on_use CHAR(5)," +
+                    "probability TEXT," +
+                    "count TEXT," +
+                    "base_harm TEXT," +
+                    "addition_harm TEXT" +
+                    ")";
+            db.execSQL(createTable);
+        }
     }
 }
