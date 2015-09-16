@@ -25,6 +25,7 @@ public abstract class Skill {
     private Maze maze;
     private EnableExpression perform;
     private UseExpression release;
+    private EnableExpression levelUp;
 
     public Skill(){
 
@@ -176,7 +177,9 @@ public abstract class Skill {
         }
     }
 
-    protected abstract void levelUp();
+    protected void levelUp(){
+        levelUp.isEnable(hero,maze,MainGameActivity.context, this);
+    }
 
     /**
      * True, 跳过攻击判定
@@ -198,4 +201,11 @@ public abstract class Skill {
     public abstract boolean load();
 
 
+    public EnableExpression getLevelUp() {
+        return levelUp;
+    }
+
+    public void setLevelUp(EnableExpression levelUp) {
+        this.levelUp = levelUp;
+    }
 }

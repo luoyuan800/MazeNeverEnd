@@ -29,6 +29,22 @@ public class Monster {
     private int maxHP;
     private String formatName;
 
+    public static int getIndex(String name){
+        int index = -1;
+        while(index == -1){
+            for(int i=0; i< lastNames.length;i++){
+                if(name.matches(".*" + lastNames[i])){
+                    index = i;
+                    return i;
+                }
+                if(i == lastNames.length - 1){
+                    return -1;
+                }
+            }
+        }
+        return index;
+    }
+
     public static Monster getBoss(Maze maze, Hero hero) {
         Random random = new Random();
         int hp = hero.getDefenseValue() * (random.nextInt(maze.getLev() + 1) + 5) + random.nextInt(hero.getUpperHp() + 1) + maze.getLev();

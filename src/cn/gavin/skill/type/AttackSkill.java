@@ -15,11 +15,6 @@ public class AttackSkill extends Skill {
     private int additionHarm;
 
     @Override
-    protected void levelUp() {
-
-    }
-
-    @Override
     public void save() {
         MainGameActivity context = MainGameActivity.context;
         DBHelper helper = context.getDbHelper();
@@ -63,4 +58,11 @@ public class AttackSkill extends Skill {
         return additionHarm;
     }
 
+    public void setBaseHarm(int baseHarm) {
+        this.baseHarm = baseHarm;
+    }
+
+    public void setAdditionHarm(int additionHarm) {
+        this.additionHarm = additionHarm;
+    }
 }

@@ -32,7 +32,7 @@
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button2" android:layout_gravity="center|top" android:textColor="@color/un_active"/>
+                android:id="@+id/base_skill_s_button" android:layout_gravity="center|top" android:textColor="@color/un_active"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button3" android:layout_gravity="center|top"
+                android:id="@+id/skill_base_t_button" android:layout_gravity="center|top"
                 android:textColor="@color/active"/>
     </LinearLayout>
     <LinearLayout

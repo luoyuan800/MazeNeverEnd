@@ -15,10 +15,8 @@ import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * gluo on 9/8/2015.
@@ -76,7 +74,20 @@ public class MonsterBook {
 
     public Set<String> getMonsterNameKeys() {
         Set<String> keys = new HashSet<String>();
-        nameSet = new HashSet<String>();
+        nameSet = new ConcurrentSkipListSet<String>(new Comparator<String>() {
+            @Override
+            public int compare(String s, String s2) {
+                int index = Monster.getIndex(s);
+                int index1 = Monster.getIndex(s2);
+                if (index > index1) {
+                    return 1;
+                }
+                if (index < index1) {
+                    return -1;
+                }
+                return 0;
+            }
+        });
         DBHelper helper = context.getDbHelper();
         String sql = "select name, isDefeat from monster_book";
         Cursor cursor = helper.excuseSOL(sql);

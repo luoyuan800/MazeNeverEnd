@@ -27,21 +27,21 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="E"
+                android:text="闪"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button2" android:layout_gravity="center|top" android:textColor="@color/un_active"/>
+                android:id="@+id/base_skill_s_button" android:layout_gravity="center|top" android:textColor="@color/un_active"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="A"
+                android:text="铁"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button3" android:layout_gravity="center|top"
+                android:id="@+id/skill_base_t_button" android:layout_gravity="center|top"
                 android:textColor="@color/active"/>
     </LinearLayout>
     <LinearLayout
@@ -66,7 +66,7 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="U"
+                android:text="反"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
@@ -75,16 +75,16 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="B"
+                android:text="巨"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button5" android:layout_gravity="center|top"/>
+                android:id="@+id/button5" android:layout_gravity="center|top" android:singleLine="false"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="C"
+                android:text="定"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
@@ -98,7 +98,7 @@
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button"
+            android:text="超"
             android:id="@+id/button7" android:layout_gravity="center"
             android:typeface="serif"
             android:textStyle="bold|italic"
@@ -116,7 +116,7 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="瞬"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
@@ -125,7 +125,7 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="斩"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
@@ -134,7 +134,7 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="裂"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
@@ -168,7 +168,7 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="传"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
@@ -177,7 +177,7 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="错"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
@@ -186,7 +186,7 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="原"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
@@ -220,7 +220,7 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="宝"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
@@ -229,7 +229,7 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="御"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
@@ -238,7 +238,7 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="重"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
