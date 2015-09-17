@@ -16,7 +16,7 @@ import cn.gavin.utils.StringUtils;
 public class Upload {
     private static String UPLOAD_URL = "http://mazeneverend.sinaapp.com";
 
-    public boolean upload(Hero hero, int pay) {
+    public boolean upload(Hero hero, long pay) {
         try {
             URL url = new URL(UPLOAD_URL + buildParas(hero, pay));
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -38,7 +38,7 @@ public class Upload {
         return false;
     }
 
-    private String buildParas(Hero hero, int pay) {
+    private String buildParas(Hero hero, long pay) {
         String name = StringUtils.toHexString(hero.getName());
         StringBuilder builder = new StringBuilder();
         builder.append("?");

@@ -66,7 +66,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private Button uploadButton;
     private Button updateButton;
     private StringBuilder versionUpdateInfo;
-    private int lastUploadLev = 0;
+    private long lastUploadLev = 0;
 
     // 战斗信息
     private ScrollView mainInfoSv;
@@ -542,16 +542,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private void initGameData() {
-        dbHelper = new DBHelper(this);
-        monsterBook = new MonsterBook(this);
+        dbHelper = DBHelper.getDbHelper();
+        monsterBook = MonsterBook.getMonsterBook();
         saveHelper = new SaveHelper(this);
 
         // 英雄
-        if (!load()) {
-            heroN = new cn.gavin.Hero("勇者");
-            maze = new Maze(heroN, monsterBook);
-            alipay = new Alipay(this, 0);
-        }
+        load();
         if (skillDialog == null) {
             skillDialog = new SkillDialog(context);
         }
@@ -651,6 +647,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             firstSkillName.setText(heroN.getFirstSkill().getName());
         } else {
             firstSkillButton.setText("");
+            firstSkillName.setText("");
             firstSkillButton.setEnabled(false);
         }
         if (heroN.getSecondSkill() != null) {
@@ -659,6 +656,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             secondSkillName.setText(heroN.getSecondSkill().getName());
         } else {
             secondSkillButton.setText("");
+            secondSkillName.setText("");
             secondSkillButton.setEnabled(false);
         }
         if (heroN.getThirdSkill() != null) {
@@ -667,6 +665,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             thirdSkillName.setText(heroN.getThirdSkill().getName());
         } else {
             thirdSkillButton.setText("");
+            thirdSkillName.setText("");
             thirdSkillButton.setEnabled(false);
         }
         if (!uploading) {
@@ -710,7 +709,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         return maze;
     }
 
-    public int getLastUploadLev() {
+    public long getLastUploadLev() {
         return lastUploadLev;
     }
 
@@ -722,7 +721,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         this.alipay = alipay;
     }
 
-    public void setLastUploadLev(int lastUploadLev) {
+    public void setLastUploadLev(long lastUploadLev) {
         this.lastUploadLev = lastUploadLev;
     }
 
@@ -869,13 +868,13 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
             case R.id.skill_button:
-                if(!skillDialog.isInit()){
+                if (!skillDialog.isInit()) {
                     skillDialog.init();
                 }
                 skillDialog.show(heroN);
                 break;
             case R.id.book_button:
-                monsterBook.showBook();
+                monsterBook.showBook(this);
                 break;
             case R.id.update_button:
                 showDownload();
@@ -973,8 +972,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         saveHelper.save();
     }
 
-    private boolean load() {
-        return saveHelper.loadHero();
+    private void load() {
+        saveHelper.loadHero();
     }
 
     public static class AchievementList {

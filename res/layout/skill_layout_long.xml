@@ -71,7 +71,7 @@
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button4" android:layout_gravity="center|top" android:textColor="@color/onUse"/>
+                android:id="@+id/skill_base_f_button" android:layout_gravity="center|top" android:textColor="@color/onUse"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button5" android:layout_gravity="center|top"/>
+                android:id="@+id/skill_base_j_button" android:layout_gravity="center|top"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button6" android:layout_gravity="center|top" android:singleLine="false"/>
+                android:id="@+id/skill_base_d_button" android:layout_gravity="center|top" android:singleLine="false"/>
     </LinearLayout>
 
     <LinearLayout

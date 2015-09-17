@@ -1,11 +1,13 @@
 package cn.gavin.skill;
 
+import android.database.Cursor;
 import android.widget.Button;
 
 import cn.gavin.Hero;
 import cn.gavin.Maze;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.db.DBHelper;
 import cn.gavin.monster.Monster;
 
 /**
@@ -27,10 +29,11 @@ public abstract class Skill {
     private UseExpression release;
     private EnableExpression levelUp;
 
-    public Skill(){
+    public Skill() {
 
     }
-    public Skill(String name){
+
+    public Skill(String name) {
         load();
     }
 
@@ -49,7 +52,7 @@ public abstract class Skill {
     public void setOnUsed(boolean onUsed) {
         if (!this.onUsed && onUsed) {
             hero.addSkill(this);
-        }else if(this.onUsed && !onUsed){
+        } else if (this.onUsed && !onUsed) {
             hero.removeSkill(this);
         }
         this.onUsed = onUsed;
@@ -101,9 +104,11 @@ public abstract class Skill {
     }
 
     public void refresh() {
-        if(skillButton!=null) {
-            skillButton.setOnClickListener(skillDialog.getClickListener(this));
-            skillButton.setOnLongClickListener(skillDialog.getLongClickListener(this));
+        if (skillButton != null) {
+            if(!skillButton.hasOnClickListeners()) {
+                skillButton.setOnClickListener(skillDialog.getClickListener(this));
+                skillButton.setOnLongClickListener(skillDialog.getLongClickListener(this));
+            }
             if (!isEnable()) {
                 skillButton.setTextColor(skillButton.getResources().getColor(R.color.disable));
             } else {
@@ -177,8 +182,8 @@ public abstract class Skill {
         }
     }
 
-    protected void levelUp(){
-        levelUp.isEnable(hero,maze,MainGameActivity.context, this);
+    protected void levelUp() {
+        levelUp.isEnable(hero, maze, MainGameActivity.context, this);
     }
 
     /**
@@ -196,9 +201,36 @@ public abstract class Skill {
         this.release = release;
     }
 
-    public abstract void save();
+    public void save() {
+        DBHelper helper = DBHelper.getDbHelper();
+        String checkExistSql = String.format("select name from skill where name ='%s'", getName());
+        Cursor cursor = helper.excuseSOL(checkExistSql);
+        String sql;
+        if (cursor.isAfterLast()) {
+            sql = String.format("insert into skill (name, is_active,is_on_use,probability, count) values('%s', '%s', '%s', '%s','%s')",
+                    getName(), isActive(), isOnUsed(), getProbability(), getCount());
+        } else {
+            sql = String.format("update skill set is_active = '%s', is_on_use = '%s', probability = '%s', count = '%s' where name = '%s'",
+                    isActive(), isOnUsed(), getProbability(), getCount(), getName());
+        }
+        helper.excuseSQLWithoutResult(sql);
+    }
 
-    public abstract boolean load();
+    public boolean load() {
+        MainGameActivity context = MainGameActivity.context;
+        DBHelper helper = context.getDbHelper();
+        String sql = String.format("select * from skill where name='%s'",
+                getName());
+        Cursor cursor = helper.excuseSOL(sql);
+        if (!cursor.isAfterLast()) {
+            setOnUsed(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_on_use"))));
+            active = (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_active"))));
+            setProbability(Float.parseFloat(cursor.getString(cursor.getColumnIndex("probability"))));
+            count = (Long.parseLong(cursor.getString(cursor.getColumnIndex("count"))));
+            return true;
+        }
+        return false;
+    }
 
 
     public EnableExpression getLevelUp() {

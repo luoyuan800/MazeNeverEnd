@@ -6,16 +6,16 @@ package cn.gavin;
 public enum Armor {
     破布(100,3), 肚兜(200, 103), 布衣(500, 303), 布甲(1000, 800), 铁甲(2000, 1800), 铜甲(4000, 3000), 银甲(8000, 7000), 金甲(10000, 10000),
     烈焰甲(16000, 15000), 水波甲(32000, 30000), 天使甲(64000, 64000), 能量甲(100000, 128000);
-    private int lev, base;
-public int getBase(){
+    private long lev, base;
+public long getBase(){
     return base;
 }
-    private Armor(int lev, int base) {
+    private Armor(long lev, long base) {
         this.lev = lev;
         this.base = base;
     }
 
-    public Armor levelUp(int lev) {
+    public Armor levelUp(long lev) {
         if (lev >= this.lev) {
             int index = ordinal();
             if (index < values().length - 1) {

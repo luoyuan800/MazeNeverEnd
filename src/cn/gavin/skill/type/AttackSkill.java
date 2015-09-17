@@ -11,8 +11,8 @@ import cn.gavin.skill.Skill;
  */
 public class AttackSkill extends Skill {
 
-    private int baseHarm;
-    private int additionHarm;
+    private long baseHarm;
+    private long additionHarm;
 
     @Override
     public void save() {
@@ -50,19 +50,19 @@ public class AttackSkill extends Skill {
         return false;
     }
 
-    public int getBaseHarm() {
+    public long getBaseHarm() {
         return baseHarm;
     }
 
-    public int getAdditionHarm() {
+    public long getAdditionHarm() {
         return additionHarm;
     }
 
-    public void setBaseHarm(int baseHarm) {
+    public void setBaseHarm(long baseHarm) {
         this.baseHarm = baseHarm;
     }
 
-    public void setAdditionHarm(int additionHarm) {
+    public void setAdditionHarm(long additionHarm) {
         this.additionHarm = additionHarm;
     }
 }

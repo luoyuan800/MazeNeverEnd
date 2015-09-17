@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.io.File;
 
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.activity.MainMenuActivity;
 
 /**
  * Created by gluo on 9/14/2015.
@@ -18,16 +19,17 @@ public class DBHelper extends SQLiteOpenHelper {
     private static String DB_NAME = "mazeNeverEnd";
     private static int DB_VERSION = 5;
 
-    private MainGameActivity context;
+    private Context context;
     private SQLiteDatabase database;
 
-    public DBHelper(MainGameActivity context) {
+    public DBHelper(Context context) {
         super(context, DB_PATH + DB_NAME, null, DB_VERSION);
         File path = new File(DB_PATH);
         if (!path.exists()) {
             path.mkdirs();
         }
         this.context = context;
+        getDB();
     }
 
     private boolean checkDBExist() {
@@ -142,5 +144,14 @@ public class DBHelper extends SQLiteOpenHelper {
                     ")";
             db.execSQL(createTable);
         }
+    }
+
+    private static DBHelper dbHelper;
+    public static void init(Context context) {
+        dbHelper = new DBHelper(context);
+    }
+
+    public static DBHelper getDbHelper(){
+        return dbHelper;
     }
 }

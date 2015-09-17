@@ -1,6 +1,7 @@
 package cn.gavin.monster;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.text.Html;
@@ -11,26 +12,32 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
+
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * gluo on 9/8/2015.
  */
 public class MonsterBook {
-    private MainGameActivity context;
+    private Context context;
     private Set<String> nameKeys;
     private Set<String> nameSet;
+    private DBHelper dbHelper;
 
-    public MonsterBook(MainGameActivity context) {
+    public MonsterBook(Context context) {
         this.context = context;
     }
 
-    public void showBook() {
+    public void showBook(MainGameActivity context) {
         AlertDialog dialog = new AlertDialog.Builder(context).create();
         LayoutInflater inflater = context.getLayoutInflater();
         View view = inflater.inflate(R.layout.monster_book, (ViewGroup) context.findViewById(R.id.monster_book));
@@ -57,6 +64,7 @@ public class MonsterBook {
             String key = monster.getName() + "_" + monster.isDefeat();
             if (!nameKeys.contains(key)) {
                 nameKeys.add(key);
+                nameSet.add(monster.getName());
                 writeIntoDB(monster);
             }
         } catch (Exception e) {
@@ -65,11 +73,10 @@ public class MonsterBook {
     }
 
     private void writeIntoDB(Monster monster) {
-        DBHelper helper = context.getDbHelper();
         String sql = String.format("insert into monster_book (name, format_name, isDefeat, %s, %s, %s) values('%s', '%s', '%s', '%s', '%s', %s)",
                 monster.isDefeat() ? "hp1" : "hp", monster.isDefeat() ? "atk1" : "atk", monster.isDefeat() ? "maze_lv1" : "maze_lv",
                 monster.getName(), monster.getFormatName(), monster.isDefeat(), monster.getMaxHP(), monster.getAtk(), monster.getMazeLev());
-        helper.excuseSQLWithoutResult(sql);
+        dbHelper.excuseSQLWithoutResult(sql);
     }
 
     public Set<String> getMonsterNameKeys() {
@@ -81,16 +88,13 @@ public class MonsterBook {
                 int index1 = Monster.getIndex(s2);
                 if (index > index1) {
                     return 1;
-                }
-                if (index < index1) {
+                }else {
                     return -1;
                 }
-                return 0;
             }
         });
-        DBHelper helper = context.getDbHelper();
         String sql = "select name, isDefeat from monster_book";
-        Cursor cursor = helper.excuseSOL(sql);
+        Cursor cursor = dbHelper.excuseSOL(sql);
         while (!cursor.isAfterLast()) {
             String key = cursor.getString(cursor.getColumnIndex("name")) + "_" + cursor.getString(cursor.getColumnIndex("isDefeat"));
             keys.add(key);
@@ -99,6 +103,18 @@ public class MonsterBook {
         }
         nameKeys = keys;
         return keys;
+    }
+
+    private static MonsterBook mb;
+
+    public static void init(Context context) {
+        mb = new MonsterBook(context);
+        mb.dbHelper = DBHelper.getDbHelper();
+        mb.getMonsterNameKeys();
+    }
+
+    public static MonsterBook getMonsterBook() {
+        return mb;
     }
 
     public static class MonsterList {
@@ -179,7 +195,7 @@ public class MonsterBook {
                         if (nameKeys.contains(name + "_true")) {
                             isDefeat = true;
                         }
-                        item = new MonsterItem(name, isDefeat, context.getDbHelper());
+                        item = new MonsterItem(name, isDefeat, dbHelper);
                     }
                     monsterList.addMonster(item);
                 }

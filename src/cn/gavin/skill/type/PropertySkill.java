@@ -32,20 +32,6 @@ public class PropertySkill extends Skill {
         getHero().addDefenseValue(def);
         getHero().addClickAward(clickAward);
     }
-    
-    @Override
-    protected void levelUp() {
 
-    }
-
-    @Override
-    public void save() {
-
-    }
-
-    @Override
-    public boolean load() {
-return false;
-    }
 
 }

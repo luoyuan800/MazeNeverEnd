@@ -35,16 +35,28 @@ public class BaseSkill extends SkillLayout {
     }
 
     public void init(SkillDialog dialog) {
-        Skill r = SkillFactory.getSkill("勇者之击", hero, dialog);
-        Button rB = (Button) view.findViewById(R.id.base_skill_r_button);
-        r.setSkillButton(rB);
+        Skill skill = SkillFactory.getSkill("勇者之击", hero, dialog);
+        Button button = (Button) view.findViewById(R.id.base_skill_r_button);
+        skill.setSkillButton(button);
 
-        Skill s = SkillFactory.getSkill("闪避",hero, dialog);
-        Button sB = (Button)view.findViewById(R.id.base_skill_s_button);
-        r.setSkillButton(sB);
+        skill = SkillFactory.getSkill("闪避",hero, dialog);
+        button = (Button)view.findViewById(R.id.base_skill_s_button);
+        skill.setSkillButton(button);
 
-        Skill t = SkillFactory.getSkill("铁拳",hero, dialog);
-        Button tB = (Button)view.findViewById(R.id.skill_base_t_button);
-        t.setSkillButton(tB);
+        skill = SkillFactory.getSkill("铁拳",hero, dialog);
+        button = (Button)view.findViewById(R.id.skill_base_t_button);
+        skill.setSkillButton(button);
+
+        skill = SkillFactory.getSkill("反弹",hero, dialog);
+        button = (Button)view.findViewById(R.id.skill_base_f_button);
+        skill.setSkillButton(button);
+
+        skill = SkillFactory.getSkill("巨大化",hero, dialog);
+        button = (Button)view.findViewById(R.id.skill_base_j_button);
+        skill.setSkillButton(button);
+
+        skill = SkillFactory.getSkill("定身",hero, dialog);
+        button = (Button)view.findViewById(R.id.skill_base_d_button);
+        skill.setSkillButton(button);
     }
 }

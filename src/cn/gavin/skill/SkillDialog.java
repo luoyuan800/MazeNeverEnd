@@ -121,7 +121,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
 
     public void show(Hero hero) {
         Message msg = new Message();
-        msg.arg1 = hero.getSkillPoint();
+        msg.obj = hero.getSkillPoint();
         msg.what = 1;
         handler.sendMessage(msg);
         dialog.show();
@@ -190,15 +190,16 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
 
     private final Handler handler = new Handler() {
         public void handleMessage(android.os.Message message) {
+            SkillFactory.refreshSkillStatus();
             switch (message.what) {
                 case 1:
-                    skillPoint.setText("技能点数:" + message.arg1);
+                    skillDesc.setText("");
+                    skillPoint.setText("技能点数:" + message.obj);
                     break;
                 case 0:
-                    SkillFactory.refreshSkillStatus();
                     skillDesc.setText("");
                     Message msg = new Message();
-                    msg.arg1 = context.getHero().getSkillPoint();
+                    msg.obj = context.getHero().getSkillPoint();
                     msg.what = 1;
                     this.sendMessage(msg);
                     break;
