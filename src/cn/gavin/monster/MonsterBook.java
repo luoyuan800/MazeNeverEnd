@@ -130,6 +130,24 @@ public class MonsterBook {
         return mb;
     }
 
+    public void initView(MainGameActivity context) {
+        dialog = new AlertDialog.Builder(context).create();
+        LayoutInflater inflater = context.getLayoutInflater();
+        View view = inflater.inflate(R.layout.monster_book, (ViewGroup) context.findViewById(R.id.monster_book));
+        ListView list = (ListView) view.findViewById(R.id.monster_book_list);
+        TextView text = (TextView) view.findViewById(R.id.monster_book_text);
+        list.setAdapter(new MonsterAdapter(text));
+        dialog.setView(view);
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setTitle("怪物收集");
+    }
+
     public static class MonsterList {
         MonsterItem a0;
         MonsterItem a1;

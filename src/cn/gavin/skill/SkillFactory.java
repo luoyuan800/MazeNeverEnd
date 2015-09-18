@@ -50,13 +50,7 @@ public class SkillFactory {
                         return builder.toString();
                     }
                 });
-                skill.setPerform(new EnableExpression() {
-                    @Override
-                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        Random random = hero.getRandom();
-                        return random.nextLong(100) < skill.getProbability();
-                    }
-                });
+
                 skill.setRelease(new UseExpression() {
                     @Override
                     public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
@@ -75,8 +69,8 @@ public class SkillFactory {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                         AttackSkill as = (AttackSkill) skill;
-                        if (skill.getProbability() < 20) {
-                            skill.setProbability(skill.getProbability() + 1);
+                        if (skill.getProbability() < 50) {
+                            skill.setProbability(skill.getProbability() + 3);
                             as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 10 + 1));
                             as.setAdditionHarm(as.getAdditionHarm() * 3);
                             return true;
@@ -128,13 +122,7 @@ public class SkillFactory {
                         return builder.toString();
                     }
                 });
-                skill.setPerform(new EnableExpression() {
-                    @Override
-                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        Random random = hero.getRandom();
-                        return random.nextLong(100) < skill.getProbability();
-                    }
-                });
+
                 skill.setRelease(new UseExpression() {
                     @Override
                     public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
@@ -144,14 +132,14 @@ public class SkillFactory {
                     }
                 });
                 if (!skill.load()) {
-                    skill.setProbability(1.0f);
+                    skill.setProbability(2.0f);
                 }
                 skill.setLevelUp(new EnableExpression() {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                         DefendSkill ds = (DefendSkill) skill;
                         if (skill.getProbability() < 2) {
-                            skill.setProbability(skill.getProbability() + 0.1f);
+                            skill.setProbability(skill.getProbability() + 1.1f);
                             return true;
                         }
                         return false;
@@ -179,13 +167,7 @@ public class SkillFactory {
                         return builder.toString();
                     }
                 });
-                skill.setPerform(new EnableExpression() {
-                    @Override
-                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        Random random = hero.getRandom();
-                        return random.nextLong(100) + random.nextFloat() < skill.getProbability();
-                    }
-                });
+
                 skill.setRelease(new UseExpression() {
                     @Override
                     public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
@@ -196,14 +178,14 @@ public class SkillFactory {
                     }
                 });
                 if (!skill.load()) {
-                    skill.setProbability(1.5f);
+                    skill.setProbability(7.5f);
                 }
                 skill.setLevelUp(new EnableExpression() {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                         DefendSkill ds = (DefendSkill) skill;
                         if (skill.getProbability() < 15) {
-                            skill.setProbability(skill.getProbability() + 0.7f);
+                            skill.setProbability(skill.getProbability() + 1.1f);
                             return true;
                         }
                         return false;
@@ -231,13 +213,7 @@ public class SkillFactory {
                         return builder.toString();
                     }
                 });
-                skill.setPerform(new EnableExpression() {
-                    @Override
-                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        Random random = hero.getRandom();
-                        return random.nextLong(100) < skill.getProbability();
-                    }
-                });
+
                 skill.setRelease(new UseExpression() {
                     @Override
                     public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
@@ -266,7 +242,7 @@ public class SkillFactory {
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                         DefendSkill ds = (DefendSkill) skill;
                         if (skill.getProbability() < 2) {
-                            skill.setProbability(skill.getProbability() + 0.1f);
+                            skill.setProbability(skill.getProbability() + 1.1f);
                             return true;
                         }
                         return false;
@@ -293,13 +269,7 @@ public class SkillFactory {
                         return builder.toString();
                     }
                 });
-                skill.setPerform(new EnableExpression() {
-                    @Override
-                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        Random random = hero.getRandom();
-                        return random.nextLong(100) + random.nextFloat() < skill.getProbability();
-                    }
-                });
+
                 skill.setRelease(new UseExpression() {
                     @Override
                     public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
@@ -313,13 +283,13 @@ public class SkillFactory {
                     }
                 });
                 if (!skill.load()) {
-                    skill.setProbability(1.0f);
+                    skill.setProbability(2.0f);
                 }
                 skill.setLevelUp(new EnableExpression() {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                         if (skill.getProbability() < 20) {
-                            skill.setProbability(skill.getProbability() + 0.5f);
+                            skill.setProbability(skill.getProbability() +2.5f);
                             return true;
                         }
                         return false;
@@ -346,13 +316,7 @@ public class SkillFactory {
                         return builder.toString();
                     }
                 });
-                skill.setPerform(new EnableExpression() {
-                    @Override
-                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        Random random = hero.getRandom();
-                        return random.nextLong(100) + random.nextFloat() < skill.getProbability();
-                    }
-                });
+
                 skill.setRelease(new UseExpression() {
                     @Override
                     public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
@@ -377,13 +341,13 @@ public class SkillFactory {
                     }
                 });
                 if (!skill.load()) {
-                    skill.setProbability(2.8f);
+                    skill.setProbability(4.8f);
                 }
                 skill.setLevelUp(new EnableExpression() {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                         if (skill.getProbability() < 20) {
-                            skill.setProbability(skill.getProbability() + 0.8f);
+                            skill.setProbability(skill.getProbability() + 1.2f);
                             return true;
                         }
                         return false;
@@ -410,13 +374,7 @@ public class SkillFactory {
                         return builder.toString();
                     }
                 });
-                skill.setPerform(new EnableExpression() {
-                    @Override
-                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        Random random = hero.getRandom();
-                        return random.nextLong(100) + random.nextFloat() < skill.getProbability();
-                    }
-                });
+
                 skill.setRelease(new UseExpression() {
                     @Override
                     public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
@@ -438,13 +396,13 @@ public class SkillFactory {
                     }
                 });
                 if (!skill.load()) {
-                    skill.setProbability(0.8f);
+                    skill.setProbability(1.0f);
                 }
                 skill.setLevelUp(new EnableExpression() {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                         if (skill.getProbability() < 20) {
-                            skill.setProbability(skill.getProbability() + 0.8f);
+                            skill.setProbability(skill.getProbability() + 1.1f);
                             return true;
                         }
                         return false;
@@ -474,13 +432,7 @@ public class SkillFactory {
                         return builder.toString();
                     }
                 });
-                skill.setPerform(new EnableExpression() {
-                    @Override
-                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        Random random = hero.getRandom();
-                        return random.nextLong(100) + random.nextFloat() < skill.getProbability();
-                    }
-                });
+
                 skill.setRelease(new UseExpression() {
                     @Override
                     public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
@@ -511,7 +463,7 @@ public class SkillFactory {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                         if (skill.getProbability() < 20) {
-                            skill.setProbability(skill.getProbability() + 0.8f);
+                            skill.setProbability(skill.getProbability() + 1.8f);
                             return true;
                         }
                         return false;
@@ -520,6 +472,14 @@ public class SkillFactory {
             }
             if (skill != null) {
                 skill.setSkillDialog(dialog);
+                skill.setPerform(new EnableExpression() {
+                    @Override
+                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
+                        Random random = hero.getRandom();
+                        long r = skill.diejia(hero.getAgility());
+                        return random.nextLong(100) + random.nextFloat() < skill.getProbability() + random.nextLong(r + 1);
+                    }
+                });
                 skillMap.put(name, skill);
             } else {
                 skill = emptySkill();

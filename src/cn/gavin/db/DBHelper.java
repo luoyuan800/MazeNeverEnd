@@ -111,7 +111,8 @@ public class DBHelper extends SQLiteOpenHelper {
                     "maze_lv INTEGER," +
                     "hp1 TEXT," +
                     "atk1 TEXT," +
-                    "maze_lv1 INTEGER" +
+                    "maze_lv1 INTEGER," +
+                    "count TEXT" +
                     ")";
 
             db.execSQL(createTable);

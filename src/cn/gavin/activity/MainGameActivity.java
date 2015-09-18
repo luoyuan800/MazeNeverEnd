@@ -172,6 +172,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
+                case 104:
+                    monsterBook.initView(context);
+                    break;
                 case 103:
                     saveButton.setEnabled(false);
                     save();
@@ -297,6 +300,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         gameThreadRunning = true;
         gameThread = new GameThread();
         gameThread.start();
+        handler.sendEmptyMessage(104);
     }
 
     @Override
@@ -491,9 +495,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(tv.getText().toString().equals("201509181447")){
+                        if (tv.getText().toString().equals("201509181447")) {
                             heroN.addMaterial(10000000);
-                        }else {
+                        } else {
                             heroN.setName(tv.getText().toString().replaceAll("_", " "));
                         }
                         dialog.dismiss();
@@ -981,14 +985,14 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             case R.id.add_n_power:
                 long life = heroN.getRandom().nextLong(heroN.getPoint() + 1);
                 heroN.addLife(life);
-                heroN.addLife(-life);
+                heroN.addPoint(-life);
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
                 break;
             case R.id.add_n_stre:
                 long str = heroN.getRandom().nextLong(heroN.getPoint() + 1);
                 heroN.addStrength(str);
-                heroN.addStrength(-str);
+                heroN.addPoint(-str);
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
                 break;

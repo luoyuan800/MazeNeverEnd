@@ -154,9 +154,9 @@ public abstract class Skill {
         this.probability = probability;
     }
 
-    private int diejia(int num) {
+    public long diejia(long num) {
         String str = String.valueOf(num);
-        int result = 0;
+        long result = 0;
         for (int i = 0; i < str.length(); i++) {
             result += Integer.parseInt(str.charAt(i) + "");
         }
@@ -197,6 +197,7 @@ public abstract class Skill {
      * @return
      */
     public boolean release(Monster monster) {
+        addCount();
         return release.release(hero, monster, MainGameActivity.context, this);
     }
 
