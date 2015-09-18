@@ -1,8 +1,9 @@
-package cn.gavin.skill;
+package cn.gavin.skill.expression;
 
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.monster.Monster;
+import cn.gavin.skill.Skill;
 
 /**
  * Copyright 2015 gluo.

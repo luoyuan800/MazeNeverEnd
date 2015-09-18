@@ -99,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="超"
-            android:id="@+id/button7" android:layout_gravity="center"
+            android:id="@+id/skill_base_c_button" android:layout_gravity="center"
             android:typeface="serif"
             android:textStyle="bold|italic"
             android:gravity="center"

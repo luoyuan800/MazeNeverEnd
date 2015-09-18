@@ -9,6 +9,9 @@ import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.monster.Monster;
+import cn.gavin.skill.expression.DescExpression;
+import cn.gavin.skill.expression.EnableExpression;
+import cn.gavin.skill.expression.UseExpression;
 
 /**
  * luoyuan on 9/12/15.
@@ -38,7 +41,7 @@ public abstract class Skill {
     }
 
     public boolean isEnable() {
-        return enableExpression.isEnable(hero, maze, null, null);
+        return enableExpression.isEnable(hero, maze, MainGameActivity.context, this);
     }
 
     public void setEnableExpression(EnableExpression exp) {
@@ -161,7 +164,7 @@ public abstract class Skill {
     }
 
     public boolean perform() {
-        return perform.isEnable(hero, maze, null, this);
+        return perform.isEnable(hero, maze, MainGameActivity.context, this);
     }
 
     public void setPerform(EnableExpression perform) {

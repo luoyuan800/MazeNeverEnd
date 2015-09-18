@@ -17,7 +17,7 @@ import cn.gavin.activity.MainMenuActivity;
 public class DBHelper extends SQLiteOpenHelper {
     private static String DB_PATH = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze/data/";
     private static String DB_NAME = "mazeNeverEnd";
-    private static int DB_VERSION = 5;
+    private static int DB_VERSION = 8;
 
     private Context context;
     private SQLiteDatabase database;
@@ -76,7 +76,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private SQLiteDatabase openOrCreateInnerDB() {
-        database = context.openOrCreateDatabase("monster_book", Context.MODE_PRIVATE, null);
+        database = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
         if (database.getVersion() == 0) {
             onCreate(database);
         }
@@ -132,17 +132,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < newVersion) {
-            String createTable = "CREATE TABLE skill(" +
-                    "name TEXT NOT NULL," +
-                    "is_active CHAR(50)," +
-                    "is_on_use CHAR(5)," +
-                    "probability TEXT," +
-                    "count TEXT," +
-                    "base_harm TEXT," +
-                    "addition_harm TEXT" +
-                    ")";
-            db.execSQL(createTable);
+        if (oldVersion < newVersion && newVersion == 8) {
+            String alterSQL = "alter table monster_book add column count TEXT NULL";
+            db.execSQL(alterSQL);
         }
     }
 

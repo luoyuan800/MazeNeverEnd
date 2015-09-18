@@ -1,20 +1,27 @@
 package cn.gavin.skill;
 
+import android.widget.Button;
+
 import java.util.HashMap;
 import java.util.Map;
-import cn.gavin.utils.Random;
+import java.util.concurrent.ConcurrentHashMap;
+
 import cn.gavin.Hero;
 import cn.gavin.Maze;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.monster.Monster;
+import cn.gavin.skill.expression.DescExpression;
+import cn.gavin.skill.expression.EnableExpression;
+import cn.gavin.skill.expression.UseExpression;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
+import cn.gavin.utils.Random;
 
 /**
  * Created by luoyuan on 9/13/15.
  */
 public class SkillFactory {
-    private static Map<String, Skill> skillMap = new HashMap<String, Skill>();
+    private static Map<String, Skill> skillMap = new ConcurrentHashMap<String, Skill>();
 
     public static Skill getSkill(String name, Hero hero, final SkillDialog dialog) {
         Skill skill = skillMap.get(name);
@@ -27,7 +34,7 @@ public class SkillFactory {
                 skill.setEnableExpression(new EnableExpression() {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        return hero.getSkillPoint() > 0 && !SkillFactory.getSkill("魔王天赋", hero, dialog).isActive();
+                        return (skill.isActive() || hero.getSkillPoint() > 0) && !SkillFactory.getSkill("魔王天赋", hero, dialog).isActive();
                     }
                 });
                 skill.setDescription(new DescExpression() {
@@ -108,7 +115,7 @@ public class SkillFactory {
                 skill.setEnableExpression(new EnableExpression() {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        return hero.getSkillPoint() > 0 && SkillFactory.getSkill("勇者一击", hero, dialog).isActive();
+                        return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("勇者之击", hero, dialog).isActive();
                     }
                 });
                 skill.setDescription(new DescExpression() {
@@ -159,7 +166,7 @@ public class SkillFactory {
                 skill.setEnableExpression(new EnableExpression() {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        return hero.getSkillPoint() > 0 && SkillFactory.getSkill("超能量", hero, dialog).isActive();
+                        return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("超能量", hero, dialog).isActive();
                     }
                 });
                 skill.setDescription(new DescExpression() {
@@ -211,7 +218,7 @@ public class SkillFactory {
                 skill.setEnableExpression(new EnableExpression() {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        return hero.getSkillPoint() > 0 && SkillFactory.getSkill("勇者一击", hero, dialog).isActive();
+                        return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("勇者之击", hero, dialog).isActive();
                     }
                 });
                 skill.setDescription(new DescExpression() {
@@ -273,7 +280,7 @@ public class SkillFactory {
                 skill.setEnableExpression(new EnableExpression() {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        return hero.getSkillPoint() > 0 && SkillFactory.getSkill("闪避", hero, dialog).isActive();
+                        return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("闪避", hero, dialog).isActive();
                     }
                 });
                 skill.setDescription(new DescExpression() {
@@ -326,7 +333,7 @@ public class SkillFactory {
                 skill.setEnableExpression(new EnableExpression() {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        return hero.getSkillPoint() > 0 && (SkillFactory.getSkill("闪避", hero, dialog).isActive() || SkillFactory.getSkill("铁拳", hero, dialog).isActive());
+                        return (skill.isActive() || hero.getSkillPoint() > 0) && (SkillFactory.getSkill("闪避", hero, dialog).isActive() || SkillFactory.getSkill("铁拳", hero, dialog).isActive());
                     }
                 });
                 skill.setDescription(new DescExpression() {
@@ -390,7 +397,7 @@ public class SkillFactory {
                 skill.setEnableExpression(new EnableExpression() {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        return hero.getSkillPoint() > 0 && (SkillFactory.getSkill("铁拳", hero, dialog).isActive());
+                        return (skill.isActive() || hero.getSkillPoint() > 0) && (SkillFactory.getSkill("铁拳", hero, dialog).isActive());
                     }
                 });
                 skill.setDescription(new DescExpression() {
@@ -451,7 +458,10 @@ public class SkillFactory {
                 skill.setEnableExpression(new EnableExpression() {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        return hero.getSkillPoint() > 0 && (SkillFactory.getSkill("反弹", hero, dialog).isActive() || SkillFactory.getSkill("巨大化", hero, dialog).isActive() || SkillFactory.getSkill("定身", hero, dialog).isActive());
+                        return (skill.isActive() || hero.getSkillPoint() > 0)
+                                && (SkillFactory.getSkill("反弹", hero, dialog).isActive() ||
+                                SkillFactory.getSkill("巨大化", hero, dialog).isActive() ||
+                                SkillFactory.getSkill("定身", hero, dialog).isActive());
                     }
                 });
                 skill.setDescription(new DescExpression() {
@@ -542,10 +552,28 @@ public class SkillFactory {
 
             }
 
+            public void setSkillButton(Button button) {
+
+            }
+
             @Override
             public boolean load() {
                 return false;
             }
         };
+    }
+
+    public static long reset() {
+        int point = 0;
+        for (Skill skill : skillMap.values()) {
+            if (skill.isActive()) {
+                if (skill.isOnUsed()) {
+                    skill.setOnUsed(false);
+                }
+                skill.setActive(false);
+                point++;
+            }
+        }
+        return point;
     }
 }

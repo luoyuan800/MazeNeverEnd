@@ -91,7 +91,7 @@ public class SaveHelper {
             heroN.setAgility(preferences.getLong("agility", heroN.getRandom().nextLong(5)));
             heroN.setClickAward(preferences.getLong("clickAward", 0));
             heroN.setSword(Sword.valueOf(preferences.getString("swordName", Sword.木剑.name())));
-            heroN.setArmor(Armor.valueOf(preferences.getString("swordName", Armor.破布.name())));
+            heroN.setArmor(Armor.valueOf(preferences.getString("armorName", Armor.破布.name())));
             heroN.setDeathCount(preferences.getLong("death", 0));
             context.setLastUploadLev(preferences.getLong("lastUploadLev", 0));
             maze.setLevel(preferences.getLong("currentMazeLev", 1));

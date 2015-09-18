@@ -58,5 +58,9 @@ public class BaseSkill extends SkillLayout {
         skill = SkillFactory.getSkill("定身",hero, dialog);
         button = (Button)view.findViewById(R.id.skill_base_d_button);
         skill.setSkillButton(button);
+
+        skill = SkillFactory.getSkill("超能量",hero, dialog);
+        button = (Button)view.findViewById(R.id.skill_base_c_button);
+        skill.setSkillButton(button);
     }
 }

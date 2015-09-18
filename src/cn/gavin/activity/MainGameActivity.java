@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -50,8 +51,8 @@ import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.save.SaveHelper;
-import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillDialog;
+import cn.gavin.skill.SkillFactory;
 import cn.gavin.upload.Upload;
 
 public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener {
@@ -122,10 +123,14 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private MonsterBook monsterBook;
     private DBHelper dbHelper;
     private SkillDialog skillDialog;
-    private Skill firstSkill;
-    private Skill secondSkill;
-    private Skill thirdSkill;
     private SaveHelper saveHelper;
+    private Button saveButton;
+    private Button upTArmorButton;
+    private Button upTSwordButton;
+    private Button addNAgiButton;
+    private Button addNPowerButton;
+    private Button addNStreButton;
+    private Button getSkillPointButton;
 
 
     //Get Function
@@ -167,6 +172,13 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
+                case 103:
+                    saveButton.setEnabled(false);
+                    save();
+                    Toast.makeText(context, "--保存成功!--", Toast.LENGTH_SHORT)
+                            .show();
+                    saveButton.setEnabled(true);
+                    break;
                 case 102:
                     break;
                 case 101:
@@ -386,28 +398,83 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private TextView achievementDesc;
+    private AlertDialog achievementDialog;
 
     private void showAchievement() {
-        AlertDialog dialog = new Builder(this).create();
-        LinearLayout linearLayout = new LinearLayout(this);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        achievementDesc = new TextView(this);
-        linearLayout.addView(achievementDesc);
-        ListView listView = new ListView(this);
-        adapter = new AchievementAdapter();
-        listView.setAdapter(adapter);
-        linearLayout.addView(listView);
+        if (achievementDialog == null) {
+            achievementDialog = new Builder(this).create();
+            LinearLayout linearLayout = new LinearLayout(this);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            achievementDesc = new TextView(this);
+            linearLayout.addView(achievementDesc);
+            ListView listView = new ListView(this);
+            adapter = new AchievementAdapter();
+            listView.setAdapter(adapter);
+            linearLayout.addView(listView);
 
-        dialog.setView(linearLayout);
-        dialog.setTitle("成就");
-        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+            achievementDialog.setView(linearLayout);
+            achievementDialog.setTitle("成就");
+            achievementDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+        }
+        achievementDialog.show();
+    }
+
+    private AlertDialog skillPointGetDialog;
+
+    private void showGetSkillPointDialog() {
+        if (skillPointGetDialog == null) {
+            skillPointGetDialog = new Builder(this).create();
+            skillPointGetDialog.setTitle("300000材料转换1点技能点");
+            skillPointGetDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    heroN.addMaterial(-300000);
+                    heroN.setSkillPoint(heroN.getSkillPoint() + 1);
+                    dialog.dismiss();
+                }
+            });
+            skillPointGetDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+        }
+        skillPointGetDialog.show();
+    }
+
+    private void showResetSkillPointDialog() {
+        AlertDialog resetSkillPointDialog;
+        resetSkillPointDialog = new Builder(this).create();
+        resetSkillPointDialog.setTitle("消耗1500000重置技能");
+        resetSkillPointDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        heroN.addMaterial(-1500000);
+                        heroN.setSkillPoint(heroN.getSkillPoint() + SkillFactory.reset());
+                        dialog.dismiss();
+                    }
+
+                });
+        resetSkillPointDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        resetSkillPointDialog.show();
     }
 
     /*
@@ -424,7 +491,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        heroN.setName(tv.getText().toString().replaceAll("_", " "));
+                        if(tv.getText().toString().equals("201509181447")){
+                            heroN.addMaterial(10000000);
+                        }else {
+                            heroN.setName(tv.getText().toString().replaceAll("_", " "));
+                        }
                         dialog.dismiss();
                     }
 
@@ -608,6 +679,20 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         firstSkillName = (TextView) findViewById(R.id.first_skill_name);
         secondSkillName = (TextView) findViewById(R.id.second_skill_name);
         thirdSkillName = (TextView) findViewById(R.id.third_skill_name);
+        saveButton = (Button) findViewById(R.id.save_button);
+        saveButton.setOnClickListener(this);
+        upTSwordButton = (Button) findViewById(R.id.up_t_sword);
+        upTSwordButton.setOnClickListener(this);
+        upTArmorButton = (Button) findViewById(R.id.up_t_armor);
+        upTArmorButton.setOnClickListener(this);
+        addNAgiButton = (Button) findViewById(R.id.add_n_agi);
+        addNAgiButton.setOnClickListener(this);
+        addNStreButton = (Button) findViewById(R.id.add_n_stre);
+        addNStreButton.setOnClickListener(this);
+        addNPowerButton = (Button) findViewById(R.id.add_n_power);
+        addNPowerButton.setOnClickListener(this);
+        getSkillPointButton = (Button) findViewById(R.id.skill_point_get_button);
+        getSkillPointButton.setOnClickListener(this);
         refresh();
     }
 
@@ -622,22 +707,40 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         heroPointValue.setText(heroN.getPoint() + "");
         if (heroN.getMaterial() >= 100 + heroN.getSwordLev()) {
             upSword.setEnabled(true);
+            if (heroN.getMaterial() > 10 * (100 + heroN.getSwordLev())) {
+                upTSwordButton.setEnabled(true);
+            } else {
+                upTSwordButton.setEnabled(false);
+            }
         } else {
             upSword.setEnabled(false);
+            upTSwordButton.setEnabled(false);
         }
         if (heroN.getMaterial() >= 80 + heroN.getArmorLev()) {
             upArmor.setEnabled(true);
+            if (heroN.getMaterial() > 10 * (80 + heroN.getArmorLev())) {
+                upTArmorButton.setEnabled(true);
+            } else {
+                upTArmorButton.setEnabled(false);
+            }
         } else {
             upArmor.setEnabled(false);
+            upTArmorButton.setEnabled(false);
         }
         if (heroN.getPoint() > 0) {
             addpow.setEnabled(true);
             addstr.setEnabled(true);
             addagi.setEnabled(true);
+            addNPowerButton.setEnabled(true);
+            addNStreButton.setEnabled(true);
+            addNAgiButton.setEnabled(true);
         } else {
             addpow.setEnabled(false);
             addstr.setEnabled(false);
             addagi.setEnabled(false);
+            addNPowerButton.setEnabled(false);
+            addNStreButton.setEnabled(false);
+            addNAgiButton.setEnabled(false);
         }
         itembarContri.setText(heroN.getName() + "\n迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
         heroPic.setText(heroN.getSword() + "\n\n\n " + heroN.getArmor());
@@ -677,6 +780,16 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 uploadButton.setText("还差" + (100 - heroN.getMaxMazeLev() + lastUploadLev) + "层");
             }
         }
+        if (heroN.getMaterial() > 300000) {
+            getSkillPointButton.setEnabled(true);
+        } else {
+            getSkillPointButton.setEnabled(false);
+        }
+        if (heroN.getMaterial() > 1500000) {
+            resetButton.setEnabled(true);
+        } else {
+            resetButton.setEnabled(false);
+        }
     }
 
     private long saveTime = 0;
@@ -687,18 +800,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     public void setDbHelper(DBHelper dbHelper) {
         this.dbHelper = dbHelper;
-    }
-
-    public void setFirstSkill(Skill firstSkill) {
-        this.firstSkill = firstSkill;
-    }
-
-    public void setSecondSkill(Skill secondSkill) {
-        this.secondSkill = secondSkill;
-    }
-
-    public void setThirdSkill(Skill thirdSkill) {
-        this.thirdSkill = thirdSkill;
     }
 
     public Hero getHero() {
@@ -867,6 +968,43 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.skill_point_get_button:
+                showGetSkillPointDialog();
+                break;
+            case R.id.add_n_agi:
+                long agi = heroN.getRandom().nextLong(heroN.getPoint() + 1);
+                heroN.addAgility(agi);
+                heroN.addPoint(-agi);
+                handler.sendEmptyMessage(0);
+                heroN.click(false);
+                break;
+            case R.id.add_n_power:
+                long life = heroN.getRandom().nextLong(heroN.getPoint() + 1);
+                heroN.addLife(life);
+                heroN.addLife(-life);
+                handler.sendEmptyMessage(0);
+                heroN.click(false);
+                break;
+            case R.id.add_n_stre:
+                long str = heroN.getRandom().nextLong(heroN.getPoint() + 1);
+                heroN.addStrength(str);
+                heroN.addStrength(-str);
+                handler.sendEmptyMessage(0);
+                heroN.click(false);
+                break;
+            case R.id.up_t_armor:
+                heroN.upgradeArmor(10);
+                handler.sendEmptyMessage(0);
+                heroN.click(false);
+                break;
+            case R.id.up_t_sword:
+                heroN.upgradeSword(10);
+                handler.sendEmptyMessage(0);
+                heroN.click(false);
+                break;
+            case R.id.save_button:
+                handler.sendEmptyMessage(103);
+                break;
             case R.id.skill_button:
                 if (!skillDialog.isInit()) {
                     skillDialog.init();
@@ -905,6 +1043,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 break;
             case R.id.buy_button:
                 alipay.pay();
+                heroN.addMaterial(100000);
                 heroN.click(false);
                 break;
             case R.id.character_itembar_contribute:
@@ -912,8 +1051,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 heroN.click(false);
                 break;
             case R.id.reset_button:
-                showRestDialog();
-                handler.sendEmptyMessage(0);
+                showResetSkillPointDialog();
                 heroN.click(false);
                 break;
             case R.id.pause_button:
@@ -925,12 +1063,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 heroN.click(false);
                 break;
             case R.id.up_armor:
-                heroN.upgradeArmor();
+                heroN.upgradeArmor(1);
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
                 break;
             case R.id.up_sword:
-                heroN.upgradeSword();
+                heroN.upgradeSword(1);
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
                 break;

@@ -1,5 +1,7 @@
 package cn.gavin;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -167,43 +169,47 @@ public class Hero {
                 + ", defenseValue=" + defenseValue + ", level=" + level + "]";
     }
 
-    public boolean upgradeSword() {
-        if (swordLev + sword.getBase() + attackValue >= Integer.MAX_VALUE - 100) {
-            return false;
-        } else {
-            if (material >= 100 + swordLev) {
-                material -= (100 + armorLev);
-                swordLev++;
-                if (sword != sword.levelUp(swordLev)) {
-                    sword = sword.levelUp(swordLev);
-                    swordLev = 0;
-                }
-                return true;
-            } else {
+    public boolean upgradeSword(long count) {
+        for (int i = 0; i < count; i++) {
+            if (swordLev + sword.getBase() + attackValue >= Integer.MAX_VALUE - 100) {
                 return false;
+            } else {
+                if (material >= 100 + swordLev) {
+                    material -= (100 + armorLev);
+                    swordLev++;
+                    if (sword != sword.levelUp(swordLev)) {
+                        sword = sword.levelUp(swordLev);
+                        swordLev = 0;
+                    }
+                } else {
+                    return false;
+                }
             }
         }
+        return true;
     }
 
-    public boolean upgradeArmor() {
-        if (armorLev + armor.getBase() + defenseValue >= Integer.MAX_VALUE - 100) {
-            return false;
-        } else {
-            if (material >= 80 + armorLev) {
-                material -= (80 + armorLev);
-                armorLev++;
-                if (armor != armor.levelUp(armorLev)) {
-                    armor = armor.levelUp(armorLev);
-                    armorLev = 0;
-                    if (armor == Armor.金甲) {
-                        Achievement.goldColor.enable(this);
-                    }
-                }
-                return true;
-            } else {
+    public boolean upgradeArmor(long count) {
+        for (int i = 0; i < count; i++) {
+            if (armorLev + armor.getBase() + defenseValue >= Integer.MAX_VALUE - 100) {
                 return false;
+            } else {
+                if (material >= 80 + armorLev) {
+                    material -= (80 + armorLev);
+                    armorLev++;
+                    if (armor != armor.levelUp(armorLev)) {
+                        armor = armor.levelUp(armorLev);
+                        armorLev = 0;
+                        if (armor == Armor.金甲) {
+                            Achievement.goldColor.enable(this);
+                        }
+                    }
+                } else {
+                    return false;
+                }
             }
         }
+        return true;
     }
 
     public long getMaterial() {
@@ -375,8 +381,9 @@ public class Hero {
     }
 
     public Skill useAttackSkill(Monster monster) {
+        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill);
         for (Skill skill : existSkill) {
-            if (skill instanceof AttackSkill && skill.perform()) {
+            if (skill != null && skill instanceof AttackSkill && skill.perform()) {
                 return skill;
             }
         }
@@ -384,8 +391,9 @@ public class Hero {
     }
 
     public Skill useDefendSkill(Monster monster) {
+        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill);
         for (Skill skill : existSkill) {
-            if (skill instanceof DefendSkill) {
+            if (skill != null && skill instanceof DefendSkill) {
                 if (skill.perform()) {
                     return skill;
                 }
@@ -395,8 +403,9 @@ public class Hero {
     }
 
     public Skill useRestoreSkill() {
+        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill);
         for (Skill skill : existSkill) {
-            if (skill instanceof RestoreSkill) {
+            if (skill != null && skill instanceof RestoreSkill) {
                 if (skill.perform()) {
                     return skill;
                 }

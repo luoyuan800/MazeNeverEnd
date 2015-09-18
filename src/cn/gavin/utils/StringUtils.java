@@ -36,4 +36,8 @@ public class StringUtils {
         }
         return s;
     }
+
+    public static boolean isNotEmpty(String countStr) {
+        return countStr !=null && !countStr.trim().isEmpty();
+    }
 }

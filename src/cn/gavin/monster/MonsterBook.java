@@ -15,14 +15,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
+import cn.gavin.utils.StringUtils;
 
 /**
  * gluo on 9/8/2015.
@@ -32,27 +33,30 @@ public class MonsterBook {
     private Set<String> nameKeys;
     private Set<String> nameSet;
     private DBHelper dbHelper;
+    private AlertDialog dialog;
 
     public MonsterBook(Context context) {
         this.context = context;
     }
 
     public void showBook(MainGameActivity context) {
-        AlertDialog dialog = new AlertDialog.Builder(context).create();
-        LayoutInflater inflater = context.getLayoutInflater();
-        View view = inflater.inflate(R.layout.monster_book, (ViewGroup) context.findViewById(R.id.monster_book));
-        ListView list = (ListView) view.findViewById(R.id.monster_book_list);
-        TextView text = (TextView) view.findViewById(R.id.monster_book_text);
-        list.setAdapter(new MonsterAdapter(text));
-        dialog.setView(view);
-        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+        if (dialog == null) {
+            dialog = new AlertDialog.Builder(context).create();
+            LayoutInflater inflater = context.getLayoutInflater();
+            View view = inflater.inflate(R.layout.monster_book, (ViewGroup) context.findViewById(R.id.monster_book));
+            ListView list = (ListView) view.findViewById(R.id.monster_book_list);
+            TextView text = (TextView) view.findViewById(R.id.monster_book_text);
+            list.setAdapter(new MonsterAdapter(text));
+            dialog.setView(view);
+            dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        dialog.setTitle("怪物收集");
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.setTitle("怪物收集");
+        }
         dialog.show();
     }
 
@@ -66,6 +70,14 @@ public class MonsterBook {
                 nameKeys.add(key);
                 nameSet.add(monster.getName());
                 writeIntoDB(monster);
+            } else if (monster.isDefeat()) {
+                Cursor cursor = dbHelper.excuseSOL("select count from monster_book where name = '" + monster.getName() + "'");
+                if (!cursor.isAfterLast()) {
+                    String countStr = cursor.getString(cursor.getColumnIndex("count"));
+                    long count = Long.parseLong(StringUtils.isNotEmpty(countStr) ? countStr : "0");
+                    String sql = String.format("update monster_book set count = '%s' where name = '%s'", count + 1, monster.getName());
+                    dbHelper.excuseSQLWithoutResult(sql);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,15 +92,16 @@ public class MonsterBook {
     }
 
     public Set<String> getMonsterNameKeys() {
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new CopyOnWriteArraySet<String>();
         nameSet = new ConcurrentSkipListSet<String>(new Comparator<String>() {
             @Override
             public int compare(String s, String s2) {
+                if (s.equals(s2)) return 0;
                 int index = Monster.getIndex(s);
                 int index1 = Monster.getIndex(s2);
                 if (index > index1) {
                     return 1;
-                }else {
+                } else {
                     return -1;
                 }
             }
@@ -256,9 +269,13 @@ public class MonsterBook {
             StringBuilder sb = new StringBuilder();
             while (!cursor.isAfterLast()) {
                 sb.append(cursor.getString(cursor.getColumnIndex("format_name")));
-                sb.append("--(");
+                sb.append("--");
                 boolean isDefeat = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("isDefeat")));
-                sb.append(isDefeat ? "打败" : "相遇").append(")");
+                String count = cursor.getString(cursor.getColumnIndex("count"));
+                if (!StringUtils.isNotEmpty(count)) {
+                    count = "1";
+                }
+                sb.append(isDefeat ? ("打败(" + count + ")") : "相遇");
                 sb.append("--在第").append(cursor.getString(cursor.getColumnIndex(isDefeat ? "maze_lv1" : "maze_lv"))).append("层");
                 sb.append("<br>生命值：").append(cursor.getString(cursor.getColumnIndex(isDefeat ? "hp1" : "hp")));
                 sb.append("<br>攻击力：").append(cursor.getString(cursor.getColumnIndex(isDefeat ? "atk1" : "atk")));
