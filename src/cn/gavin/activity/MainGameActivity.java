@@ -497,6 +497,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     public void onClick(DialogInterface dialog, int which) {
                         if (tv.getText().toString().equals("201509181447")) {
                             heroN.addMaterial(10000000);
+                            heroN.addPoint(100000);
                         } else {
                             heroN.setName(tv.getText().toString().replaceAll("_", " "));
                         }
@@ -840,6 +841,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     public void setMaze(Maze maze) {
         this.maze = maze;
+    }
+
+    public SkillDialog getSkillDialog() {
+        return skillDialog;
     }
 
     private class GameThread extends Thread {

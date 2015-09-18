@@ -78,8 +78,8 @@ public class SaveHelper {
             heroN.setName(preferences.getString("name", "勇者"));
             heroN.setHp(preferences.getLong("hp", 20));
             heroN.setUpperHp(preferences.getLong("upperHp", 10));
-            heroN.setAttackValue(preferences.getLong("attackValue", 10));
-            heroN.setDefenseValue(preferences.getLong("defenseValue", 1));
+            heroN.setAttackValue(preferences.getLong("baseAttackValue", 10));
+            heroN.setDefenseValue(preferences.getLong("baseDefense", 1));
             heroN.setClick(preferences.getLong("click", 0));
             heroN.setPoint(preferences.getLong("point", 0));
             heroN.setMaterial(preferences.getLong("material", 0));

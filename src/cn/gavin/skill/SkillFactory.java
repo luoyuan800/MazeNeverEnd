@@ -1,10 +1,6 @@
 package cn.gavin.skill;
 
 import android.widget.Button;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import cn.gavin.Hero;
 import cn.gavin.Maze;
 import cn.gavin.activity.MainGameActivity;
@@ -14,7 +10,11 @@ import cn.gavin.skill.expression.EnableExpression;
 import cn.gavin.skill.expression.UseExpression;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
+import cn.gavin.skill.type.PropertySkill;
 import cn.gavin.utils.Random;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by luoyuan on 9/13/15.
@@ -289,7 +289,7 @@ public class SkillFactory {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                         if (skill.getProbability() < 20) {
-                            skill.setProbability(skill.getProbability() +2.5f);
+                            skill.setProbability(skill.getProbability() + 2.5f);
                             return true;
                         }
                         return false;
@@ -464,6 +464,100 @@ public class SkillFactory {
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                         if (skill.getProbability() < 20) {
                             skill.setProbability(skill.getProbability() + 1.8f);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+            } else if (name.equals("瞬间移动")) {
+                skill = new PropertySkill(0, 0, 0, 0, 0, 0, 0);
+                skill.setName("瞬间移动");
+                skill.setHero(hero);
+                skill.setEnableExpression(new EnableExpression() {
+                    @Override
+                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
+                        return (skill.isActive() || hero.getSkillPoint() > 0)
+                                && SkillFactory.getSkill("超能量", hero, dialog).isActive();
+                    }
+                });
+                skill.setDescription(new DescExpression() {
+                    @Override
+                    public String buildDescription(Skill skill) {
+                        DefendSkill ds = (DefendSkill) skill;
+                        StringBuilder builder = new StringBuilder();
+                        builder.append("<br>");
+                        builder.append("被动技能<br>");
+                        builder.append(ds.getProbability()).append("%的概率在受到致命伤害前脱离战斗<br>");
+                        return builder.toString();
+                    }
+                });
+
+                skill.setRelease(new UseExpression() {
+                    @Override
+                    public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
+                        context.addMessage(hero.getName() + "触发了" + skill.getName() + "，逃离了战斗");
+                        return true;
+                    }
+                });
+                if (!skill.load()) {
+                    skill.setProbability(1f);
+                }
+                skill.setLevelUp(new EnableExpression() {
+                    @Override
+                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
+                        if (skill.getProbability() < 10) {
+                            skill.setProbability(skill.getProbability() + 0.9f);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+            } else if (name.equals("传送")) {
+                skill = new PropertySkill(0, 0, 0, 0, 0, 0, 0) {
+                    public void setOnUsed(boolean use) {
+                        if (use)
+                            MainGameActivity.context.getMaze().setCsmgl(MainGameActivity.context.getMaze().getCsmgl() - Math.round(getProbability()));
+                        else
+                            MainGameActivity.context.getMaze().setCsmgl(MainGameActivity.context.getMaze().getCsmgl() + Math.round(getProbability()));
+                    }
+                };
+                skill.setName("传送");
+                skill.setHero(hero);
+                skill.setEnableExpression(new EnableExpression() {
+                    @Override
+                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
+                        return (skill.isActive() || hero.getSkillPoint() > 0)
+                                && SkillFactory.getSkill("瞬间移动", hero, dialog).isActive();
+                    }
+                });
+                skill.setDescription(new DescExpression() {
+                    @Override
+                    public String buildDescription(Skill skill) {
+                        DefendSkill ds = (DefendSkill) skill;
+                        StringBuilder builder = new StringBuilder();
+                        builder.append("<br>");
+                        builder.append("被动技能<br>");
+                        builder.append(ds.getProbability()).append("增加踩到传送门的几率<br>");
+                        return builder.toString();
+                    }
+                });
+
+                skill.setRelease(new UseExpression() {
+                    @Override
+                    public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
+//                        context.addMessage(hero.getName() + "触发了" + skill.getName() + "，逃离了战斗");
+                        return true;
+                    }
+                });
+                if (!skill.load()) {
+                    skill.setProbability(50f);
+                }
+                skill.setLevelUp(new EnableExpression() {
+                    @Override
+                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
+                        if (skill.getProbability() < 400) {
+                            skill.setProbability(skill.getProbability() + 30f);
+                            MainGameActivity.context.getMaze().setCsmgl(MainGameActivity.context.getMaze().getCsmgl() - 30);
                             return true;
                         }
                         return false;

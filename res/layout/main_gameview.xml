@@ -340,19 +340,17 @@
                             android:id="@+id/up_sword"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/level_up"
-                            android:textSize="15sp" />
+                            android:textSize="12sp" />
 
                         <Button
                             android:id="@+id/up_t_sword"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:gravity="center"
                             android:text="+10"
-                            android:textSize="15sp" />
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -379,19 +377,17 @@
                             android:id="@+id/up_armor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/level_up"
-                            android:textSize="15sp" />
+                            android:textSize="12sp" />
 
                         <Button
                             android:id="@+id/up_t_armor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:gravity="center"
                             android:text="+10"
-                            android:textSize="15sp" />
+                            android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -406,7 +402,7 @@
                         android:orientation="vertical">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
@@ -444,7 +440,7 @@
                             />
 -->
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
@@ -477,7 +473,7 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
                             <Button
@@ -485,7 +481,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="12sp"
-                                android:text="转换技能点"
+                                android:text="获取技能点"
                                 android:layout_weight="1"
                                 android:enabled="false"/>
                             <Button
@@ -495,11 +491,11 @@
                                 android:layout_gravity="fill_horizontal"
                                 android:layout_weight="1"
                                 android:text="@string/buy_label"
-                                android:textSize="8sp" />
+                                android:textSize="12sp" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 

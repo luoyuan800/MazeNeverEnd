@@ -4,18 +4,26 @@ import cn.gavin.activity.MainGameActivity;
 import cn.gavin.monster.Monster;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.skill.Skill;
+import cn.gavin.skill.SkillFactory;
 import cn.gavin.utils.Random;
 
 /**
  * Created by gluo on 8/26/2015.
  */
 public class Maze {
+    private int csmgl = 8977;
     private Hero hero;
     private long level;
     private boolean moving;
     private long step;
     private long streaking;
     private MonsterBook monsterBook;
+
+    public void setCsmgl(int csmgl){
+        this.csmgl = csmgl;
+    }
+
+    public int getCsmgl(){return csmgl;}
 
     public boolean isMoving() {
         return moving;
@@ -63,7 +71,7 @@ public class Maze {
                 context.addMessage(heroName + "休息了一会，恢复了<font color=\"green\">" + hel + "</font>点HP");
                 hero.addHp(hel);
                 context.addMessage("-------------------");
-            } else if (random.nextLong(9000) > 8977) {
+            } else if (random.nextLong(9000) > csmgl) {
                 step = 0;
                 long levJ = random.nextLong(hero.getMaxMazeLev() + 5) + 1;
                 context.addMessage(heroName + "踩到了传送门，被传送到了迷宫第" + levJ + "层");
@@ -114,6 +122,13 @@ public class Maze {
                             long harm = monster.getAtk() - hero.getDefenseValue();
                             if (harm <= 0) {
                                 harm = random.nextLong(level + 1);
+                            }
+                            if(harm >= hero.getHp()){
+                                Skill sy = SkillFactory.getSkill("超能量",hero,context.getSkillDialog());
+                                if(sy.isActive()&&sy.perform()){
+                                    isJump = sy.release(monster);
+                                    continue;
+                                }
                             }
                             hero.addHp(-harm);
                             context.addMessage(monster.getName() + "攻击了" + heroName + "，造成了<font color=\"red\">" + harm + "</font>点伤害。");
