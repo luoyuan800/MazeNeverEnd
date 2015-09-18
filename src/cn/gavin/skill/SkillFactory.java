@@ -2,7 +2,6 @@ package cn.gavin.skill;
 
 import android.widget.Button;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -133,7 +132,7 @@ public class SkillFactory {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                         Random random = hero.getRandom();
-                        return random.nextLong(1000) < skill.getProbability() * 10;
+                        return random.nextLong(100) < skill.getProbability();
                     }
                 });
                 skill.setRelease(new UseExpression() {
@@ -145,7 +144,7 @@ public class SkillFactory {
                     }
                 });
                 if (!skill.load()) {
-                    skill.setProbability(0.5f);
+                    skill.setProbability(1.0f);
                 }
                 skill.setLevelUp(new EnableExpression() {
                     @Override
@@ -197,7 +196,7 @@ public class SkillFactory {
                     }
                 });
                 if (!skill.load()) {
-                    skill.setProbability(1.1f);
+                    skill.setProbability(1.5f);
                 }
                 skill.setLevelUp(new EnableExpression() {
                     @Override
@@ -242,7 +241,7 @@ public class SkillFactory {
                 skill.setRelease(new UseExpression() {
                     @Override
                     public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                        long harm = hero.getAttackValue();
+                        long harm = hero.getAttackValue() + hero.getRandom().nextLong(hero.getStrength() / 100 + 1);
                         context.addMessage(hero.getName() + "使用技能" + skill.getName() + "攻击" + monster.getFormatName() + "造成了" + harm + "点伤害");
                         monster.addHp(-harm);
                         if (hero.getRandom().nextLong(1000) > skill.getProbability()) {
@@ -252,7 +251,7 @@ public class SkillFactory {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            harm = hero.getAttackValue();
+                            harm = hero.getAttackValue() + hero.getRandom().nextLong(hero.getStrength() / 100 + 1);
                             context.addMessage(hero.getName() + "使用技能" + skill.getName() + "攻击" + monster.getFormatName() + "造成了" + harm + "点伤害");
                             monster.addHp(-harm);
                         }
@@ -260,7 +259,7 @@ public class SkillFactory {
                     }
                 });
                 if (!skill.load()) {
-                    skill.setProbability(0.1f);
+                    skill.setProbability(2.5f);
                 }
                 skill.setLevelUp(new EnableExpression() {
                     @Override
@@ -378,7 +377,7 @@ public class SkillFactory {
                     }
                 });
                 if (!skill.load()) {
-                    skill.setProbability(0.8f);
+                    skill.setProbability(2.8f);
                 }
                 skill.setLevelUp(new EnableExpression() {
                     @Override
@@ -415,7 +414,7 @@ public class SkillFactory {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                         Random random = hero.getRandom();
-                        return random.nextLong(1000) + random.nextFloat() < skill.getProbability() * 10;
+                        return random.nextLong(100) + random.nextFloat() < skill.getProbability();
                     }
                 });
                 skill.setRelease(new UseExpression() {
@@ -506,7 +505,7 @@ public class SkillFactory {
                     }
                 });
                 if (!skill.load()) {
-                    skill.setProbability(1.1f);
+                    skill.setProbability(3.5f);
                 }
                 skill.setLevelUp(new EnableExpression() {
                     @Override

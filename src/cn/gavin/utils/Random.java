@@ -14,7 +14,7 @@ public class Random extends java.util.Random {
             int i = s.length() / 2;
             int j = Integer.parseInt(s.substring(0, i));
             int k = Integer.parseInt(s.substring(i, s.length()-1));
-            return Long.parseLong(String.format("%s%s",nextInt(j),nextInt(k)));
+            return (long)nextInt(j) + (long)nextInt(k);
         }
     }
 }
