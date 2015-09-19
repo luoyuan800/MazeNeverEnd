@@ -553,6 +553,6 @@ public class Hero {
     }
 
     public String getFormatName() {
-        return "<font color=\"#800080\">" + hero.getName() + "</font>";
+        return "<font color=\"#800080\">" + getName() + "</font>";
     }
 }
