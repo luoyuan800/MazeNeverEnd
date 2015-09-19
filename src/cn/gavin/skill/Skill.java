@@ -244,4 +244,12 @@ public abstract class Skill {
     public void setLevelUp(EnableExpression levelUp) {
         this.levelUp = levelUp;
     }
+
+    public String format(String desc){
+        return "<i>" + desc + "</i>";
+    }
+
+    protected void addMessage(String msg){
+        MainGameActivity.context.addMessage(format(msg));
+    }
 }

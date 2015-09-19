@@ -1,16 +1,16 @@
 package cn.gavin;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.RestoreSkill;
 import cn.gavin.utils.Random;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Hero {
     private static final String TAG = "Hero";
@@ -550,5 +550,9 @@ public class Hero {
 
     public void setThirdSkill(Skill thirdSkill) {
         this.thirdSkill = thirdSkill;
+    }
+
+    public String getFormatName() {
+        return "<font color=\"#800080\">" + hero.getName() + "</font>";
     }
 }
