@@ -18,7 +18,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by luoyuan on 9/13/15.
+ * by luoyuan
+ * on 9/13/15.
  */
 public class SkillFactory {
     private static Map<String, Skill> skillMap = new ConcurrentHashMap<String, Skill>();
@@ -42,12 +43,11 @@ public class SkillFactory {
                     public String buildDescription(Skill skill) {
                         AttackSkill attackSkill = (AttackSkill) skill;
                         StringBuilder builder = new StringBuilder();
-                        builder.append("<br>");
                         builder.append("勇者的基本技能，学会了才能踏上征途。<br>");
                         builder.append(attackSkill.getProbability()).append("%概率释放<br>");
-                        builder.append("造成").append(attackSkill.getBaseHarm()).append("基本伤害。").append("0 - ").
-                                append(attackSkill.getAdditionHarm()).append("随机伤害").append("<br>").
-                                append("不可与魔王技能同时激活<br>");
+                        builder.append("造成额外的").append(attackSkill.getBaseHarm()).append(" - ").
+                                append(attackSkill.getBaseHarm() + attackSkill.getAdditionHarm()).append("伤害").append("<br>").
+                                append("不可与魔王技能同时激活");
                         return builder.toString();
                     }
                 });
@@ -55,7 +55,7 @@ public class SkillFactory {
                 skill.setRelease(new UseExpression() {
                     @Override
                     public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                        long harm = ((AttackSkill) skill).getBaseHarm() + hero.getRandom().nextLong((((AttackSkill) skill).getAdditionHarm()) + 1);
+                        long harm = hero.getAttackValue() + ((AttackSkill) skill).getBaseHarm() + hero.getRandom().nextLong((((AttackSkill) skill).getAdditionHarm()) + 1);
                         context.addMessage(skill.format(hero.getFormatName() + "使用了技能" + skill.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点伤害"));
                         monster.addHp(-harm);
                         return false;
@@ -94,16 +94,15 @@ public class SkillFactory {
                     public String buildDescription(Skill skill) {
                         DefendSkill defendSkill = (DefendSkill) skill;
                         StringBuilder builder = new StringBuilder();
-                        builder.append("<br>").append("魔本天性，吾欲入魔，谁人可挡。<br>").
+                        builder.append("魔本天性，吾欲入魔，谁人可挡。<br>").
                                 append("被攻击的时候有").append(defendSkill.getProbability()).
                                 append("%概率将伤害转换为HP恢复。").
-                                append("不可与勇者技能同时激活<br>");
+                                append("不可与勇者技能同时激活");
                         return builder.toString();
                     }
                 });
             } else if (name.equals("闪避")) {
-                DefendSkill defendSkill = new DefendSkill();
-                skill = defendSkill;
+                skill = new DefendSkill();
                 skill.setName("闪避");
                 skill.setHero(hero);
                 skill.setEnableExpression(new EnableExpression() {
@@ -117,9 +116,8 @@ public class SkillFactory {
                     public String buildDescription(Skill skill) {
                         DefendSkill ds = (DefendSkill) skill;
                         StringBuilder builder = new StringBuilder();
-                        builder.append("<br>");
                         builder.append("防御技能<br>");
-                        builder.append(ds.getProbability()).append("%概率闪避攻击<br>");
+                        builder.append(ds.getProbability()).append("%概率闪避攻击");
                         return builder.toString();
                     }
                 });
@@ -138,7 +136,6 @@ public class SkillFactory {
                 skill.setLevelUp(new EnableExpression() {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        DefendSkill ds = (DefendSkill) skill;
                         if (skill.getProbability() < 2) {
                             skill.setProbability(skill.getProbability() + 1.1f);
                             return true;
@@ -147,8 +144,7 @@ public class SkillFactory {
                     }
                 });
             } else if (name.equals("斩击")) {
-                final AttackSkill attackSkill = new AttackSkill();
-                skill = attackSkill;
+                skill = new AttackSkill();
                 skill.setName("斩击");
                 skill.setHero(hero);
                 skill.setEnableExpression(new EnableExpression() {
@@ -162,9 +158,8 @@ public class SkillFactory {
                     public String buildDescription(Skill skill) {
                         AttackSkill as = (AttackSkill) skill;
                         StringBuilder builder = new StringBuilder();
-                        builder.append("<br>");
                         builder.append(as.getProbability()).append("%的概率释放<br>");
-                        builder.append("对对方造成不超过自身当前HP值的随机伤害<br>");
+                        builder.append("对对方造成不超过自身当前HP值的随机伤害");
                         return builder.toString();
                     }
                 });
@@ -193,8 +188,7 @@ public class SkillFactory {
                     }
                 });
             } else if (name.equals("铁拳")) {
-                AttackSkill attackSkill = new AttackSkill();
-                skill = attackSkill;
+                skill = new AttackSkill();
                 skill.setName("铁拳");
                 skill.setHero(hero);
                 skill.setEnableExpression(new EnableExpression() {
@@ -208,9 +202,8 @@ public class SkillFactory {
                     public String buildDescription(Skill skill) {
                         AttackSkill as = (AttackSkill) skill;
                         StringBuilder builder = new StringBuilder();
-                        builder.append("<br>");
                         builder.append(as.getProbability()).append("%的概率释放<br>");
-                        builder.append("使用技能后，有").append(as.getProbability() / 10f).append("%概率使得敌人眩晕<br>");
+                        builder.append("使用技能后，有").append(as.getProbability() / 10f).append("%概率使得敌人眩晕");
                         return builder.toString();
                     }
                 });
@@ -241,7 +234,6 @@ public class SkillFactory {
                 skill.setLevelUp(new EnableExpression() {
                     @Override
                     public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        DefendSkill ds = (DefendSkill) skill;
                         if (skill.getProbability() < 2) {
                             skill.setProbability(skill.getProbability() + 1.1f);
                             return true;
@@ -264,9 +256,8 @@ public class SkillFactory {
                     public String buildDescription(Skill skill) {
                         DefendSkill ds = (DefendSkill) skill;
                         StringBuilder builder = new StringBuilder();
-                        builder.append("<br>");
                         builder.append("防御技能<br>");
-                        builder.append(ds.getProbability()).append("%概率反弹").append(20 + skill.getProbability() * 10).append("%的攻击伤害<br>");
+                        builder.append(ds.getProbability()).append("%概率反弹").append(20 + skill.getProbability() * 10).append("%的攻击伤害");
                         return builder.toString();
                     }
                 });
@@ -311,9 +302,8 @@ public class SkillFactory {
                     public String buildDescription(Skill skill) {
                         DefendSkill ds = (DefendSkill) skill;
                         StringBuilder builder = new StringBuilder();
-                        builder.append("<br>");
                         builder.append("防御技能<br>");
-                        builder.append(ds.getProbability()).append("%概率在受到伤害后持续一段时间增幅0 - ").append(ds.getProbability() * 5 + 5).append("%的攻击力<br>");
+                        builder.append(ds.getProbability()).append("%概率在受到伤害后持续一段时间增幅0 - ").append(ds.getProbability() * 5 + 5).append("%的攻击力");
                         return builder.toString();
                     }
                 });
@@ -325,8 +315,8 @@ public class SkillFactory {
                         context.addMessage(skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害"));
                         hero.addHp(-harm);
                         final long atk = hero.getRandom().nextLong(Math.round(hero.getAttackValue() + hero.getAttackValue() * (5 + skill.getProbability() * 5)) + 1);
-                        context.addMessage(skill.format(hero.getFormatName() + "触发了" + skill.getName() + "攻击力增加了" + atk));
                         hero.addAttackValue(atk);
+                        context.addMessage(skill.format(hero.getFormatName() + "触发了" + skill.getName() + "攻击力增加了" + atk));
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -369,9 +359,8 @@ public class SkillFactory {
                     public String buildDescription(Skill skill) {
                         DefendSkill ds = (DefendSkill) skill;
                         StringBuilder builder = new StringBuilder();
-                        builder.append("<br>");
                         builder.append("防御技能<br>");
-                        builder.append(ds.getProbability()).append("%概率在受到伤害后持续一段时间使得对方不可动弹").append("<br>");
+                        builder.append(ds.getProbability()).append("%概率在受到伤害后持续一段时间使得对方不可动弹");
                         return builder.toString();
                     }
                 });
@@ -427,9 +416,8 @@ public class SkillFactory {
                     public String buildDescription(Skill skill) {
                         DefendSkill ds = (DefendSkill) skill;
                         StringBuilder builder = new StringBuilder();
-                        builder.append("<br>");
                         builder.append("防御技能<br>");
-                        builder.append(ds.getProbability()).append("%概率在受到伤害后持续一段时间增幅0 - ").append(ds.getProbability() * 5 + 10).append("%的生命值上限<br>");
+                        builder.append(ds.getProbability()).append("%概率在受到伤害后持续一段时间增幅0 - ").append(ds.getProbability() * 5 + 10).append("%的生命值上限");
                         return builder.toString();
                     }
                 });
@@ -438,11 +426,11 @@ public class SkillFactory {
                     @Override
                     public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                         long harm = monster.getAtk() - hero.getDefenseValue();
-                        context.addMessage(skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害"));
                         hero.addHp(-harm);
+                        context.addMessage(skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害"));
                         final long hp = hero.getRandom().nextLong(Math.round(hero.getAttackValue() + hero.getAttackValue() * (10 + skill.getProbability() * 5)) + 1);
-                        context.addMessage(skill.format(hero.getFormatName() + "触发了" + skill.getName() + "生命值上限增加了" + hp));
                         hero.addUpperHp(hp);
+                        context.addMessage(skill.format(hero.getFormatName() + "触发了" + skill.getName() + "生命值上限增加了" + hp));
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -486,9 +474,8 @@ public class SkillFactory {
                     public String buildDescription(Skill skill) {
                         DefendSkill ds = (DefendSkill) skill;
                         StringBuilder builder = new StringBuilder();
-                        builder.append("<br>");
                         builder.append("被动技能<br>");
-                        builder.append(ds.getProbability()).append("%的概率在受到致命伤害前脱离战斗<br>");
+                        builder.append(ds.getProbability()).append("%的概率在受到致命伤害前脱离战斗");
                         return builder.toString();
                     }
                 });
@@ -536,9 +523,8 @@ public class SkillFactory {
                     public String buildDescription(Skill skill) {
                         DefendSkill ds = (DefendSkill) skill;
                         StringBuilder builder = new StringBuilder();
-                        builder.append("<br>");
                         builder.append("被动技能<br>");
-                        builder.append(ds.getProbability()).append("增加踩到传送门的几率<br>");
+                        builder.append(ds.getProbability()).append("增加踩到传送门的几率");
                         return builder.toString();
                     }
                 });
@@ -564,70 +550,7 @@ public class SkillFactory {
                         return false;
                     }
                 });
-            } else if (name.equals("定身")) {
-                skill = new AttackSkill();
-                skill.setName("定身");
-                skill.setHero(hero);
-                skill.setEnableExpression(new EnableExpression() {
-                    @Override
-                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        return (skill.isActive() || hero.getSkillPoint() > 0)
-                                && SkillFactory.getSkill("传送", hero, dialog).isActive();
-                    }
-                });
-                skill.setDescription(new DescExpression() {
-                    @Override
-                    public String buildDescription(Skill skill) {
-                        AttackSkill ds = (AttackSkill) skill;
-                        StringBuilder builder = new StringBuilder();
-                        builder.append("<br>");
-                        builder.append("有").append(skill.getProbability()).append("的机率使得敌方").append(ds.getBaseHarm()).append("个回合不能动弹<br>");
-                        return builder.toString();
-                    }
-                });
-
-                skill.setRelease(new UseExpression() {
-                    @Override
-                    public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                        int turn = hero.getRandom().nextInt((int) ((AttackSkill) skill).getBaseHarm() + 1);
-                        boolean isJump = false;
-                        while (!isJump && turn-- > 0) {
-                            if (context.isPause()) {
-                                continue;
-                            }
-                            Skill skillUse = hero.useAttackSkill(monster);
-                            isJump = false;
-                            if (skillUse != null) {
-                                isJump = skillUse.release(monster);
-                            } else {
-                                if (hero.getHp() < hero.getUpperHp()) {
-                                    skillUse = hero.useRestoreSkill();
-                                }
-                                if (skillUse != null) {
-                                    isJump = skillUse.release(monster);
-                                } else {
-                                    monster.addHp(-(hero.getAttackValue()));
-                                    skill.addMessage(hero.getFormatName() + "攻击了" + monster.getName() + "，造成了<font color=\"red\">" + hero.getAttackValue() + "</font>点伤害。");
-                                }
-                            }
-                        }
-                        return false;
-                    }
-                });
-                if (!skill.load()) {
-                    skill.setProbability(8f);
-                }
-                skill.setLevelUp(new EnableExpression() {
-                    @Override
-                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                        if (skill.getProbability() < 20) {
-                            skill.setProbability(skill.getProbability() + 5f);
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-            }else if (name.equals("裂空剑")) {
+            } else if (name.equals("裂空剑")) {
                 skill = new AttackSkill();
                 skill.setName("裂空剑");
                 skill.setHero(hero);
@@ -643,9 +566,8 @@ public class SkillFactory {
                     public String buildDescription(Skill skill) {
                         AttackSkill ds = (AttackSkill) skill;
                         StringBuilder builder = new StringBuilder();
-                        builder.append("<br>");
                         builder.append("高阶剑技能，需要装备武器阶位高于金剑才可以激活<br>");
-                        builder.append(ds.getProbability()).append("的概率释放，造成").append(ds.getBaseHarm()).append("的基本伤害和0 - ").append(ds.getAdditionHarm()).append("的额外伤害<br>");
+                        builder.append(ds.getProbability()).append("的概率释放，造成额外的").append(ds.getBaseHarm()).append(" - ").append(ds.getBaseHarm() + ds.getAdditionHarm()).append("伤害");
                         return builder.toString();
                     }
                 });
@@ -653,9 +575,9 @@ public class SkillFactory {
                 skill.setRelease(new UseExpression() {
                     @Override
                     public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                        long harm = ((AttackSkill)skill).getBaseHarm() + hero.getRandom().nextLong(((AttackSkill)skill).getAdditionHarm() + 1);
-                        skill.addMessage(hero.getFormatName() + "使用了技能"  + skill.getName() + "，对" + monster.getName() + "造成了" + harm + "点伤害");
+                        long harm = hero.getAttackValue() + ((AttackSkill) skill).getBaseHarm() + hero.getRandom().nextLong(((AttackSkill) skill).getAdditionHarm() + 1);
                         monster.addHp(-harm);
+                        skill.addMessage(hero.getFormatName() + "使用了技能" + skill.getName() + "，对" + monster.getName() + "造成了" + harm + "点伤害");
                         return false;
                     }
                 });
@@ -673,6 +595,228 @@ public class SkillFactory {
                             return true;
                         }
                         return false;
+                    }
+                });
+            } else if (name.equals("原能力")) {
+                DefendSkill defendSkill = new DefendSkill();
+                defendSkill.setName("原能力");
+                defendSkill.setHero(hero);
+                defendSkill.setEnableExpression(new EnableExpression() {
+                    @Override
+                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
+                        return (skill.isActive() || hero.getSkillPoint() > 0)
+                                && SkillFactory.getSkill("裂空剑", hero, dialog).isActive();
+                    }
+                });
+                defendSkill.setDescription(new DescExpression() {
+                    @Override
+                    public String buildDescription(Skill skill) {
+                        AttackSkill ds = (AttackSkill) skill;
+                        StringBuilder builder = new StringBuilder();
+                        builder.append("防御技能<br>");
+                        builder.append(ds.getProbability()).append("的概率释放，在受到伤害后恢复全部HP");
+                        return builder.toString();
+                    }
+                });
+
+                defendSkill.setRelease(new UseExpression() {
+                    @Override
+                    public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
+                        long harm = monster.getAtk() - hero.getDefenseValue();
+                        if (harm >= hero.getHp()) {
+                            hero.addHp(-harm);
+                            skill.addMessage(monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了" + harm + "的伤害");
+                            return false;
+                        }
+                        hero.restore();
+                        skill.addMessage(hero.getFormatName() + "使用了技能" + skill.getName() + "，HP全部恢复了");
+                        return false;
+                    }
+                });
+                if (!defendSkill.load()) {
+                    defendSkill.setProbability(1f);
+                }
+                defendSkill.setLevelUp(new EnableExpression() {
+                    @Override
+                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
+                        if (skill.getProbability() < 10) {
+                            skill.setProbability(skill.getProbability() + 1f);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+            } else if (name.equals("重击")) {
+                AttackSkill iSkill = new AttackSkill();
+                iSkill.setName("重击");
+                iSkill.setHero(hero);
+                iSkill.setEnableExpression(new EnableExpression() {
+                    @Override
+                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
+                        return (skill.isActive() || hero.getSkillPoint() > 0)
+                                && SkillFactory.getSkill("原能力", hero, dialog).isActive();
+                    }
+                });
+                iSkill.setDescription(new DescExpression() {
+                    @Override
+                    public String buildDescription(Skill skill) {
+                        AttackSkill aSkill = (AttackSkill) skill;
+                        StringBuilder builder = new StringBuilder();
+                        builder.append("返璞归真<br>");
+                        builder.append(skill.getProbability()).append("的概率释放，造成").append(aSkill.getBaseHarm()).append("倍伤害");
+                        return builder.toString();
+                    }
+                });
+                iSkill.setRelease(new UseExpression() {
+                    @Override
+                    public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
+                        long n = hero.getRandom().nextLong(((AttackSkill) skill).getBaseHarm() + 1) + 1;
+                        long harm = n * hero.getAttackValue();
+                        monster.addHp(-harm);
+                        skill.addMessage(hero.getFormatName() + "使用了技能" + skill.getName() + "，对" + monster.getFormatName() + "造成了" + harm + "伤害");
+                        return false;
+                    }
+                });
+                if (!iSkill.load()) {
+                    iSkill.setProbability(5f);
+                    iSkill.setBaseHarm(3);
+                }
+                iSkill.setLevelUp(new EnableExpression() {
+                    @Override
+                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
+                        if (skill.getProbability() < 20) {
+                            skill.setProbability(skill.getProbability() + 1f);
+                            ((AttackSkill) skill).setBaseHarm(((AttackSkill) skill).getBaseHarm() + 5);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+            } else if (name.equals("寻宝")) {
+                final PropertySkill iskll = new PropertySkill(2900, 0, 0, 0, 0, 0, 0);
+                iskll.setName("寻宝");
+                iskll.setHero(hero);
+                iskll.setEnableExpression(new EnableExpression() {
+                    @Override
+                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
+                        return (skill.isActive() || hero.getSkillPoint() > 0)
+                                && SkillFactory.getSkill("传送", hero, dialog).isActive();
+                    }
+                });
+                iskll.setDescription(new DescExpression() {
+                    @Override
+                    public String buildDescription(Skill skill) {
+                        DefendSkill ds = (DefendSkill) skill;
+                        StringBuilder builder = new StringBuilder();
+                        builder.append("被动技能<br>");
+                        builder.append(ds.getProbability()).append("永久增加获得宝箱的概率防御上限");
+                        return builder.toString();
+                    }
+                });
+
+                iskll.setRelease(new UseExpression() {
+                    @Override
+                    public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
+                        return true;
+                    }
+                });
+                if (!iskll.load()) {
+                    iskll.setProbability(1f);
+                }
+                iskll.setLevelUp(new EnableExpression() {
+                    @Override
+                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
+                        return true;
+                    }
+                });
+            }else if (name.equals("错位")) {
+                final AttackSkill iskll = new AttackSkill();
+                iskll.setName("错位");
+                iskll.setHero(hero);
+                iskll.setEnableExpression(new EnableExpression() {
+                    @Override
+                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
+                        return (skill.isActive() || hero.getSkillPoint() > 0)
+                                && SkillFactory.getSkill("斩击", hero, dialog).isActive();
+                    }
+                });
+                iskll.setDescription(new DescExpression() {
+                    @Override
+                    public String buildDescription(Skill skill) {
+                        StringBuilder builder = new StringBuilder();
+                        builder.append("当敌方生命值比自己HP高的时候，有").append(skill.getProbability()).append("%的概率交换双方的HP");
+                        return builder.toString();
+                    }
+                });
+
+                iskll.setRelease(new UseExpression() {
+                    @Override
+                    public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
+                        if(monster.getHp() > hero.getHp()){
+                            long p = hero.getHp();
+                            hero.setHp(monster.getHp());
+                            monster.addHp(-monster.getHp() + p);
+                            skill.addMessage(hero.getFormatName() + "使用了技能" +skill.getName() + "，和" + monster.getFormatName() + "交换了HP");
+                        }else{
+                            long harm = hero.getAttackValue();
+                            monster.addHp(-harm);
+                            MainGameActivity.context.addMessage(hero.getFormatName() + "攻击了" + monster.getFormatName() + "造成了" + harm + "点伤害");
+                        }
+                        return true;
+                    }
+                });
+                if (!iskll.load()) {
+                    iskll.setProbability(1f);
+                }
+                iskll.setLevelUp(new EnableExpression() {
+                    @Override
+                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
+                        return true;
+                    }
+                });
+            }else if (name.equals("超防御")) {
+                final PropertySkill iskll = new PropertySkill(0,0,0,0,0,0,0){
+                    public void setActive(boolean active){
+                        if(active){
+                            getHero().setDefenseValue(getHero().getBaseDefense() * 2);
+                        }else{
+                            getHero().setDefenseValue(getHero().getBaseDefense() / 2);
+                        }
+                        super.setActive(active);
+                    }
+                };
+                iskll.setName("超防御");
+                iskll.setHero(hero);
+                iskll.setEnableExpression(new EnableExpression() {
+                    @Override
+                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
+                        return (skill.isActive() || hero.getSkillPoint() > 0)
+                                && SkillFactory.getSkill("错位", hero, dialog).isActive();
+                    }
+                });
+                iskll.setDescription(new DescExpression() {
+                    @Override
+                    public String buildDescription(Skill skill) {
+                        StringBuilder builder = new StringBuilder();
+                        builder.append("防御至上<br>").append("被动技能，激活即生效<br>").append("当激活该技能时，当前的基础防御力翻倍。当取消激活该技能时，当前的基础防御力减半");
+                        return builder.toString();
+                    }
+                });
+
+                iskll.setRelease(new UseExpression() {
+                    @Override
+                    public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
+
+                        return true;
+                    }
+                });
+                if (!iskll.load()) {
+                    iskll.setProbability(1f);
+                }
+                iskll.setLevelUp(new EnableExpression() {
+                    @Override
+                    public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
+                        return true;
                     }
                 });
             }

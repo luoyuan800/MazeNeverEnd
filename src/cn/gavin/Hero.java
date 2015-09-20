@@ -23,6 +23,7 @@ public class Hero {
     public static final long ATR_RISE = 2;
     // 防御成长 （每点敏捷点数增加）
     public static final long DEF_RISE = 1;
+    private final String formatName = "<font color=\"#800080\">" + getName() + "</font>";
     private long click;
     private String name;
     private long hp;//当前
@@ -553,6 +554,6 @@ public class Hero {
     }
 
     public String getFormatName() {
-        return "<font color=\"#800080\">" + getName() + "</font>";
+        return formatName;
     }
 }

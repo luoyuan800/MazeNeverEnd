@@ -62,5 +62,41 @@ public class BaseSkill extends SkillLayout {
         skill = SkillFactory.getSkill("超能量",hero, dialog);
         button = (Button)view.findViewById(R.id.skill_base_c_button);
         skill.setSkillButton(button);
+
+        skill = SkillFactory.getSkill("瞬间移动",hero, dialog);
+        button = (Button)view.findViewById(R.id.skill_base_sy_button);
+        skill.setSkillButton(button);
+
+        skill = SkillFactory.getSkill("斩击",hero, dialog);
+        button = (Button)view.findViewById(R.id.skill_base_zj_button);
+        skill.setSkillButton(button);
+
+        skill = SkillFactory.getSkill("裂空剑",hero, dialog);
+        button = (Button)view.findViewById(R.id.skill_base_lkj_button);
+        skill.setSkillButton(button);
+
+        skill = SkillFactory.getSkill("传送",hero, dialog);
+        button = (Button)view.findViewById(R.id.skill_base_cs_button);
+        skill.setSkillButton(button);
+
+        skill = SkillFactory.getSkill("错位",hero, dialog);
+        button = (Button)view.findViewById(R.id.skill_base_cw_button);
+        skill.setSkillButton(button);
+
+        skill = SkillFactory.getSkill("原能力",hero, dialog);
+        button = (Button)view.findViewById(R.id.skill_base_ynl_button);
+        skill.setSkillButton(button);
+
+        skill = SkillFactory.getSkill("寻宝",hero, dialog);
+        button = (Button)view.findViewById(R.id.skill_base_xb_button);
+        skill.setSkillButton(button);
+
+        skill = SkillFactory.getSkill("超防御",hero, dialog);
+        button = (Button)view.findViewById(R.id.skill_base_cfy_button);
+        skill.setSkillButton(button);
+
+        skill = SkillFactory.getSkill("重击",hero, dialog);
+        button = (Button)view.findViewById(R.id.skill_base_zj_button);
+        skill.setSkillButton(button);
     }
 }

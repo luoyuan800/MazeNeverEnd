@@ -57,7 +57,7 @@ import cn.gavin.upload.Upload;
 
 public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener {
     //Constants
-    private static final String TAG = "MainGameActivity";
+    public static final String TAG = "MazeNeverEnd";
     public static final String APK_PATH = Environment.getExternalStorageDirectory() + "/maze";
     private static final String VERSION_CHECK_URL = "http://7xk7ce.com1.z0.glb.clouddn.com/MazeNeverEndUpdate.jpg";
     private static final String PACKAGE_DOWNLOAD_URL = "http://7xk7ce.com1.z0.glb.clouddn.com/MazeNeverEnd.png";
@@ -171,6 +171,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
         @Override
         public void handleMessage(Message msg) {
+            try{
             switch (msg.what) {
                 case 104:
                     monsterBook.initView(context);
@@ -260,6 +261,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             }
             refresh();
             super.handleMessage(msg);
+            }catch (Exception exp){
+                Log.e(TAG,"MainGameActivity.Handler", exp);
+            }
         }
 
     };
@@ -851,6 +855,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
         @Override
         public void run() {
+            try{
             checkUpdate();
             new MoveThread().start();
             while (gameThreadRunning) {
@@ -864,6 +869,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     if (saveTime >= refreshInfoSpeed * 200)
                         save();
                 }
+            }
+            }catch (Exception exp){
+                Log.e(TAG,"MainGameActivity.GameThread", exp);
             }
         }
     }
