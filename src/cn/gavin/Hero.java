@@ -1,16 +1,17 @@
 package cn.gavin;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.RestoreSkill;
 import cn.gavin.utils.Random;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import cn.gavin.utils.StringUtils;
 
 public class Hero {
     private static final String TAG = "Hero";
@@ -23,7 +24,7 @@ public class Hero {
     public static final long ATR_RISE = 2;
     // 防御成长 （每点敏捷点数增加）
     public static final long DEF_RISE = 1;
-    private final String formatName = "<font color=\"#800080\">" + getName() + "</font>";
+    private String formatName;
     private long click;
     private String name;
     private long hp;//当前
@@ -45,10 +46,11 @@ public class Hero {
     private Random random;
     private long clickAward = 1;
     private long deathCount;
-    private long skillPoint;
+    private long skillPoint = 1;
     private Skill firstSkill;
     private Skill secondSkill;
     private Skill thirdSkill;
+    private long awardCount;
 
     public long getDeathCount() {
         return deathCount;
@@ -68,6 +70,7 @@ public class Hero {
 
     public void setName(String name) {
         this.name = name;
+        this.formatName = "";
     }
 
     public long getHp() {
@@ -140,6 +143,7 @@ public class Hero {
         else if (secondSkill == null) secondSkill = skill;
         else if (thirdSkill == null) thirdSkill = skill;
         else {
+            firstSkill.setOnUsed(false);
             firstSkill = secondSkill;
             secondSkill = thirdSkill;
             thirdSkill = skill;
@@ -554,6 +558,17 @@ public class Hero {
     }
 
     public String getFormatName() {
+        if (!StringUtils.isNotEmpty(formatName)) {
+            formatName = "<font color=\"#800080\">" + getName() + "</font>";
+        }
         return formatName;
+    }
+
+    public long getAwardCount() {
+        return awardCount;
+    }
+
+    public void setAwardCount(long awardCount) {
+        this.awardCount = awardCount;
     }
 }

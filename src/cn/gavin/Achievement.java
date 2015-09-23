@@ -38,6 +38,11 @@ public enum Achievement {
     crapGame("烂游戏", "这么差劲的游戏你也愿意出钱玩，内购了50次。", 10, 10, 10, 0),
     goldColor("土豪金", "全身上下都是土豪金，防具升级为金。", 0, 0, 0, 0),
     artifact("神器", "防具或者武器升级到最高级！", 0, 0, 0, 0),
+    hero("勇者", "学习了勇者技能", 0, 0, 0, 0),
+    devils("魔王", "学习了魔王技能", 0, 0, 0, 0),
+    R_hero("真勇者", "学习了全部勇者技能", 0, 0, 0, 0),
+    satan("撒旦", "学习了全部魔王技能", 0, 0, 0, 0),
+    story("主线剧情", "恭喜你触发了主线剧情！什么？你以为这个游戏没有主线？那你就错了！", 0, 0, 0, 0),
     EMPTY("", "", 0, 0, 0, 0);
     private int addStrength;
     private int addPower;
@@ -70,7 +75,10 @@ public enum Achievement {
                 hero.addAgility(addAgility);
                 hero.addClickAward(click);
             }
-            MainGameActivity.context.addMessage("------------------------", "* 获得成就：<font color=\"#D2691E\">" + name + "</font> *", "------------------------");
+            MainGameActivity context = MainGameActivity.context;
+            if(context!=null) {
+                context.addMessage("------------------------", "* 获得成就：<font color=\"#D2691E\">" + name + "</font> *", "------------------------");
+            }
         }
     }
 

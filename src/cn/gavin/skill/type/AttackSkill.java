@@ -17,7 +17,7 @@ public class AttackSkill extends Skill {
     @Override
     public void save() {
         MainGameActivity context = MainGameActivity.context;
-        DBHelper helper = context.getDbHelper();
+        DBHelper helper = DBHelper.getDbHelper();
         String checkExistSql =  String.format("select name from skill where name ='%s'", getName());
         Cursor cursor = helper.excuseSOL(checkExistSql);
         String sql;
@@ -34,7 +34,7 @@ public class AttackSkill extends Skill {
     @Override
     public boolean load() {
         MainGameActivity context = MainGameActivity.context;
-        DBHelper helper = context.getDbHelper();
+        DBHelper helper = DBHelper.getDbHelper();
         String sql = String.format("select * from skill where name='%s'",
                 getName());
         Cursor cursor = helper.excuseSOL(sql);

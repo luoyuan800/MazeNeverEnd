@@ -112,24 +112,12 @@
                                 android:gravity="center"
                                 android:textSize="6sp" />
 
-                            <TextView
-                                android:id="@+id/first_skill_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="6sp" />
-
                             <Button
                                 android:id="@+id/secondary_skill"
                                 android:layout_width="wrap_content"
                                 android:layout_height="32dp"
                                 android:alpha="70"
                                 android:gravity="center"
-                                android:textSize="6sp" />
-
-                            <TextView
-                                android:id="@+id/second_skill_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
                                 android:textSize="6sp" />
 
                             <Button
@@ -140,11 +128,6 @@
                                 android:gravity="center"
                                 android:textSize="6sp" />
 
-                            <TextView
-                                android:id="@+id/third_skill_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="6sp" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -333,24 +316,27 @@
                             android:id="@+id/main_contri_level"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
-                            android:textSize="12sp" android:singleLine="false"
-                                />
+                            android:singleLine="false"
+                            android:textSize="12sp" />
 
                         <Button
                             android:id="@+id/up_sword"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:gravity="center"
+                            android:singleLine="true"
                             android:text="@string/level_up"
-                            android:textSize="12sp" android:singleLine="true" android:layout_weight="1"/>
+                            android:textSize="12sp" />
 
                         <Button
                             android:id="@+id/up_t_sword"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:text="+10"
-                            android:textSize="12sp" android:layout_weight="1"/>
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -376,17 +362,20 @@
                             android:id="@+id/up_armor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:gravity="center"
+                            android:singleLine="true"
                             android:text="@string/level_up"
-                            android:textSize="12sp" android:singleLine="true" android:layout_weight="1"/>
+                            android:textSize="12sp" />
 
                         <Button
                             android:id="@+id/up_t_armor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:text="+10"
-                            android:textSize="12sp" android:layout_weight="1"/>
+                            android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -432,40 +421,41 @@
                                 android:text="@string/book_label"
                                 android:textSize="12sp" />
                         </LinearLayout>
+
                         <LinearLayout
-                                android:layout_width="fill_parent"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/issue_button"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                                android:layout_gravity="fill_horizontal"
+                                android:layout_weight="1"
+                                android:enabled="false"
+                                android:text="任务"
+                                android:textSize="12sp" />
 
                             <Button
-                                    android:id="@+id/issue_button"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="fill_horizontal"
-                                    android:layout_weight="1"
-                                    android:text="任务"
-                                    android:enabled="false"
-                                    android:textSize="12sp" />
+                                android:id="@+id/batte_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="fill_horizontal"
+                                android:layout_weight="1"
+                                android:enabled="false"
+                                android:text="竞技场"
+                                android:textSize="12sp" />
 
                             <Button
-                                    android:id="@+id/batte_button"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="fill_horizontal"
-                                    android:layout_weight="1"
-                                    android:text="竞技场"
-                                    android:enabled="false"
-                                    android:textSize="12sp" />
-
-                            <Button
-                                    android:id="@+id/order_button"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="fill_horizontal"
-                                    android:layout_weight="1"
-                                    android:text="排名"
-                                    android:enabled="false"
-                                    android:textSize="12sp" />
+                                android:id="@+id/order_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="fill_horizontal"
+                                android:layout_weight="1"
+                                android:enabled="false"
+                                android:text="排名"
+                                android:textSize="12sp" />
                         </LinearLayout>
                         <!--<View
                             android:layout_width="fill_parent"
@@ -509,14 +499,15 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
+
                             <Button
                                 android:id="@+id/skill_point_get_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="12sp"
-                                android:text="获取技能点"
                                 android:layout_weight="1"
-                                android:enabled="false"/>
+                                android:text="获取技能点"
+                                android:textSize="12sp" />
+
                             <Button
                                 android:id="@+id/buy_button"
                                 android:layout_width="wrap_content"

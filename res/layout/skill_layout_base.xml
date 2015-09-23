@@ -243,6 +243,6 @@
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/skill_base_zj_button" android:layout_gravity="center|top"/>
+                android:id="@+id/skill_base_hit_button" android:layout_gravity="center|top"/>
     </LinearLayout>
 </LinearLayout>

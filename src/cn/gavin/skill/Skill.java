@@ -20,7 +20,7 @@ public abstract class Skill {
     protected long count;
     private String name;
     protected boolean active;
-    private boolean onUsed;
+    protected boolean onUsed;
     private Button skillButton;
     private Hero hero;
     private SkillDialog skillDialog;
@@ -222,7 +222,7 @@ public abstract class Skill {
 
     public boolean load() {
         MainGameActivity context = MainGameActivity.context;
-        DBHelper helper = context.getDbHelper();
+        DBHelper helper = DBHelper.getDbHelper();
         String sql = String.format("select * from skill where name='%s'",
                 getName());
         Cursor cursor = helper.excuseSOL(sql);

@@ -30,7 +30,7 @@ import cn.gavin.skill.type.PropertySkill;
  */
 public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
     private MainGameActivity context;
-    private AlertDialog dialog;
+    private AlertDialog alertDialog;
     private TextView skillDesc;
     private TextView skillPoint;
     private List<Skill> skills;
@@ -43,15 +43,38 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         this.context = context;
     }
 
+    public SkillDialog(){
+
+    }
+
     public void init() {
-        dialog = new AlertDialog.Builder(context).create();
-        dialog.setTitle("技能选择");
-        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出",
+        handler = new Handler() {
+            public void handleMessage(android.os.Message message) {
+                SkillFactory.refreshSkillStatus();
+                switch (message.what) {
+                    case 1:
+                        skillDesc.setText("");
+                        skillPoint.setText("技能点数:" + message.obj);
+                        break;
+                    case 0:
+                        skillDesc.setText("");
+                        Message msg = new Message();
+                        msg.obj = context.getHero().getSkillPoint();
+                        msg.what = 1;
+                        this.sendMessage(msg);
+                        break;
+                }
+                super.handleMessage(message);
+            }
+        };
+        alertDialog = new AlertDialog.Builder(context).create();
+        alertDialog.setTitle("技能选择");
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出",
                 new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                        alertDialog.hide();
                     }
 
                 });
@@ -68,7 +91,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         viewFlipper.addView(longSkill);
         linearLayout.addView(viewFlipper);
         detector = new GestureDetector(context, this);
-        dialog.setView(view);
+        alertDialog.setView(view);
         skillDesc = (TextView) view.findViewById(R.id.skill_description);
         skillPoint = (TextView) view.findViewById(R.id.skill_point);
         sillNameText = (TextView) view.findViewById(R.id.skill_system_name);
@@ -124,7 +147,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         msg.obj = hero.getSkillPoint();
         msg.what = 1;
         handler.sendMessage(msg);
-        dialog.show();
+        alertDialog.show();
     }
 
     public View.OnClickListener getClickListener(final Skill skill) {
@@ -188,25 +211,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         };
     }
 
-    private final Handler handler = new Handler() {
-        public void handleMessage(android.os.Message message) {
-            SkillFactory.refreshSkillStatus();
-            switch (message.what) {
-                case 1:
-                    skillDesc.setText("");
-                    skillPoint.setText("技能点数:" + message.obj);
-                    break;
-                case 0:
-                    skillDesc.setText("");
-                    Message msg = new Message();
-                    msg.obj = context.getHero().getSkillPoint();
-                    msg.what = 1;
-                    this.sendMessage(msg);
-                    break;
-            }
-            super.handleMessage(message);
-        }
-    };
+    private Handler handler;
 
     public Handler getHandler() {
         return handler;
@@ -226,5 +231,9 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
 
     public boolean isInit() {
         return isInit;
+    }
+
+    public void setContext(MainGameActivity context) {
+        this.context = context;
     }
 }

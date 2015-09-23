@@ -5,11 +5,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.io.File;
 
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.activity.MainMenuActivity;
 
 /**
  * Created by gluo on 9/14/2015.
@@ -80,7 +80,7 @@ public class DBHelper extends SQLiteOpenHelper {
         if (database.getVersion() == 0) {
             onCreate(database);
         }
-        if(database.getVersion() < DB_VERSION){
+        if (database.getVersion() < DB_VERSION) {
             onUpgrade(database, database.getVersion(), DB_VERSION);
         }
         database.setVersion(DB_VERSION);
@@ -117,7 +117,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
             db.execSQL(createTable);
             createTable = "CREATE TABLE skill(" +
-                    "name TEXT NOT NULL," +
+                    "name TEXT NOT NULL PRIMARY KEY," +
                     "is_active CHAR(50)," +
                     "is_on_use CHAR(5)," +
                     "probability TEXT," +
@@ -126,25 +126,38 @@ public class DBHelper extends SQLiteOpenHelper {
                     "addition_harm TEXT" +
                     ")";
             db.execSQL(createTable);
-        }catch (Exception e){
+            db.execSQL("CREATE UNIQUE INDEX monster_index ON monster_book (name)");
+        } catch (Exception e) {
             e.printStackTrace();
+            Log.e(MainGameActivity.TAG, "CreateTable", e);
         }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < newVersion && newVersion == 8) {
-            String alterSQL = "alter table monster_book add column count TEXT NULL";
-            db.execSQL(alterSQL);
-        }
+
     }
 
     private static DBHelper dbHelper;
+
     public static void init(Context context) {
         dbHelper = new DBHelper(context);
     }
 
-    public static DBHelper getDbHelper(){
+    public static DBHelper getDbHelper() {
         return dbHelper;
+    }
+
+    public void beginTransaction() {
+        getDB().beginTransaction();
+    }
+
+    public void markTransactionSuccess() {
+        getDB().setTransactionSuccessful();
+    }
+
+    public void endTransaction(){
+        markTransactionSuccess();
+        getDB().endTransaction();
     }
 }

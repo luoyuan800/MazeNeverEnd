@@ -1,13 +1,16 @@
 package cn.gavin.skill.type;
 
 import android.view.View;
+import android.widget.Toast;
+
+import cn.gavin.activity.MainGameActivity;
 import cn.gavin.skill.Skill;
 
 /**
  * gluo on 9/15/2015.
  */
 public class PropertySkill extends Skill {
-    private int agi, str, life,clickAward, hp, def, atk;
+    private int agi, str, life, clickAward, hp, def, atk;
 
     public PropertySkill(int agi, int str, int life, int clickAward, int hp, int def, int atk) {
         super();
@@ -20,38 +23,46 @@ public class PropertySkill extends Skill {
         this.atk = atk;
     }
 
-    public boolean isOnUsed(){
+    public boolean isOnUsed() {
         return isActive();
     }
+
     public String toString() {
         return String.format("<font color=\"red\">%s</font>使用/点击次数:%s<br>%s<br>属性技能%s", getName(), getCount(), description(),
                 !isActive() ? "长按激活" : "已经激活（被动技能激活后无需装备就可以生效）");
     }
 
     @Override
-    public void setActive(boolean active){
-        if(!isActive() && active){
+    public void setActive(boolean active) {
+        if (!isActive() && active) {
             super.setActive(true);
             setOnUsed(true);
         }
     }
+
     @Override
-    public void setOnUsed(boolean used){
-        getHero().addAgility(agi);
-        getHero().addStrength(str);
-        getHero().addLife(life);
-        getHero().setUpperHp(getHero().getUpperHp() + hp);
-        getHero().addAttackValue(atk);
-        getHero().addDefenseValue(def);
-        getHero().addClickAward(clickAward);
+    public void setOnUsed(boolean used) {
+        if (MainGameActivity.context != null && used) {
+            getHero().addAgility(agi);
+            getHero().addStrength(str);
+            getHero().addLife(life);
+            getHero().setUpperHp(getHero().getUpperHp() + hp);
+            getHero().addAttackValue(atk);
+            getHero().addDefenseValue(def);
+            getHero().addClickAward(clickAward);
+            Toast.makeText(MainGameActivity.context, "激活" + getName(), Toast.LENGTH_SHORT).show();
+        }
+        this.onUsed = used;
     }
 
-    public void refresh(){
+    public void refresh() {
         super.refresh();
         getSkillButton().setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                setActive(true);
+                if (isEnable()) {
+                    setActive(true);
+                }
                 return false;
             }
         });

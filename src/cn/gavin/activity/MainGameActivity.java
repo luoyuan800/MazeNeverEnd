@@ -49,6 +49,7 @@ import cn.gavin.R;
 import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
+import cn.gavin.log.LogHelper;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
@@ -88,9 +89,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private TextView heroPointValue;
     private TextView mainContriCurMaterial;
     private TextView clickCount;
-    private TextView firstSkillName;
-    private TextView secondSkillName;
-    private TextView thirdSkillName;
     //按钮
     private Button addstr;
     private Button addpow;
@@ -171,98 +169,98 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
         @Override
         public void handleMessage(Message msg) {
-            try{
-            switch (msg.what) {
-                case 104:
-                    monsterBook.initView(context);
-                    break;
-                case 103:
-                    saveButton.setEnabled(false);
-                    save();
-                    Toast.makeText(context, "--保存成功!--", Toast.LENGTH_SHORT)
-                            .show();
-                    saveButton.setEnabled(true);
-                    break;
-                case 102:
-                    break;
-                case 101:
-                    uploadButton.setEnabled(false);
-                    uploadButton.setText("上传中");
-                    uploading = true;
-                    new Thread(new Runnable() {
-                        public void run() {
-                            Upload upload = new Upload();
-                            if (upload.upload(heroN, alipay.getPayTime())) {
-                                lastUploadLev = heroN.getMaxMazeLev();
-                                uploading = false;
-                                Achievement.uploader.enable(heroN);
+            try {
+                switch (msg.what) {
+                    case 103:
+                        saveButton.setEnabled(false);
+                        saveButton.setText("正在存档");
+                        save();
+                        Toast.makeText(context, "--保存成功!--", Toast.LENGTH_SHORT)
+                                .show();
+                        saveButton.setEnabled(true);
+                        saveButton.setText("存档");
+                        addMessage("存档成功");
+                        break;
+                    case 102:
+                        break;
+                    case 101:
+                        uploadButton.setEnabled(false);
+                        uploadButton.setText("上传中");
+                        uploading = true;
+                        new Thread(new Runnable() {
+                            public void run() {
+                                Upload upload = new Upload();
+                                if (upload.upload(heroN, alipay.getPayTime())) {
+                                    lastUploadLev = heroN.getMaxMazeLev();
+                                    uploading = false;
+                                    Achievement.uploader.enable(heroN);
+                                }
+                            }
+                        }).start();
+                        break;
+                    case 201:
+                        updateButton.setEnabled(false);
+                        updateButton.setText("V" + currentVersion);
+                        break;
+                    case 202:
+                        updateButton.setEnabled(true);
+                        updateButton.setText("升级V" + updateVersion);
+                        showUpdate();
+                        break;
+                    case 100:
+                        heroN.addMaterial(100000);
+                        heroN.addPoint(20);
+                        alipay.addPayTime();
+                        if (alipay.getPayTime() == 50) {
+                            Achievement.crapGame.enable();
+                        }
+                        Achievement.richer.enable(heroN);
+                        break;
+                    case 1:
+                        if (pause) {
+                            pause = false;
+                            pauseButton.setText("暂停");
+                        } else {
+                            pause = true;
+                            pauseButton.setText("继续");
+                        }
+                    case 4:
+                        clickCount.setText("点击\n" + heroN.getClick());
+                        heroPic.setBackgroundResource(R.drawable.h_1);
+                        break;
+                    case 5:
+                        clickCount.setText("点击\n" + heroN.getClick());
+                        heroPic.setBackgroundResource(R.drawable.h_2);
+                        break;
+                    case 10:
+                        Bundle bundle = msg.peekData();
+                        if (bundle != null && !bundle.isEmpty()) {
+                            String[] messages = bundle.getStringArray("msg");
+                            for (String str : messages) {
+                                if (str.matches(".*遇到了.*")) {
+                                    heroPic.setBackgroundResource(R.drawable.h_3);
+                                } else if (str.matches(".*击败了.*")) {
+                                    heroPic.setBackgroundResource(R.drawable.h_2);
+                                } else if (str.matches(".*被.*打败了.*")) {
+                                    heroPic.setBackgroundResource(R.drawable.h_1);
+                                }
+                                TextView oneKickInfo = new TextView(MainGameActivity.this);
+                                // 将一次信息数据显示到页面中
+                                oneKickInfo.setText(Html.fromHtml(str));
+                                mainInfoPlatform.addView(oneKickInfo);
+                                scrollToBottom(mainInfoSv, mainInfoPlatform);
                             }
                         }
-                    }).start();
-                    break;
-                case 201:
-                    updateButton.setEnabled(false);
-                    updateButton.setText("V" + currentVersion);
-                    break;
-                case 202:
-                    updateButton.setEnabled(true);
-                    updateButton.setText("升级V" + updateVersion);
-                    showUpdate();
-                    break;
-                case 100:
-                    heroN.addMaterial(100000);
-                    heroN.addPoint(20);
-                    alipay.addPayTime();
-                    if (alipay.getPayTime() == 50) {
-                        Achievement.crapGame.enable();
-                    }
-                    Achievement.richer.enable(heroN);
-                    break;
-                case 1:
-                    if (pause) {
-                        pause = false;
-                        pauseButton.setText("暂停");
-                    } else {
-                        pause = true;
-                        pauseButton.setText("继续");
-                    }
-                case 4:
-                    clickCount.setText("点击\n" + heroN.getClick());
-                    heroPic.setBackgroundResource(R.drawable.h_1);
-                    break;
-                case 5:
-                    clickCount.setText("点击\n" + heroN.getClick());
-                    heroPic.setBackgroundResource(R.drawable.h_2);
-                    break;
-                case 10:
-                    Bundle bundle = msg.peekData();
-                    if (bundle != null && !bundle.isEmpty()) {
-                        String[] messages = bundle.getStringArray("msg");
-                        for (String str : messages) {
-                            if (str.matches(".*遇到了.*")) {
-                                heroPic.setBackgroundResource(R.drawable.h_3);
-                            } else if (str.matches(".*击败了.*")) {
-                                heroPic.setBackgroundResource(R.drawable.h_2);
-                            } else if (str.matches(".*被.*打败了.*")) {
-                                heroPic.setBackgroundResource(R.drawable.h_1);
-                            }
-                            TextView oneKickInfo = new TextView(MainGameActivity.this);
-                            // 将一次信息数据显示到页面中
-                            oneKickInfo.setText(Html.fromHtml(str));
-                            mainInfoPlatform.addView(oneKickInfo);
-                            scrollToBottom(mainInfoSv, mainInfoPlatform);
+                        if (mainInfoPlatform.getChildCount() > fightInfoTotalCount) {
+                            mainInfoPlatform.removeViewAt(0);
                         }
-                    }
-                    if (mainInfoPlatform.getChildCount() > fightInfoTotalCount) {
-                        mainInfoPlatform.removeViewAt(0);
-                    }
-                    // mainInfoSv.fullScroll(ScrollView.FOCUS_DOWN);
-                    break;
-            }
-            refresh();
-            super.handleMessage(msg);
-            }catch (Exception exp){
-                Log.e(TAG,"MainGameActivity.Handler", exp);
+                        // mainInfoSv.fullScroll(ScrollView.FOCUS_DOWN);
+                        break;
+                }
+                refresh();
+                super.handleMessage(msg);
+            } catch (Exception exp) {
+                Log.e(TAG, "MainGameActivity.Handler", exp);
             }
         }
 
@@ -299,12 +297,13 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_gameview);
         context = this;
+        setAlipay(new Alipay(context, MainMenuActivity.context.payTime));
+        lastUploadLev = MainMenuActivity.context.lastUpload;
         Log.i(TAG, "start game~");
         initGameData();
         gameThreadRunning = true;
         gameThread = new GameThread();
         gameThread.start();
-        handler.sendEmptyMessage(104);
     }
 
     @Override
@@ -388,6 +387,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         save();
+                        if(skillPointGetDialog!=null){
+                            skillPointGetDialog.dismiss();
+                        }
                         MainGameActivity.this.finish();
                         System.exit(0);
                     }
@@ -426,7 +428,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
+                    achievementDialog.hide();
                 }
             });
         }
@@ -444,24 +446,29 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 public void onClick(DialogInterface dialog, int which) {
                     heroN.addMaterial(-300000);
                     heroN.setSkillPoint(heroN.getSkillPoint() + 1);
-                    dialog.dismiss();
+                    skillPointGetDialog.hide();
                 }
             });
             skillPointGetDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
+                    skillPointGetDialog.hide();
                 }
             });
         }
         skillPointGetDialog.show();
+        if (heroN.getMaterial() > 300000) {
+            skillPointGetDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+        } else {
+            skillPointGetDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+        }
     }
 
     private void showResetSkillPointDialog() {
         AlertDialog resetSkillPointDialog;
         resetSkillPointDialog = new Builder(this).create();
-        resetSkillPointDialog.setTitle("消耗1500000重置技能");
+        resetSkillPointDialog.setTitle("消耗1500000材料重置技能");
         resetSkillPointDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
 
@@ -483,6 +490,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
                 });
         resetSkillPointDialog.show();
+        if (heroN.getMaterial() > 1500000) {
+            resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+        } else {
+            resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+        }
     }
 
     /*
@@ -502,6 +514,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         if (tv.getText().toString().equals("201509181447")) {
                             heroN.addMaterial(10000000);
                             heroN.addPoint(100000);
+                            heroN.setAwardCount(heroN.getAwardCount() +1);
+                        } else if (tv.getText().toString().equals("sp1.1c")) {
+                            if(heroN.getAwardCount() < 1) {
+                                heroN.setSkillPoint(heroN.getSkillPoint() + 3);
+                                heroN.setAwardCount(heroN.getAwardCount() + 1);
+                            }
                         } else {
                             heroN.setName(tv.getText().toString().replaceAll("_", " "));
                         }
@@ -623,14 +641,15 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     private void initGameData() {
         dbHelper = DBHelper.getDbHelper();
-        monsterBook = MonsterBook.getMonsterBook();
         saveHelper = new SaveHelper(this);
-
+        MonsterBook.init(context);
         // 英雄
         load();
+        skillDialog = MainMenuActivity.context.skillDialog;
         if (skillDialog == null) {
             skillDialog = new SkillDialog(context);
         }
+        skillDialog.setContext(this);
         saveHelper.loadSkill(heroN, skillDialog);
         // 左侧战斗信息
         mainInfoSv = (ScrollView) findViewById(R.id.main_info_sv);
@@ -685,9 +704,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         bookButton.setOnClickListener(this);
         skillsButton = (Button) findViewById(R.id.skill_button);
         skillsButton.setOnClickListener(this);
-        firstSkillName = (TextView) findViewById(R.id.first_skill_name);
-        secondSkillName = (TextView) findViewById(R.id.second_skill_name);
-        thirdSkillName = (TextView) findViewById(R.id.third_skill_name);
         saveButton = (Button) findViewById(R.id.save_button);
         saveButton.setOnClickListener(this);
         upTSwordButton = (Button) findViewById(R.id.up_t_sword);
@@ -756,28 +772,22 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         if (heroN.getFirstSkill() != null) {
             firstSkillButton.setText(heroN.getFirstSkill().getDisplayName());
             firstSkillButton.setEnabled(true);
-            firstSkillName.setText(heroN.getFirstSkill().getName());
         } else {
             firstSkillButton.setText("");
-            firstSkillName.setText("");
             firstSkillButton.setEnabled(false);
         }
         if (heroN.getSecondSkill() != null) {
             secondSkillButton.setText(heroN.getSecondSkill().getDisplayName());
             secondSkillButton.setEnabled(true);
-            secondSkillName.setText(heroN.getSecondSkill().getName());
         } else {
             secondSkillButton.setText("");
-            secondSkillName.setText("");
             secondSkillButton.setEnabled(false);
         }
         if (heroN.getThirdSkill() != null) {
             thirdSkillButton.setText(heroN.getThirdSkill().getDisplayName());
             thirdSkillButton.setEnabled(true);
-            thirdSkillName.setText(heroN.getThirdSkill().getName());
         } else {
             thirdSkillButton.setText("");
-            thirdSkillName.setText("");
             thirdSkillButton.setEnabled(false);
         }
         if (!uploading) {
@@ -789,16 +799,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 uploadButton.setText("还差" + (100 - heroN.getMaxMazeLev() + lastUploadLev) + "层");
             }
         }
-        if (heroN.getMaterial() > 300000) {
-            getSkillPointButton.setEnabled(true);
-        } else {
-            getSkillPointButton.setEnabled(false);
-        }
-        if (heroN.getMaterial() > 1500000) {
-            resetButton.setEnabled(true);
-        } else {
-            resetButton.setEnabled(false);
-        }
+
     }
 
     private long saveTime = 0;
@@ -855,23 +856,24 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
         @Override
         public void run() {
-            try{
-            checkUpdate();
-            new MoveThread().start();
-            while (gameThreadRunning) {
-                try {
-                    Thread.sleep(refreshInfoSpeed);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            try {
+                checkUpdate();
+                new MoveThread().start();
+                while (gameThreadRunning) {
+                    try {
+                        Thread.sleep(refreshInfoSpeed);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 if (!pause) {
                     saveTime += refreshInfoSpeed;
-                    if (saveTime >= refreshInfoSpeed * 200)
+                    if (saveTime >= refreshInfoSpeed * 400)
                         save();
                 }
-            }
-            }catch (Exception exp){
-                Log.e(TAG,"MainGameActivity.GameThread", exp);
+            } catch (Exception exp) {
+                Log.e(TAG, "MainGameActivity.GameThread", exp);
+                LogHelper.writeLog();
             }
         }
     }
@@ -968,6 +970,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             return true;
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG, "DownloadUpdate", e);
         }
         handler.sendEmptyMessage(-1);
         return false;
@@ -1029,6 +1032,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 skillDialog.show(heroN);
                 break;
             case R.id.book_button:
+                if (monsterBook == null) {
+                    monsterBook = MonsterBook.getMonsterBook();
+                }
                 monsterBook.showBook(this);
                 break;
             case R.id.update_button:
@@ -1060,7 +1066,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 break;
             case R.id.buy_button:
                 alipay.pay();
-                heroN.addMaterial(100000);
                 heroN.click(false);
                 break;
             case R.id.character_itembar_contribute:
@@ -1128,7 +1133,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private void load() {
-        saveHelper.loadHero();
+        heroN = MainMenuActivity.context.hero;
+        maze = MainMenuActivity.context.maze;
+        lastUploadLev = MainMenuActivity.context.lastUpload;
+        //saveHelper.loadHero();
     }
 
     public static class AchievementList {

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.gavin"
     android:versionCode="1"
-    android:versionName="1.1c" >
+    android:versionName="1.1.4c" >
 
     <uses-sdk
         android:minSdkVersion="17"

@@ -96,7 +96,7 @@ public class BaseSkill extends SkillLayout {
         skill.setSkillButton(button);
 
         skill = SkillFactory.getSkill("重击",hero, dialog);
-        button = (Button)view.findViewById(R.id.skill_base_zj_button);
+        button = (Button)view.findViewById(R.id.skill_base_hit_button);
         skill.setSkillButton(button);
     }
 }

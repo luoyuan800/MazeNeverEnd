@@ -13,6 +13,7 @@ import cn.gavin.Hero;
 import cn.gavin.Maze;
 import cn.gavin.Sword;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.activity.MainMenuActivity;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
 import cn.gavin.monster.MonsterBook;
@@ -24,56 +25,15 @@ import cn.gavin.skill.SkillFactory;
  * ALL RIGHTS RESERVED.
  * Created by gluo on 9/16/2015.
  */
-public class SaveHelper {
-    private MainGameActivity context;
+public class LoadHelper {
+    private MainMenuActivity context;
 
-    public SaveHelper(MainGameActivity activity) {
+    public LoadHelper(MainMenuActivity activity) {
         context = activity;
     }
 
-    public SaveHelper(){
 
-    }
 
-    public void saveHero() {
-        Hero heroN = context.getHero();
-        Maze maze = context.getMaze();
-        SharedPreferences preferences = context.getSharedPreferences("hero", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("name", heroN.getName());
-        editor.putLong("hp", heroN.getHp());
-        editor.putLong("upperHp", heroN.getUpperHp());
-        editor.putLong("baseAttackValue", heroN.getBaseAttackValue());
-        editor.putLong("baseDefense", heroN.getBaseDefense());
-        editor.putLong("click", heroN.getClick());
-        editor.putLong("point", heroN.getPoint());
-        editor.putLong("material", heroN.getMaterial());
-        editor.putLong("swordLev", heroN.getSwordLev());
-        editor.putLong("armorLev", heroN.getArmorLev());
-        editor.putString("swordName", heroN.getSword());
-        editor.putString("armorName", heroN.getArmor());
-        editor.putLong("maxMazeLev", heroN.getMaxMazeLev());
-        editor.putLong("strength", heroN.getStrength());
-        editor.putLong("power", heroN.getPower());
-        editor.putLong("agility", heroN.getAgility());
-        editor.putLong("clickAward", heroN.getClickAward());
-        StringBuilder sb = new StringBuilder();
-        for (Achievement achievement : Achievement.values()) {
-            if (achievement.isEnable()) {
-                sb.append(1);
-            } else {
-                sb.append(0);
-            }
-        }
-        editor.putString("achievement", sb.toString());
-        editor.putLong("currentMazeLev", maze.getLev());
-        editor.putLong("payTime", context.getAlipay().getPayTime());
-        editor.putLong("death", heroN.getDeathCount());
-        editor.putLong("lastUploadLev", context.getLastUploadLev());
-        editor.putLong("skillPoint", heroN.getSkillPoint());
-        editor.putLong("awardCount", heroN.getAwardCount());
-        editor.apply();
-    }
 
     public void loadHero() {
         Hero heroN = new Hero("勇者");
@@ -101,7 +61,8 @@ public class SaveHelper {
             heroN.setSword(Sword.valueOf(preferences.getString("swordName", Sword.木剑.name())));
             heroN.setArmor(Armor.valueOf(preferences.getString("armorName", Armor.破布.name())));
             heroN.setDeathCount(preferences.getLong("death", 0));
-            context.setLastUploadLev(preferences.getLong("lastUploadLev", 0));
+            heroN.setSkillPoint(preferences.getLong("skillPoint",1));
+            context.lastUpload = preferences.getLong("lastUploadLev", 0);
             maze.setLevel(preferences.getLong("currentMazeLev", 1));
             String ach = preferences.getString("achievement", "0");
             for (int i = 0; i < ach.length() && i < Achievement.values().length; i++) {
@@ -110,11 +71,11 @@ public class SaveHelper {
                     Achievement.values()[i].enable();
                 }
             }
-            context.setAlipay(new Alipay(context, preferences.getLong("swordLev", 0)));
-            heroN.setAwardCount(preferences.getInt("awardCount", 0));
+            context.payTime = preferences.getLong("swordLev", 0);
+            heroN.setAwardCount(preferences.getLong("awardCount", 0));
         }
-        context.setHeroN(heroN);
-        context.setMaze(maze);
+        context.hero = heroN;
+        context.maze = maze;
     }
 
     private boolean loadOlderSaveFile(Hero heroN, Maze maze) {
@@ -154,7 +115,7 @@ public class SaveHelper {
 //                    heroN.getExistSkill().get(2).setCount(Integer.parseInt(atts[23]));
                 }
                 if (atts.length >= 25) {
-                    context.setLastUploadLev(Integer.parseInt(atts[24]));
+                    context.lastUpload = Integer.parseInt(atts[24]);
                 }
                 maze.setLevel(Integer.parseInt(atts[18]));
                 if (maze.getLev() > heroN.getMaxMazeLev()) {
@@ -166,10 +127,10 @@ public class SaveHelper {
                         Achievement.values()[i].enable();
                     }
                 }
-                context.setAlipay(new Alipay(context, Integer.parseInt(atts[19])));
+                context.payTime = Integer.parseInt(atts[19]);
                 Achievement.linger.enable(heroN);
-                context.setHeroN(heroN);
-                context.setMaze(maze);
+                context.hero = (heroN);
+                context.maze = (maze);
                 return true;
             } else {
                 return false;
@@ -189,17 +150,4 @@ public class SaveHelper {
         }
     }
 
-    public void saveSkill() {
-        SkillFactory.save();
-    }
-
-    public void saveMonster(){
-        MonsterBook.getMonsterBook().writeIntoDB();
-    }
-
-    public void save() {
-        saveHero();
-        saveSkill();
-        saveMonster();
-    }
 }

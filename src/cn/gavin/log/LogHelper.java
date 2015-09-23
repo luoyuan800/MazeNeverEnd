@@ -5,6 +5,10 @@ import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -13,8 +17,7 @@ import java.io.InputStreamReader;
  */
 public class LogHelper {
 
-    public void getLog(){
-        MainGameActivity context = MainGameActivity.context;
+    public static void writeLog(){
         try {
             Process process = Runtime.getRuntime().exec(String.format("logcat -s %s:I ",MainGameActivity.TAG));
             BufferedReader bufferedReader = new BufferedReader(
@@ -23,11 +26,22 @@ public class LogHelper {
             StringBuilder log=new StringBuilder();
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                log.append(line);
+                log.append(line + "\n");
             }
-            //TextView tv = (TextView)context.findViewById(R.id.textView1);
-            //tv.setText(log.toString());
+           File path = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze/log/");
+           if(!path.exists()){
+               path.mkdirs();
+           }
+            File file = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze/log/log.txt");
+            if(!file.exists()){
+                file.createNewFile();
+            }
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            writer.write(log.toString());
+            writer.flush();
+            writer.close();
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

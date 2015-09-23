@@ -13,19 +13,20 @@ import cn.gavin.utils.StringUtils;
 public class Monster {
     private final static String[] firstNames = {"普通", "怪异", "飞翔", "稀有", "发狂", "神奇", "神经", "传奇"};
     private final static long[] firstAdditionHP = {15, 25, 400, 1000, 500, 2000, 10000, 50000};
-    private final static long[] firstAdditionAtk = {3, 25, 350, 800, 4000, 3800, 5000, 20000};
+    private final static long[] firstAdditionAtk = {3, 25, 350, 800, 4000, 3800, 5000, 30000};
     private final static String[] secondNames = {"小", "中", "大", "大大", "红色", "绿色", "人面"};
-    private final static long[] secondAdditionHP = {15, 25, 100, 500, 1003, 2000, 3000};
-    private final static long[] secondAdditionAtk = {5, 25, 100, 200, 400, 100, 2000};
+    private final static long[] secondAdditionHP = {15, 25, 100, 500, 1003, 2000, 6000};
+    private final static long[] secondAdditionAtk = {5, 25, 100, 200, 400, 100, 1000};
     private final static String[] lastNames = {"蟑螂", "大蚯蚓", "异壳虫", "巨型飞蛾", "猪", "老鼠", "嗜血蚁", "变异蝎", "食人鸟", "丑蝙蝠", "蛇", "野牛", "龟", "三头蛇", "刺猬", "狼", "精灵", "僵尸", "骷髅", "凤凰", "龙", "作者"};
     private final static long[] baseHP = {13, 30, 55, 75, 95, 115, 400, 520, 280, 350, 380, 450, 530, 1000, 1500, 2300, 4000, 4500, 6000, 10000, 20000, 50000};
     private final static long[] baseAtk = {8, 15, 35, 55, 75, 105, 200, 250, 310, 350, 400, 900, 1000, 1430, 1500, 2000, 3000, 5000, 6000, 7000, 10000, 50000};
     private final static LongSparseArray<String> defender = new LongSparseArray<String>();
 
     static {
-        defender.put(324l, "name:0x6c81739f_hp:138645_atk:37889");
-        defender.put(101l, "name:0x590f65878fdb_hp:24990_atk:12911");
-        defender.put(113l, "name:0x50bb74dc_hp:41331_atk:4542_mazeLev:113");
+        defender.put(324l, "name:沁玟_hp:138645_atk:37889");
+        defender.put(101l, "name:夏文进_hp:24990_atk:12911");
+        defender.put(113l, "name:傻瓜_hp:41331_atk:4542");
+        defender.put(200l, "name:自己的爸爸_hp:40046_atk:9329");
     }
 
     private String firstName;
@@ -38,6 +39,7 @@ public class Monster {
     private boolean defeat;
     private long maxHP;
     private String formatName;
+    private String name;
 
     public static int getIndex(String name) {
         for (int i = 0; i < lastNames.length; i++) {
@@ -45,7 +47,7 @@ public class Monster {
                 return i;
             }
         }
-        return -1;
+        return Integer.MAX_VALUE-1;
     }
 
     public static Monster getBoss(Maze maze, Hero hero) {
@@ -59,6 +61,7 @@ public class Monster {
             long atk = Long.parseLong(strings[2].split(":")[1]);
             monster = new Monster("", "【守护者】", name, hp, atk);
         } else {
+            if(random.nextInt(100)<25){return null;}
             monster = buildDefaultDefender(maze, hero, random);
         }
         monster.material = random.nextLong(maze.getLev() + monster.atk + 1) / 20 + 5;
@@ -66,10 +69,16 @@ public class Monster {
     }
 
     private static Monster buildDefaultDefender(Maze maze, Hero hero, Random random) {
-        long hp = hero.getDefenseValue() * (random.nextLong(maze.getLev() + 1) + 5) + random.nextLong(hero.getUpperHp() + 1) + maze.getLev();
-        long atk = hero.getDefenseValue() + maze.getLev() + random.nextLong(hero.getAttackValue() / 3 + maze.getLev() + 1);
+        long hp = (hero.getDefenseValue()/2) * (random.nextLong(maze.getLev() + 1)) + random.nextLong(hero.getUpperHp() + 1) + maze.getLev()*100;
+        long atk = (hero.getDefenseValue()+hero.getHp())/3 + maze.getLev()*32 + random.nextLong(hero.getAttackValue() / 3 + maze.getLev() + 1);
         if (hp <= 0) hp = Integer.MAX_VALUE - 10;
         if (atk <= 0) hp = Integer.MAX_VALUE - 100;
+        if(atk > hero.getUpperHp()){
+            atk = atk/3;
+        }
+        if(hp > hero.getAttackValue()*25){
+            hp = hp/2;
+        }
         Monster monster = new Monster("第" + maze.getLev() + "层", "守护", "者",
                 hp,
                 atk);
@@ -97,15 +106,18 @@ public class Monster {
         secondName = secondNames[second];
         lastName = lastNames[last];
         if (hero.getAttackValue() != 0)
-            hp += maze.getLev() * random.nextLong(hero.getAttackValue() / 1540 + 1);
+            hp += maze.getLev() * random.nextLong(hero.getAttackValue() / 300 + 1);
         if (hero.getPower() != 0)
             atk += random.nextLong(hero.getPower() / 10 + 1) * random.nextLong(maze.getLev() + 1);
-        atk += random.nextLong(hero.getDefenseValue() / 1100 + 1) * random.nextLong(maze.getLev() + 1);
+        atk += random.nextLong(hero.getDefenseValue() / 1500 + 1) * random.nextLong(maze.getLev() + 1);
+        if(hp < hero.getAttackValue()){
+            hp += random.nextLong(hero.getAttackValue());
+        }
         if (hp <= 0) hp = Integer.MAX_VALUE - 10;
         if (atk <= 0) hp = Integer.MAX_VALUE - 100;
         long m1 = random.nextLong(hp + 1) / 180 + 5;
         long m2 = random.nextLong(atk + 1) / 509;
-        material = random.nextLong((m1 + m2) / 20 + 1) + 3;
+        material = random.nextLong((m1 + m2) / 20 + 1) + 2 + random.nextLong(maze.getLev()/10+1);
         maxHP = hp;
         formatName(hero);
     }
@@ -135,7 +147,10 @@ public class Monster {
     }
 
     public String getName() {
-        return firstName + "的" + secondName + lastName;
+        if(name == null) {
+            name = firstName + "的" + secondName + lastName;
+        }
+        return name;
     }
 
     public boolean isDefeat() {

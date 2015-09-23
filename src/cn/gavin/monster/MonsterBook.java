@@ -14,11 +14,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
@@ -30,122 +34,150 @@ import cn.gavin.utils.StringUtils;
  */
 public class MonsterBook {
     private Context context;
-    private Set<String> nameKeys;
-    private Set<String> nameSet;
     private DBHelper dbHelper;
-    private AlertDialog dialog;
+    private AlertDialog alertDialog;
+    private Map<String, MonsterItem> monsterItemMap;
+    private List<MonsterItem> sortItems;
 
     public MonsterBook(Context context) {
         this.context = context;
+        monsterItemMap = new ConcurrentHashMap<String, MonsterItem>();
+        sortItems = new ArrayList<MonsterItem>();
     }
 
     public void showBook(MainGameActivity context) {
-        if (dialog == null) {
-            dialog = new AlertDialog.Builder(context).create();
-            LayoutInflater inflater = context.getLayoutInflater();
-            View view = inflater.inflate(R.layout.monster_book, (ViewGroup) context.findViewById(R.id.monster_book));
-            ListView list = (ListView) view.findViewById(R.id.monster_book_list);
-            TextView text = (TextView) view.findViewById(R.id.monster_book_text);
-            list.setAdapter(new MonsterAdapter(text));
-            dialog.setView(view);
-            dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            dialog.setTitle("怪物收集");
-        }
-        dialog.show();
+            initView(context);
+        alertDialog.show();
     }
 
     public void addMonster(Monster monster) {
-        try {
-            if (nameKeys == null) {
-                nameKeys = getMonsterNameKeys();
+        MonsterItem item = monsterItemMap.get(monster.getName());
+        if (item == null) {
+            item = new MonsterItem(monster.getName(), monster.isDefeat());
+            item.count = 0;
+            item.defeat = monster.isDefeat();
+            if (monster.isDefeat()) {
+                item.atk1 = monster.getAtk();
+                item.hp1 = monster.getMaxHP();
+                item.mazeLev1 = monster.getMazeLev();
+            } else {
+                item.atk = monster.getAtk();
+                item.hp = monster.getMaxHP();
+                item.mazeLev = monster.getMazeLev();
             }
-            String key = monster.getName() + "_" + monster.isDefeat();
-            if (!nameKeys.contains(key)) {
-                nameKeys.add(key);
-                nameSet.add(monster.getName());
-                writeIntoDB(monster);
-            } else if (monster.isDefeat()) {
-                Cursor cursor = dbHelper.excuseSOL("select count from monster_book where name = '" + monster.getName() + "'");
-                if (!cursor.isAfterLast()) {
-                    String countStr = cursor.getString(cursor.getColumnIndex("count"));
-                    long count = Long.parseLong(StringUtils.isNotEmpty(countStr) ? countStr : "0");
-                    String sql = String.format("update monster_book set count = '%s' where name = '%s'", count + 1, monster.getName());
-                    dbHelper.excuseSQLWithoutResult(sql);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            item.formatName = monster.getFormatName();
+            monsterItemMap.put(monster.getName(), item);
+            sortItems.add(item);
+        } else if (!item.isDefeat() && monster.isDefeat()) {
+            item.defeat = true;
+            item.atk1 = monster.getAtk();
+            item.hp1 = monster.getMaxHP();
+            item.mazeLev1 = monster.getMazeLev();
         }
+        item.count++;
     }
 
-    private void writeIntoDB(Monster monster) {
-        String sql = String.format("insert into monster_book (name, format_name, isDefeat, %s, %s, %s) values('%s', '%s', '%s', '%s', '%s', %s)",
-                monster.isDefeat() ? "hp1" : "hp", monster.isDefeat() ? "atk1" : "atk", monster.isDefeat() ? "maze_lv1" : "maze_lv",
-                monster.getName(), monster.getFormatName(), monster.isDefeat(), monster.getMaxHP(), monster.getAtk(), monster.getMazeLev());
-        dbHelper.excuseSQLWithoutResult(sql);
+    public void writeIntoDB() {
+        String baseSql = "replace into monster_book (name, format_name, isDefeat, hp, hp1,atk,atk1,maze_lv,maze_lv1, count) values('%s', '%s', '%s','%s', '%s', '%s', '%s','%s','%s','%s')";
+        dbHelper.beginTransaction();
+        for (MonsterItem monster : sortItems) {
+            if(monster!=null) {
+                String sql = String.format(baseSql,
+                        monster.name, monster.formatName, monster.isDefeat(), monster.hp, monster.hp1, monster.atk, monster.atk1, monster.mazeLev, monster.mazeLev1, monster.count);
+                dbHelper.excuseSQLWithoutResult(sql);
+            }
+        }
+        dbHelper.endTransaction();
     }
 
     public Set<String> getMonsterNameKeys() {
-        Set<String> keys = new CopyOnWriteArraySet<String>();
-        nameSet = new ConcurrentSkipListSet<String>(new Comparator<String>() {
-            @Override
-            public int compare(String s, String s2) {
-                if (s.equals(s2)) return 0;
-                int index = Monster.getIndex(s);
-                int index1 = Monster.getIndex(s2);
-                if (index > index1) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            }
-        });
-        String sql = "select name, isDefeat from monster_book";
+        String sql = "select * from monster_book";
         Cursor cursor = dbHelper.excuseSOL(sql);
         while (!cursor.isAfterLast()) {
-            String key = cursor.getString(cursor.getColumnIndex("name")) + "_" + cursor.getString(cursor.getColumnIndex("isDefeat"));
-            keys.add(key);
-            nameSet.add(cursor.getString(cursor.getColumnIndex("name")));
+            String fName = cursor.getString(cursor.getColumnIndex("format_name"));
+            String name = cursor.getString(cursor.getColumnIndex("name"));
+            String hp = cursor.getString(cursor.getColumnIndex("hp"));
+            String hp1 = cursor.getString(cursor.getColumnIndex("hp1"));
+            String atk = cursor.getString(cursor.getColumnIndex("atk"));
+            String atk1 = cursor.getString(cursor.getColumnIndex("atk1"));
+            String count = cursor.getString(cursor.getColumnIndex("count"));
+            String mazeLev = cursor.getString(cursor.getColumnIndex("maze_lv"));
+            String mazeLev1 = cursor.getString(cursor.getColumnIndex("maze_lv1"));
+            boolean isDefeat = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("isDefeat")));
+            MonsterItem item = new MonsterItem(name, isDefeat);
+            item.count = StringUtils.isNotEmpty(count) ? Long.parseLong(count) : 0l;
+            item.atk = StringUtils.isNotEmpty(atk) ? Long.parseLong(atk) : 0l;
+            item.atk1 = StringUtils.isNotEmpty(atk1) ? Long.parseLong(atk1) : 0l;
+            item.hp = StringUtils.isNotEmpty(hp) ? Long.parseLong(hp) : 0l;
+            item.hp1 = StringUtils.isNotEmpty(hp1) ? Long.parseLong(hp1) : 0l;
+            item.mazeLev = StringUtils.isNotEmpty(mazeLev) ? Long.parseLong(mazeLev) : 0l;
+            item.mazeLev1 = StringUtils.isNotEmpty(mazeLev1) ? Long.parseLong(mazeLev1) : 0l;
+            item.formatName = fName;
+            monsterItemMap.put(name, item);
             cursor.moveToNext();
         }
-        nameKeys = keys;
-        return keys;
+        sortItems.addAll(monsterItemMap.values());
+
+        sort();
+        return monsterItemMap.keySet();
+    }
+
+    private void sort() {
+        try {
+            Collections.sort(sortItems, new Comparator<MonsterItem>() {
+                @Override
+                public int compare(MonsterItem s, MonsterItem s2) {
+                    if (s.equals(s2)) return 0;
+                    int index = Monster.getIndex(s.name);
+                    int index1 = Monster.getIndex(s2.name);
+                    if (index > index1) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+        }catch (Exception exp){
+            exp.printStackTrace();
+        }
     }
 
     private static MonsterBook mb;
 
     public static void init(Context context) {
-        mb = new MonsterBook(context);
-        mb.dbHelper = DBHelper.getDbHelper();
-        mb.getMonsterNameKeys();
+        if(mb == null) {
+            mb = new MonsterBook(context);
+            mb.dbHelper = DBHelper.getDbHelper();
+            mb.getMonsterNameKeys();
+        }else{
+            mb.context = context;
+        }
     }
 
-    public static MonsterBook getMonsterBook() {
+    public synchronized static MonsterBook getMonsterBook() {
+        if (mb == null) {
+            MonsterBook.init(MainGameActivity.context);
+        }
         return mb;
     }
 
     public void initView(MainGameActivity context) {
-        dialog = new AlertDialog.Builder(context).create();
+        this.context = context;
+        alertDialog = new AlertDialog.Builder(context).create();
         LayoutInflater inflater = context.getLayoutInflater();
         View view = inflater.inflate(R.layout.monster_book, (ViewGroup) context.findViewById(R.id.monster_book));
         ListView list = (ListView) view.findViewById(R.id.monster_book_list);
         TextView text = (TextView) view.findViewById(R.id.monster_book_text);
         list.setAdapter(new MonsterAdapter(text));
-        dialog.setView(view);
-        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+        alertDialog.setView(view);
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+                alertDialog.dismiss();
             }
         });
-        dialog.setTitle("怪物收集");
+        alertDialog.setTitle("怪物收集");
     }
 
     public static class MonsterList {
@@ -173,6 +205,10 @@ public class MonsterBook {
             } else {
                 a2 = item;
             }
+        }
+
+        public boolean full() {
+            return a0 != null && a1 != null && a2 != null;
         }
     }
 
@@ -214,23 +250,20 @@ public class MonsterBook {
         public MonsterAdapter(TextView textView) {
             this.textView = textView;
             adapterData = new ArrayList<MonsterList>();
-            getMonsterNameKeys();
-            List<String> nameList = new ArrayList<String>(nameSet);
-            for (int i = 0; i < nameList.size(); i += 3) {
-                MonsterList monsterList = new MonsterList();
-                for (int j = i; j < i + 3; j++) {
-                    MonsterItem item = MonsterItem.EMPTY_MONSTER;
-                    if (j < nameList.size()) {
-                        String name = nameList.get(j);
-                        boolean isDefeat = false;
-                        if (nameKeys.contains(name + "_true")) {
-                            isDefeat = true;
-                        }
-                        item = new MonsterItem(name, isDefeat, dbHelper);
-                    }
-                    monsterList.addMonster(item);
+            MonsterList list = new MonsterList();
+            sort();
+            for (MonsterItem item : sortItems) {
+                if (item == null) {
+                    item = MonsterItem.EMPTY_MONSTER;
                 }
-                adapterData.add(monsterList);
+                if (list.full()) {
+                    adapterData.add(list);
+                    list = new MonsterList();
+                }
+                list.addMonster(item);
+            }
+            while(!list.full()){
+                list.addMonster(MonsterItem.EMPTY_MONSTER);
             }
         }
 
@@ -279,26 +312,33 @@ public class MonsterBook {
         private Boolean defeat;
         private String desc;
         private String name;
-        private DBHelper helper;
+        private long count;
+        private long hp, hp1, atk, atk1;
+        private String formatName;
+        public long mazeLev;
+        public long mazeLev1;
+
+        public void addCount() {
+            count++;
+        }
 
         private void load() {
-            String sql = String.format("select * from monster_book where name = '%s'", name);
-            Cursor cursor = helper.excuseSOL(sql);
             StringBuilder sb = new StringBuilder();
-            while (!cursor.isAfterLast()) {
-                sb.append(cursor.getString(cursor.getColumnIndex("format_name")));
-                sb.append("--");
-                boolean isDefeat = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("isDefeat")));
-                String count = cursor.getString(cursor.getColumnIndex("count"));
-                if (!StringUtils.isNotEmpty(count)) {
-                    count = "1";
-                }
-                sb.append(isDefeat ? ("打败(" + count + ")") : "相遇");
-                sb.append("--在第").append(cursor.getString(cursor.getColumnIndex(isDefeat ? "maze_lv1" : "maze_lv"))).append("层");
-                sb.append("<br>生命值：").append(cursor.getString(cursor.getColumnIndex(isDefeat ? "hp1" : "hp")));
-                sb.append("<br>攻击力：").append(cursor.getString(cursor.getColumnIndex(isDefeat ? "atk1" : "atk")));
+            sb.append(formatName);
+            sb.append("--");
+            if (defeat) {
+                sb.append("打败(" + count + ")");
+                sb.append("--在第").append(mazeLev1).append("层");
+                sb.append("<br>生命值：").append(hp1);
+                sb.append("<br>攻击力：").append(atk1);
                 sb.append("<br>**************<br>");
-                cursor.moveToNext();
+            }
+            if (hp != 0) {
+                sb.append("第一次相遇");
+                sb.append("--在第").append(mazeLev).append("层");
+                sb.append("<br>生命值：").append(hp);
+                sb.append("<br>攻击力：").append(atk);
+                sb.append("<br>**************<br>");
             }
             desc = sb.toString();
         }
@@ -318,13 +358,12 @@ public class MonsterBook {
             return name;
         }
 
-        public MonsterItem(String name, boolean defeat, DBHelper helper) {
+        public MonsterItem(String name, boolean defeat) {
             this.name = name;
             this.defeat = defeat;
-            this.helper = helper;
         }
 
-        public final static MonsterItem EMPTY_MONSTER = new MonsterItem("", false, null) {
+        public final static MonsterItem EMPTY_MONSTER = new MonsterItem("", false) {
             public boolean isDefeat() {
                 return false;
             }
