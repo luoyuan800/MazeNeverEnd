@@ -1,6 +1,7 @@
 package cn.gavin.story;
 
 import cn.gavin.Achievement;
+import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
 
 /**
@@ -10,9 +11,14 @@ import cn.gavin.activity.MainGameActivity;
  */
 public class StoryHelper {
     public boolean trigger(){
-        if(MainGameActivity.context.getMaze().getLev() == 1 && MainGameActivity.context.getHero().getAgility() > MainGameActivity.context.getHero().getRandom().nextInt()){
-            MainGameActivity.context.addMessage(String.format("%s找到了一扇上锁了的门，但是没有钥匙打开它。门后面是什么呢？", MainGameActivity.context.getHero().getFormatName()));
-            Achievement.story.enable(MainGameActivity.context.getHero());
+        Hero hero = MainGameActivity.context.getHero();
+        boolean b = hero.getAgility()/2000 > hero.getRandom().nextLong();
+        if(MainGameActivity.context.getMaze().getLev() == 1 && b && hero.getRandom().nextInt(1000)<20){
+            MainGameActivity.context.addMessage(String.format("%s找到了一扇上锁了的门，但是没有钥匙打开它。门后面是什么呢？", hero.getFormatName()));
+            Achievement.story.enable(hero);
+        }else if(Achievement.story.isEnable() && b && hero.getRandom().nextBoolean() && 10 > hero.getRandom().nextLong(hero.getLockBox() + 1)){
+            MainGameActivity.context.addMessage(hero.getFormatName() + "找到一个带锁的宝箱");
+            hero.setLockBox(hero.getLockBox() + 1);
         }
         return false;
     }

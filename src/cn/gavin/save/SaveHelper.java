@@ -72,6 +72,8 @@ public class SaveHelper {
         editor.putLong("lastUploadLev", context.getLastUploadLev());
         editor.putLong("skillPoint", heroN.getSkillPoint());
         editor.putLong("awardCount", heroN.getAwardCount());
+        editor.putLong("lockBox", heroN.getLockBox());
+        editor.putLong("keyCount", heroN.getKeyCount());
         editor.apply();
     }
 

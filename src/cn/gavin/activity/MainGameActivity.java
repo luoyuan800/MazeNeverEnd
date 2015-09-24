@@ -129,6 +129,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private Button addNPowerButton;
     private Button addNStreButton;
     private Button getSkillPointButton;
+    private TextView lockBoxCount;
+    private TextView keyCount;
 
 
     //Get Function
@@ -718,6 +720,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         addNPowerButton.setOnClickListener(this);
         getSkillPointButton = (Button) findViewById(R.id.skill_point_get_button);
         getSkillPointButton.setOnClickListener(this);
+        lockBoxCount = (TextView) findViewById(R.id.local_box);
+        keyCount = (TextView) findViewById(R.id.key_count);
         refresh();
     }
 
@@ -800,6 +804,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             }
         }
 
+        lockBoxCount.setText("X " + heroN.getLockBox());
+        keyCount.setText("X " + heroN.getKeyCount());
     }
 
     private long saveTime = 0;
@@ -869,7 +875,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 if (!pause) {
                     saveTime += refreshInfoSpeed;
                     if (saveTime >= refreshInfoSpeed * 400)
-                        save();
+                        handler.sendEmptyMessage(103);
                 }
             } catch (Exception exp) {
                 Log.e(TAG, "MainGameActivity.GameThread", exp);

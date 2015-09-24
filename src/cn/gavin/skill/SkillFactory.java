@@ -272,6 +272,9 @@ public class SkillFactory {
                         @Override
                         public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                             long harm = monster.getAtk() - hero.getDefenseValue();
+                            if(harm<=0){
+                                harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1);
+                            }
                             context.addMessage(skill.format(monster.getFormatName() + "攻击" + hero.getFormatName()));
                             long rHarm = Math.round(harm * ((50 + skill.getProbability() * 10)/100));
                             context.addMessage(skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "反弹了" + rHarm + "的伤害"));

@@ -51,6 +51,8 @@ public class Hero {
     private Skill secondSkill;
     private Skill thirdSkill;
     private long awardCount;
+    private long lockBox;
+    private long keyCount;
 
     public long getDeathCount() {
         return deathCount;
@@ -570,5 +572,21 @@ public class Hero {
 
     public void setAwardCount(long awardCount) {
         this.awardCount = awardCount;
+    }
+
+    public long getKeyCount() {
+        return keyCount;
+    }
+
+    public void setKeyCount(long keyCount) {
+        this.keyCount = keyCount;
+    }
+
+    public long getLockBox() {
+        return lockBox;
+    }
+
+    public void setLockBox(long lockBox) {
+        this.lockBox = lockBox;
     }
 }

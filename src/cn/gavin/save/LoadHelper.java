@@ -73,6 +73,8 @@ public class LoadHelper {
             }
             context.payTime = preferences.getLong("swordLev", 0);
             heroN.setAwardCount(preferences.getLong("awardCount", 0));
+            heroN.setLockBox(preferences.getLong("lockBox", 0));
+            heroN.setKeyCount(preferences.getLong("keyCount", 0));
         }
         context.hero = heroN;
         context.maze = maze;
