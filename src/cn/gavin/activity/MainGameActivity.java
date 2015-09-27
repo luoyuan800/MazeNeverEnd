@@ -310,10 +310,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         save();
         gameThreadRunning = false;
         dbHelper.close();
+        super.onDestroy();
     }
 
     @Override
@@ -874,7 +874,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 }
                 if (!pause) {
                     saveTime += refreshInfoSpeed;
-                    if (saveTime >= refreshInfoSpeed * 400)
+                    if (saveTime >= refreshInfoSpeed * 300)
                         handler.sendEmptyMessage(103);
                 }
             } catch (Exception exp) {

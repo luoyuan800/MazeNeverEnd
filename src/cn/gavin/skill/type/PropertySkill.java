@@ -10,8 +10,17 @@ import cn.gavin.skill.Skill;
  * gluo on 9/15/2015.
  */
 public class PropertySkill extends Skill {
-    private int agi, str, life, clickAward, hp, def, atk;
+    private int agi;
+    private int str;
+    private int life;
+    private int clickAward;
+    private int hp;
+    private int def;
+    private int atk;
 
+    public PropertySkill(){
+
+    }
     public PropertySkill(int agi, int str, int life, int clickAward, int hp, int def, int atk) {
         super();
         this.agi = agi;
@@ -37,6 +46,8 @@ public class PropertySkill extends Skill {
         if (!isActive() && active) {
             super.setActive(true);
             setOnUsed(true);
+        }else if(isActive() && !active){
+            setOnUsed(false);
         }
     }
 
@@ -68,4 +79,59 @@ public class PropertySkill extends Skill {
         });
     }
 
+    public int getAgi() {
+        return agi;
+    }
+
+    public void setAgi(int agi) {
+        this.agi = agi;
+    }
+
+    public int getStr() {
+        return str;
+    }
+
+    public void setStr(int str) {
+        this.str = str;
+    }
+
+    public int getLife() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+
+    public int getClickAward() {
+        return clickAward;
+    }
+
+    public void setClickAward(int clickAward) {
+        this.clickAward = clickAward;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public int getDef() {
+        return def;
+    }
+
+    public void setDef(int def) {
+        this.def = def;
+    }
+
+    public int getAtk() {
+        return atk;
+    }
+
+    public void setAtk(int atk) {
+        this.atk = atk;
+    }
 }

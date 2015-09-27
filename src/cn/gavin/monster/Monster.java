@@ -41,6 +41,7 @@ public class Monster {
     private long maxHP;
     private String formatName;
     private String name;
+    private float hitRate =100.0f;
 
     public static int getIndex(String name) {
         for (int i = 0; i < lastNames.length; i++) {
@@ -182,5 +183,13 @@ public class Monster {
 
     public void setFormatName(String formatName) {
         this.formatName = formatName;
+    }
+
+    public float getHitRate() {
+        return hitRate;
+    }
+
+    public void setHitRate(float hitRate) {
+        this.hitRate = hitRate;
     }
 }

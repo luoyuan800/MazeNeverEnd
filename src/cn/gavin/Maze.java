@@ -18,14 +18,17 @@ public class Maze {
     private boolean moving;
     private long step;
     private long streaking;
+    private float meetRate = 100f;
     private MonsterBook monsterBook;
     private StoryHelper storyHelper;
 
-    public void setCsmgl(int csmgl){
+    public void setCsmgl(int csmgl) {
         this.csmgl = csmgl;
     }
 
-    public int getCsmgl(){return csmgl;}
+    public int getCsmgl() {
+        return csmgl;
+    }
 
     public boolean isMoving() {
         return moving;
@@ -50,20 +53,22 @@ public class Maze {
             if (context.isPause()) {
                 continue;
             }
-            if(storyHelper!=null && storyHelper.trigger()){continue;}
+            if (storyHelper != null && storyHelper.trigger()) {
+                continue;
+            }
             moving = true;
             step++;
             if (random.nextLong(10000) > 9985 || step > random.nextLong(22) || random.nextLong(streaking + 1) > 20 + level) {
                 step = 0;
                 level++;
                 mazeLevelDetect();
-                long point = 1 + level/10 + random.nextLong(level + 1) / 30;
+                long point = 1 + level / 10 + random.nextLong(level + 1) / 30;
                 context.addMessage(hero.getFormatName() + "进入了" + level + "层迷宫， 获得了<font color=\"#FF8C00\">" + point + "</font>点数奖励");
                 if (level > hero.getMaxMazeLev()) {
                     hero.addMaxMazeLev();
                 }
                 hero.addPoint(point);
-                hero.addHp(hero.getUpperHp()/890);
+                hero.addHp(hero.getUpperHp() / 890);
                 context.addMessage("-------------------");
             } else if (random.nextLong(100) > 95) {
                 long mate = random.nextLong(level * 2 + 1) + random.nextLong(hero.getAgility() / 100 + 1) + 2;
@@ -86,12 +91,16 @@ public class Maze {
                 mazeLevelDetect();
                 context.addMessage("-------------------");
             } else if (random.nextBoolean()) {
+                Skill skill1 = SkillFactory.getSkill("隐身", hero, context.getSkillDialog());
+                if (skill1.isActive() && skill1.perform()) {
+                    continue;
+                }
                 Monster monster = null;
                 if (random.nextLong(1000) > 899) {
                     monster = Monster.getBoss(this, hero);
                     step += 21;
                 }
-                if(monster == null){
+                if (monster == null) {
                     monster = new Monster(hero, this);
                 }
                 monster.setMazeLev(level);
@@ -125,14 +134,20 @@ public class Maze {
                             isJump = skill.release(monster);
                         } else {
                             long harm = monster.getAtk() - hero.getDefenseValue();
-                            if (harm <= 0) {
+                            if (harm <= 0 || hero.getRandom().nextInt(100) > monster.getHitRate()) {
                                 harm = random.nextLong(level + 1);
                             }
-                            if(harm >= hero.getHp()){
-                                Skill sy = SkillFactory.getSkill("超能量",hero,context.getSkillDialog());
-                                if(sy.isActive()&&sy.perform()){
+                            if (harm >= hero.getHp()) {
+                                Skill sy = SkillFactory.getSkill("超能量", hero, context.getSkillDialog());
+                                if (sy.isActive() && sy.perform()) {
                                     isJump = sy.release(monster);
                                     continue;
+                                } else {
+                                    sy = SkillFactory.getSkill("反杀", hero, context.getSkillDialog());
+                                    if (sy.isActive() && sy.perform()) {
+                                        isJump = sy.release(monster);
+                                        continue;
+                                    }
                                 }
                             }
                             hero.addHp(-harm);
@@ -157,14 +172,19 @@ public class Maze {
                     monster.setDefeat(true);
                     monsterBook.addMonster(monster);
                 } else {
-                    streaking = 0;
-                    step = 0;
-                    context.addMessage(hero.getFormatName() + "被" + monster.getFormatName() + "打败了，回到迷宫第一层。");
-                    this.level = 1;
-                    hero.restore();
-                    monster.setDefeat(false);
-                    monster.setMazeLev(level);
-                    monsterBook.addMonster(monster);
+                    Skill notDieSkill = SkillFactory.getSkill("不死之身", hero, context.getSkillDialog());
+                    if (notDieSkill.isActive() && notDieSkill.perform()) {
+                        isJump = notDieSkill.release(monster);
+                    } else {
+                        streaking = 0;
+                        step = 0;
+                        context.addMessage(hero.getFormatName() + "被" + monster.getFormatName() + "打败了，回到迷宫第一层。");
+                        this.level = 1;
+                        hero.restore();
+                        monster.setDefeat(false);
+                        monster.setMazeLev(level);
+                        monsterBook.addMonster(monster);
+                    }
                 }
                 context.addMessage("-----------------------------");
             }
@@ -212,4 +232,11 @@ public class Maze {
         this.level = level;
     }
 
+    public float getMeetRate() {
+        return meetRate;
+    }
+
+    public void setMeetRate(float meetRate) {
+        this.meetRate = meetRate;
+    }
 }
