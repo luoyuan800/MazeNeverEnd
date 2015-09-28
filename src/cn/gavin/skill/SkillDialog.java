@@ -22,6 +22,7 @@ import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.skill.system.BaseSkill;
+import cn.gavin.skill.system.EvilSkill;
 import cn.gavin.skill.system.LongSkill;
 import cn.gavin.skill.type.PropertySkill;
 
@@ -85,10 +86,11 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         viewFlipper = new ViewFlipper(context);
         BaseSkill baseSkill = new BaseSkill(context);
         baseSkill.init(this);
-        LongSkill longSkill = new LongSkill(context);
-        longSkill.init(this);
+
+        EvilSkill evilSkill = new EvilSkill(context);
+        evilSkill.init(this);
         viewFlipper.addView(baseSkill);
-        viewFlipper.addView(longSkill);
+        viewFlipper.addView(evilSkill);
         linearLayout.addView(viewFlipper);
         detector = new GestureDetector(context, this);
         alertDialog.setView(view);
@@ -122,7 +124,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
     }
 
     int index = 0;
-    String[] systemNames = {"勇者技能", "龙裔技能", "魔王技能"};
+    String[] systemNames = {"勇者技能", "魔王技能"};
 
     private String getNextSystemName() {
         if (index >= systemNames.length - 1) {

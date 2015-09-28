@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:layout_gravity="left|center_vertical"
+        android:gravity="fill">
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="魔"
+            android:gravity="center"
+            android:id="@+id/skill_evil_m_button" android:layout_gravity="center"
+            android:typeface="serif"
+            android:textStyle="bold|italic"
+            android:textColor="@color/disable"/>
+
+    <ImageView
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" android:src="@drawable/line_2_center"
+            android:adjustViewBounds="true"/>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="腐"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_evil_f_button" android:layout_gravity="center|top" android:textColor="@color/un_active"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="强"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_evil_q_button" android:layout_gravity="center|top"
+                android:textColor="@color/active"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|top"
+                android:src="@drawable/line_1_center" android:adjustViewBounds="false" android:layout_weight="1"
+                />
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center|top"
+                android:src="@drawable/line_1_center" android:adjustViewBounds="false"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="迷"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_evil_mw_button" android:layout_gravity="center|top" android:textColor="@color/onUse"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="电"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_evil_s_button" android:layout_gravity="center|top"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|top"
+                android:src="@drawable/line_1_center" android:adjustViewBounds="false" android:layout_weight="1"
+                />
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center|top"
+                android:src="@drawable/line_1_center" android:adjustViewBounds="false"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="隐"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_evil_y_button" android:layout_gravity="center|top" android:textColor="@color/onUse"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="水"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_evil_sb_button" android:layout_gravity="center|top"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|top"
+                android:src="@drawable/line_1_center" android:adjustViewBounds="false" android:layout_weight="1"
+                />
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center|top"
+                android:src="@drawable/line_1_center" android:adjustViewBounds="false"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="精"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_evil_j_button" android:layout_gravity="center|top"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="杀"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_evil_fs_button" android:layout_gravity="center|top"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/line_2_right"
+                android:layout_gravity="left|top"
+                android:layout_weight="1" android:adjustViewBounds="false"/>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:src="@drawable/line_2_right" android:layout_weight="1"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="不死"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_evil_b_button" android:layout_gravity="center|top"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="变身"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_evil_bs_button" android:layout_gravity="center|top"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="吸命"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_evil_sm_button" android:layout_gravity="center|top"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:src="@drawable/line_3_center" android:layout_weight="1"
+                android:adjustViewBounds="false"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="多重攻击"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_evil_mul_button" android:layout_gravity="center|top"/>
+    </LinearLayout>
+</LinearLayout>
