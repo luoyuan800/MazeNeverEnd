@@ -78,9 +78,9 @@ public class SkillFactory {
                         @Override
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                             AttackSkill as = (AttackSkill) skill;
-                            if (skill.getProbability() < 50) {
-                                skill.setProbability(skill.getProbability() + 3);
-                                as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 10 + 1));
+                            if (skill.getProbability() < 35) {
+                                skill.setProbability(skill.getProbability() + 1.3f);
+                                as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 30 + 1));
                                 return true;
                             }
                             as.setAdditionHarm(as.getAdditionHarm() * 3);
@@ -268,7 +268,7 @@ public class SkillFactory {
                     skill.setLevelUp(new EnableExpression() {
                         @Override
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                            if (skill.getProbability() < 12) {
+                            if (skill.getProbability() < 25) {
                                 skill.setProbability(skill.getProbability() + 1.1f);
                                 return true;
                             }
@@ -317,7 +317,7 @@ public class SkillFactory {
                         @Override
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                             if (skill.getProbability() < 20) {
-                                skill.setProbability(skill.getProbability() + 2.5f);
+                                skill.setProbability(skill.getProbability() + 1.5f);
                                 return true;
                             }
                             return false;
@@ -414,7 +414,8 @@ public class SkillFactory {
                             long turn = hero.getRandom().nextLong(Math.round(skill.getCount() / 200f) + 1) + 1;
                             context.addMessage(skill.format(hero.getFormatName() + "触发了" + skill.getName() + "定住对方" + turn + "个回合"));
                             while (turn-- > 0) {
-                                monster.addHp(-hero.getAttackValue());
+                               harm = hero.getAttackValue();
+                                monster.addHp(-harm);
                                 context.addMessage(skill.format(hero.getFormatName() + "攻击了" + monster.getFormatName() + "造成了" + harm + "点伤害"));
                                 try {
                                     Thread.sleep(MainGameActivity.context.getRefreshInfoSpeed());
@@ -727,13 +728,13 @@ public class SkillFactory {
                     });
                     if (!iSkill.load()) {
                         iSkill.setProbability(5f);
-                        iSkill.setBaseHarm(3);
+                        iSkill.setBaseHarm(2);
                     }
                     iSkill.setLevelUp(new EnableExpression() {
                         @Override
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                             if (skill.getProbability() < 20) {
-                                skill.setProbability(skill.getProbability() + 1f);
+                                skill.setProbability(skill.getProbability() + 0.7f);
                                 ((AttackSkill) skill).setBaseHarm(((AttackSkill) skill).getBaseHarm() + 2);
                                 return true;
                             }

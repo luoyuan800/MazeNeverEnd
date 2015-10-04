@@ -40,4 +40,12 @@ public class StringUtils {
     public static boolean isNotEmpty(String countStr) {
         return countStr !=null && !countStr.trim().isEmpty();
     }
+
+    public static String[] split(String str,String regularExpression){
+        if(isNotEmpty(str)){
+            return str.split(regularExpression);
+        }else{
+            return new String[]{};
+        }
+    }
 }

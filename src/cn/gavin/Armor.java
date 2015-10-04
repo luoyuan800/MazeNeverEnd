@@ -15,11 +15,13 @@ public long getBase(){
         this.base = base;
     }
 
-    public Armor levelUp(long lev) {
+    public Armor levelUp(long lev, Hero hero) {
         if (lev >= this.lev) {
             int index = ordinal();
             if (index < values().length - 1) {
-                return values()[index + 1];
+                Armor armor = values()[index + 1];
+                armor.base = base + hero.getRandom().nextLong(hero.getPower()/3000);
+                return armor;
             }else{
                 Achievement.artifact.enable(null);
             }

@@ -1,6 +1,8 @@
 package cn.gavin;
 
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.forge.Item;
+import cn.gavin.forge.list.ItemName;
 import cn.gavin.monster.Monster;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.skill.Skill;
@@ -75,8 +77,8 @@ public class Maze {
                 context.addMessage(hero.getFormatName() + "找到了一个宝箱， 获得了<font color=\"#FF8C00\">" + mate + "</font>材料");
                 hero.addMaterial(mate);
                 context.addMessage("-------------------");
-            } else if (hero.getHp() < hero.getUpperHp() && random.nextLong(100) > 85) {
-                long hel = random.nextLong(hero.getUpperHp() + 1);
+            } else if (hero.getHp() < hero.getUpperHp() && random.nextLong(1000) > 985) {
+                long hel = random.nextLong(hero.getUpperHp()/70 + 1) + random.nextLong(hero.getPower()/1000);
                 context.addMessage(hero.getFormatName() + "休息了一会，恢复了<font color=\"#556B2F\">" + hel + "</font>点HP");
                 hero.addHp(hel);
                 context.addMessage("-------------------");
@@ -171,6 +173,15 @@ public class Maze {
                     hero.addMaterial(monster.getMaterial());
                     monster.setDefeat(true);
                     monsterBook.addMonster(monster);
+                    StringBuilder items = new StringBuilder();
+                    for(ItemName item : monster.getItems()){
+                        Item i = Item.buildItem(hero,this,monster);
+                        if(i!=null){
+                            i.save();
+                            items.append(item.name()).append(" ");
+                        }
+                    }
+                    context.addMessage(hero.getFormatName() + "获得了:" + items.toString());
                 } else {
                     Skill notDieSkill = SkillFactory.getSkill("不死之身", hero, context.getSkillDialog());
                     if (notDieSkill.isActive() && notDieSkill.perform()) {
@@ -199,6 +210,11 @@ public class Maze {
     }
 
     private void mazeLevelDetect() {
+        if(level > Integer.MAX_VALUE){
+            if(level > Long.MAX_VALUE -100){
+                level --;
+            }
+        }else{
         switch ((int) level) {
             case 50:
                 Achievement.maze50.enable(hero);
@@ -221,6 +237,8 @@ public class Maze {
             case 50000:
                 Achievement.maze50000.enable(hero);
                 break;
+
+        }
         }
     }
 

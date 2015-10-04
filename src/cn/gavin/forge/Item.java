@@ -1,6 +1,16 @@
 package cn.gavin.forge;
 
-import cn.gavin.skill.Skill;
+import android.database.Cursor;
+import cn.gavin.Hero;
+import cn.gavin.Maze;
+import cn.gavin.db.DBHelper;
+import cn.gavin.forge.effect.Effect;
+import cn.gavin.forge.list.ItemName;
+import cn.gavin.monster.Monster;
+import cn.gavin.utils.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Copyright 2015 gluo.
@@ -8,139 +18,138 @@ import cn.gavin.skill.Skill;
  * Created by gluo on 9/25/2015.
  */
 public class Item {
-    private long baseAgi;
-    private long baseStre;
-    private long baseLife;
-    private long baseClickAward;
-    private long baseAtk;
-    private long baseDef;
-    private float additionAtkRate;
-    private float additionDefRate;
-    private long additionAgi;
-    private long additionStre;
-    private long additionLife;
-    private long additionClickAward;
-    private long additionAtk;
-    private long additionDef;
-    private Skill skill;
+    private ItemName name;
+    private Effect effect;
+    private Effect effect1;
+    private Number effectValue;
+    private Number effect1Value;
+    private String id;
 
-    public long getBaseAgi() {
-        return baseAgi;
+    public String toString() {
+        StringBuilder builder = new StringBuilder(name.name());
+        builder.append("<br>");
+        if (effect != null) builder.append(effect.name()).append(":").append(effectValue).append("<br>");
+        if (effect1 != null) builder.append(effect1.name()).append(":").append(effect1Value);
+        return builder.toString();
     }
 
-    public void setBaseAgi(long baseAgi) {
-        this.baseAgi = baseAgi;
+    public ItemName getName() {
+        return name;
     }
 
-    public long getBaseStre() {
-        return baseStre;
+    public void setName(ItemName name) {
+        this.name = name;
     }
 
-    public void setBaseStre(long baseStre) {
-        this.baseStre = baseStre;
+    public Effect getEffect1() {
+        return effect1;
     }
 
-    public long getBaseLife() {
-        return baseLife;
+    public void setEffect1(Effect effect1) {
+        this.effect1 = effect1;
     }
 
-    public void setBaseLife(long baseLife) {
-        this.baseLife = baseLife;
+    public Effect getEffect() {
+        return effect;
     }
 
-    public long getBaseClickAward() {
-        return baseClickAward;
+    public void setEffect(Effect effect) {
+        this.effect = effect;
     }
 
-    public void setBaseClickAward(long baseClickAward) {
-        this.baseClickAward = baseClickAward;
+    public Number getEffect1Value() {
+        return effect1Value;
     }
 
-    public long getBaseAtk() {
-        return baseAtk;
+    public void setEffect1Value(Number effect1Value) {
+        this.effect1Value = effect1Value;
     }
 
-    public void setBaseAtk(long baseAtk) {
-        this.baseAtk = baseAtk;
+    public Number getEffectValue() {
+        return effectValue;
     }
 
-    public long getBaseDef() {
-        return baseDef;
+    public void setEffectValue(Number effectValue) {
+        this.effectValue = effectValue;
     }
 
-    public void setBaseDef(long baseDef) {
-        this.baseDef = baseDef;
+    public static Item buildItem(Hero hero, Maze maze, Monster monster) {
+        ItemName name = null;
+        for (ItemName in : monster.getItems()) {
+            if (in.perform(hero, monster)) {
+                name = in;
+                break;
+            }
+        }
+        if (name == null) return null;
+        Item item = new Item();
+        item.setName(name);
+        Random random = hero.getRandom();
+        Effect e = Effect.values()[random.nextInt(Effect.values().length)];
+        item.setEffect(e);
+        item.setEffectValue(e.calculate(hero, monster));
+        if (maze.getLev() > 15 && random.nextBoolean()) {
+            Effect e1 = Effect.values()[random.nextInt(Effect.values().length)];
+            if (e1 != e) {
+                item.setEffect1(e1);
+                item.setEffect1Value(e1.calculate(hero, monster));
+            }
+        }
+        return item;
     }
 
-    public float getAdditionAtkRate() {
-        return additionAtkRate;
+    public static ArrayList<Item> loadItems() {
+        DBHelper dbHelper = DBHelper.getDbHelper();
+        String sql = "SELECT * FROM item";
+        Cursor cursor = dbHelper.excuseSOL(sql);
+        ArrayList<Item> items = new ArrayList<Item>(cursor.getCount());
+        while (!cursor.isAfterLast()) {
+            ItemName name = ItemName.valueOfName(cursor.getString(cursor.getColumnIndex("name")));
+            Item item = new Item();
+            item.setName(name);
+            item.id = cursor.getString(cursor.getColumnIndex("id"));
+            String properties = cursor.getString(cursor.getColumnIndex("properties"));
+            if (StringUtils.isNotEmpty(properties)) {
+                String[] props = properties.split("<br>");
+                for (String pro : props) {
+                    String[] proVal = pro.split(":");
+                    if (proVal.length > 1) {
+                        Effect e = Effect.valueOf(proVal[0]);
+                        Long value = Long.parseLong(proVal[1]);
+                        if (item.getEffect() == null) {
+                            item.setEffect(e);
+                            item.setEffectValue(value);
+                        } else {
+                            item.setEffect1(e);
+                            item.setEffect1Value(value);
+                        }
+                    }
+                }
+            }
+            items.add(item);
+            cursor.moveToNext();
+        }
+        return items;
     }
 
-    public void setAdditionAtkRate(float additionAtkRate) {
-        this.additionAtkRate = additionAtkRate;
+    public void save() {
+        DBHelper dbHelper = DBHelper.getDbHelper();
+        long value = System.currentTimeMillis();
+        String sql = String.format("INSERT INTO item (id,name,properties) values ('%s','%s', '%s')", value, name.name(), toString());
+        dbHelper.excuseSQLWithoutResult(sql);
+        id = String.valueOf(value);
     }
 
-    public float getAdditionDefRate() {
-        return additionDefRate;
+    public void delete() {
+        DBHelper dbHelper = DBHelper.getDbHelper();
+        String sql = String.format("DELETE FROM item WHERE id = '%s'", id);
+        dbHelper.excuseSQLWithoutResult(sql);
     }
 
-    public void setAdditionDefRate(float additionDefRate) {
-        this.additionDefRate = additionDefRate;
-    }
 
-    public long getAdditionAgi() {
-        return additionAgi;
-    }
-
-    public void setAdditionAgi(long additionAgi) {
-        this.additionAgi = additionAgi;
-    }
-
-    public long getAdditionStre() {
-        return additionStre;
-    }
-
-    public void setAdditionStre(long additionStre) {
-        this.additionStre = additionStre;
-    }
-
-    public long getAdditionLife() {
-        return additionLife;
-    }
-
-    public void setAdditionLife(long additionLife) {
-        this.additionLife = additionLife;
-    }
-
-    public long getAdditionClickAward() {
-        return additionClickAward;
-    }
-
-    public void setAdditionClickAward(long additionClickAward) {
-        this.additionClickAward = additionClickAward;
-    }
-
-    public long getAdditionAtk() {
-        return additionAtk;
-    }
-
-    public void setAdditionAtk(long additionAtk) {
-        this.additionAtk = additionAtk;
-    }
-
-    public long getAdditionDef() {
-        return additionDef;
-    }
-
-    public void setAdditionDef(long additionDef) {
-        this.additionDef = additionDef;
-    }
-
-    public Skill getSkill() {
-        return skill;
-    }
-
-    public void setSkill(Skill skill) {
-        this.skill = skill;
+    public static Item emptyItem() {
+        Item item = new Item();
+        item.setName(ItemName.EMPTY);
+        return item;
     }
 }

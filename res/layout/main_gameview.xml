@@ -460,13 +460,13 @@
                                 android:textSize="12sp" />
 
                             <Button
-                                android:id="@+id/batte_button"
+                                android:id="@+id/forge_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="fill_horizontal"
                                 android:layout_weight="1"
-                                android:enabled="false"
-                                android:text="竞技场"
+                                android:enabled="true"
+                                android:text="打造"
                                 android:textSize="12sp" />
 
                             <Button

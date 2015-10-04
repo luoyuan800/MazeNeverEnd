@@ -16,7 +16,7 @@ public class StoryHelper {
         if(MainGameActivity.context.getMaze().getLev() == 1 && b && hero.getRandom().nextInt(1000)<20){
             MainGameActivity.context.addMessage(String.format("%s找到了一扇上锁了的门，但是没有钥匙打开它。门后面是什么呢？", hero.getFormatName()));
             Achievement.story.enable(hero);
-        }else if(Achievement.story.isEnable() && b && hero.getRandom().nextBoolean() && 10 > hero.getRandom().nextLong(hero.getLockBox() + 1)){
+        }else if(Achievement.story.isEnable() && b && hero.getRandom().nextBoolean() && 3 > hero.getRandom().nextLong(hero.getLockBox() + 1)){
             MainGameActivity.context.addMessage(hero.getFormatName() + "找到一个带锁的宝箱");
             hero.setLockBox(hero.getLockBox() + 1);
         }

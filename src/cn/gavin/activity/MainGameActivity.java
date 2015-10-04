@@ -49,6 +49,7 @@ import cn.gavin.R;
 import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
+import cn.gavin.forge.dialog.ItemDialog;
 import cn.gavin.log.LogHelper;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.save.SaveHelper;
@@ -131,6 +132,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private Button getSkillPointButton;
     private TextView lockBoxCount;
     private TextView keyCount;
+    private Button forgeButton;
 
 
     //Get Function
@@ -722,6 +724,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         getSkillPointButton.setOnClickListener(this);
         lockBoxCount = (TextView) findViewById(R.id.local_box);
         keyCount = (TextView) findViewById(R.id.key_count);
+        forgeButton = (Button) findViewById(R.id.forge_button);
+        forgeButton.setOnClickListener(this);
         refresh();
     }
 
@@ -994,6 +998,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.forge_button:
+                Intent intent = new Intent(this,ForgeActivity.class);
+                startActivity(intent);
+                break;
             case R.id.skill_point_get_button:
                 showGetSkillPointDialog();
                 break;

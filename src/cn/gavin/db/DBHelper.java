@@ -10,6 +10,7 @@ import android.util.Log;
 import java.io.File;
 
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.forge.ForgeDB;
 
 /**
  * Created by gluo on 9/14/2015.
@@ -102,6 +103,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         try {
+            beginTransaction();
             String createTable = "CREATE TABLE monster_book(" +
                     "name TEXT NOT NULL," +
                     "format_name TEXT," +
@@ -127,6 +129,9 @@ public class DBHelper extends SQLiteOpenHelper {
                     ")";
             db.execSQL(createTable);
             db.execSQL("CREATE UNIQUE INDEX monster_index ON monster_book (name)");
+            ForgeDB forgeDB = new ForgeDB();
+            forgeDB.createTable(db);
+            endTransaction();
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "CreateTable", e);

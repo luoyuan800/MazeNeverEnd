@@ -160,6 +160,9 @@ public abstract class Skill {
         for (int i = 0; i < str.length(); i++) {
             result += Integer.parseInt(str.charAt(i) + "");
         }
+        if(result > 50){
+            result = hero.getRandom().nextInt(50);
+        }
         return result;
     }
 
@@ -180,7 +183,7 @@ public abstract class Skill {
         if (count % 1000 == 0) {
             levelUp();
         }
-        if (count % 3000 == 0) {
+        if (count % 8000 == 0) {
             hero.setSkillPoint(hero.getSkillPoint() + 1);
         }
     }

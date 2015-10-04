@@ -12,22 +12,13 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListMap;
-
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.utils.StringUtils;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * gluo on 9/8/2015.
@@ -46,7 +37,7 @@ public class MonsterBook {
     }
 
     public void showBook(MainGameActivity context) {
-            initView(context);
+        initView(context);
         alertDialog.show();
     }
 
@@ -81,7 +72,7 @@ public class MonsterBook {
         String baseSql = "replace into monster_book (name, format_name, isDefeat, hp, hp1,atk,atk1,maze_lv,maze_lv1, count) values('%s', '%s', '%s','%s', '%s', '%s', '%s','%s','%s','%s')";
         dbHelper.beginTransaction();
         for (MonsterItem monster : sortItems) {
-            if(monster!=null) {
+            if (monster != null) {
                 String sql = String.format(baseSql,
                         monster.name, monster.formatName, monster.isDefeat(), monster.hp, monster.hp1, monster.atk, monster.atk1, monster.mazeLev, monster.mazeLev1, monster.count);
                 dbHelper.excuseSQLWithoutResult(sql);
@@ -137,7 +128,7 @@ public class MonsterBook {
                     }
                 }
             });
-        }catch (Exception exp){
+        } catch (Exception exp) {
             exp.printStackTrace();
         }
     }
@@ -145,11 +136,11 @@ public class MonsterBook {
     private static MonsterBook mb;
 
     public static void init(Context context) {
-        if(mb == null) {
+        if (mb == null) {
             mb = new MonsterBook(context);
             mb.dbHelper = DBHelper.getDbHelper();
             mb.getMonsterNameKeys();
-        }else{
+        } else {
             mb.context = context;
         }
     }
@@ -262,7 +253,7 @@ public class MonsterBook {
                 }
                 list.addMonster(item);
             }
-            while(!list.full()){
+            while (!list.full()) {
                 list.addMonster(MonsterItem.EMPTY_MONSTER);
             }
         }

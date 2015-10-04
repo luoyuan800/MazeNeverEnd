@@ -178,14 +178,14 @@ public class Hero {
 
     public boolean upgradeSword(long count) {
         for (int i = 0; i < count; i++) {
-            if (swordLev + sword.getBase() + attackValue >= Integer.MAX_VALUE - 100) {
+            if (swordLev + sword.getBase() + attackValue >= Long.MAX_VALUE - 100) {
                 return false;
             } else {
                 if (material >= 100 + swordLev) {
                     material -= (100 + armorLev);
                     swordLev++;
-                    if (sword != sword.levelUp(swordLev)) {
-                        sword = sword.levelUp(swordLev);
+                    if (sword != sword.levelUp(swordLev, this)) {
+                        sword = sword.levelUp(swordLev, this);
                         swordLev = 0;
                     }
                 } else {
@@ -204,8 +204,8 @@ public class Hero {
                 if (material >= 80 + armorLev) {
                     material -= (80 + armorLev);
                     armorLev++;
-                    if (armor != armor.levelUp(armorLev)) {
-                        armor = armor.levelUp(armorLev);
+                    if (armor != armor.levelUp(armorLev, this)) {
+                        armor = armor.levelUp(armorLev, this);
                         armorLev = 0;
                         if (armor == Armor.金甲) {
                             Achievement.goldColor.enable(this);

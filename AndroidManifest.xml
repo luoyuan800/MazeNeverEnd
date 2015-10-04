@@ -32,6 +32,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.MainGameActivity"/>
+        <activity android:name=".activity.ForgeActivity"/>
         <!-- bmob pay sdk activity begin ,please put below code into application tag -->
         <activity
                 android:name="com.alipay.sdk.app.H5PayActivity"

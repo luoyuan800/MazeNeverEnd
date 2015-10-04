@@ -17,11 +17,13 @@ public enum Sword {
     public long getBase(){
         return base;
     }
-    public Sword levelUp(long lev) {
+    public Sword levelUp(long lev, Hero hero) {
         if (lev >= this.lev) {
             int index = ordinal();
             if (index < values().length - 1) {
-                return values()[index + 1];
+                Sword sword = values()[index + 1];
+                sword.base = hero.getRandom().nextLong(hero.getStrength()/1000) + sword.base;
+                return sword;
             }else{
                 Achievement.artifact.enable(null);
             }

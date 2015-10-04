@@ -117,7 +117,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
             @Override
             public void onClick(View view) {
                 viewFlipper.showNext();
-                sillNameText.setText(getPrevSystemName());
+                sillNameText.setText(getNextSystemName());
             }
         });
         isInit = true;
