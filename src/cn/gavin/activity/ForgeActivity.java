@@ -1,6 +1,8 @@
 package cn.gavin.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,9 +11,19 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import cn.gavin.R;
+import cn.gavin.forge.Accessory;
+import cn.gavin.forge.Builder;
 import cn.gavin.forge.Item;
+import cn.gavin.forge.RingBuilder;
 import cn.gavin.forge.dialog.ItemDialog;
 
 
@@ -27,6 +39,11 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
     ItemDialog itemDialog;
     private Item item1, item2, item3, item4, item5;
     private TextView resultText;
+    private Builder ringBuilder = new RingBuilder();
+    List<Item> items = new ArrayList<Item>(5);
+    private Button forgeButton;
+    private Button conformButton;
+    private Button cleanButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +76,19 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
         item3Button.setOnClickListener(this);
         item4Button.setOnClickListener(this);
         item5Button.setOnClickListener(this);
+        item1Button.setOnLongClickListener(this);
+        item2Button.setOnLongClickListener(this);
+        item3Button.setOnLongClickListener(this);
+        item4Button.setOnLongClickListener(this);
+        item5Button.setOnLongClickListener(this);
         itemDialog = new ItemDialog(this);
         resultText = (TextView) findViewById(R.id.forge_conform_result);
+        conformButton = (Button) findViewById(R.id.forge_conform_button);
+        conformButton.setOnClickListener(this);
+        forgeButton = (Button) findViewById(R.id.forge_do_button);
+        forgeButton.setOnClickListener(this);
+        cleanButton = (Button) findViewById(R.id.forge_clean_button);
+        cleanButton.setOnClickListener(this);
     }
 
     @Override
@@ -111,22 +139,92 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.forge_clean_button:
+                clean();
+                break;
             case R.id.forge_item_1:
-                resultText.setText(Html.fromHtml(item1.toString()));
+                if(item1!=null) {
+                    resultText.setText(Html.fromHtml(item1.toString()));
+                }
                 break;
             case R.id.forge_item_2:
-                resultText.setText(Html.fromHtml(item2.toString()));
+                if(item2!=null) {
+                    resultText.setText(Html.fromHtml(item2.toString()));
+                }
                 break;
             case R.id.forge_item_3:
-                resultText.setText(Html.fromHtml(item3.toString()));
+                if(item3!=null) {
+                    resultText.setText(Html.fromHtml(item3.toString()));
+                }
                 break;
             case R.id.forge_item_4:
-                resultText.setText(Html.fromHtml(item4.toString()));
+                if(item4!=null) {
+                    resultText.setText(Html.fromHtml(item4.toString()));
+                }
                 break;
             case R.id.forge_item_5:
-                resultText.setText(Html.fromHtml(item5.toString()));
+                if(item5!=null) {
+                    resultText.setText(Html.fromHtml(item5.toString()));
+                }
                 break;
+            case R.id.forge_conform_button:
+                if(index == 1){
+                    items.clear();
+                    if(item1!=null) items.add(item1);
+                    if(item2!=null) items.add(item2);
+                    if(item3!=null) items.add(item3);
+                    if(item4!=null) items.add(item4);
+                    if(item5!=null) items.add(item5);
+                    resultText.setText(Html.fromHtml(ringBuilder.detect(items)));
+                }
+                break;
+            case R.id.forge_do_button:
+                if(index == 1){
+                    items.clear();
+                    if(item1!=null) items.add(item1);
+                    if(item2!=null) items.add(item2);
+                    if(item3!=null) items.add(item3);
+                    if(item4!=null) items.add(item4);
+                    if(item5!=null) items.add(item5);
+                    if(items.size() > 2) {
+                        Accessory accessory = ringBuilder.build(items);
+                        showResult(accessory);
+                        clean();
+                    }
+                }
         }
+    }
+
+    private void clean(){
+        item1 = null;
+        item2= null;
+        item3= null;
+        item4 = null;
+        item5 = null;
+        items.clear();
+        item1Button.setText("");
+        item2Button.setText("");
+        item3Button.setText("");
+        item4Button.setText("");
+        item5Button.setText("");
+    }
+    public void showResult(Accessory accessory){
+        AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setTitle("打造成功");
+        final TextView tv = new TextView(this);
+        tv.setText(Html.fromHtml(accessory.toString()));
+        dialog.setView(tv);
+
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.show();
     }
 
     public Handler handler = new Handler() {

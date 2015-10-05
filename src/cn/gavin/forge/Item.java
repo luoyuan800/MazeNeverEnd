@@ -11,6 +11,7 @@ import cn.gavin.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * Copyright 2015 gluo.
@@ -26,6 +27,14 @@ public class Item {
     private String id;
 
     public String toString() {
+        StringBuilder builder = new StringBuilder(name.name());
+        builder.append("<br>");
+        if (effect != null) builder.append(effect.getName()).append(":").append(effectValue).append("<br>");
+        if (effect1 != null) builder.append(effect1.getName()).append(":").append(effect1Value);
+        return builder.toString();
+    }
+
+    public String buildProperties(){
         StringBuilder builder = new StringBuilder(name.name());
         builder.append("<br>");
         if (effect != null) builder.append(effect.name()).append(":").append(effectValue).append("<br>");
@@ -71,6 +80,23 @@ public class Item {
 
     public void setEffectValue(Number effectValue) {
         this.effectValue = effectValue;
+    }
+
+    public static Item buildItem(Hero hero, ItemName name){
+        Item item = new Item();
+        item.setName(name);
+        Random random = hero.getRandom();
+        Effect e = Effect.values()[random.nextInt(Effect.values().length)];
+        item.setEffect(e);
+        item.setEffectValue(1000);
+        if (random.nextBoolean()) {
+            Effect e1 = Effect.values()[random.nextInt(Effect.values().length)];
+            if (e1 != e) {
+                item.setEffect1(e1);
+                item.setEffect1Value(1000);
+            }
+        }
+        return item;
     }
 
     public static Item buildItem(Hero hero, Maze maze, Monster monster) {
@@ -134,10 +160,10 @@ public class Item {
 
     public void save() {
         DBHelper dbHelper = DBHelper.getDbHelper();
-        long value = System.currentTimeMillis();
-        String sql = String.format("INSERT INTO item (id,name,properties) values ('%s','%s', '%s')", value, name.name(), toString());
+        String value = UUID.randomUUID().toString();
+        String sql = String.format("INSERT INTO item (id,name,properties) values ('%s','%s', '%s')", value, name.name(), buildProperties());
         dbHelper.excuseSQLWithoutResult(sql);
-        id = String.valueOf(value);
+        id = value;
     }
 
     public void delete() {

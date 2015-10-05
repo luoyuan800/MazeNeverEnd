@@ -49,7 +49,8 @@ import cn.gavin.R;
 import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
-import cn.gavin.forge.dialog.ItemDialog;
+import cn.gavin.forge.Item;
+import cn.gavin.forge.list.ItemName;
 import cn.gavin.log.LogHelper;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.save.SaveHelper;
@@ -69,7 +70,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private Button uploadButton;
     private Button updateButton;
     private StringBuilder versionUpdateInfo;
-    private long lastUploadLev = 0;
 
     // 战斗信息
     private ScrollView mainInfoSv;
@@ -195,7 +195,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                             public void run() {
                                 Upload upload = new Upload();
                                 if (upload.upload(heroN, alipay.getPayTime())) {
-                                    lastUploadLev = heroN.getMaxMazeLev();
+                                    MazeContents.lastUpload = heroN.getMaxMazeLev();
                                     uploading = false;
                                     Achievement.uploader.enable(heroN);
                                 }
@@ -301,14 +301,19 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_gameview);
         context = this;
-        setAlipay(new Alipay(context, MainMenuActivity.context.payTime));
-        lastUploadLev = MainMenuActivity.context.lastUpload;
+        setAlipay(new Alipay(context, MazeContents.payTime));
         Log.i(TAG, "start game~");
         initGameData();
-        gameThreadRunning = true;
-        gameThread = new GameThread();
-        gameThread.start();
+
     }
+
+   @Override
+   protected  void onResume(){
+       super.onResume();
+       gameThreadRunning = true;
+       gameThread = new GameThread();
+       gameThread.start();
+   }
 
     @Override
     protected void onDestroy() {
@@ -391,7 +396,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         save();
-                        if(skillPointGetDialog!=null){
+                        if (skillPointGetDialog != null) {
                             skillPointGetDialog.dismiss();
                         }
                         MainGameActivity.this.finish();
@@ -518,12 +523,21 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         if (tv.getText().toString().equals("201509181447")) {
                             heroN.addMaterial(10000000);
                             heroN.addPoint(100000);
-                            heroN.setAwardCount(heroN.getAwardCount() +1);
+                            heroN.setAwardCount(heroN.getAwardCount() + 1);
                         } else if (tv.getText().toString().equals("sp1.1c")) {
-                            if(heroN.getAwardCount() < 1) {
+                            if (heroN.getAwardCount() < 1) {
                                 heroN.setSkillPoint(heroN.getSkillPoint() + 3);
                                 heroN.setAwardCount(heroN.getAwardCount() + 1);
                             }
+                        } else if (tv.getText().toString().equals("forge1.2d")) {
+                            Item item = Item.buildItem(heroN, ItemName.冷杉木);
+                            if (item != null) item.save();
+                            item = Item.buildItem(heroN, ItemName.黑石);
+                            if (item != null) item.save();
+                            item = Item.buildItem(heroN, ItemName.玄石);
+                            if (item != null) item.save();
+                            item = Item.buildItem(heroN, ItemName.龟壳);
+                            if (item != null) item.save();
                         } else {
                             heroN.setName(tv.getText().toString().replaceAll("_", " "));
                         }
@@ -645,11 +659,15 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     private void initGameData() {
         dbHelper = DBHelper.getDbHelper();
+        if(dbHelper == null) {
+            DBHelper.init(context);
+            dbHelper = DBHelper.getDbHelper();
+        }
         saveHelper = new SaveHelper(this);
         MonsterBook.init(context);
         // 英雄
         load();
-        skillDialog = MainMenuActivity.context.skillDialog;
+        skillDialog = MazeContents.skillDialog;
         if (skillDialog == null) {
             skillDialog = new SkillDialog(context);
         }
@@ -799,12 +817,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             thirdSkillButton.setEnabled(false);
         }
         if (!uploading) {
-            if (lastUploadLev + 100 <= heroN.getMaxMazeLev()) {
+            if (MazeContents.lastUpload + 100 <= heroN.getMaxMazeLev()) {
                 uploadButton.setEnabled(true);
                 uploadButton.setText("上传角色信息");
             } else {
                 uploadButton.setEnabled(false);
-                uploadButton.setText("还差" + (100 - heroN.getMaxMazeLev() + lastUploadLev) + "层");
+                uploadButton.setText("还差" + (100 - heroN.getMaxMazeLev() + MazeContents.lastUpload) + "层");
             }
         }
 
@@ -831,7 +849,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     public long getLastUploadLev() {
-        return lastUploadLev;
+        return MazeContents.lastUpload;
     }
 
     public Alipay getAlipay() {
@@ -843,7 +861,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     public void setLastUploadLev(long lastUploadLev) {
-        this.lastUploadLev = lastUploadLev;
+        MazeContents.lastUpload = lastUploadLev;
     }
 
     public MonsterBook getMonsterBook() {
@@ -999,7 +1017,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
             case R.id.forge_button:
-                Intent intent = new Intent(this,ForgeActivity.class);
+                gameThreadRunning = false;
+                Intent intent = new Intent(this, ForgeActivity.class);
                 startActivity(intent);
                 break;
             case R.id.skill_point_get_button:
@@ -1147,9 +1166,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private void load() {
-        heroN = MainMenuActivity.context.hero;
-        maze = MainMenuActivity.context.maze;
-        lastUploadLev = MainMenuActivity.context.lastUpload;
+        heroN = MazeContents.hero;
+        maze = MazeContents.maze;
         //saveHelper.loadHero();
     }
 

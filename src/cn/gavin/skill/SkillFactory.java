@@ -3,12 +3,16 @@ package cn.gavin.skill;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.Maze;
 import cn.gavin.Sword;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.activity.MainMenuActivity;
+import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;
 import cn.gavin.monster.Monster;
@@ -19,9 +23,6 @@ import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.PropertySkill;
 import cn.gavin.utils.Random;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * by luoyuan
@@ -348,7 +349,7 @@ public class SkillFactory {
                         public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                             long harm = monster.getAtk() - hero.getDefenseValue();
                             if (harm <= 0) {
-                                harm = hero.getRandom().nextLong(hero.getMaxMazeLev() +1);
+                                harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1);
                             }
                             hero.addHp(-harm);
                             context.addMessage(skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害"));
@@ -407,14 +408,14 @@ public class SkillFactory {
                         public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                             long harm = monster.getAtk() - hero.getDefenseValue();
                             if (harm <= 0) {
-                                harm = hero.getRandom().nextLong(hero.getMaxMazeLev()+1);
+                                harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1);
                             }
                             hero.addHp(-harm);
                             context.addMessage(skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害"));
                             long turn = hero.getRandom().nextLong(Math.round(skill.getCount() / 200f) + 1) + 1;
                             context.addMessage(skill.format(hero.getFormatName() + "触发了" + skill.getName() + "定住对方" + turn + "个回合"));
                             while (turn-- > 0) {
-                               harm = hero.getAttackValue();
+                                harm = hero.getAttackValue();
                                 monster.addHp(-harm);
                                 context.addMessage(skill.format(hero.getFormatName() + "攻击了" + monster.getFormatName() + "造成了" + harm + "点伤害"));
                                 try {
@@ -468,7 +469,7 @@ public class SkillFactory {
                         public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                             long harm = monster.getAtk() - hero.getDefenseValue();
                             if (harm <= 0) {
-                                harm = hero.getRandom().nextLong(hero.getMaxMazeLev()+1);
+                                harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1);
                             }
                             hero.addHp(-harm);
                             context.addMessage(skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害"));
@@ -549,9 +550,9 @@ public class SkillFactory {
                         public void setOnUsed(boolean use) {
                             if (MainGameActivity.context != null) {
                                 if (use)
-                                    MainMenuActivity.context.getMaze().setCsmgl(MainMenuActivity.context.getMaze().getCsmgl() - Math.round(getProbability()));
+                                    MazeContents.getMaze().setCsmgl(MazeContents.getMaze().getCsmgl() - Math.round(getProbability()));
                                 else
-                                    MainMenuActivity.context.getMaze().setCsmgl(MainMenuActivity.context.getMaze().getCsmgl() + Math.round(getProbability()));
+                                    MazeContents.getMaze().setCsmgl(MazeContents.getMaze().getCsmgl() + Math.round(getProbability()));
                             }
                         }
                     };
@@ -589,7 +590,7 @@ public class SkillFactory {
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                             if (skill.getProbability() < 400) {
                                 skill.setProbability(skill.getProbability() + 30f);
-                                MainMenuActivity.context.getMaze().setCsmgl(MainMenuActivity.context.getMaze().getCsmgl() - 30);
+                                MazeContents.getMaze().setCsmgl(MazeContents.getMaze().getCsmgl() - 30);
                                 return true;
                             }
                             return false;
@@ -1176,7 +1177,7 @@ public class SkillFactory {
                     skill.setRelease(new UseExpression() {
                         @Override
                         public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                            long harm = hero.getAttackValue() + iskll.getBaseHarm() + hero.getRandom().nextLong(iskll.getAdditionHarm() +1);
+                            long harm = hero.getAttackValue() + iskll.getBaseHarm() + hero.getRandom().nextLong(iskll.getAdditionHarm() + 1);
                             monster.addHp(-harm);
                             skill.addMessage(hero.getFormatName() + "使用了技能" + iskll.getName() + "，对" +
                                     monster.getFormatName() + "造成了" + harm + "的闪电伤害");
@@ -1226,7 +1227,7 @@ public class SkillFactory {
                         public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                             long harm = monster.getAtk() - hero.getDefenseValue();
                             if (harm <= 0) {
-                                harm = hero.getRandom().nextLong(hero.getMaxMazeLev()+1);
+                                harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1);
                             }
                             skill.addMessage(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "的伤害。");
                             double v = harm * (iskll.getProbability() + 80d) / 100d;

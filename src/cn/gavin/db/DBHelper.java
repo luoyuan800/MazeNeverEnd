@@ -150,6 +150,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public static DBHelper getDbHelper() {
+
         return dbHelper;
     }
 

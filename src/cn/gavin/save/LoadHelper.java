@@ -12,11 +12,9 @@ import cn.gavin.Armor;
 import cn.gavin.Hero;
 import cn.gavin.Maze;
 import cn.gavin.Sword;
-import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MainMenuActivity;
-import cn.gavin.alipay.Alipay;
+import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
-import cn.gavin.monster.MonsterBook;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 
@@ -31,8 +29,6 @@ public class LoadHelper {
     public LoadHelper(MainMenuActivity activity) {
         context = activity;
     }
-
-
 
 
     public void loadHero() {
@@ -61,8 +57,8 @@ public class LoadHelper {
             heroN.setSword(Sword.valueOf(preferences.getString("swordName", Sword.木剑.name())));
             heroN.setArmor(Armor.valueOf(preferences.getString("armorName", Armor.破布.name())));
             heroN.setDeathCount(preferences.getLong("death", 0));
-            heroN.setSkillPoint(preferences.getLong("skillPoint",1));
-            context.lastUpload = preferences.getLong("lastUploadLev", 0);
+            heroN.setSkillPoint(preferences.getLong("skillPoint", 1));
+            MazeContents.lastUpload = preferences.getLong("lastUploadLev", 0);
             maze.setLevel(preferences.getLong("currentMazeLev", 1));
             String ach = preferences.getString("achievement", "0");
             for (int i = 0; i < ach.length() && i < Achievement.values().length; i++) {
@@ -71,13 +67,13 @@ public class LoadHelper {
                     Achievement.values()[i].enable();
                 }
             }
-            context.payTime = preferences.getLong("swordLev", 0);
+            MazeContents.payTime = preferences.getLong("swordLev", 0);
             heroN.setAwardCount(preferences.getLong("awardCount", 0));
             heroN.setLockBox(preferences.getLong("lockBox", 0));
             heroN.setKeyCount(preferences.getLong("keyCount", 0));
         }
-        context.hero = heroN;
-        context.maze = maze;
+        MazeContents.hero = heroN;
+        MazeContents.maze = maze;
     }
 
     private boolean loadOlderSaveFile(Hero heroN, Maze maze) {
@@ -117,7 +113,7 @@ public class LoadHelper {
 //                    heroN.getExistSkill().get(2).setCount(Integer.parseInt(atts[23]));
                 }
                 if (atts.length >= 25) {
-                    context.lastUpload = Integer.parseInt(atts[24]);
+                    MazeContents.lastUpload = Integer.parseInt(atts[24]);
                 }
                 maze.setLevel(Integer.parseInt(atts[18]));
                 if (maze.getLev() > heroN.getMaxMazeLev()) {
@@ -129,10 +125,10 @@ public class LoadHelper {
                         Achievement.values()[i].enable();
                     }
                 }
-                context.payTime = Integer.parseInt(atts[19]);
+                MazeContents.payTime = Integer.parseInt(atts[19]);
                 Achievement.linger.enable(heroN);
-                context.hero = (heroN);
-                context.maze = (maze);
+                MazeContents.hero = (heroN);
+                MazeContents.maze = (maze);
                 return true;
             } else {
                 return false;

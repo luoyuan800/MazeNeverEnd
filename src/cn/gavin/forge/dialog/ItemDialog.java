@@ -7,13 +7,18 @@ import android.os.Message;
 import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import cn.gavin.R;
-import cn.gavin.activity.ForgeActivity;
-import cn.gavin.forge.Item;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.gavin.R;
+import cn.gavin.activity.ForgeActivity;
+import cn.gavin.forge.Item;
 
 /**
  * Copyright 2015 luoyuan.
@@ -184,28 +189,28 @@ public class ItemDialog {
                 holder = (ItemViewHolder) convertView.getTag();
             }
             ItemList item = getItem(position);
-            if (item.i1 != null || forgeActivity.contains(item.i1)) {
+            if (item.i1 != null && !forgeActivity.contains(item.i1)) {
                 holder.name1.setText(item.i1.getName().name());
                 holder.name1.setEnabled(true);
             } else {
                 holder.name1.setText("");
                 holder.name1.setEnabled(false);
             }
-            if (item.i2 != null|| forgeActivity.contains(item.i2)) {
+            if (item.i2 != null && !forgeActivity.contains(item.i2)) {
                 holder.name2.setText(item.i2.getName().name());
                 holder.name2.setEnabled(true);
             } else {
                 holder.name2.setText("");
                 holder.name2.setEnabled(false);
             }
-            if (item.i3 != null|| forgeActivity.contains(item.i3)) {
+            if (item.i3 != null && !forgeActivity.contains(item.i3)) {
                 holder.name3.setText(item.i3.getName().name());
                 holder.name3.setEnabled(true);
             } else {
                 holder.name3.setText("");
                 holder.name3.setEnabled(false);
             }
-            if (item.i4 != null|| forgeActivity.contains(item.i4)) {
+            if (item.i4 != null && !forgeActivity.contains(item.i4)) {
                 holder.name4.setText(item.i4.getName().name());
                 holder.name4.setEnabled(true);
             } else {

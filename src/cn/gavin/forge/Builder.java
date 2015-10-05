@@ -1,11 +1,16 @@
 package cn.gavin.forge;
 
 import android.database.Cursor;
+
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
-
-import java.util.*;
 
 /**
  * Copyright 2015 gluo.
@@ -18,15 +23,15 @@ public abstract class Builder {
     public Accessory a2;
     public List<Item> items;
 
-    public Accessory builder(List<Item> items) {
+    public Accessory build(List<Item> items) {
         if (this.items != items || !items.containsAll(this.items)) {
             detect(items);
         }
         int p = random.nextInt(100);
-        if (p > a1.getPro()) {
+        if (p < a1.getPro()) {
             build(a1, false);
             return a1;
-        } else if (p > a2.getPro()) {
+        } else if (p < a2.getPro()) {
             build(a2, false);
             return a2;
         } else {
@@ -44,29 +49,54 @@ public abstract class Builder {
         }
         StringBuilder b = new StringBuilder();
         for (String s : names) {
-            b.append(s);
+            if(b.length() < 3 || random.nextBoolean()) {
+                b.append(s);
+            }
         }
         accessory.setName(b.toString());
         accessory.setItems(items);
     }
 
     private void build(Accessory accessory, boolean detectSave) {
-        Map<Effect, Number> effectNumberMap = new EnumMap<Effect, Number>(Effect.class);
+        Map<Effect, Number> effectNumberMap = accessory.getEffects();
+        if (effectNumberMap == null) effectNumberMap = new EnumMap<Effect, Number>(Effect.class);
         for (Item item : items) {
-            Number number = effectNumberMap.get(item.getEffect());
-            if (number != null) {
-                effectNumberMap.put(item.getEffect(), number.longValue() + random.nextLong((number.longValue() + item.getEffectValue().longValue()) / 5 + 1));
-            } else {
-                effectNumberMap.put(item.getEffect(), item.getEffectValue().longValue());
+            Effect effect = item.getEffect();
+            if(effect!=null) {
+                Number number = effectNumberMap.get(effect);
+                if (number != null) {
+                    effectNumberMap.put(effect, number.longValue() + random.nextLong((number.longValue() + item.getEffectValue().longValue()) / 5 + 1));
+                } else {
+                    effectNumberMap.put(effect, item.getEffectValue().longValue());
+                }
             }
-            number = effectNumberMap.get(item.getEffect1());
-            if (number != null) {
-                effectNumberMap.put(item.getEffect1(), number.longValue() + random.nextLong((number.longValue() + item.getEffect1Value().longValue()) / 5 + 1));
-            } else {
-                effectNumberMap.put(item.getEffect1(), item.getEffect1Value().longValue());
+            Effect effect1 = item.getEffect1();
+            if(effect1!=null) {
+                Number number = effectNumberMap.get(effect1);
+                if (number != null) {
+                    effectNumberMap.put(effect1, number.longValue() + random.nextLong((number.longValue() + item.getEffect1Value().longValue()) / 5 + 1));
+                } else {
+                    effectNumberMap.put(effect1, item.getEffect1Value().longValue());
+                }
             }
         }
-        String color = "";
+        accessory.setEffects(effectNumberMap);
+        detectColor(accessory, detectSave);
+        detectElement(accessory);
+        accessory.setType(getType());
+        for (Item item : items) {
+            item.delete();
+        }
+        accessory.setItems(items);
+        accessory.save();
+    }
+
+    private void detectColor(Accessory accessory, boolean detectSave) {
+        String color = accessory.getColor();
+        if (StringUtils.isNotEmpty(color)) {
+            return;
+        }
+        Map<Effect, Number> effectNumberMap = accessory.getEffects();
         for (Effect effect : effectNumberMap.keySet()) {
             switch (effect) {
                 case ADD_ATK:
@@ -74,19 +104,53 @@ public abstract class Builder {
                 case ADD_UPPER_HP:
                     long l = effectNumberMap.get(effect).longValue();
                     if (l > 10000) {
-                        color = "blue";
+                        color = "#0000FF";
                     }
-                    if(l > 1000000){
-                        color = "golden";
+                    if (l > 100000) {
+                        color = "#9932CC";
+                    }
+                    if (l > 10000000) {
+                        color = "#B8860B";
 
                     }
                     break;
+                default:
+                    color = "#000000";
             }
         }
-        if(color.equalsIgnoreCase("golden") && detectSave){
+        accessory.setColor(color);
+        if (color.equalsIgnoreCase("golden") && detectSave) {
             accessory.setSave(true);
         }
-        accessory.setEffects(effectNumberMap);
+    }
+
+    private void detectElement(Accessory accessory) {
+        EnumMap<Effect, Number> effectNumberEnumMap = new EnumMap<Effect, Number>(Effect.class);
+        effectNumberEnumMap.putAll(accessory.getEffects());
+        effectNumberEnumMap.putAll(accessory.getAdditionEffects());
+        Effect lessEffect = null;
+        for (Effect effect : effectNumberEnumMap.keySet()) {
+            if (lessEffect == null) {
+                lessEffect = effect;
+            } else {
+                if (effectNumberEnumMap.get(lessEffect).longValue() > effectNumberEnumMap.get(effect).longValue()) {
+                    lessEffect = effect;
+                }
+            }
+        }
+        switch (lessEffect) {
+            case ADD_ATK:
+                accessory.setElement(Element.金);
+                break;
+            case ADD_DEF:
+                accessory.setElement(Element.水);
+                break;
+            case ADD_UPPER_HP:
+                accessory.setElement(Element.木);
+                break;
+            default:
+                accessory.setElement(Element.无);
+        }
     }
 
     public String detect(List<Item> items) {
@@ -95,7 +159,7 @@ public abstract class Builder {
         while (!cursor.isAfterLast()) {
             float pro = 0.0f;
             Set<String> recipeItemSet = new HashSet<String>(5);
-            for (String name : StringUtils.split(cursor.getString(cursor.getColumnIndex("items")), "_")) {
+            for (String name : StringUtils.split(cursor.getString(cursor.getColumnIndex("items")), "-")) {
                 recipeItemSet.add(name.trim());
             }
             int p = 85 / recipeItemSet.size();
@@ -104,24 +168,44 @@ public abstract class Builder {
                     pro += p;
                 }
             }
+            Map<Effect, Number> baseEffectsMap = new EnumMap<Effect, Number>(Effect.class);
+            for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
+                String[] keyValue = StringUtils.split(str, ":");
+                if (keyValue.length > 1) {
+                    baseEffectsMap.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                }
+            }
+            Map<Effect, Number> additionEffectsMap = new EnumMap<Effect, Number>(Effect.class);
+            for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")) {
+                String[] keyValue = StringUtils.split(str, ":");
+                if (keyValue.length > 1) {
+                    additionEffectsMap.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                }
+            }
             if (a1 == null || a1.getPro() < pro) {
                 a1 = new Accessory();
                 a1.setPro(pro);
                 a1.setName(cursor.getString(cursor.getColumnIndex("name")));
                 a1.setColor(cursor.getString(cursor.getColumnIndex("color")));
+                a1.setAdditionEffects(additionEffectsMap);
+                a1.setEffects(baseEffectsMap);
             } else if (a2 == null || a2.getPro() < pro) {
                 a2 = new Accessory();
                 a2.setPro(pro);
-                a1.setName(cursor.getString(cursor.getColumnIndex("name")));
-                a1.setColor(cursor.getString(cursor.getColumnIndex("color")));
+                a2.setName(cursor.getString(cursor.getColumnIndex("name")));
+                a2.setColor(cursor.getString(cursor.getColumnIndex("color")));
+                a2.setAdditionEffects(additionEffectsMap);
+                a2.setEffects(baseEffectsMap);
             }
             cursor.moveToNext();
         }
-        if ((a1.getPro() + a2.getPro()) >= 100) {
-            if (a1.getPro() >= a2.getPro()) {
-                a2.setPro((100 - a1.getPro()) / 2);
-            } else {
-                a1.setPro((100 - a2.getPro()) / 2);
+        if(a1!=null && a1!=null) {
+            if ((a1.getPro() + a2.getPro()) >= 100) {
+                if (a1.getPro() >= a2.getPro()) {
+                    a2.setPro((100 - a1.getPro()) / 2);
+                } else {
+                    a1.setPro((100 - a2.getPro()) / 2);
+                }
             }
         }
         StringBuilder builder = new StringBuilder();

@@ -1,9 +1,16 @@
 package cn.gavin.forge;
 
-import cn.gavin.forge.effect.Effect;
+import android.database.Cursor;
 
+import cn.gavin.db.DBHelper;
+import cn.gavin.forge.effect.Effect;
+import cn.gavin.utils.StringUtils;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Copyright 2015 luoyuan.
@@ -11,6 +18,7 @@ import java.util.Map;
  * Created by luoyuan on 10/4/15.
  */
 public class Accessory extends Equipment {
+    private String id;
     private float pro;
     private String name;
     private Map<Effect, Number> effects;
@@ -18,6 +26,8 @@ public class Accessory extends Equipment {
     private List<Item> items;
     private boolean save;
     private Element element;
+    private Map<Effect, Number> additionEffects;
+    private int type;
 
     public float getPro() {
         return pro;
@@ -73,5 +83,110 @@ public class Accessory extends Equipment {
 
     public void setElement(Element element) {
         this.element = element;
+    }
+
+    public Map<Effect, Number> getAdditionEffects() {
+        return additionEffects;
+    }
+
+    public void setAdditionEffects(Map<Effect, Number> additionEffects) {
+        this.additionEffects = additionEffects;
+    }
+
+    public void save(){
+        DBHelper dbHelper = DBHelper.getDbHelper();
+        StringBuilder base = new StringBuilder();
+        if(effects!=null) {
+            for (Effect effect : effects.keySet()) {
+                base.append(effect.name()).append(":").append(effects.get(effect)).append("-");
+            }
+        }
+        StringBuilder addition = new StringBuilder();
+        if(additionEffects!=null) {
+            for (Effect effect : additionEffects.keySet()) {
+                addition.append(effect.name()).append(":").append(additionEffects.get(effect));
+            }
+        }
+        id = UUID.randomUUID().toString();
+        String sql = String.format("INSERT INTO accessory (id, name,base,addition,element,type,color) " +
+                "values ('%s', '%s', '%s','%s','%s','%s','%s')", id,
+                name,base.toString(),addition.toString(),element.name(),type,color);
+        dbHelper.excuseSQLWithoutResult(sql);
+        sql = String.format("SELECT name from recipe where name = '%s'", name);
+        Cursor cursor = dbHelper.excuseSOL(sql);
+        StringBuilder itemBuilder = new StringBuilder();
+        for(Item item : items){
+            itemBuilder.append(item.getName().name()).append("-");
+        }
+        if(save && cursor.isAfterLast()){
+            sql = String.format("INSERT INTO recipe (name,items,base,addition,found,user,type,color) " +
+                    "values('%s','%s','%s','%s','%s','%s','%s','%s')",
+                    name,itemBuilder.toString(), base.toString(), addition.toString(), Boolean.FALSE, Boolean.TRUE, type, color);
+        }else if(!cursor.isAfterLast()){
+            sql = String.format("UPDATE recipe set found = '%s'", Boolean.TRUE);
+        }
+        dbHelper.excuseSQLWithoutResult(sql);
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String toString(){
+        StringBuilder builder = new StringBuilder();
+        builder.append("<font color=\"").append(color).append("\">");
+        builder.append(name).append("</font><br>");
+        builder.append("属性: ").append(element.name()).append("<br>");
+        for(Effect effect : effects.keySet()){
+            builder.append("<br>").append(effect.getName()).append(":").append(effects.get(effect));
+        }
+        if(additionEffects!=null) {
+            builder.append("<font color=\"#D3D3D3\">");
+            for (Effect effect : additionEffects.keySet()) {
+                builder.append("<br>").append(effect.getName()).append(":").append(additionEffects.get(effect));
+            }
+            builder.append("</font>");
+        }
+        return builder.toString();
+    }
+
+    public static List<Accessory> load(){
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM accessory");
+        List<Accessory> res = new ArrayList<Accessory>(cursor.getCount());
+        while(!cursor.isAfterLast()){
+            Accessory accessory = new Accessory();
+            accessory.setName(cursor.getString(cursor.getColumnIndex("name")));
+            accessory.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
+            accessory.setColor(cursor.getString(cursor.getColumnIndex("color")));
+            EnumMap<Effect, Number> base = new EnumMap<Effect, Number>(Effect.class);
+            for(String  str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")){
+                String[] keyValue = StringUtils.split(str, ":");
+                if(keyValue.length>1){
+                    base.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                }
+            }
+            EnumMap<Effect, Number> addition = new EnumMap<Effect, Number>(Effect.class);
+            for(String  str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")){
+                String[] keyValue = StringUtils.split(str, ":");
+                if(keyValue.length>1){
+                    addition.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                }
+            }
+            accessory.setEffects(base);
+            accessory.setAdditionEffects(addition);
+            accessory.setType(cursor.getInt(cursor.getColumnIndex("type")));
+            accessory.setId(cursor.getString(cursor.getColumnIndex("id")));
+            res.add(accessory);
+            cursor.moveToNext();
+        }
+        return res;
     }
 }

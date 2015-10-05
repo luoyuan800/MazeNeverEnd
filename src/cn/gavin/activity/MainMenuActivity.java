@@ -24,12 +24,7 @@ import cn.gavin.save.LoadHelper;
 import cn.gavin.skill.SkillDialog;
 
 public class MainMenuActivity extends Activity implements OnClickListener {
-    public Hero hero;
-    public Maze maze;
-    public long payTime;
-    public long lastUpload;
-    public static MainMenuActivity context;
-    public SkillDialog skillDialog;
+public MainMenuActivity context;
 
     private Button menuStart;
 
@@ -54,23 +49,23 @@ public class MainMenuActivity extends Activity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         setContentView(R.layout.activity_main_menu);
         BmobPay.init(MainMenuActivity.this, "4de7673ec85955af7568cfa1494c6498");
         menuStart = (Button) findViewById(R.id.menu_start);
         menuStart.setOnClickListener(this);
         menuStart.setEnabled(false);
         menuStart.setText("加载存档");
-        context = this;
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     DBHelper.init(MainMenuActivity.this);
-                    skillDialog = new SkillDialog();
+                    MazeContents.skillDialog = new SkillDialog();
                     LoadHelper saveHelper = new LoadHelper(context);
                     saveHelper.loadHero();
                     handler.sendEmptyMessage(2);
-                    saveHelper.loadSkill(hero, skillDialog);
+                    saveHelper.loadSkill(MazeContents.hero, MazeContents.skillDialog);
                     handler.sendEmptyMessage(1);
                     MonsterBook.init(context);
                     handler.sendEmptyMessage(0);
@@ -105,7 +100,4 @@ public class MainMenuActivity extends Activity implements OnClickListener {
         }
     }
 
-    public Maze getMaze() {
-        return maze;
-    }
 }
