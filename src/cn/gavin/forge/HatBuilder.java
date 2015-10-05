@@ -8,7 +8,7 @@ import android.database.Cursor;
  * Created by gluo on 9/25/2015.
  */
 public class HatBuilder extends Builder {
-    public static int type = 0;
+    public final static int type = 0;
     @Override
     public int getType() {
         return 0;

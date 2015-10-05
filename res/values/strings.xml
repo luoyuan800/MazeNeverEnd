@@ -8,7 +8,7 @@
     <string name="atk_name">攻击</string>
     <string name="def_name">防御</string>
     <string name="upload_label">上传角色</string>
-    <string name="reset_label">重置技能</string>
+    <string name="reset_skill_label">重置技能</string>
     <string name="buy_label">10W材料(1￥)</string>
     <string name="pause_label">暂停</string>
     <string name="achievement_label">成就</string>
@@ -18,13 +18,13 @@
     <string name="hp_label">HP</string>
     <string name="material_label">锻造点数</string>
     <string name="point_label">能力点数</string>
-    <string name="strength_label">力</string>
-    <string name="life_label">体</string>
-    <string name="agile_label">敏</string>
+    <string name="strength_label">+1力</string>
+    <string name="life_label">+1体</string>
+    <string name="agile_label">+1敏</string>
     <string name="sword_label">武器</string>
     <string name="armor_label">护具</string>
-    <string name="level_up">+</string>
-    <string name="version">version-1.1.6c</string>
+    <string name="level_up">+1</string>
+    <string name="version">version-1.2d</string>
     <string name="start_label">开 始 游 戏</string>
     <string name="hero_name">勇者</string>
     <string name="book_label">怪物</string>

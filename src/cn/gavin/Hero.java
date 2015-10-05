@@ -198,7 +198,7 @@ public class Hero {
 
     public boolean upgradeArmor(long count) {
         for (int i = 0; i < count; i++) {
-            if (armorLev + armor.getBase() + defenseValue >= Integer.MAX_VALUE - 100) {
+            if (armorLev + armor.getBase() + defenseValue >= Long.MAX_VALUE - 1000) {
                 return false;
             } else {
                 if (material >= 80 + armorLev) {
@@ -224,7 +224,7 @@ public class Hero {
     }
 
     public void addMaterial(long material) {
-        if (this.material < 0 || this.material < (Integer.MAX_VALUE - material - 1000))
+        if (this.material < 0 || this.material < (Long.MAX_VALUE - material - 1000))
             this.material += material;
         if (this.material < 0) this.material = 0;
         if (this.material >= 5000000) Achievement.rich.enable(this);
@@ -235,7 +235,7 @@ public class Hero {
     }
 
     public void addPoint(long point) {
-        if (point < 0 || this.point < (Integer.MAX_VALUE - point - 5000))
+        if (point < 0 || this.point < (Long.MAX_VALUE - point - 5000))
             this.point += point;
         if (this.point < 0) this.point = 0;
         if (this.point >= 5000) Achievement.lazy.enable(this);
@@ -246,25 +246,25 @@ public class Hero {
     }
 
     public void addStrength() {
-        if (point != 0 && strength < (Integer.MAX_VALUE - 500)) {
+        if (point != 0 && strength < (Long.MAX_VALUE - 500)) {
             point--;
             strength++;
-            if (attackValue < (Integer.MAX_VALUE - ATR_RISE - 500))
+            if (attackValue < (Long.MAX_VALUE - ATR_RISE - 500))
                 attackValue += ATR_RISE;
             else {
-                attackValue = Integer.MAX_VALUE;
+                attackValue = Long.MAX_VALUE;
                 Achievement.extreme.enable(this);
             }
         }
     }
 
     public void addStrength(long str) {
-        if (str < 0 || strength < (Integer.MAX_VALUE - strength - 100)) {
+        if (str < 0 || strength < (Long.MAX_VALUE - strength - 100)) {
             strength += str;
-            if (str < 0 || attackValue < (Integer.MAX_VALUE - ATR_RISE * str))
+            if (str < 0 || attackValue < (Long.MAX_VALUE - ATR_RISE * str))
                 attackValue += ATR_RISE * str;
             else {
-                attackValue = Integer.MAX_VALUE;
+                attackValue = Long.MAX_VALUE;
                 Achievement.extreme.enable(this);
             }
         }
@@ -280,7 +280,7 @@ public class Hero {
         if (point != 0 && power < (Integer.MAX_VALUE - 500)) {
             point--;
             power++;
-            if (upperHp < (Integer.MAX_VALUE - MAX_HP_RISE)) {
+            if (upperHp < (Long.MAX_VALUE - MAX_HP_RISE)) {
                 hp += MAX_HP_RISE;
                 upperHp += MAX_HP_RISE;
             }
@@ -290,7 +290,7 @@ public class Hero {
     public void addLife(long life) {
         if (life < 0 || power < (Integer.MAX_VALUE - life - 100)) {
             power += life;
-            if (life < 0 || upperHp < (Integer.MAX_VALUE - MAX_HP_RISE * life)) {
+            if (life < 0 || upperHp < (Long.MAX_VALUE - MAX_HP_RISE * life)) {
                 hp += MAX_HP_RISE * life;
                 upperHp += MAX_HP_RISE * life;
             }
@@ -308,10 +308,10 @@ public class Hero {
         if (point != 0 && (agility < Integer.MAX_VALUE - 500)) {
             point--;
             agility++;
-            if (defenseValue < (Integer.MAX_VALUE - DEF_RISE))
+            if (defenseValue < (Long.MAX_VALUE - DEF_RISE))
                 defenseValue += DEF_RISE;
             else {
-                defenseValue = Integer.MAX_VALUE;
+                defenseValue = Long.MAX_VALUE;
                 Achievement.master.enable(this);
             }
         }
@@ -323,10 +323,10 @@ public class Hero {
     public void addAgility(long agi) {
         if (agi < 0 || agility < (Integer.MAX_VALUE - agi - 100)) {
             agility += agi;
-            if (agi < 0 || defenseValue < (Integer.MAX_VALUE - DEF_RISE * agi))
+            if (agi < 0 || defenseValue < (Long.MAX_VALUE - DEF_RISE * agi))
                 defenseValue += DEF_RISE * agi;
             else {
-                defenseValue = Integer.MAX_VALUE;
+                defenseValue = Long.MAX_VALUE;
                 Achievement.master.enable(this);
             }
         }
@@ -344,7 +344,7 @@ public class Hero {
     }
 
     public void addMaxMazeLev() {
-        if (this.maxMazeLev < Integer.MAX_VALUE - 10) {
+        if (this.maxMazeLev < Long.MAX_VALUE - 10) {
             this.maxMazeLev++;
         }
     }

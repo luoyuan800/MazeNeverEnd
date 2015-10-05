@@ -67,7 +67,7 @@ public MainMenuActivity context;
                     handler.sendEmptyMessage(2);
                     saveHelper.loadSkill(MazeContents.hero, MazeContents.skillDialog);
                     handler.sendEmptyMessage(1);
-                    MonsterBook.init(context);
+                    //MonsterBook.init(context);
                     handler.sendEmptyMessage(0);
                 }catch(Exception exp){
                     Log.e(MainGameActivity.TAG, "Init", exp);

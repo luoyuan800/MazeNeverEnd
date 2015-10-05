@@ -216,6 +216,50 @@
 
                     <LinearLayout
                         android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:text="@string/sword_label"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/main_contri_level"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:singleLine="false"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:text="@string/armor_label"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/main_armor_level"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:textSize="12sp" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
                         android:layout_height="25dp"
                         android:orientation="horizontal">
 
@@ -254,317 +298,37 @@
                             android:gravity="center_vertical"
                             android:textSize="12sp" />
                     </LinearLayout>
-
                     <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="30dp"
-                        android:orientation="horizontal">
-
-                        <Button
-                            android:id="@+id/main_contri_add_str"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="@string/strength_label"
-                            android:textSize="12sp" />
-
-                        <Button
-                            android:id="@+id/main_contri_add_pow"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="@string/life_label"
-                            android:textSize="12sp" />
-
-                        <Button
-                            android:id="@+id/main_contri_add_agi"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="@string/agile_label"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="30dp"
-                        android:orientation="horizontal">
-
-                        <Button
-                            android:id="@+id/add_n_stre"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="+n力"
-                            android:textSize="12sp" />
-
-                        <Button
-                            android:id="@+id/add_n_power"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="+n体"
-                            android:textSize="12sp" />
-
-                        <Button
-                            android:id="@+id/add_n_agi"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="+n敏"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:text="@string/sword_label"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:id="@+id/main_contri_level"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:singleLine="false"
-                            android:textSize="12sp" />
-
-                        <Button
-                            android:id="@+id/up_sword"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:singleLine="true"
-                            android:text="@string/level_up"
-                            android:textSize="12sp" />
-
-                        <Button
-                            android:id="@+id/up_t_sword"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="+10"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:text="@string/armor_label"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:id="@+id/main_armor_level"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:textSize="12sp" />
-
-                        <Button
-                            android:id="@+id/up_armor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:singleLine="true"
-                            android:text="@string/level_up"
-                            android:textSize="12sp" />
-
-                        <Button
-                            android:id="@+id/up_t_armor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="+10"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="fill_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
+                        <Button
+                            android:id="@+id/prev_button_system_button"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:layout_gravity="start"
+                            android:text="&lt;"
+                            android:textSize="8sp"
+                            android:textColor="#0dc2fb" />
 
-                            <Button
-                                android:id="@+id/skill_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="fill_horizontal"
-                                android:layout_weight="1"
-                                android:text="@string/skill_label"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/achieve_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="fill_horizontal"
-                                android:layout_weight="1"
-                                android:text="@string/achievement_label"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/book_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="fill_horizontal"
-                                android:layout_weight="1"
-                                android:text="@string/book_label"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <Button
-                                android:id="@+id/issue_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="fill_horizontal"
-                                android:layout_weight="1"
-                                android:enabled="false"
-                                android:text="任务"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/forge_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="fill_horizontal"
-                                android:layout_weight="1"
-                                android:enabled="true"
-                                android:text="打造"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/order_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="fill_horizontal"
-                                android:layout_weight="1"
-                                android:enabled="false"
-                                android:text="排名"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-                        <!--<View
-                            android:layout_width="fill_parent"
-                            android:layout_height="30dp"
-                            />
--->
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <Button
-                                android:id="@+id/pause_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="fill_horizontal"
-                                android:layout_weight="1"
-                                android:text="@string/pause_label"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/save_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="fill_horizontal"
-                                android:layout_weight="1"
-                                android:text="存档"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/reset_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="fill_horizontal"
-                                android:layout_weight="1"
-                                android:text="@string/reset_label"
-                                android:textSize="8sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <Button
-                                android:id="@+id/skill_point_get_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="获取技能点"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/buy_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="fill_horizontal"
-                                android:layout_weight="1"
-                                android:text="@string/buy_label"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <Button
-                                android:id="@+id/upload_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="fill_horizontal"
-                                android:layout_weight="1"
-                                android:text="@string/upload_label"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/update_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="fill_horizontal"
-                                android:layout_weight="1"
-                                android:textSize="12sp" />
-
-                        </LinearLayout>
+                        <Button
+                            android:id="@+id/next_button_system_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="right"
+                            android:text="&gt;"
+                            android:textSize="8sp"
+                            android:textColor="#0dc2fb" />
                     </LinearLayout>
+                    <ViewFlipper
+                        android:id="@+id/button_group_flipper"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" />
+
+
                 </LinearLayout>
+
             </LinearLayout>
         </ScrollView>
     </RelativeLayout>

@@ -172,7 +172,7 @@ public class Maze {
                     context.addMessage(hero.getFormatName() + "击败了" + monster.getFormatName() + "， 获得了<font color=\"blue\">" + monster.getMaterial() + "</font>份锻造材料。");
                     hero.addMaterial(monster.getMaterial());
                     monster.setDefeat(true);
-                    monsterBook.addMonster(monster);
+                    //monsterBook.addMonster(monster);
                     StringBuilder items = new StringBuilder();
                     for(ItemName item : monster.getItems()){
                         Item i = Item.buildItem(hero,this,monster);

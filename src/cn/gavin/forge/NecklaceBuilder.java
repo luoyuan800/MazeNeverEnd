@@ -8,7 +8,7 @@ import android.database.Cursor;
  * Created by gluo on 9/25/2015.
  */
 public class NecklaceBuilder extends Builder {
-    public static int type = 2;
+    public final static int type = 2;
     @Override
     public int getType() {
         return type;

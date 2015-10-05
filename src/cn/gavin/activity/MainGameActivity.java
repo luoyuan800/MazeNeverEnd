@@ -14,7 +14,10 @@ import android.os.Message;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -28,6 +31,7 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -49,6 +53,7 @@ import cn.gavin.R;
 import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
+import cn.gavin.forge.AccessoryAdapter;
 import cn.gavin.forge.Item;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.log.LogHelper;
@@ -98,13 +103,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private Button upArmor;
     private Button heroPic;
     private Button pauseButton;
-    private Button achievementButton;
-    private Button resetButton;
+    private Button resetSkillButton;
     private Button buyButton;
     private Button firstSkillButton;
     private Button secondSkillButton;
     private Button thirdSkillButton;
-    private Button bookButton;
     private Button skillsButton;
 
     private boolean pause;
@@ -118,7 +121,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     //Upload control
     private boolean uploading = false;
     //Data
-    private AchievementAdapter adapter;
+    private AchievementAdapter achievementAdapter;
     private MonsterBook monsterBook;
     private DBHelper dbHelper;
     private SkillDialog skillDialog;
@@ -133,6 +136,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private TextView lockBoxCount;
     private TextView keyCount;
     private Button forgeButton;
+    private ViewFlipper buttonGroup;
+    private GestureDetector detector; //手势检测
+    private Button itemButton;
+    private Button achievementButton;
 
 
     //Get Function
@@ -299,21 +306,46 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        detector = new GestureDetector(this, gestureListener);
         setContentView(R.layout.main_gameview);
         context = this;
         setAlipay(new Alipay(context, MazeContents.payTime));
         Log.i(TAG, "start game~");
+        buttonGroup = (ViewFlipper) findViewById(R.id.button_group_flipper);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.main_control_buttons, (ViewGroup) this.findViewById(R.id.main_control_buttons));
+        buttonGroup.addView(view);
+        view = inflater.inflate(R.layout.buy_buttons, (ViewGroup) this.findViewById(R.id.buy_buttons));
+        buttonGroup.addView(view);
+        view = inflater.inflate(R.layout.upgrade_buttons, (ViewGroup) this.findViewById(R.id.upgrade_buttons));
+        buttonGroup.addView(view);
+        view = inflater.inflate(R.layout.item_buttons, (ViewGroup) this.findViewById(R.id.item_buttons));
+        buttonGroup.addView(view);
+        Button pre = (Button) findViewById(R.id.prev_button_system_button);
+        pre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonGroup.showNext();
+            }
+        });
+        Button next = (Button) findViewById(R.id.next_button_system_button);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonGroup.showPrevious();
+            }
+        });
         initGameData();
 
     }
 
-   @Override
-   protected  void onResume(){
-       super.onResume();
-       gameThreadRunning = true;
-       gameThread = new GameThread();
-       gameThread.start();
-   }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        gameThreadRunning = true;
+        gameThread = new GameThread();
+        gameThread.start();
+    }
 
     @Override
     protected void onDestroy() {
@@ -417,31 +449,29 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private TextView achievementDesc;
-    private AlertDialog achievementDialog;
-
+    private AlertDialog achDialog;
     private void showAchievement() {
-        if (achievementDialog == null) {
-            achievementDialog = new Builder(this).create();
+        if(achDialog == null) {
+            achDialog = new Builder(this).create();
+            achDialog.setTitle("成就");
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             achievementDesc = new TextView(this);
             linearLayout.addView(achievementDesc);
             ListView listView = new ListView(this);
-            adapter = new AchievementAdapter();
-            listView.setAdapter(adapter);
+            achievementAdapter = new AchievementAdapter();
+            listView.setAdapter(achievementAdapter);
             linearLayout.addView(listView);
-
-            achievementDialog.setView(linearLayout);
-            achievementDialog.setTitle("成就");
-            achievementDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+            achDialog.setView(linearLayout);
+            achDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    achievementDialog.hide();
+                    achDialog.hide();
                 }
             });
         }
-        achievementDialog.show();
+        achDialog.show();
     }
 
     private AlertDialog skillPointGetDialog;
@@ -517,7 +547,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         dialog.setView(tv);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (tv.getText().toString().equals("201509181447")) {
@@ -537,6 +566,18 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                             item = Item.buildItem(heroN, ItemName.玄石);
                             if (item != null) item.save();
                             item = Item.buildItem(heroN, ItemName.龟壳);
+                            if (item != null) item.save();
+                            item = Item.buildItem(heroN, ItemName.狼皮);
+                            if (item != null) item.save();
+                            item = Item.buildItem(heroN, ItemName.红檀木);
+                            if (item != null) item.save();
+                            item = Item.buildItem(heroN, ItemName.白杏木);
+                            if (item != null) item.save();
+                            item = Item.buildItem(heroN, ItemName.蛇皮);
+                            if (item != null) item.save();
+                            item = Item.buildItem(heroN, ItemName.蛇骨);
+                            if (item != null) item.save();
+                            item = Item.buildItem(heroN, ItemName.龙皮);
                             if (item != null) item.save();
                         } else {
                             heroN.setName(tv.getText().toString().replaceAll("_", " "));
@@ -584,6 +625,31 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 });
         dialog.show();
     }
+
+    private void showAccessory() {
+        AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("物品列表");
+        LinearLayout linearLayout = new LinearLayout(this);
+        final TextView tv = new TextView(context);
+        linearLayout.addView(tv);
+        ListView listView = new ListView(this);
+        AccessoryAdapter accessoryAdapter = new AccessoryAdapter();
+        accessoryAdapter.accDesc = tv;
+        listView.setAdapter(accessoryAdapter);
+        linearLayout.addView(listView);
+        dialog.setView(linearLayout);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.show();
+    }
+
 
     private void showDownload() {
         final AlertDialog dialog = new Builder(this).create();
@@ -659,7 +725,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     private void initGameData() {
         dbHelper = DBHelper.getDbHelper();
-        if(dbHelper == null) {
+        if (dbHelper == null) {
             DBHelper.init(context);
             dbHelper = DBHelper.getDbHelper();
         }
@@ -704,11 +770,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         heroPic.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
         pauseButton = (Button) findViewById(R.id.pause_button);
         pauseButton.setOnClickListener(this);
-        achievementButton = (Button) findViewById(R.id.achieve_button);
-        achievementButton.setOnClickListener(this);
         clickCount = (TextView) findViewById(R.id.hero_pic_click_count);
-        resetButton = (Button) findViewById(R.id.reset_button);
-        resetButton.setOnClickListener(this);
+        resetSkillButton = (Button) findViewById(R.id.reset_skill_button);
+        resetSkillButton.setOnClickListener(this);
         buyButton = (Button) findViewById(R.id.buy_button);
         buyButton.setOnClickListener(this);
         firstSkillButton = (Button) findViewById(R.id.first_skill);
@@ -722,8 +786,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         uploadButton.setOnClickListener(this);
         updateButton.setOnClickListener(this);
         updateButton.setEnabled(false);
-        bookButton = (Button) findViewById(R.id.book_button);
-        bookButton.setOnClickListener(this);
         skillsButton = (Button) findViewById(R.id.skill_button);
         skillsButton.setOnClickListener(this);
         saveButton = (Button) findViewById(R.id.save_button);
@@ -744,6 +806,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         keyCount = (TextView) findViewById(R.id.key_count);
         forgeButton = (Button) findViewById(R.id.forge_button);
         forgeButton.setOnClickListener(this);
+        itemButton = (Button) findViewById(R.id.accessory_button);
+        itemButton.setOnClickListener(this);
+        achievementButton = (Button) findViewById(R.id.achievement_button);
+        achievementButton.setOnClickListener(this);
         refresh();
     }
 
@@ -1016,6 +1082,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.achievement_button:
+                showAchievement();
+                break;
+            case R.id.accessory_button:
+                showAccessory();
+                break;
             case R.id.forge_button:
                 gameThreadRunning = false;
                 Intent intent = new Intent(this, ForgeActivity.class);
@@ -1064,12 +1136,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 }
                 skillDialog.show(heroN);
                 break;
-            case R.id.book_button:
-                if (monsterBook == null) {
-                    monsterBook = MonsterBook.getMonsterBook();
-                }
-                monsterBook.showBook(this);
-                break;
             case R.id.update_button:
                 showDownload();
                 break;
@@ -1105,16 +1171,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 showNameDialog();
                 heroN.click(false);
                 break;
-            case R.id.reset_button:
+            case R.id.reset_skill_button:
                 showResetSkillPointDialog();
                 heroN.click(false);
                 break;
             case R.id.pause_button:
                 handler.sendEmptyMessage(1);
-                heroN.click(false);
-                break;
-            case R.id.achieve_button:
-                showAchievement();
                 heroN.click(false);
                 break;
             case R.id.up_armor:
@@ -1279,4 +1341,23 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         }
 
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return detector.onTouchEvent(event);
+    }
+
+    public GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener() {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (e1.getX() - e2.getX() > 100) {
+                buttonGroup.showNext();
+                return true;
+            } else if (e1.getX() - e2.getY() < -100) {
+                buttonGroup.showPrevious();
+                return true;
+            }
+            return false;
+        }
+    };
 }

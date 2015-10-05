@@ -28,7 +28,9 @@ public class Accessory extends Equipment {
     private Element element;
     private Map<Effect, Number> additionEffects;
     private int type;
-
+public int getType(){
+    return type;
+}
     public float getPro() {
         return pro;
     }
@@ -140,6 +142,10 @@ public class Accessory extends Equipment {
         this.id = id;
     }
 
+    public boolean isActive(){
+        return false;
+    }
+
     public String toString(){
         StringBuilder builder = new StringBuilder();
         builder.append("<font color=\"").append(color).append("\">");
@@ -149,7 +155,7 @@ public class Accessory extends Equipment {
             builder.append("<br>").append(effect.getName()).append(":").append(effects.get(effect));
         }
         if(additionEffects!=null) {
-            builder.append("<font color=\"#D3D3D3\">");
+            builder.append("<font color=\"").append(isActive() ? "#B8860B":"#D3D3D3").append("\">");
             for (Effect effect : additionEffects.keySet()) {
                 builder.append("<br>").append(effect.getName()).append(":").append(additionEffects.get(effect));
             }

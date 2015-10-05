@@ -44,5 +44,13 @@ public class ForgeDB {
         database.execSQL(sql);
         sql = String.format(base,"水纹戒", "凤凰木-龟壳-蚁须-青檀木", "ADD_DEF:12000","ADD_ATK:100000", RingBuilder.type,"#008000");
         database.execSQL(sql);
+        sql = String.format(base,"青铜戒", "铜矿石-精铁-黑石-钢石-牛皮", "ADD_DEF:2000-ADD_ATK:50000","ADD_UPPER_HP:50000", RingBuilder.type,"#0000FF");
+        database.execSQL(sql);
+        sql = String.format(base,"桑晶链", "蛇筋-龙须木-红檀木-玄石-钢石", "ADD_DEF:2000-ADD_ATK:50000","ADD_UPPER_HP:50000", NecklaceBuilder.type,"#0000FF");
+        database.execSQL(sql);
+        sql = String.format(base,"神心项链", "萤石-银矿石-白杏木-狼筋-精铁", "ADD_DEF:20000-ADD_ATK:50000","ADD_UPPER_HP:500000", NecklaceBuilder.type,"#8A2BE2");
+        database.execSQL(sql);
+        sql = String.format(base,"天雷盔", "硝石-银矿石-冷杉木-龙皮-蛇骨", "ADD_ATK:50000","ADD_UPPER_HP:10000", HatBuilder.type,"#8A2BE2");
+        database.execSQL(sql);
     }
 }

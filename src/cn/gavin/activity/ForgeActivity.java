@@ -11,18 +11,17 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import cn.gavin.R;
 import cn.gavin.forge.Accessory;
 import cn.gavin.forge.Builder;
+import cn.gavin.forge.HatBuilder;
 import cn.gavin.forge.Item;
+import cn.gavin.forge.NecklaceBuilder;
 import cn.gavin.forge.RingBuilder;
 import cn.gavin.forge.dialog.ItemDialog;
 
@@ -40,6 +39,8 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
     private Item item1, item2, item3, item4, item5;
     private TextView resultText;
     private Builder ringBuilder = new RingBuilder();
+    private Builder hatBuilder = new HatBuilder();
+    private Builder necklaceBuilder = new NecklaceBuilder();
     List<Item> items = new ArrayList<Item>(5);
     private Button forgeButton;
     private Button conformButton;
@@ -143,62 +144,82 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                 clean();
                 break;
             case R.id.forge_item_1:
-                if(item1!=null) {
+                if (item1 != null) {
                     resultText.setText(Html.fromHtml(item1.toString()));
                 }
                 break;
             case R.id.forge_item_2:
-                if(item2!=null) {
+                if (item2 != null) {
                     resultText.setText(Html.fromHtml(item2.toString()));
                 }
                 break;
             case R.id.forge_item_3:
-                if(item3!=null) {
+                if (item3 != null) {
                     resultText.setText(Html.fromHtml(item3.toString()));
                 }
                 break;
             case R.id.forge_item_4:
-                if(item4!=null) {
+                if (item4 != null) {
                     resultText.setText(Html.fromHtml(item4.toString()));
                 }
                 break;
             case R.id.forge_item_5:
-                if(item5!=null) {
+                if (item5 != null) {
                     resultText.setText(Html.fromHtml(item5.toString()));
                 }
                 break;
             case R.id.forge_conform_button:
-                if(index == 1){
-                    items.clear();
-                    if(item1!=null) items.add(item1);
-                    if(item2!=null) items.add(item2);
-                    if(item3!=null) items.add(item3);
-                    if(item4!=null) items.add(item4);
-                    if(item5!=null) items.add(item5);
-                    resultText.setText(Html.fromHtml(ringBuilder.detect(items)));
+                items.clear();
+                if (item1 != null) items.add(item1);
+                if (item2 != null) items.add(item2);
+                if (item3 != null) items.add(item3);
+                if (item4 != null) items.add(item4);
+                if (item5 != null) items.add(item5);
+                String result = "";
+                switch (index) {
+                    case RingBuilder.type:
+                        result = ringBuilder.detect(items);
+                        break;
+                    case NecklaceBuilder.type:
+                        result = necklaceBuilder.detect(items);
+                        break;
+                    case HatBuilder.type:
+                        result = hatBuilder.detect(items);
+                        break;
                 }
+                resultText.setText(Html.fromHtml(result));
                 break;
             case R.id.forge_do_button:
-                if(index == 1){
-                    items.clear();
-                    if(item1!=null) items.add(item1);
-                    if(item2!=null) items.add(item2);
-                    if(item3!=null) items.add(item3);
-                    if(item4!=null) items.add(item4);
-                    if(item5!=null) items.add(item5);
-                    if(items.size() > 2) {
-                        Accessory accessory = ringBuilder.build(items);
-                        showResult(accessory);
-                        clean();
+                items.clear();
+                if (item1 != null) items.add(item1);
+                if (item2 != null) items.add(item2);
+                if (item3 != null) items.add(item3);
+                if (item4 != null) items.add(item4);
+                if (item5 != null) items.add(item5);
+                Accessory accessory = null;
+                if (items.size() > 2) {
+                    switch (index) {
+                        case RingBuilder.type:
+                            accessory = ringBuilder.build(items);
+                            break;
+                        case NecklaceBuilder.type:
+                            accessory = necklaceBuilder.build(items);
+                            break;
+                        case HatBuilder.type:
+                            accessory = hatBuilder.build(items);
+                            break;
                     }
+                    showResult(accessory);
+                    clean();
                 }
         }
+
     }
 
-    private void clean(){
+    private void clean() {
         item1 = null;
-        item2= null;
-        item3= null;
+        item2 = null;
+        item3 = null;
         item4 = null;
         item5 = null;
         items.clear();
@@ -207,8 +228,11 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
         item3Button.setText("");
         item4Button.setText("");
         item5Button.setText("");
+        itemDialog.dismiss();
+        itemDialog = null;
     }
-    public void showResult(Accessory accessory){
+
+    public void showResult(Accessory accessory) {
         AlertDialog dialog = new AlertDialog.Builder(this).create();
         dialog.setTitle("打造成功");
         final TextView tv = new TextView(this);
@@ -260,11 +284,14 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
 
     @Override
     public boolean onLongClick(View view) {
+        if (itemDialog == null) {
+            itemDialog = new ItemDialog(this);
+        }
         itemDialog.show(view.getId());
         return false;
     }
 
-    public boolean contains(Item item){
+    public boolean contains(Item item) {
         return item1 == item || item2 == item || item3 == item || item4 == item || item5 == item;
     }
 }
