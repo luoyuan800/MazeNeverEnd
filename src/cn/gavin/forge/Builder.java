@@ -1,16 +1,11 @@
 package cn.gavin.forge;
 
 import android.database.Cursor;
-
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
+
+import java.util.*;
 
 /**
  * Copyright 2015 gluo.
@@ -235,11 +230,11 @@ public abstract class Builder {
             }
         }
         StringBuilder builder = new StringBuilder();
-        if (a1 != null) {
+        if (a1 != null && a1.getPro() > 0) {
             builder.append("<font color=\"").append(a1.getColor()).append("\">");
             builder.append(a1.getName()).append(" : ").append(a1.getPro()).append("%</font>");
         }
-        if (a2 != null) {
+        if (a2 != null && a2.getPro() > 0) {
             builder.append("<br>").append("<font color=\"").append(a2.getColor()).append("\">");
             builder.append(a2.getName()).append(" : ").append(a2.getPro()).append("%</font>");
         }

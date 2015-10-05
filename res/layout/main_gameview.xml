@@ -299,23 +299,31 @@
                             android:textSize="12sp" />
                     </LinearLayout>
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
                         <Button
                             android:id="@+id/prev_button_system_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
                             android:layout_gravity="start"
                             android:text="&lt;"
                             android:textSize="8sp"
                             android:textColor="#0dc2fb" />
-
+                        <View
+                                android:id="@+id/skill_system_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textColor="@color/red" />
                         <Button
                             android:id="@+id/next_button_system_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
                             android:layout_gravity="right"
                             android:text="&gt;"
                             android:textSize="8sp"

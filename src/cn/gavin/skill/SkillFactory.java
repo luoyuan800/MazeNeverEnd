@@ -1169,8 +1169,8 @@ public class SkillFactory {
                         public String buildDescription(Skill skill) {
                             StringBuilder builder = new StringBuilder();
                             builder.append("从虚空中拉出一条闪电攻击敌人。<br>").append(skill.getProbability()).
-                                    append("的概率释放。造成基本伤害 + 额外的").append(iskll.getBaseHarm()).append("-").
-                                    append(iskll.getBaseHarm()).append(iskll.getAdditionHarm()).append("闪电伤害");
+                                    append("的概率释放。造成额外的").append(iskll.getBaseHarm()).append("-").
+                                    append(iskll.getBaseHarm()+iskll.getAdditionHarm()).append("闪电伤害");
                             return builder.toString();
                         }
                     });
@@ -1445,18 +1445,18 @@ public class SkillFactory {
                     skill.setLevelUp(new EnableExpression() {
                         @Override
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                            if (skill.getProbability() < 35 && iskll.getBaseHarm() > 3) {
+                            if (skill.getProbability() < 35 ) {
                                 skill.setProbability(skill.getProbability() + 3.1f);
-                                iskll.setBaseHarm(iskll.getBaseHarm() - 3);
                                 return true;
                             }
-                            iskll.setAdditionHarm(iskll.getAdditionHarm() + 3);
+                            iskll.setBaseHarm(iskll.getBaseHarm() + 1);
+                            iskll.setAdditionHarm(iskll.getAdditionHarm() + 2);
                             return false;
                         }
                     });
                     if (!skill.load()) {
                         skill.setProbability(1.0f);
-                        iskll.setBaseHarm(3l);
+                        iskll.setBaseHarm(60l);
                         iskll.setAdditionHarm(5l);
                     }
                 }

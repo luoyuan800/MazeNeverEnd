@@ -1,6 +1,7 @@
 package cn.gavin.forge;
 
 import android.database.Cursor;
+import cn.gavin.db.DBHelper;
 
 /**
  * Copyright 2015 gluo.
@@ -16,6 +17,7 @@ public class NecklaceBuilder extends Builder {
 
     @Override
     public Cursor queryRecipe() {
-        return null;
+        String sql = "SELECT * from recipe WHERE type = 2";
+        return DBHelper.getDbHelper().excuseSOL(sql);
     }
 }

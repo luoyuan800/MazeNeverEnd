@@ -7,6 +7,9 @@ package cn.gavin.utils;
  */
 public class Random extends java.util.Random {
     public long nextLong(long num){
+        if(num <= 0){
+            return 0;
+        }
         if(num < Integer.MAX_VALUE){
             return nextInt((int)num);
         }else{

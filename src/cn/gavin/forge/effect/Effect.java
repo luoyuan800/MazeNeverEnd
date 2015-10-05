@@ -14,8 +14,8 @@ public enum Effect {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
-            long atk = random.nextLong((hero.getStrength() + monster.getHp()) / 3000 + 1);
-            if (atk <= 1000) atk = random.nextLong(hero.getMaxMazeLev()) + 1000;
+            long atk = random.nextLong((hero.getStrength() + monster.getMaxHP()) / 3000 + 1);
+            if (atk <= 1000) atk = random.nextLong(hero.getMaxMazeLev()+1) + 1000;
             return atk;
         }
     }, "增加攻击上限"),
@@ -24,7 +24,7 @@ public enum Effect {
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
             long hp = random.nextLong((hero.getAgility() + monster.getAtk()) / 100 + 1);
-            if (hp <= 1000) hp = random.nextLong(hero.getMaxMazeLev()) + 1000;
+            if (hp <= 1000) hp = random.nextLong(hero.getMaxMazeLev()+1) + 1000;
             return hp;
         }
     }, "增加HP上限"),
@@ -33,7 +33,7 @@ public enum Effect {
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
             long def = random.nextLong((hero.getPower() + monster.getMaterial()) / 2000 + 1);
-            if (def <= 1000) def = random.nextLong(hero.getMaxMazeLev()) + 1000;
+            if (def <= 1000) def = random.nextLong(hero.getMaxMazeLev()+1) + 1000;
             return def;
         }
     }, "增加防御上限");

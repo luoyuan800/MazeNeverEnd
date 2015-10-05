@@ -70,7 +70,7 @@ public class EvilSkill extends SkillLayout {
         button = (Button) view.findViewById(R.id.skill_evil_b_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("变身术", hero, dialog);
+        skill = SkillFactory.getSkill("变身", hero, dialog);
         button = (Button) view.findViewById(R.id.skill_evil_bs_button);
         skill.setSkillButton(button);
 

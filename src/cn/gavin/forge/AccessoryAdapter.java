@@ -6,12 +6,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import cn.gavin.R;
+import cn.gavin.activity.MainGameActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.gavin.R;
-import cn.gavin.activity.MainGameActivity;
 
 /**
  * Copyright 2015 gluo.
@@ -24,7 +23,6 @@ public class AccessoryAdapter extends BaseAdapter {
         Accessory a1;
         Accessory a2;
         Accessory a3;
-        Accessory a4;
 
         public AccessoryList() {
 
@@ -34,7 +32,6 @@ public class AccessoryAdapter extends BaseAdapter {
             if (a1 == null) a1 = item;
             else if (a2 == null) a2 = item;
             else if (a3 == null) a3 = item;
-            else if (a4 == null) a4 = item;
             else return false;
             return true;
         }
@@ -44,7 +41,6 @@ public class AccessoryAdapter extends BaseAdapter {
         Button name1;
         Button name2;
         Button name3;
-        Button name4;
     }
 
     private List<AccessoryList> loadAccessoryLists() {
@@ -88,13 +84,6 @@ public class AccessoryAdapter extends BaseAdapter {
             holder = new AccessoryViewHolder();
             convertView = View.inflate(MainGameActivity.context,
                     R.layout.acc_item, null);
-            holder.name4 = (Button) convertView.findViewById(R.id.acc_name_4);
-            holder.name4.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    accDesc.setText(Html.fromHtml(getItem(position).a4.toString()));
-                }
-            });
             holder.name1 = (Button) convertView.findViewById(R.id.acc_name_1);
             holder.name1.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -121,34 +110,26 @@ public class AccessoryAdapter extends BaseAdapter {
             holder = (AccessoryViewHolder) convertView.getTag();
         }
         AccessoryList item = getItem(position);
-        if(item.a4!=null){
-            holder.name4.setText(item.a4.getName());
-            holder.name4.setEnabled(true);
-        }else{
-            holder.name4.setText("");
-            holder.name4.setEnabled(false);
-        }
-
-        if(item.a1!=null){
-            holder.name1.setText(item.a1.getName());
+        if (item.a1 != null) {
+            holder.name1.setText(Html.fromHtml(item.a1.getFormatName()));
             holder.name1.setEnabled(true);
-        }else{
+        } else {
             holder.name1.setText("");
             holder.name1.setEnabled(false);
         }
 
-        if(item.a2!=null){
-            holder.name2.setText(item.a2.getName());
+        if (item.a2 != null) {
+            holder.name2.setText(Html.fromHtml(item.a2.getFormatName()));
             holder.name2.setEnabled(true);
-        }else{
+        } else {
             holder.name2.setText("");
             holder.name2.setEnabled(false);
         }
 
-        if(item.a3!=null){
-            holder.name3.setText(item.a3.getName());
+        if (item.a3 != null) {
+            holder.name3.setText(Html.fromHtml(item.a3.getFormatName()));
             holder.name3.setEnabled(true);
-        }else{
+        } else {
             holder.name3.setText("");
             holder.name3.setEnabled(false);
         }

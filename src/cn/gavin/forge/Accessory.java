@@ -195,4 +195,7 @@ public int getType(){
         }
         return res;
     }
+    public String getFormatName(){
+        return "<font color=\"" + color + "\">" + name + "</font>";
+    }
 }
