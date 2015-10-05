@@ -49,7 +49,7 @@ import cn.gavin.Achievement;
 import cn.gavin.Armor;
 import cn.gavin.Hero;
 import cn.gavin.Maze;
-import cn.gavin.activity.R;
+import cn.gavin.R;
 import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
@@ -140,6 +140,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private GestureDetector detector; //手势检测
     private Button itemButton;
     private Button achievementButton;
+    private TextView ringTextView;
+    private TextView necklaceTextView;
+    private TextView hatTextView;
 
 
     //Get Function
@@ -632,11 +635,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("物品列表");
         LinearLayout linearLayout = new LinearLayout(this);
-        final TextView tv = new TextView(context);
-        linearLayout.addView(tv);
         ListView listView = new ListView(this);
         AccessoryAdapter accessoryAdapter = new AccessoryAdapter();
-        accessoryAdapter.accDesc = tv;
         listView.setAdapter(accessoryAdapter);
         linearLayout.addView(listView);
         dialog.setView(linearLayout);
@@ -812,6 +812,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         itemButton.setOnClickListener(this);
         achievementButton = (Button) findViewById(R.id.achievement_button);
         achievementButton.setOnClickListener(this);
+        ringTextView = (TextView) findViewById(R.id.ring_view);
+        necklaceTextView = (TextView) findViewById(R.id.necklace_view);
+        hatTextView = (TextView) findViewById(R.id.hat_view);
         refresh();
     }
 
@@ -896,6 +899,21 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
         lockBoxCount.setText("X " + heroN.getLockBox());
         keyCount.setText("X " + heroN.getKeyCount());
+        if(heroN.getRing()!=null){
+            ringTextView.setText(heroN.getRing().getFormatName());
+        }else{
+            ringTextView.setText("未装备戒指");
+        }
+        if(heroN.getNecklace()!=null){
+            necklaceTextView.setText(heroN.getNecklace().getFormatName());
+        }else{
+            necklaceTextView.setText("未装备项链");
+        }
+        if(heroN.getHat()!=null){
+            hatTextView.setText(heroN.getHat().getFormatName());
+        }else{
+            hatTextView.setText("未装备帽子");
+        }
     }
 
     private long saveTime = 0;
@@ -976,7 +994,13 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     private class MoveThread extends Thread {
         public void run() {
+            try{
             maze.move(context);
+            }catch (Exception e){
+                Log.e(TAG, "MainGameActivity.GameThread", e);
+                LogHelper.writeLog();
+                throw new RuntimeException(e);
+            }
         }
     }
 

@@ -28,5 +28,13 @@
         android:gravity="center"
         android:textSize="15sp"
         />
+    <Button
+            android:id="@+id/acc_name_4"
+            android:background="#ffff"
+            android:layout_height="50sp"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:textSize="15sp"
+            />
 
 </LinearLayout>

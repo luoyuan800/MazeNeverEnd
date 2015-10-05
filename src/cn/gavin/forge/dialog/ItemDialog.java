@@ -16,7 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.gavin.activity.R;
+import cn.gavin.R;
 import cn.gavin.activity.ForgeActivity;
 import cn.gavin.forge.Item;
 

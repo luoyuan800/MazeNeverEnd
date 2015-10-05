@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cn.gavin.R;
 import cn.gavin.forge.*;
 import cn.gavin.forge.dialog.ItemDialog;
 

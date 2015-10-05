@@ -5,7 +5,7 @@ import android.widget.Button;
 
 import cn.gavin.Hero;
 import cn.gavin.Maze;
-import cn.gavin.activity.R;
+import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.monster.Monster;

@@ -54,7 +54,25 @@ public enum Effect {
             if (str <= 500) str = random.nextLong(hero.getMaxMazeLev()+1) + 399;
             return str;
         }
-    }, "增加力量");
+    }, "增加力量"),
+    ADD_POWER(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            Random random = hero.getRandom();
+            long power = random.nextLong((hero.getHp() + monster.getHp()) / 200000 + 1);
+            if (power <= 500) power = random.nextLong(hero.getMaxMazeLev()+1) + 699;
+            return power;
+        }
+    }, "增加体力"),
+    ADD_CLICK_AWARDd(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            Random random = hero.getRandom();
+            long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 200 + 1);
+            if (award <= 10) award = random.nextLong(hero.getMaxMazeLev()+1) +10;
+            return award;
+        }
+    }, "增加点击奖励");
     private Calculate calculate;
     private String name;
 

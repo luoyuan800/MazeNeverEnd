@@ -1,10 +1,7 @@
 package cn.gavin;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
+import cn.gavin.forge.Accessory;
+import cn.gavin.forge.effect.Effect;
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.type.AttackSkill;
@@ -12,6 +9,12 @@ import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.RestoreSkill;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
+
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Hero {
     private static final String TAG = "Hero";
@@ -53,6 +56,50 @@ public class Hero {
     private long awardCount;
     private long lockBox;
     private long keyCount;
+    private Accessory ring;
+    private Accessory necklace;
+    private Accessory hat;
+
+    private EnumMap<Effect, Long> getAccessoryEffectMap() {
+        EnumMap<Effect, Long> effectLongEnumMap = new EnumMap<Effect, Long>(Effect.class);
+        if (ring != null) {
+            calculateEffect(effectLongEnumMap, ring);
+            calculateAdditionEffectE(effectLongEnumMap, ring, hat, necklace);
+        }
+        if (necklace != null) {
+            calculateEffect(effectLongEnumMap, necklace);
+            calculateAdditionEffectE(effectLongEnumMap, necklace, ring, hat);
+        }
+        if (hat != null) {
+            calculateEffect(effectLongEnumMap, hat);
+            calculateAdditionEffectE(effectLongEnumMap, hat, necklace, ring);
+        }
+        return effectLongEnumMap;
+    }
+
+    private void calculateEffect(EnumMap<Effect, Long> effectLongEnumMap, Accessory accessory) {
+        for (EnumMap.Entry<Effect, Number> effect : accessory.getEffects().entrySet()) {
+            Long value = effectLongEnumMap.get(effect.getKey());
+            if (value != null) {
+                effectLongEnumMap.put(effect.getKey(), value + effect.getValue().longValue());
+            } else {
+                effectLongEnumMap.put(effect.getKey(), effect.getValue().longValue());
+            }
+        }
+    }
+
+    private void calculateAdditionEffectE(EnumMap<Effect, Long> effectLongEnumMap, Accessory accessory, Accessory other1, Accessory other2) {
+        if (accessory.getAdditionEffects() != null && ((other1 != null && other1.getElement().isReinforce(accessory.getElement())) || ((other2 != null && other2.getElement().isReinforce(accessory.getElement()))))) {
+            for (EnumMap.Entry<Effect, Number> effect : accessory.getAdditionEffects().entrySet()) {
+                Long value = effectLongEnumMap.get(effect.getKey());
+                if (value != null) {
+                    effectLongEnumMap.put(effect.getKey(), value + effect.getValue().longValue());
+                } else {
+                    effectLongEnumMap.put(effect.getKey(), effect.getValue().longValue());
+                }
+            }
+        }
+    }
 
     public long getDeathCount() {
         return deathCount;
@@ -588,5 +635,93 @@ public class Hero {
 
     public void setLockBox(long lockBox) {
         this.lockBox = lockBox;
+    }
+
+    public Accessory getRing() {
+        return ring;
+    }
+
+    public void setRing(Accessory ring) {
+        cleanEffect();
+        this.ring = ring;
+        appendEffect();
+    }
+
+    private void appendEffect() {
+        EnumMap<Effect, Long> effectLongEnumMap = getAccessoryEffectMap();
+        for (EnumMap.Entry<Effect, Long> effect : effectLongEnumMap.entrySet()) {
+            switch (effect.getKey()) {
+                case ADD_STR:
+                    addStrength(effect.getValue());
+                    break;
+                case ADD_UPPER_HP:
+                    addUpperHp(effect.getValue());
+                    break;
+                case ADD_DEF:
+                    defenseValue -= effect.getValue();
+                    break;
+                case ADD_ATK:
+                    addAttackValue(effect.getValue());
+                    break;
+                case ADD_AGI:
+                    addAgility(agility -= effect.getValue());
+                    break;
+                case ADD_POWER:
+                    addLife(effect.getValue());
+                    break;
+                case ADD_CLICK_AWARDd:
+                    addClickAward(effect.getValue());
+                    break;
+            }
+        }
+    }
+
+    private void cleanEffect() {
+        EnumMap<Effect, Long> effectLongEnumMap = getAccessoryEffectMap();
+        for (EnumMap.Entry<Effect, Long> effect : effectLongEnumMap.entrySet()) {
+            switch (effect.getKey()) {
+                case ADD_STR:
+                    this.strength -= effect.getValue();
+                    break;
+                case ADD_UPPER_HP:
+                    this.upperHp -= effect.getValue();
+                    break;
+                case ADD_DEF:
+                    defenseValue -= effect.getValue();
+                    break;
+                case ADD_ATK:
+                    attackValue -= effect.getValue();
+                    break;
+                case ADD_AGI:
+                    agility -= effect.getValue();
+                    break;
+                case ADD_POWER:
+                    power -= effect.getValue();
+                    break;
+                case ADD_CLICK_AWARDd:
+                    clickAward -= effect.getValue();
+                    break;
+            }
+        }
+    }
+
+    public Accessory getNecklace() {
+        return necklace;
+    }
+
+    public void setNecklace(Accessory necklace) {
+        cleanEffect();
+        this.necklace = necklace;
+        appendEffect();
+    }
+
+    public Accessory getHat() {
+        return hat;
+    }
+
+    public void setHat(Accessory hat) {
+        cleanEffect();
+        this.hat = hat;
+        appendEffect();
     }
 }

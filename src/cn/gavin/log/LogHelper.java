@@ -1,7 +1,7 @@
 package cn.gavin.log;
 
 import android.widget.TextView;
-import cn.gavin.activity.R;
+import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 
 import java.io.BufferedReader;

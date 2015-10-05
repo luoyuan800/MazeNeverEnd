@@ -1,13 +1,16 @@
 package cn.gavin.forge;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.activity.R;
+import cn.gavin.activity.MazeContents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,7 @@ public class AccessoryAdapter extends BaseAdapter {
         Accessory a1;
         Accessory a2;
         Accessory a3;
+        Accessory a4;
 
         public AccessoryList() {
 
@@ -32,6 +36,7 @@ public class AccessoryAdapter extends BaseAdapter {
             if (a1 == null) a1 = item;
             else if (a2 == null) a2 = item;
             else if (a3 == null) a3 = item;
+            else if (a4 == null) a4 = item;
             else return false;
             return true;
         }
@@ -41,6 +46,7 @@ public class AccessoryAdapter extends BaseAdapter {
         Button name1;
         Button name2;
         Button name3;
+        Button name4;
     }
 
     private List<AccessoryList> loadAccessoryLists() {
@@ -85,26 +91,12 @@ public class AccessoryAdapter extends BaseAdapter {
             convertView = View.inflate(MainGameActivity.context,
                     R.layout.acc_item, null);
             holder.name1 = (Button) convertView.findViewById(R.id.acc_name_1);
-            holder.name1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    accDesc.setText(Html.fromHtml(getItem(position).a1.toString()));
-                }
-            });
+
             holder.name2 = (Button) convertView.findViewById(R.id.acc_name_2);
-            holder.name2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    accDesc.setText(Html.fromHtml(getItem(position).a2.toString()));
-                }
-            });
+
             holder.name3 = (Button) convertView.findViewById(R.id.acc_name_3);
-            holder.name3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    accDesc.setText(Html.fromHtml(getItem(position).a3.toString()));
-                }
-            });
+            holder.name4 = (Button) convertView.findViewById(R.id.acc_name_4);
+
             convertView.setTag(holder);
         } else {
             holder = (AccessoryViewHolder) convertView.getTag();
@@ -113,6 +105,7 @@ public class AccessoryAdapter extends BaseAdapter {
         if (item.a1 != null) {
             holder.name1.setText(Html.fromHtml(item.a1.getFormatName()));
             holder.name1.setEnabled(true);
+            holder.name1.setOnClickListener(buildOnClick(item.a1));
         } else {
             holder.name1.setText("");
             holder.name1.setEnabled(false);
@@ -121,6 +114,7 @@ public class AccessoryAdapter extends BaseAdapter {
         if (item.a2 != null) {
             holder.name2.setText(Html.fromHtml(item.a2.getFormatName()));
             holder.name2.setEnabled(true);
+            holder.name2.setOnClickListener(buildOnClick(item.a2));
         } else {
             holder.name2.setText("");
             holder.name2.setEnabled(false);
@@ -129,11 +123,90 @@ public class AccessoryAdapter extends BaseAdapter {
         if (item.a3 != null) {
             holder.name3.setText(Html.fromHtml(item.a3.getFormatName()));
             holder.name3.setEnabled(true);
+            holder.name3.setOnClickListener(buildOnClick(item.a3));
         } else {
             holder.name3.setText("");
             holder.name3.setEnabled(false);
         }
-
+        if (item.a4 != null) {
+            holder.name4.setText(Html.fromHtml(item.a4.getFormatName()));
+            holder.name4.setEnabled(true);
+            holder.name4.setOnClickListener(buildOnClick(item.a4));
+        } else {
+            holder.name4.setText("");
+            holder.name4.setEnabled(false);
+        }
         return convertView;
+    }
+
+    private View.OnClickListener buildOnClick(final Accessory a) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog alertDialog = new AlertDialog.Builder(MainGameActivity.context).create();
+                alertDialog.setTitle("装备信息");
+                TextView tv = new TextView(alertDialog.getContext());
+                tv.setText(Html.fromHtml(a.toString()));
+                alertDialog.setView(tv);
+                boolean isOnUsed = false;
+                switch (a.getType()) {
+                    case RingBuilder.type:
+                        isOnUsed = MazeContents.hero.getRing() == a;
+                        break;
+                    case NecklaceBuilder.type:
+                        isOnUsed = MazeContents.hero.getNecklace() == a;
+                        break;
+                    case HatBuilder.type:
+                        isOnUsed = MazeContents.hero.getHat() == a;
+                        break;
+                }
+                if (isOnUsed) {
+                    alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "卸下", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            switch (a.getType()) {
+                                case RingBuilder.type:
+                                    MazeContents.hero.setRing(null);
+                                    break;
+                                case NecklaceBuilder.type:
+                                    MazeContents.hero.setNecklace(null);
+                                    break;
+                                case HatBuilder.type:
+                                    MazeContents.hero.setHat(null);
+                                    break;
+                            }
+                            dialogInterface.dismiss();
+                            MainGameActivity.context.getHandler().sendEmptyMessage(0);
+                        }
+                    });
+                } else {
+                    alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "装备", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            switch (a.getType()) {
+                                case RingBuilder.type:
+                                    MazeContents.hero.setRing(a);
+                                    break;
+                                case NecklaceBuilder.type:
+                                    MazeContents.hero.setNecklace(a);
+                                    break;
+                                case HatBuilder.type:
+                                    MazeContents.hero.setHat(a);
+                                    break;
+                            }
+                            dialogInterface.dismiss();
+                            MainGameActivity.context.getHandler().sendEmptyMessage(0);
+                        }
+                    });
+                }
+                alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                alertDialog.show();
+            }
+        };
     }
 }

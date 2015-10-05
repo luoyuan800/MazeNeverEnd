@@ -81,10 +81,10 @@ public class SkillFactory {
                             AttackSkill as = (AttackSkill) skill;
                             if (skill.getProbability() < 35) {
                                 skill.setProbability(skill.getProbability() + 1.3f);
-                                as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 30 + 1));
+                                as.setAdditionHarm(as.getAdditionHarm() * 3);
                                 return true;
                             }
-                            as.setAdditionHarm(as.getAdditionHarm() * 3);
+                            as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 30 + 1));
                             return false;
                         }
                     });
