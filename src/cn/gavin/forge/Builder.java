@@ -42,13 +42,29 @@ public abstract class Builder {
         for (Item item : items) {
             names.add(item.getName().name().charAt(0) + "");
         }
+        if(names.contains("黑")&&names.contains("白")){
+            names.clear();
+            names.add("无常");
+        }else if(names.containsAll(Arrays.asList("蛇", "鼠"))){
+            names.clear();
+            names.add("风语");
+        } else if(names.containsAll(Arrays.asList("鼠", "蚁"))){
+            names.clear();
+            names.add("缥缈");
+        } else if(names.containsAll(Arrays.asList("黑","硝"))){
+            names.clear();
+            names.add("火神");
+        }
         StringBuilder b = new StringBuilder();
         for (String s : names) {
-            if (b.length() < 3 || random.nextBoolean()) {
+            if(b.length() < 3){
                 b.append(s);
+            }else if (random.nextBoolean()) {
+                int start = random.nextInt(2);
+                b.replace(start, start +1, s);
             }
         }
-        switch (accessory.getType()) {
+        switch (getType()) {
             case RingBuilder.type:
                 b.append("戒");
                 break;
@@ -59,7 +75,14 @@ public abstract class Builder {
                 b.append("帽");
                 break;
         }
-        accessory.setName(b.toString());
+
+        String name = b.toString();
+        name = name.replaceAll("硝","火");
+        name = name.replaceAll("食","宏");
+        if(name.startsWith("龟")){
+            name = name.replaceAll("龟","寿");
+        }
+        accessory.setName(name);
         accessory.setItems(items);
     }
 
@@ -121,12 +144,25 @@ public abstract class Builder {
 
                     }
                     break;
+                case ADD_AGI:
+                    case ADD_STR:
+                        long sml = effectNumberMap.get(effect).longValue();
+                        if (sml > 5000) {
+                            color = "#0000FF";
+                        }
+                        if (sml > 10000) {
+                            color = "#9932CC";
+                        }
+                        if (sml > 100000) {
+                            color = "#B8860B";
+
+                        }
                 default:
                     color = "#000000";
             }
         }
         accessory.setColor(color);
-        if (color.equalsIgnoreCase("#9932CC") && detectSave) {
+        if (color.equalsIgnoreCase("#0000FF") && detectSave) {
             accessory.setSave(true);
         }
     }
@@ -213,7 +249,7 @@ public abstract class Builder {
             }
             cursor.moveToNext();
         }
-        if (a1 != null && a1 != null) {
+        if (a1 != null && a2 != null) {
             if ((a1.getPro() + a2.getPro()) >= 100) {
                 if (a1.getPro() >= a2.getPro()) {
                     a2.setPro((100 - a1.getPro()) / 2);
@@ -238,8 +274,16 @@ public abstract class Builder {
             builder.append("<br>").append("<font color=\"").append(a2.getColor()).append("\">");
             builder.append(a2.getName()).append(" : ").append(a2.getPro()).append("%</font>");
         }
+        float normalP = 100.0f;
         if (a1 != null && a2 != null && (a1.getPro() + a2.getPro()) < 100) {
-            builder.append("<br>").append("??? : ").append(100 - a1.getPro() - a2.getPro());
+            normalP = 100 - a1.getPro() - a2.getPro();
+        } else if (a2 == null && a1 != null) {
+            normalP = 100 - a1.getPro();
+        } else if (a1 == null && a2 != null) {
+            normalP = 100 - a2.getPro();
+        }
+        if (normalP > 0) {
+            builder.append("<br>").append("??? : ").append(normalP);
         }
         return builder.toString();
     }

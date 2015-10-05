@@ -232,7 +232,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:singleLine="false"
-                            android:textSize="12sp" />
+                            android:textSize="12sp" android:layout_weight="1"/>
 
                     </LinearLayout>
 
@@ -253,7 +253,7 @@
                             android:id="@+id/main_armor_level"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
-                            android:textSize="12sp" />
+                            android:textSize="12sp" android:layout_weight="1"/>
 
 
                     </LinearLayout>
@@ -305,11 +305,11 @@
 
                         <Button
                             android:id="@+id/prev_button_system_button"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="45dp"
+                            android:layout_height="40dp"
                             android:layout_gravity="start"
                             android:text="&lt;"
-                            android:textSize="8sp"
+                            android:textSize="12sp"
                             android:textColor="#0dc2fb" />
                         <View
                                 android:id="@+id/skill_system_name"
@@ -322,11 +322,11 @@
                                 android:textColor="@color/red" />
                         <Button
                             android:id="@+id/next_button_system_button"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="45dp"
+                            android:layout_height="40dp"
                             android:layout_gravity="right"
                             android:text="&gt;"
-                            android:textSize="8sp"
+                            android:textSize="12sp"
                             android:textColor="#0dc2fb" />
                     </LinearLayout>
                     <ViewFlipper

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">勇者闯迷宫</string>
+    <string name="app_name">勇者闯迷宫Demon</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="attr_name">属性</string>

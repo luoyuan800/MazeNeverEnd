@@ -36,7 +36,25 @@ public enum Effect {
             if (def <= 1000) def = random.nextLong(hero.getMaxMazeLev()+1) + 1000;
             return def;
         }
-    }, "增加防御上限");
+    }, "增加防御上限"),
+    ADD_AGI(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            Random random = hero.getRandom();
+            long agi = random.nextLong((hero.getBaseDefense() + monster.getMaxHP()) / 20000 + 1);
+            if (agi <= 500) agi = random.nextLong(hero.getMaxMazeLev()+1) + 499;
+            return agi;
+        }
+    }, "增加敏捷"),
+    ADD_STR(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            Random random = hero.getRandom();
+            long str = random.nextLong((hero.getAttackValue() + monster.getAtk()) / 200000 + 1);
+            if (str <= 500) str = random.nextLong(hero.getMaxMazeLev()+1) + 399;
+            return str;
+        }
+    }, "增加力量");
     private Calculate calculate;
     private String name;
 

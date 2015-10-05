@@ -12,18 +12,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cn.gavin.forge.*;
+import cn.gavin.forge.dialog.ItemDialog;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.gavin.R;
-import cn.gavin.forge.Accessory;
-import cn.gavin.forge.Builder;
-import cn.gavin.forge.HatBuilder;
-import cn.gavin.forge.Item;
-import cn.gavin.forge.NecklaceBuilder;
-import cn.gavin.forge.RingBuilder;
-import cn.gavin.forge.dialog.ItemDialog;
 
 
 /**
@@ -175,19 +168,21 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                 if (item3 != null) items.add(item3);
                 if (item4 != null) items.add(item4);
                 if (item5 != null) items.add(item5);
-                String result = "";
-                switch (index) {
-                    case RingBuilder.type:
-                        result = ringBuilder.detect(items);
-                        break;
-                    case NecklaceBuilder.type:
-                        result = necklaceBuilder.detect(items);
-                        break;
-                    case HatBuilder.type:
-                        result = hatBuilder.detect(items);
-                        break;
+                if (items.size() >= 3) {
+                    String result = "";
+                    switch (index) {
+                        case RingBuilder.type:
+                            result = ringBuilder.detect(items);
+                            break;
+                        case NecklaceBuilder.type:
+                            result = necklaceBuilder.detect(items);
+                            break;
+                        case HatBuilder.type:
+                            result = hatBuilder.detect(items);
+                            break;
+                    }
+                    resultText.setText(Html.fromHtml(result));
                 }
-                resultText.setText(Html.fromHtml(result));
                 break;
             case R.id.forge_do_button:
                 items.clear();

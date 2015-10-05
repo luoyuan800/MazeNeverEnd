@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import cn.gavin.R;
+import cn.gavin.activity.R;
 import cn.gavin.skill.SkillDialog;
 
 /**

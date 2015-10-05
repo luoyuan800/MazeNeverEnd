@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import cn.gavin.Hero;
-import cn.gavin.R;
+import cn.gavin.activity.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillDialog;

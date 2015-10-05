@@ -5,7 +5,7 @@ import android.widget.Button;
 
 import cn.gavin.Hero;
 import cn.gavin.Maze;
-import cn.gavin.R;
+import cn.gavin.activity.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.monster.Monster;
@@ -41,7 +41,7 @@ public abstract class Skill {
     }
 
     public boolean isEnable() {
-        return enableExpression.isEnable(hero, maze, MainGameActivity.context, this);
+        return isActive() || enableExpression.isEnable(hero, maze, MainGameActivity.context, this);
     }
 
     public void setEnableExpression(EnableExpression exp) {

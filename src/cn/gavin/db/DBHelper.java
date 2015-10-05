@@ -16,8 +16,8 @@ import cn.gavin.forge.ForgeDB;
  * Created by gluo on 9/14/2015.
  */
 public class DBHelper extends SQLiteOpenHelper {
-    private static String DB_PATH = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze/data/";
-    private static String DB_NAME = "mazeNeverEnd";
+    private static String DB_PATH = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze/data/demon";
+    private static String DB_NAME = "mazeNeverEndDemon";
     private static int DB_VERSION = 8;
 
     private Context context;
@@ -91,11 +91,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private SQLiteDatabase getDB() {
         SQLiteDatabase db = database;
         if (db == null || !db.isOpen()) {
-            try {
-                db = getWritableDatabase();
-            } catch (Exception e) {
-                db = openOrCreateInnerDB();
-            }
+            db = openOrCreateInnerDB();
         }
         return db;
     }

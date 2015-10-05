@@ -2,6 +2,7 @@ package cn.gavin.forge.list;
 
 import cn.gavin.Hero;
 import cn.gavin.monster.Monster;
+import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -59,7 +60,8 @@ public enum ItemName {
     }
 
     public boolean perform(Hero hero, Monster monster) {
-        return true;
+        Random random = hero.getRandom();
+        return random.nextLong(hero.getAgility() +hero.getAttackValue() + 1) > random.nextLong(monster.getAtk() + monster.getMaxHP() + 1);
     }
 
     public static final int 木材 = 0, 皮毛 = 1, 石头 = 2, 骨头 = 3, 筋 = 4;

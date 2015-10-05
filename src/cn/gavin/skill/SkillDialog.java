@@ -19,7 +19,7 @@ import android.widget.ViewFlipper;
 import java.util.List;
 
 import cn.gavin.Hero;
-import cn.gavin.R;
+import cn.gavin.activity.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.skill.system.BaseSkill;
 import cn.gavin.skill.system.EvilSkill;

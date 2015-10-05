@@ -6,8 +6,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.activity.R;
 
 import java.util.ArrayList;
 import java.util.List;

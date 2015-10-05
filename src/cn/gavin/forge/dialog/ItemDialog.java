@@ -16,7 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.gavin.R;
+import cn.gavin.activity.R;
 import cn.gavin.activity.ForgeActivity;
 import cn.gavin.forge.Item;
 
@@ -41,6 +41,8 @@ public class ItemDialog {
 
     public void show(int what) {
         if (itemDialog == null) init();
+        selected = null;
+        itemDesc.setText("");
         itemDialog.show();
         this.what = what;
     }
@@ -141,28 +143,70 @@ public class ItemDialog {
                 convertView = View.inflate(activity,
                         R.layout.items_item, null);
                 holder.name1 = (Button) convertView.findViewById(R.id.item_name_1);
+
+                holder.name2 = (Button) convertView.findViewById(R.id.item_name_2);
+
+                holder.name4 = (Button) convertView.findViewById(R.id.item_name_4);
+
+                holder.name3 = (Button) convertView.findViewById(R.id.item_name_3);
+
+                convertView.setTag(holder);
+            } else {
+                holder = (ItemViewHolder) convertView.getTag();
+            }
+            ItemList item = getItem(position);
+            if (item.i1 != null && !forgeActivity.contains(item.i1)) {
+                holder.name1.setText(item.i1.getName().name());
+                holder.name1.setEnabled(true);
                 holder.name1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ItemList itemList = getItem(position);
-                        if (itemList.i1 != null) {
-                            selected = itemList.i1;
-                            itemDesc.setText(Html.fromHtml(itemList.i1.toString()));
+                        if (getItem(position).i1 != null) {
+                            selected = getItem(position).i1;
+                            itemDesc.setText(Html.fromHtml(getItem(position).i1.toString()));
                         }
                     }
-                });
-                holder.name2 = (Button) convertView.findViewById(R.id.item_name_2);
+                });} else {
+                holder.name1.setText("");
+                holder.name1.setEnabled(false);
+            }
+            if (item.i2 != null && !forgeActivity.contains(item.i2)) {
+                holder.name2.setText(item.i2.getName().name());
+                holder.name2.setEnabled(true);
                 holder.name2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ItemList itemList = getItem(position);
-                        if (itemList.i2 != null) {
-                            selected = itemList.i2;
-                            itemDesc.setText(Html.fromHtml(itemList.i2.toString()));
+                        if (getItem(position).i2 != null) {
+                            selected = getItem(position).i2;
+                            itemDesc.setText(Html.fromHtml(getItem(position).i2.toString()));
                         }
                     }
                 });
-                holder.name4 = (Button) convertView.findViewById(R.id.item_name_4);
+
+            } else {
+                holder.name2.setText("");
+                holder.name2.setEnabled(false);
+            }
+            if (item.i3 != null && !forgeActivity.contains(item.i3)) {
+                holder.name3.setText(item.i3.getName().name());
+                holder.name3.setEnabled(true);
+                holder.name3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (getItem(position).i3 != null) {
+                            selected = getItem(position).i3;
+                            itemDesc.setText(Html.fromHtml(getItem(position).i3.toString()));
+                        }
+                    }
+                });} else {
+                holder.name3.setText("");
+                holder.name3.setEnabled(false);
+            }
+            if (item.i4 != null && !forgeActivity.contains(item.i4)) {
+                holder.name4.setText(item.i4.getName().name());
+                holder.name4.setEnabled(true);
                 holder.name4.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -173,46 +217,6 @@ public class ItemDialog {
                         }
                     }
                 });
-                holder.name3 = (Button) convertView.findViewById(R.id.item_name_3);
-                holder.name3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ItemList itemList = getItem(position);
-                        if (itemList.i3 != null) {
-                            selected = itemList.i3;
-                            itemDesc.setText(Html.fromHtml(itemList.i3.toString()));
-                        }
-                    }
-                });
-                convertView.setTag(holder);
-            } else {
-                holder = (ItemViewHolder) convertView.getTag();
-            }
-            ItemList item = getItem(position);
-            if (item.i1 != null && !forgeActivity.contains(item.i1)) {
-                holder.name1.setText(item.i1.getName().name());
-                holder.name1.setEnabled(true);
-            } else {
-                holder.name1.setText("");
-                holder.name1.setEnabled(false);
-            }
-            if (item.i2 != null && !forgeActivity.contains(item.i2)) {
-                holder.name2.setText(item.i2.getName().name());
-                holder.name2.setEnabled(true);
-            } else {
-                holder.name2.setText("");
-                holder.name2.setEnabled(false);
-            }
-            if (item.i3 != null && !forgeActivity.contains(item.i3)) {
-                holder.name3.setText(item.i3.getName().name());
-                holder.name3.setEnabled(true);
-            } else {
-                holder.name3.setText("");
-                holder.name3.setEnabled(false);
-            }
-            if (item.i4 != null && !forgeActivity.contains(item.i4)) {
-                holder.name4.setText(item.i4.getName().name());
-                holder.name4.setEnabled(true);
             } else {
                 holder.name4.setText("");
                 holder.name4.setEnabled(false);

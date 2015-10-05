@@ -12,7 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import cn.gavin.R;
+import cn.gavin.activity.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.utils.StringUtils;

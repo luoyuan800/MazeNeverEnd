@@ -49,7 +49,7 @@ import cn.gavin.Achievement;
 import cn.gavin.Armor;
 import cn.gavin.Hero;
 import cn.gavin.Maze;
-import cn.gavin.R;
+import cn.gavin.activity.R;
 import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
@@ -578,6 +578,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                             item = Item.buildItem(heroN, ItemName.蛇骨);
                             if (item != null) item.save();
                             item = Item.buildItem(heroN, ItemName.龙皮);
+                            if (item != null) item.save();
+                            item = Item.buildItem(heroN, ItemName.青檀木);
                             if (item != null) item.save();
                         } else {
                             heroN.setName(tv.getText().toString().replaceAll("_", " "));
