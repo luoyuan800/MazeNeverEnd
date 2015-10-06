@@ -26,7 +26,7 @@
             android:layout_gravity="fill_horizontal"
             android:layout_weight="1"
             android:text="@string/upload_label"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
 
         <Button
             android:id="@+id/save_button"
@@ -38,64 +38,37 @@
             android:textSize="12sp" />
     </LinearLayout>
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/skill_button"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:layout_weight="1"
-            android:text="@string/skill_label"
-            android:textSize="12sp" />
+            android:orientation="horizontal">
+
         <Button
-            android:id="@+id/forge_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:layout_weight="1"
-            android:enabled="true"
-            android:text="打造"
-            android:textSize="12sp" />
+                android:id="@+id/reset_skill_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:layout_weight="1"
+                android:text="@string/reset_skill_label"
+                android:textSize="10sp" />
+
         <Button
-            android:id="@+id/forge_recipe_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:layout_weight="1"
-            android:enabled="true"
-            android:text="配方"
-            android:textSize="12sp" />
-        </LinearLayout>
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                android:id="@+id/rebirth_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:text="转生"
+                android:textSize="12sp" />
+
         <Button
-            android:id="@+id/palace_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:layout_weight="1"
-            android:enabled="false"
-            android:text="殿堂"
-            android:textSize="12sp" />
-        <Button
-            android:id="@+id/help_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:layout_weight="1"
-            android:enabled="false"
-            android:text="帮助"
-            android:textSize="12sp" />
-        <Button
-            android:id="@+id/update_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:layout_weight="1"
-            android:textSize="12sp" />
-        </LinearLayout>
+                android:id="@+id/clean_data_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:layout_weight="1"
+                android:text="清除数据"
+                android:textSize="10sp" />
+    </LinearLayout>
+
 </LinearLayout>

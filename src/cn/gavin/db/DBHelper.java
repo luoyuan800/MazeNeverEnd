@@ -12,7 +12,7 @@ import cn.gavin.forge.ForgeDB;
  */
 public class DBHelper {
     private static String DB_PATH = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze/data/demon";
-    private static String DB_NAME = "mazeNeverEnd";
+    public final static String DB_NAME = "mazeNeverEnd";
     private static int DB_VERSION = 8;
 
     private Context context;
@@ -30,7 +30,12 @@ public class DBHelper {
     }
 
     public void excuseSQLWithoutResult(String sql) {
-        getDB().execSQL(sql);
+        try {
+            getDB().execSQL(sql);
+        } catch (Exception e) {
+            Log.e("DB", "DB ERROR", e);
+            e.printStackTrace();
+        }
     }
 
     private SQLiteDatabase openOrCreateInnerDB() {

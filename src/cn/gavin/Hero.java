@@ -669,7 +669,7 @@ public class Hero {
                 case ADD_POWER:
                     addLife(effect.getValue());
                     break;
-                case ADD_CLICK_AWARDd:
+                case ADD_CLICK_AWARD:
                     addClickAward(effect.getValue());
                     break;
             }
@@ -698,7 +698,7 @@ public class Hero {
                 case ADD_POWER:
                     power -= effect.getValue();
                     break;
-                case ADD_CLICK_AWARDd:
+                case ADD_CLICK_AWARD:
                     clickAward -= effect.getValue();
                     break;
             }

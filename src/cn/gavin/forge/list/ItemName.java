@@ -61,7 +61,11 @@ public enum ItemName {
 
     public boolean perform(Hero hero, Monster monster) {
         Random random = hero.getRandom();
-        return random.nextLong(hero.getAgility() +hero.getAttackValue() + 1) > random.nextLong(monster.getAtk() + monster.getMaxHP() + 1);
+        if (monster.getMaterial() < 1000) {
+            return random.nextLong(hero.getAgility() + monster.getAtk() + 1) - 1000 > random.nextLong(monster.getMaxHP() + hero.getAttackValue() + 1) + 2000;
+        } else {
+            return random.nextLong(Math.abs(monster.getAtk() - hero.getAttackValue()) + 1) - 100000 > random.nextLong(Math.abs(hero.getHp() - monster.getMaxHP()) + 1) + 2000;
+        }
     }
 
     public static final int 木材 = 0, 皮毛 = 1, 石头 = 2, 骨头 = 3, 筋 = 4;

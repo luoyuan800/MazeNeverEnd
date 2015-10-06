@@ -5,11 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainGameActivity">
 
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-
         <ScrollView
             android:id="@+id/main_info_sv"
             android:layout_width="200dp"
@@ -160,15 +155,15 @@
                         <TextView android:id="@+id/hat_view"
                                   android:layout_height="wrap_content"
                                   android:layout_width="wrap_content"
-                                  android:layout_weight="1"/>
+                                  android:layout_weight="1" android:textSize="12sp"/>
                         <TextView android:id="@+id/necklace_view"
                                   android:layout_height="wrap_content"
                                   android:layout_width="wrap_content"
-                                  android:layout_weight="1"/>
+                                  android:layout_weight="1" android:textSize="12sp"/>
                         <TextView android:id="@+id/ring_view"
                                   android:layout_height="wrap_content"
                                   android:layout_width="wrap_content"
-                                  android:layout_weight="1"/>
+                                  android:layout_weight="1" android:textSize="12sp"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="fill_parent"
@@ -176,7 +171,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="fill_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="25sp"
                             android:gravity="center_vertical"
                             android:text="@string/hp_label"
@@ -186,8 +181,8 @@
                             android:id="@+id/main_contri_hp"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:gravity="center_vertical"
-                            android:textSize="12sp" />
+                            android:textSize="12sp" android:text="123456" android:gravity="center"
+                            android:textAlignment="center"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -196,7 +191,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="fill_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="25sp"
                             android:gravity="center_vertical"
                             android:text="@string/atk_name"
@@ -206,8 +201,8 @@
                             android:id="@+id/main_contri_att"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:gravity="center_vertical"
-                            android:textSize="12sp" />
+                            android:textSize="12sp" android:text="123456" android:textAlignment="center"
+                            android:gravity="center"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -216,7 +211,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="fill_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="25sp"
                             android:gravity="center_vertical"
                             android:text="@string/def_name"
@@ -226,14 +221,13 @@
                             android:id="@+id/main_contri_def"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:gravity="center_vertical"
-                            android:textSize="12sp" />
+                            android:textSize="12sp" android:gravity="center"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal" android:gravity="center">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -247,7 +241,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:singleLine="false"
-                            android:textSize="12sp" android:layout_weight="1"/>
+                            android:textSize="12sp"/>
 
                     </LinearLayout>
 
@@ -260,15 +254,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="25sp"
                             android:layout_weight="1"
-                            android:gravity="center_vertical"
                             android:text="@string/armor_label"
-                            android:textSize="12sp" />
+                            android:textSize="12sp" android:gravity="center"/>
 
                         <TextView
                             android:id="@+id/main_armor_level"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
-                            android:textSize="12sp" android:layout_weight="1"/>
+                            android:textSize="12sp"/>
 
 
                     </LinearLayout>
@@ -354,6 +347,5 @@
 
             </LinearLayout>
         </ScrollView>
-    </RelativeLayout>
 
 </RelativeLayout>

@@ -1,69 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/item_buttons">
-
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:id="@+id/item_buttons">
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <Button
+                android:id="@+id/skill_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:layout_weight="1"
+                android:text="@string/skill_label"
+                android:textSize="12sp"/>
+        <Button
+                android:id="@+id/monster_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:text="怪物"
+                android:textSize="12sp"/>
 
         <Button
-            android:id="@+id/monster_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:layout_weight="1"
-            android:enabled="false"
-            android:text="怪物"
-            android:textSize="12sp" />
+                android:id="@+id/achievement_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:layout_weight="1"
+                android:text="成就"
+                android:textSize="12sp"/>
 
-
-        <Button
-            android:id="@+id/accessory_button"
-            android:layout_width="wrap_content"
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:layout_weight="1"
-            android:text="物品"
-            android:textSize="12sp" />
+            android:orientation="horizontal">
 
         <Button
-            android:id="@+id/achievement_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:layout_weight="1"
-            android:text="成就"
-            android:textSize="12sp" />
+                android:id="@+id/forge_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:layout_weight="1"
+                android:enabled="true"
+                android:text="打造"
+                android:textSize="12sp"/>
+        <Button
+                android:id="@+id/forge_recipe_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:layout_weight="1"
+                android:text="配方"
+                android:textSize="12sp"/>
+        <Button
+                android:id="@+id/accessory_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:layout_weight="1"
+                android:text="物品"
+                android:textSize="12sp"/>
+
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/issue_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:layout_weight="1"
-            android:enabled="false"
-            android:text="任务"
-            android:textSize="12sp" />
-
-
-        <Button
-            android:id="@+id/order_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:layout_weight="1"
-            android:enabled="false"
-            android:text="排名"
-            android:textSize="12sp" />
-    </LinearLayout>
 </LinearLayout>

@@ -9,6 +9,7 @@ import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.story.StoryHelper;
 import cn.gavin.utils.Random;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Created by gluo on 8/26/2015.
@@ -23,6 +24,7 @@ public class Maze {
     private float meetRate = 100f;
     private MonsterBook monsterBook;
     private StoryHelper storyHelper;
+    private long lastSave;
 
     public void setCsmgl(int csmgl) {
         this.csmgl = csmgl;
@@ -61,6 +63,9 @@ public class Maze {
             moving = true;
             step++;
             if (random.nextLong(10000) > 9985 || step > random.nextLong(22) || random.nextLong(streaking + 1) > 20 + level) {
+                if (step > 3 || level - lastSave > 5) {
+                    context.getHandler().sendEmptyMessage(103);
+                }
                 step = 0;
                 level++;
                 mazeLevelDetect();
@@ -69,6 +74,7 @@ public class Maze {
                 if (level > hero.getMaxMazeLev()) {
                     hero.addMaxMazeLev();
                 }
+
                 hero.addPoint(point);
                 hero.addHp(hero.getUpperHp() / 890);
                 context.addMessage("-------------------");
@@ -78,7 +84,7 @@ public class Maze {
                 hero.addMaterial(mate);
                 context.addMessage("-------------------");
             } else if (hero.getHp() < hero.getUpperHp() && random.nextLong(1000) > 985) {
-                long hel = random.nextLong(hero.getUpperHp()/70 + 1) + random.nextLong(hero.getPower()/1000);
+                long hel = random.nextLong(hero.getUpperHp() / 70 + 1) + random.nextLong(hero.getPower() / 1000);
                 context.addMessage(hero.getFormatName() + "休息了一会，恢复了<font color=\"#556B2F\">" + hel + "</font>点HP");
                 hero.addHp(hel);
                 context.addMessage("-------------------");
@@ -174,14 +180,17 @@ public class Maze {
                     monster.setDefeat(true);
                     //monsterBook.addMonster(monster);
                     StringBuilder items = new StringBuilder();
-                    for(ItemName item : monster.getItems()){
-                        Item i = Item.buildItem(hero,this,monster);
-                        if(i!=null){
+                    for (ItemName item : monster.getItems()) {
+                        Item i = Item.buildItem(hero, this, monster);
+                        if (i != null) {
                             i.save();
                             items.append(item.name()).append(" ");
                         }
                     }
-                    context.addMessage(hero.getFormatName() + "获得了:" + items.toString());
+                    String str = items.toString();
+                    if (StringUtils.isNotEmpty(str)) {
+                        context.addMessage(hero.getFormatName() + "获得了:" + str);
+                    }
                 } else {
                     Skill notDieSkill = SkillFactory.getSkill("不死之身", hero, context.getSkillDialog());
                     if (notDieSkill.isActive() && notDieSkill.perform()) {
@@ -194,6 +203,7 @@ public class Maze {
                         hero.restore();
                         monster.setDefeat(false);
                         monster.setMazeLev(level);
+                        context.getHandler().sendEmptyMessage(103);
                         monsterBook.addMonster(monster);
                     }
                 }
@@ -210,35 +220,35 @@ public class Maze {
     }
 
     private void mazeLevelDetect() {
-        if(level > Integer.MAX_VALUE){
-            if(level > Long.MAX_VALUE -100){
-                level --;
+        if (level > Integer.MAX_VALUE) {
+            if (level > Long.MAX_VALUE - 100) {
+                level--;
             }
-        }else{
-        switch ((int) level) {
-            case 50:
-                Achievement.maze50.enable(hero);
-                break;
-            case 100:
-                Achievement.maze100.enable(hero);
-                break;
-            case 500:
-                if (hero.getArmorLev() == 0 && hero.getSwordLev() == 0) {
+        } else {
+            switch ((int) level) {
+                case 50:
+                    Achievement.maze50.enable(hero);
+                    break;
+                case 100:
+                    Achievement.maze100.enable(hero);
+                    break;
+                case 500:
+                    if (hero.getArmorLev() == 0 && hero.getSwordLev() == 0) {
 
-                }
-                Achievement.maze500.enable(hero);
-                break;
-            case 1000:
-                Achievement.maze1000.enable(hero);
-                break;
-            case 10000:
-                Achievement.maze10000.enable(hero);
-                break;
-            case 50000:
-                Achievement.maze50000.enable(hero);
-                break;
+                    }
+                    Achievement.maze500.enable(hero);
+                    break;
+                case 1000:
+                    Achievement.maze1000.enable(hero);
+                    break;
+                case 10000:
+                    Achievement.maze10000.enable(hero);
+                    break;
+                case 50000:
+                    Achievement.maze50000.enable(hero);
+                    break;
 
-        }
+            }
         }
     }
 

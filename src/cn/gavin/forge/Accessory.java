@@ -164,7 +164,7 @@ public int getType(){
         return builder.toString();
     }
 
-    public static List<Accessory> load(){
+    public static List<Accessory> loadAccessories(){
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM accessory");
         List<Accessory> res = new ArrayList<Accessory>(cursor.getCount());
         while(!cursor.isAfterLast()){
@@ -197,5 +197,34 @@ public int getType(){
     }
     public String getFormatName(){
         return "<font color=\"" + color + "\">" + name + "</font>";
+    }
+
+    public void load() {
+        if(id!=null){
+            Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM accessory WHERE id = '" + id + "'");
+            if(!cursor.isAfterLast()){
+                setName(cursor.getString(cursor.getColumnIndex("name")));
+                setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
+                setColor(cursor.getString(cursor.getColumnIndex("color")));
+                EnumMap<Effect, Number> base = new EnumMap<Effect, Number>(Effect.class);
+                for(String  str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")){
+                    String[] keyValue = StringUtils.split(str, ":");
+                    if(keyValue.length>1){
+                        base.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                    }
+                }
+                EnumMap<Effect, Number> addition = new EnumMap<Effect, Number>(Effect.class);
+                for(String  str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")){
+                    String[] keyValue = StringUtils.split(str, ":");
+                    if(keyValue.length>1){
+                        addition.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                    }
+                }
+                setEffects(base);
+                setAdditionEffects(addition);
+                setType(cursor.getInt(cursor.getColumnIndex("type")));
+                setId(cursor.getString(cursor.getColumnIndex("id")));
+            }
+        }
     }
 }

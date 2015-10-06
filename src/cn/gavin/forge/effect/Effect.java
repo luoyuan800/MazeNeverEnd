@@ -14,7 +14,7 @@ public enum Effect {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
-            long atk = random.nextLong((hero.getStrength() + monster.getMaxHP()) / 3000 + 1);
+            long atk = random.nextLong((hero.getStrength() + monster.getMaxHP()) / 300 + 1);
             if (atk <= 1000) atk = random.nextLong(hero.getMaxMazeLev()+1) + 1000;
             return atk;
         }
@@ -64,7 +64,7 @@ public enum Effect {
             return power;
         }
     }, "增加体力"),
-    ADD_CLICK_AWARDd(new Calculate() {
+    ADD_CLICK_AWARD(new Calculate() {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();

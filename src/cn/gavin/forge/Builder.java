@@ -1,6 +1,7 @@
 package cn.gavin.forge;
 
 import android.database.Cursor;
+import cn.gavin.activity.MazeContents;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
@@ -42,26 +43,26 @@ public abstract class Builder {
         for (Item item : items) {
             names.add(item.getName().name().charAt(0) + "");
         }
-        if(names.contains("黑")&&names.contains("白")){
+        if (names.contains("黑") && names.contains("白")) {
             names.clear();
             names.add("无常");
-        }else if(names.containsAll(Arrays.asList("蛇", "鼠"))){
+        } else if (names.containsAll(Arrays.asList("蛇", "鼠"))) {
             names.clear();
             names.add("风语");
-        } else if(names.containsAll(Arrays.asList("鼠", "蚁"))){
+        } else if (names.containsAll(Arrays.asList("鼠", "蚁"))) {
             names.clear();
             names.add("缥缈");
-        } else if(names.containsAll(Arrays.asList("黑","硝"))){
+        } else if (names.containsAll(Arrays.asList("黑", "硝"))) {
             names.clear();
             names.add("火神");
         }
         StringBuilder b = new StringBuilder();
         for (String s : names) {
-            if(b.length() < 3){
+            if (b.length() < 3) {
                 b.append(s);
-            }else if (random.nextBoolean()) {
+            } else if (random.nextBoolean()) {
                 int start = random.nextInt(2);
-                b.replace(start, start +1, s);
+                b.replace(start, start + 1, s);
             }
         }
         switch (getType()) {
@@ -77,10 +78,10 @@ public abstract class Builder {
         }
 
         String name = b.toString();
-        name = name.replaceAll("硝","火");
-        name = name.replaceAll("食","宏");
-        if(name.startsWith("龟")){
-            name = name.replaceAll("龟","寿");
+        name = name.replaceAll("硝", "火");
+        name = name.replaceAll("食", "宏");
+        if (name.startsWith("龟")) {
+            name = name.replaceAll("龟", "寿");
         }
         accessory.setName(name);
         accessory.setItems(items);
@@ -94,7 +95,7 @@ public abstract class Builder {
             if (effect != null) {
                 Number number = effectNumberMap.get(effect);
                 if (number != null) {
-                    effectNumberMap.put(effect, number.longValue() + random.nextLong((number.longValue() + item.getEffectValue().longValue()) / 5 + 1));
+                    effectNumberMap.put(effect, number.longValue() + random.nextLong((number.longValue() + item.getEffectValue().longValue()) / 3 + 1));
                 } else {
                     effectNumberMap.put(effect, item.getEffectValue().longValue());
                 }
@@ -103,7 +104,7 @@ public abstract class Builder {
             if (effect1 != null) {
                 Number number = effectNumberMap.get(effect1);
                 if (number != null) {
-                    effectNumberMap.put(effect1, number.longValue() + random.nextLong((number.longValue() + item.getEffect1Value().longValue()) / 5 + 1));
+                    effectNumberMap.put(effect1, number.longValue() + random.nextLong((number.longValue() + item.getEffect1Value().longValue()) / 2 + 1));
                 } else {
                     effectNumberMap.put(effect1, item.getEffect1Value().longValue());
                 }
@@ -143,26 +144,45 @@ public abstract class Builder {
                         color = "#B8860B";
 
                     }
+                    if(l > MazeContents.hero.getBaseDefense()){
+                        color = "#8B008B";
+                    }
+                    if(l > MazeContents.hero.getBaseDefense()){
+                        color = "#FF8C00";
+                    }
                     break;
                 case ADD_AGI:
-                    case ADD_STR:
-                        long sml = effectNumberMap.get(effect).longValue();
-                        if (sml > 5000) {
-                            color = "#0000FF";
-                        }
-                        if (sml > 10000) {
-                            color = "#9932CC";
-                        }
-                        if (sml > 100000) {
-                            color = "#B8860B";
-
-                        }
+                case ADD_STR:
+                case ADD_POWER:
+                    long sml = effectNumberMap.get(effect).longValue();
+                    if (sml > 5000) {
+                        color = "#0000FF";
+                    }
+                    if (sml > 10000) {
+                        color = "#9932CC";
+                    }
+                    if (sml > 100000) {
+                        color = "#B8860B";
+                    }
+                    break;
+                case ADD_CLICK_AWARD:
+                    long cw = effectNumberMap.get(effect).longValue();
+                    if (cw > 20) {
+                        color = "#0000FF";
+                    }
+                    if (cw > 100) {
+                        color = "#9932CC";
+                    }
+                    if (cw > 1000) {
+                        color = "#B8860B";
+                    }
+                    break;
                 default:
                     color = "#000000";
             }
         }
         accessory.setColor(color);
-        if (color.equalsIgnoreCase("#0000FF") && detectSave) {
+        if (!color.equalsIgnoreCase("#000000") && detectSave) {
             accessory.setSave(true);
         }
     }

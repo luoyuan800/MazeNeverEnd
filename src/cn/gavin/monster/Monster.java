@@ -117,7 +117,7 @@ public class Monster {
             atk = atk / 3;
         }
         if (hp > hero.getAttackValue() * 25) {
-            hp = hp / 2;
+            hp = hero.getAttackValue() * 26;
         }
         return new Monster("第" + maze.getLev() + "层", "守护", "者",
                 hp,
@@ -151,6 +151,12 @@ public class Monster {
         atk += random.nextLong(hero.getDefenseValue() / 1500 + 1) * random.nextLong(maze.getLev() + 1);
         if (hp < hero.getAttackValue()) {
             hp += random.nextLong(hero.getAttackValue() * 2);
+        }
+        if (atk > hero.getUpperHp() + hero.getDefenseValue()) {
+            atk = atk / 3;
+        }
+        if (hp > hero.getAttackValue() * 19) {
+            hp = hero.getAttackValue() * 20;
         }
         if (hp <= 0) hp = Integer.MAX_VALUE - 10;
         if (atk <= 0) hp = Integer.MAX_VALUE - 100;

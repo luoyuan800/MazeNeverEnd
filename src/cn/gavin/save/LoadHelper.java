@@ -3,20 +3,16 @@ package cn.gavin.save;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-
-import cn.gavin.Achievement;
-import cn.gavin.Armor;
-import cn.gavin.Hero;
-import cn.gavin.Maze;
-import cn.gavin.Sword;
+import cn.gavin.*;
 import cn.gavin.activity.MainMenuActivity;
 import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
+import cn.gavin.forge.Accessory;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 
 /**
  * Copyright 2015 gluo.
@@ -71,6 +67,27 @@ public class LoadHelper {
             heroN.setAwardCount(preferences.getLong("awardCount", 0));
             heroN.setLockBox(preferences.getLong("lockBox", 0));
             heroN.setKeyCount(preferences.getLong("keyCount", 0));
+            String ringId = preferences.getString("ring", null);
+            if (ringId != null) {
+                Accessory ring = new Accessory();
+                ring.setId(ringId);
+                ring.load();
+                heroN.setRing(ring);
+            }
+            String necklaceId = preferences.getString("necklace", null);
+            if (necklaceId != null) {
+                Accessory necklace = new Accessory();
+                necklace.setId(necklaceId);
+                necklace.load();
+                heroN.setNecklace(necklace);
+            }
+            String hatId = preferences.getString("hat", null);
+            if (hatId != null) {
+                Accessory hat = new Accessory();
+                hat.setId(necklaceId);
+                hat.load();
+                heroN.setHat(hat);
+            }
         }
         MazeContents.hero = heroN;
         MazeContents.maze = maze;
