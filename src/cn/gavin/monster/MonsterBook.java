@@ -38,8 +38,16 @@ public class MonsterBook {
     public void addMonster(Monster monster) {
         MonsterItem item = new MonsterItem();
         int index = Monster.getIndex(monster.getName());
+        String name = "";
         if (index < Monster.lastNames.length) {
-            String name = Monster.lastNames[index];
+            name = Monster.lastNames[index];
+        }else{
+            if(monster.getName().endsWith("守护者")){
+                name = "守护者";
+            }else{
+                name = monster.getName();
+            }
+        }
             item.setName(name);
             item.load();
             long atk = StringUtils.isNotEmpty(item.getMaxATKATK()) ? Long.parseLong(item.getMaxATKATK()) : 0;
@@ -66,7 +74,6 @@ public class MonsterBook {
                 item.setDefeated(item.getDefeated() + 1);
             }
             item.save();
-        }
     }
 
     public void initView(MainGameActivity context) {
