@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.gavin.R;
 import cn.gavin.forge.*;
 import cn.gavin.forge.dialog.ItemDialog;
@@ -186,27 +187,32 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                 }
                 break;
             case R.id.forge_do_button:
-                items.clear();
-                if (item1 != null) items.add(item1);
-                if (item2 != null) items.add(item2);
-                if (item3 != null) items.add(item3);
-                if (item4 != null) items.add(item4);
-                if (item5 != null) items.add(item5);
-                Accessory accessory = null;
-                if (items.size() > 2) {
-                    switch (index) {
-                        case RingBuilder.type:
-                            accessory = ringBuilder.build(items);
-                            break;
-                        case NecklaceBuilder.type:
-                            accessory = necklaceBuilder.build(items);
-                            break;
-                        case HatBuilder.type:
-                            accessory = hatBuilder.build(items);
-                            break;
+                if (MazeContents.hero.getMaterial() >= 30250) {
+                    items.clear();
+                    if (item1 != null) items.add(item1);
+                    if (item2 != null) items.add(item2);
+                    if (item3 != null) items.add(item3);
+                    if (item4 != null) items.add(item4);
+                    if (item5 != null) items.add(item5);
+                    Accessory accessory = null;
+                    if (items.size() > 2) {
+                        switch (index) {
+                            case RingBuilder.type:
+                                accessory = ringBuilder.build(items);
+                                break;
+                            case NecklaceBuilder.type:
+                                accessory = necklaceBuilder.build(items);
+                                break;
+                            case HatBuilder.type:
+                                accessory = hatBuilder.build(items);
+                                break;
+                        }
+                        showResult(accessory);
+                        clean();
                     }
-                    showResult(accessory);
-                    clean();
+                }else{
+                    Toast.makeText(this, "--锻造点数不足30250!--", Toast.LENGTH_SHORT)
+                            .show();
                 }
         }
 
@@ -234,7 +240,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
         final TextView tv = new TextView(this);
         tv.setText(Html.fromHtml(accessory.toString()));
         dialog.setView(tv);
-
+        MazeContents.hero.addMaterial(-30250);
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定",
                 new DialogInterface.OnClickListener() {
 

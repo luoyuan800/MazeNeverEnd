@@ -80,13 +80,9 @@ public class SaveHelper {
         SkillFactory.save();
     }
 
-    public void saveMonster() {
-        MonsterBook.getMonsterBook().writeIntoDB();
-    }
 
     public void save() {
         saveHero();
         saveSkill();
-        saveMonster();
     }
 }

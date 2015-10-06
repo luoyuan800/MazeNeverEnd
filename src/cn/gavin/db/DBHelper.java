@@ -13,7 +13,7 @@ import cn.gavin.forge.ForgeDB;
 public class DBHelper {
     private static String DB_PATH = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze/data/demon";
     public final static String DB_NAME = "mazeNeverEnd";
-    private static int DB_VERSION = 8;
+    private static int DB_VERSION = 9;
 
     private Context context;
     private SQLiteDatabase database;
@@ -61,17 +61,22 @@ public class DBHelper {
     public void onCreate(SQLiteDatabase db) {
         try {
             beginTransaction();
-            String createTable = "CREATE TABLE monster_book(" +
-                    "name TEXT NOT NULL," +
-                    "format_name TEXT," +
-                    "isDefeat CHAR(50) NOT NULL," +
-                    "hp TEXT," +
-                    "atk TEXT," +
-                    "maze_lv INTEGER," +
-                    "hp1 TEXT," +
-                    "atk1 TEXT," +
-                    "maze_lv1 INTEGER," +
-                    "count TEXT" +
+            String createTable = "CREATE TABLE monster(" +
+                    "name TEXT NOT NULL PRIMARY KEY," +
+                    "max_hp_name TEXT," +
+                    "max_atk_name TEXT," +
+                    "max_hp_defeat CHAR(5)," +
+                    "max_atk_defeat CHAR(5)," +
+                    "max_atk_atk TEXT," +
+                    "max_hp_atk TEXT," +
+                    "max_hp_hp TEXT," +
+                    "max_atk_hp TEXT," +
+                    "max_atk_lev TEXT," +
+                    "max_atk_battle TEXT," +
+                    "max_hp_battle TEXT," +
+                    "max_hp_lev TEXT," +
+                    "defeat TEXT," +
+                    "defeated TEXT" +
                     ")";
 
             db.execSQL(createTable);
@@ -85,7 +90,7 @@ public class DBHelper {
                     "addition_harm TEXT" +
                     ")";
             db.execSQL(createTable);
-            db.execSQL("CREATE UNIQUE INDEX monster_index ON monster_book (name)");
+            db.execSQL("CREATE UNIQUE INDEX monster_index ON monster (name)");
             ForgeDB forgeDB = new ForgeDB();
             forgeDB.createTable(db);
             endTransaction();
@@ -96,7 +101,25 @@ public class DBHelper {
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if(oldVersion == 8){
+            String createTable = "CREATE TABLE monster(" +
+                    "name TEXT NOT NULL PRIMARY KEY," +
+                    "max_hp_name TEXT," +
+                    "max_atk_name TEXT," +
+                    "max_hp_defeat CHAR(5)," +
+                    "max_atk_defeat CHAR(5)," +
+                    "max_atk_atk TEXT," +
+                    "max_hp_atk TEXT," +
+                    "max_hp_hp TEXT," +
+                    "max_atk_hp TEXT," +
+                    "max_atk_lev TEXT," +
+                    "max_hp_lev TEXT," +
+                    "defeat TEXT," +
+                    "defeated TEXT" +
+                    ")";
 
+            db.execSQL(createTable);
+        }
     }
 
     private static DBHelper dbHelper;

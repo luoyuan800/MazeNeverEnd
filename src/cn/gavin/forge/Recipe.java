@@ -28,7 +28,9 @@ public class Recipe {
     }
 
     public String getItems() {
-
+        if(!found && user){
+            return items.substring(0, items.lastIndexOf("+")) + "+ ?";
+        }
         return items;
     }
 
@@ -60,7 +62,7 @@ public class Recipe {
         this.type = type;
     }
 
-    public String toString(){
+    public String toString() {
         StringBuilder builder = new StringBuilder("<font color=\"");
         builder.append(color).append("\">");
         builder.append(name);
@@ -69,14 +71,14 @@ public class Recipe {
         return builder.toString();
     }
 
-    public static List<Recipe> loadRecipes(){
+    public static List<Recipe> loadRecipes() {
         List<Recipe> recipeList = new ArrayList<Recipe>();
-        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT name,items,found,user,type,color FROM recipe WHERE found = 'true'");
-        while(!cursor.isAfterLast()){
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT name,items,found,user,type,color FROM recipe WHERE found = 'true' OR user = 'true'");
+        while (!cursor.isAfterLast()) {
             Recipe recipe = new Recipe();
             recipe.name = cursor.getString(cursor.getColumnIndex("name"));
-            recipe.items= cursor.getString(cursor.getColumnIndex("items"));
-            if(recipe.items!=null){
+            recipe.items = cursor.getString(cursor.getColumnIndex("items"));
+            if (recipe.items != null) {
                 recipe.items = recipe.items.replaceAll("-", "+");
             }
             recipe.found = Boolean.getBoolean(cursor.getString(cursor.getColumnIndex("found")));

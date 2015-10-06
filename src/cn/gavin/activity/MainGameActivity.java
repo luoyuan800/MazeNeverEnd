@@ -46,7 +46,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private static final String PACKAGE_DOWNLOAD_URL = "http://7xk7ce.com1.z0.glb.clouddn.com/MazeNeverEnd.png";
 
     // 战斗刷新速度
-    private long refreshInfoSpeed = 500;
+    private long refreshInfoSpeed = 600;
     private Button uploadButton;
     private Button updateButton;
     private StringBuilder versionUpdateInfo;
@@ -97,7 +97,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private boolean uploading = false;
     //Data
     private AchievementAdapter achievementAdapter;
-    private MonsterBook monsterBook;
     private DBHelper dbHelper;
     private SkillDialog skillDialog;
     private SaveHelper saveHelper;
@@ -120,6 +119,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private TextView hatTextView;
     private Button recipeButton;
     private Button cleanButton;
+    private Button buyLockBoxButton;
+    private Button monsterBookButton;
+    private MonsterBook monsterBook;
 
 
     //Get Function
@@ -293,22 +295,25 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         Log.i(TAG, "start game~");
         initGameView();
         initGameData();
-
+        checkUpdate();
+        gameThreadRunning = true;
+        gameThread = new GameThread();
+        gameThread.start();
     }
 
     private void initGameView() {
         buttonGroup = (ViewFlipper) findViewById(R.id.button_group_flipper);
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.main_control_buttons, (ViewGroup) this.findViewById(R.id.main_control_buttons));
-        buttonGroup.addView(view,0);
+        buttonGroup.addView(view, 0);
         view = inflater.inflate(R.layout.upgrade_buttons, (ViewGroup) this.findViewById(R.id.upgrade_buttons));
-        buttonGroup.addView(view,1);
+        buttonGroup.addView(view, 1);
         view = inflater.inflate(R.layout.info_buttons, (ViewGroup) this.findViewById(R.id.info_buttons));
-        buttonGroup.addView(view,2);
+        buttonGroup.addView(view, 2);
         view = inflater.inflate(R.layout.item_buttons, (ViewGroup) this.findViewById(R.id.item_buttons));
-        buttonGroup.addView(view,3);
+        buttonGroup.addView(view, 3);
         view = inflater.inflate(R.layout.buy_buttons, (ViewGroup) this.findViewById(R.id.buy_buttons));
-        buttonGroup.addView(view,4);
+        buttonGroup.addView(view, 4);
         Button pre = (Button) findViewById(R.id.prev_button_system_button);
         pre.setOnClickListener(new OnClickListener() {
             @Override
@@ -328,9 +333,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     @Override
     protected void onResume() {
         super.onResume();
-        gameThreadRunning = true;
-        gameThread = new GameThread();
-        gameThread.start();
+        pause = false;
     }
 
     @Override
@@ -492,6 +495,37 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         }
     }
 
+    private AlertDialog getLockBoxDialog;
+
+    private void getLockBox() {
+        if (getLockBoxDialog == null) {
+            getLockBoxDialog = new Builder(this).create();
+            getLockBoxDialog.setTitle("32250换取一个带锁的宝箱");
+            getLockBoxDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    heroN.addMaterial(-32250);
+                    heroN.setLockBox(heroN.getLockBox() + 1);
+                    handler.sendEmptyMessage(103);
+                    getLockBoxDialog.hide();
+                }
+            });
+            getLockBoxDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getLockBoxDialog.hide();
+                }
+            });
+        }
+        getLockBoxDialog.show();
+        if (heroN.getMaterial() >= 32250) {
+            getLockBoxDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+        } else {
+            getLockBoxDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+        }
+    }
+
     private void showResetSkillPointDialog() {
         AlertDialog resetSkillPointDialog;
         resetSkillPointDialog = new Builder(this).create();
@@ -538,7 +572,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (tv.getText().toString().equals("201509181447")) {
+                        if (tv.getText().toString().equals("332406332") && heroN.getAwardCount() < 3) {
+                            heroN.addMaterial(60000);
+                            heroN.setAwardCount(heroN.getAwardCount() + 3);
+                        } else if (tv.getText().toString().equals("201509181447")) {
                             heroN.addMaterial(10000000);
                             heroN.addPoint(100000);
                             heroN.setAwardCount(heroN.getAwardCount() + 1);
@@ -547,29 +584,14 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                                 heroN.setSkillPoint(heroN.getSkillPoint() + 3);
                                 heroN.setAwardCount(heroN.getAwardCount() + 1);
                             }
-                        } else if (tv.getText().toString().equals("forge1.2d")) {
-                            Item item = Item.buildItem(heroN, ItemName.冷杉木);
-                            if (item != null) item.save();
-                            item = Item.buildItem(heroN, ItemName.黑石);
-                            if (item != null) item.save();
-                            item = Item.buildItem(heroN, ItemName.玄石);
-                            if (item != null) item.save();
-                            item = Item.buildItem(heroN, ItemName.龟壳);
-                            if (item != null) item.save();
-                            item = Item.buildItem(heroN, ItemName.狼皮);
-                            if (item != null) item.save();
-                            item = Item.buildItem(heroN, ItemName.红檀木);
-                            if (item != null) item.save();
-                            item = Item.buildItem(heroN, ItemName.白杏木);
-                            if (item != null) item.save();
-                            item = Item.buildItem(heroN, ItemName.蛇皮);
-                            if (item != null) item.save();
-                            item = Item.buildItem(heroN, ItemName.蛇骨);
+                        } else if (tv.getText().toString().equals("forge1.2d") && heroN.getAwardCount() < 2) {
+                            Item item = Item.buildItem(heroN, ItemName.蛇骨);
                             if (item != null) item.save();
                             item = Item.buildItem(heroN, ItemName.龙皮);
                             if (item != null) item.save();
                             item = Item.buildItem(heroN, ItemName.青檀木);
                             if (item != null) item.save();
+                            heroN.setAwardCount(heroN.getAwardCount() + 2);
                         } else {
                             heroN.setName(tv.getText().toString().replaceAll("_", " "));
                         }
@@ -637,6 +659,48 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 });
         dialog.show();
     }
+
+    private void showLockBox() {
+        AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("开启宝箱");
+        ScrollView scrollView = new ScrollView(this);
+        TextView textView = new TextView(this);
+        scrollView.addView(textView);
+        heroN.setLockBox(heroN.getLockBox() - 1);
+        StringBuilder builder = new StringBuilder("开宝箱获得的材料:<br>------<br>");
+        ItemName itemName = ItemName.values()[heroN.getRandom().nextInt(ItemName.values().length)];
+        Item item = Item.buildItem(heroN, itemName);
+        item.save();
+        builder.append(item.toString());
+        builder.append("<br>").append("-------<br>");
+        if (heroN.getRandom().nextBoolean()) {
+            itemName = ItemName.values()[heroN.getRandom().nextInt(ItemName.values().length)];
+            item = Item.buildItem(heroN, itemName);
+            item.save();
+            builder.append(item.toString());
+            builder.append("<br>").append("-------<br>");
+        }
+        if (heroN.getRandom().nextBoolean()) {
+            itemName = ItemName.values()[heroN.getRandom().nextInt(ItemName.values().length)];
+            item = Item.buildItem(heroN, itemName);
+            item.save();
+            builder.append(item.toString());
+            builder.append("<br>").append("-------<br>");
+        }
+        textView.setText(Html.fromHtml(builder.toString()));
+        dialog.setView(scrollView);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.show();
+    }
+
     private void showCleanDialog() {
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("清除数据");
@@ -654,7 +718,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         cleanMonster.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM monster_book");
+                DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM monster");
                 view.setEnabled(false);
             }
         });
@@ -677,14 +741,16 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             }
         });
         Button deleteDB = new Button(this);
-        cleanAcc.setText("删除数据库");
-        cleanAcc.setOnClickListener(new OnClickListener() {
+        deleteDB.setText("删除数据库");
+        deleteDB.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                pause = true;
                 DBHelper.getDbHelper().close();
                 context.deleteDatabase(DBHelper.DB_NAME);
                 DBHelper.init(context);
                 view.setEnabled(false);
+                pause = false;
             }
         });
         LinearLayout linearLayout = new LinearLayout(this);
@@ -693,6 +759,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         linearLayout.addView(cleanItem);
         linearLayout.addView(cleanMonster);
         linearLayout.addView(cleanSkill);
+        linearLayout.addView(deleteDB);
         dialog.setView(linearLayout);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
@@ -703,9 +770,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 });
         dialog.show();
     }
+
     private void showRecipe() {
         AlertDialog dialog = new Builder(this).create();
-        dialog.setTitle("配方列表");
+        dialog.setTitle("已发现的配方列表");
         ListView listView = new ListView(this);
         RecipeAdapter recipeAdapter = new RecipeAdapter();
         listView.setAdapter(recipeAdapter);
@@ -800,7 +868,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             dbHelper = DBHelper.getDbHelper();
         }
         saveHelper = new SaveHelper(this);
-        MonsterBook.init(context);
         // 英雄
         load();
         skillDialog = MazeContents.skillDialog;
@@ -808,6 +875,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             skillDialog = new SkillDialog(context);
         }
         skillDialog.setContext(this);
+        monsterBook = new MonsterBook(this);
         // 左侧战斗信息
         mainInfoSv = (ScrollView) findViewById(R.id.main_info_sv);
         mainInfoPlatform = (LinearLayout) findViewById(R.id.main_info_ll);
@@ -872,6 +940,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         getSkillPointButton = (Button) findViewById(R.id.skill_point_get_button);
         getSkillPointButton.setOnClickListener(this);
         lockBoxCount = (TextView) findViewById(R.id.local_box);
+        lockBoxCount.setOnClickListener(this);
         keyCount = (TextView) findViewById(R.id.key_count);
         forgeButton = (Button) findViewById(R.id.forge_button);
         forgeButton.setOnClickListener(this);
@@ -889,12 +958,16 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         recipeButton.setOnClickListener(this);
         cleanButton = (Button) findViewById(R.id.clean_data_button);
         cleanButton.setOnClickListener(this);
+        buyLockBoxButton = (Button) findViewById(R.id.lock_box_get_button);
+        buyLockBoxButton.setOnClickListener(this);
+        monsterBookButton = (Button) findViewById(R.id.monster_button);
+        monsterBookButton.setOnClickListener(this);
         refresh();
     }
 
     private synchronized void refresh() {
         clickCount.setText("点击\n" + heroN.getClick());
-        mainContriHp.setText(heroN.getHp() + "");
+        mainContriHp.setText(heroN.getHp() + "/" + heroN.getUpperHp());
         mainContriAtt.setText(heroN.getUpperAtk() + "");
         mainContriDef.setText(heroN.getUpperDef() + "");
         swordLev.setText(heroN.getSword() + "+" + heroN.getSwordLev());
@@ -976,17 +1049,17 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         if (heroN.getRing() != null) {
             ringTextView.setText(Html.fromHtml(heroN.getRing().getFormatName()));
         } else {
-            ringTextView.setText("未装备戒指");
+            ringTextView.setText("未装备");
         }
         if (heroN.getNecklace() != null) {
             necklaceTextView.setText(Html.fromHtml(heroN.getNecklace().getFormatName()));
         } else {
-            necklaceTextView.setText("未装备项链");
+            necklaceTextView.setText("未装备");
         }
         if (heroN.getHat() != null) {
             hatTextView.setText(Html.fromHtml(heroN.getHat().getFormatName()));
         } else {
-            hatTextView.setText("未装备帽子");
+            hatTextView.setText("未装备");
         }
     }
 
@@ -1024,10 +1097,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         MazeContents.lastUpload = lastUploadLev;
     }
 
-    public MonsterBook getMonsterBook() {
-        return monsterBook;
-    }
-
     public void setHeroN(Hero heroN) {
         this.heroN = heroN;
     }
@@ -1040,12 +1109,15 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         return skillDialog;
     }
 
+    public MonsterBook getMonsterBook() {
+        return monsterBook;
+    }
+
     private class GameThread extends Thread {
 
         @Override
         public void run() {
             try {
-                checkUpdate();
                 new MoveThread().start();
                 while (gameThreadRunning) {
                     try {
@@ -1182,12 +1254,24 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.monster_button:
+                monsterBook.showBook(context);
+                break;
+            case R.id.lock_box_get_button:
+                getLockBox();
+                break;
+            case R.id.local_box:
+                if (heroN.getKeyCount() > 0) {
+                    heroN.setKeyCount(heroN.getKeyCount() - 1);
+                    showLockBox();
+                }
+                break;
             case R.id.clean_data_button:
                 showCleanDialog();
                 break;
             case R.id.ring_view:
             case R.id.necklace_view:
-            case R.id.hat_view :
+            case R.id.hat_view:
                 showAccessory();
                 break;
             case R.id.forge_recipe_button:
@@ -1200,7 +1284,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 showAccessory();
                 break;
             case R.id.forge_button:
-                gameThreadRunning = false;
+                pause = true;
                 handler.sendEmptyMessage(103);
                 Intent intent = new Intent(this, ForgeActivity.class);
                 startActivity(intent);
@@ -1335,7 +1419,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     }
 
-    private synchronized void save() {
+    public synchronized void save() {
         saveHelper.save();
     }
 

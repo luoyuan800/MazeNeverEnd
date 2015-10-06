@@ -21,7 +21,7 @@ public class Monster {
     private final static String[] secondNames = {"小", "中", "大", "大大", "红色", "绿色", "人面"};
     private final static long[] secondAdditionHP = {15, 25, 100, 500, 1003, 2000, 6000};
     private final static long[] secondAdditionAtk = {5, 25, 100, 200, 400, 100, 1000};
-    private final static String[] lastNames = {"蟑螂", "大蚯蚓", "异壳虫", "巨型飞蛾", "猪", "老鼠", "嗜血蚁",
+    public final static String[] lastNames = {"蟑螂", "大蚯蚓", "异壳虫", "巨型飞蛾", "猪", "老鼠", "嗜血蚁",
             "老虎", "蛟", "变异蝎", "食人鸟", "丑蝙蝠", "蛇", "野牛", "龟", "三头蛇", "刺猬", "狼", "精灵",
             "僵尸", "骷髅", "凤凰", "龙", "作者"};
     private final static long[] baseHP = {13, 30, 55, 75, 95, 115, 400, 1000, 800, 520, 280, 350, 380, 450, 530, 1000, 1500, 2300, 4000, 4500, 6000, 10000, 20000, 50000};
@@ -50,7 +50,7 @@ public class Monster {
             Arrays.asList(ItemName.原石),
             Arrays.asList(ItemName.凤凰木, ItemName.凤凰毛),
             Arrays.asList(ItemName.龙皮, ItemName.冷杉木, ItemName.原石, ItemName.银矿石, ItemName.龙骨, ItemName.龙筋, ItemName.龙须),
-            Arrays.asList(ItemName.牛皮,ItemName.原石, ItemName.银矿石, ItemName.萤石, ItemName.白云石, ItemName.龙须木, ItemName.青檀木, ItemName.白杏木, ItemName.银矿石, ItemName.铁矿石)
+            Arrays.asList(ItemName.牛皮, ItemName.原石, ItemName.银矿石, ItemName.萤石, ItemName.白云石, ItemName.龙须木, ItemName.青檀木, ItemName.白杏木, ItemName.银矿石, ItemName.铁矿石)
     };
     private final static LongSparseArray<String> defender = new LongSparseArray<String>();
 
@@ -102,9 +102,11 @@ public class Monster {
             monster = buildDefaultDefender(maze, hero, random);
         }
         monster.material = random.nextLong(maze.getLev() + monster.atk + 1) / 100 + 5;
-        monster.items = Arrays.asList(ItemName.原石, ItemName.铁矿石,ItemName.冷杉木,
+        monster.items = Arrays.asList(ItemName.原石, ItemName.铁矿石, ItemName.冷杉木,
                 ItemName.萤石, ItemName.白云石);
         monster.formatName(hero);
+        monster.builder = new StringBuilder("第");
+        monster.builder.append(maze.getLev()).append("层").append("<br>-------");
         return monster;
     }
 
@@ -114,10 +116,13 @@ public class Monster {
         if (hp <= 0) hp = Integer.MAX_VALUE - 10;
         if (atk <= 0) hp = Integer.MAX_VALUE - 100;
         if (atk > hero.getUpperHp() + hero.getDefenseValue()) {
-            atk = atk / 3;
+            atk = atk / 2;
         }
-        if (hp > hero.getAttackValue() * 25) {
-            hp = hero.getAttackValue() * 26;
+        if (hp > hero.getAttackValue() * 20) {
+            hp = hero.getAttackValue() * 21;
+        }
+        if (atk < hero.getDefenseValue()) {
+            atk += random.nextLong(hero.getDefenseValue() * 3);
         }
         return new Monster("第" + maze.getLev() + "层", "守护", "者",
                 hp,
@@ -152,11 +157,12 @@ public class Monster {
         if (hp < hero.getAttackValue()) {
             hp += random.nextLong(hero.getAttackValue() * 2);
         }
-        if (atk > hero.getUpperHp() + hero.getDefenseValue()) {
-            atk = atk / 3;
-        }
+
         if (hp > hero.getAttackValue() * 19) {
             hp = hero.getAttackValue() * 20;
+        }
+        if(atk < hero.getDefenseValue()){
+            atk += random.nextLong(hero.getDefenseValue() * 2);
         }
         if (hp <= 0) hp = Integer.MAX_VALUE - 10;
         if (atk <= 0) hp = Integer.MAX_VALUE - 100;
@@ -165,6 +171,8 @@ public class Monster {
         material = random.nextLong((m1 + m2) / 20 + 1) + 3 + random.nextLong(maze.getLev() * 10 + 1);
         maxHP = hp;
         formatName(hero);
+        builder = new StringBuilder("第");
+        builder.append(maze.getLev()).append("层").append("<br>------------");
     }
 
     private void formatName(Hero hero) {
@@ -240,5 +248,19 @@ public class Monster {
 
     public void setHitRate(float hitRate) {
         this.hitRate = hitRate;
+    }
+
+    private StringBuilder builder;
+    public void addBattleDesc(String desc){
+        if(builder == null) builder = new StringBuilder();
+        builder.append("<br>").append(desc);
+    }
+    public void addBattleSkillDesc(String desc){
+        if(builder == null) builder = new StringBuilder();
+        builder.append("<br><font color=\"#8B0000\">").append(desc).append("</font>");
+    }
+
+    public String getBattleMsg(){
+        return builder.toString();
     }
 }

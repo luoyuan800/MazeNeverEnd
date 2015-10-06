@@ -59,6 +59,7 @@ public class Hero {
     private Accessory ring;
     private Accessory necklace;
     private Accessory hat;
+    private float parry;
 
     private EnumMap<Effect, Long> getAccessoryEffectMap() {
         EnumMap<Effect, Long> effectLongEnumMap = new EnumMap<Effect, Long>(Effect.class);
@@ -170,12 +171,16 @@ public class Hero {
         return defenseValue;
     }
 
+    private boolean isParry = false;
+
     public long getDefenseValue() {
         long defend = defenseValue + random.nextLong(armor.getBase()) + random.nextLong(armorLev * 2 + 1);
-        if (random.nextLong(100) + random.nextLong(agility + 1) / 1000 > 96 + random.nextLong(strength + 1) / 1000) {
+        if (random.nextLong(100) + parry + random.nextLong(agility + 1) / 1000 > 96 + random.nextLong(strength + 1) / 1000) {
             defend *= 3;
+            isParry = true;
+        } else {
+            isParry = false;
         }
-
         return defend;
     }
 
@@ -271,7 +276,9 @@ public class Hero {
     }
 
     public void addMaterial(long material) {
-        if (this.material < 0 || this.material < (Long.MAX_VALUE - material - 1000))
+        if (material <= 0) {
+            this.material += material;
+        } else if (this.material < (Long.MAX_VALUE - material - 1000))
             this.material += material;
         if (this.material < 0) this.material = 0;
         if (this.material >= 5000000) Achievement.rich.enable(this);
@@ -308,8 +315,9 @@ public class Hero {
     public void addStrength(long str) {
         if (str < 0 || strength < (Long.MAX_VALUE - strength - 100)) {
             strength += str;
-            if (str < 0 || attackValue < (Long.MAX_VALUE - ATR_RISE * str))
+            if (str < 0 || attackValue < (Long.MAX_VALUE - ATR_RISE * str)){
                 attackValue += ATR_RISE * str;
+            }
             else {
                 attackValue = Long.MAX_VALUE;
                 Achievement.extreme.enable(this);
@@ -494,7 +502,7 @@ public class Hero {
 
     public void addUpperHp(long hp) {
         this.upperHp += hp;
-        addHp(hp);
+        //addHp(hp);
     }
 
     public void setAttackValue(long attackValue) {
@@ -550,6 +558,9 @@ public class Hero {
     }
 
     public void setClickAward(long clickAward) {
+        if (clickAward == 0) {
+            clickAward = 1;
+        }
         this.clickAward = clickAward;
     }
 
@@ -658,19 +669,22 @@ public class Hero {
                     addUpperHp(effect.getValue());
                     break;
                 case ADD_DEF:
-                    defenseValue -= effect.getValue();
+                    addDefenseValue(effect.getValue());
                     break;
                 case ADD_ATK:
                     addAttackValue(effect.getValue());
                     break;
                 case ADD_AGI:
-                    addAgility(agility -= effect.getValue());
+                    addAgility(effect.getValue());
                     break;
                 case ADD_POWER:
                     addLife(effect.getValue());
                     break;
                 case ADD_CLICK_AWARD:
                     addClickAward(effect.getValue());
+                    break;
+                case ADD_PARRY:
+                    parry += effect.getValue();
                     break;
             }
         }
@@ -681,25 +695,28 @@ public class Hero {
         for (EnumMap.Entry<Effect, Long> effect : effectLongEnumMap.entrySet()) {
             switch (effect.getKey()) {
                 case ADD_STR:
-                    this.strength -= effect.getValue();
+                    addStrength(-effect.getValue());
                     break;
                 case ADD_UPPER_HP:
-                    this.upperHp -= effect.getValue();
+                    addUpperHp(-effect.getValue());
                     break;
                 case ADD_DEF:
-                    defenseValue -= effect.getValue();
+                    addDefenseValue(-effect.getValue());
                     break;
                 case ADD_ATK:
-                    attackValue -= effect.getValue();
+                    addAttackValue(-effect.getValue());
                     break;
                 case ADD_AGI:
-                    agility -= effect.getValue();
+                    addAgility(-effect.getValue());
                     break;
                 case ADD_POWER:
-                    power -= effect.getValue();
+                    addLife(-effect.getValue());
                     break;
                 case ADD_CLICK_AWARD:
-                    clickAward -= effect.getValue();
+                    addClickAward(-effect.getValue());
+                    break;
+                case ADD_PARRY:
+                    parry -= effect.getValue();
                     break;
             }
         }
@@ -717,6 +734,10 @@ public class Hero {
 
     public Accessory getHat() {
         return hat;
+    }
+
+    public boolean isParry() {
+        return isParry;
     }
 
     public void setHat(Accessory hat) {

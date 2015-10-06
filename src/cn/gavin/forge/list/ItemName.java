@@ -61,10 +61,14 @@ public enum ItemName {
 
     public boolean perform(Hero hero, Monster monster) {
         Random random = hero.getRandom();
-        if (monster.getMaterial() < 1000) {
-            return random.nextLong(hero.getAgility() + monster.getAtk() + 1) - 1000 > random.nextLong(monster.getMaxHP() + hero.getAttackValue() + 1) + 2000;
+        if (random.nextInt(1000) < 3) {
+            if (monster.getMaterial() < 1000) {
+                return random.nextLong(hero.getAgility() + monster.getAtk() + 1) - 1000 > random.nextLong(monster.getMaxHP() + hero.getAttackValue() + 1) + 2000;
+            } else {
+                return random.nextLong(Math.abs(monster.getAtk() - hero.getAttackValue()) + 1) - 100000 > random.nextLong(Math.abs(hero.getHp() - monster.getMaxHP()) + 1) + 2000;
+            }
         } else {
-            return random.nextLong(Math.abs(monster.getAtk() - hero.getAttackValue()) + 1) - 100000 > random.nextLong(Math.abs(hero.getHp() - monster.getMaxHP()) + 1) + 2000;
+            return false;
         }
     }
 

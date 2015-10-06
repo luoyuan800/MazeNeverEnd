@@ -3,10 +3,6 @@ package cn.gavin.skill;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.Maze;
@@ -23,6 +19,9 @@ import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.PropertySkill;
 import cn.gavin.utils.Random;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * by luoyuan
@@ -64,7 +63,9 @@ public class SkillFactory {
                         @Override
                         public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                             long harm = hero.getAttackValue() + ((AttackSkill) skill).getBaseHarm() + hero.getRandom().nextLong((((AttackSkill) skill).getAdditionHarm()) + 1);
-                            context.addMessage(skill.format(hero.getFormatName() + "使用了技能" + skill.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点伤害"));
+                            String skillmsg = skill.format(hero.getFormatName() + "使用了技能" + skill.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点伤害");
+                            context.addMessage(skillmsg);
+                            monster.addBattleSkillDesc(skillmsg);
                             monster.addHp(-harm);
                             Achievement.hero.enable(hero);
                             return false;
@@ -118,8 +119,12 @@ public class SkillFactory {
                                 harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1) + 1;
                             }
                             hero.addHp(harm);
-                            skill.addMessage(monster.getFormatName() + "攻击了" + hero.getFormatName());
-                            skill.addMessage(hero.getFormatName() + "使用了技能" + skill.getName() + "将" + harm + "点伤害转化为生命");
+                            String msg1 = monster.getFormatName() + "攻击了" + hero.getFormatName();
+                            skill.addMessage(msg1);
+                            monster.addBattleSkillDesc(msg1);
+                            String msg2 = hero.getFormatName() + "使用了技能" + skill.getName() + "将" + harm + "点伤害转化为生命";
+                            skill.addMessage(msg2);
+                            monster.addBattleSkillDesc(msg2);
                             return false;
                         }
 
@@ -135,7 +140,7 @@ public class SkillFactory {
                         }
                     });
                     if (!skill.load()) {
-                        skill.setProbability(1.2f);
+                        skill.setProbability(2.2f);
                     }
                 } else if (name.equals("闪避")) {
                     skill = new DefendSkill();
@@ -161,8 +166,12 @@ public class SkillFactory {
                     skill.setRelease(new UseExpression() {
                         @Override
                         public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                            context.addMessage(skill.format(monster.getFormatName() + "攻击" + hero.getFormatName()));
-                            context.addMessage(skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "躲过了攻击"));
+                            String msg1 = skill.format(monster.getFormatName() + "攻击" + hero.getFormatName());
+                            context.addMessage(msg1);
+                            String msg2 = skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "躲过了攻击");
+                            context.addMessage(msg2);
+                            monster.addBattleSkillDesc(msg1);
+                            monster.addBattleSkillDesc(msg2);
                             return false;
                         }
                     });
@@ -204,7 +213,9 @@ public class SkillFactory {
                         @Override
                         public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                             long harm = hero.getRandom().nextLong(hero.getHp() + 1);
-                            context.addMessage(skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "攻击" + monster.getFormatName() + "造成了" + harm + "点伤害"));
+                            String msg = skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "攻击" + monster.getFormatName() + "造成了" + harm + "点伤害");
+                            context.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                             monster.addHp(-harm);
                             return false;
                         }
@@ -247,17 +258,23 @@ public class SkillFactory {
                         @Override
                         public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                             long harm = hero.getAttackValue() + hero.getRandom().nextLong(hero.getStrength() / 100 + 1);
-                            context.addMessage(skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "攻击" + monster.getFormatName() + "造成了" + harm + "点伤害"));
+                            String msg1 = skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "攻击" + monster.getFormatName() + "造成了" + harm + "点伤害");
+                            context.addMessage(msg1);
+                            monster.addBattleSkillDesc(msg1);
                             monster.addHp(-harm);
                             if (hero.getRandom().nextLong(1000) > skill.getProbability()) {
-                                context.addMessage(skill.format(monster.getFormatName() + "被打晕了"));
+                                String msg2 = skill.format(monster.getFormatName() + "被打晕了");
+                                context.addMessage(msg2);
+                                monster.addBattleSkillDesc(msg2);
                                 try {
                                     Thread.sleep(context.getRefreshInfoSpeed());
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
                                 harm = hero.getAttackValue() + hero.getRandom().nextLong(hero.getStrength() / 100 + 1);
-                                context.addMessage(skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "攻击" + monster.getFormatName() + "造成了" + harm + "点伤害"));
+                                String msg3 = skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "攻击" + monster.getFormatName() + "造成了" + harm + "点伤害");
+                                context.addMessage(msg3);
+                                monster.addBattleSkillDesc(msg3);
                                 monster.addHp(-harm);
                             }
                             return false;
@@ -303,9 +320,13 @@ public class SkillFactory {
                             if (harm <= 0) {
                                 harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1);
                             }
-                            context.addMessage(skill.format(monster.getFormatName() + "攻击" + hero.getFormatName()));
+                            String msg1 = skill.format(monster.getFormatName() + "攻击" + hero.getFormatName());
+                            context.addMessage(msg1);
+                            monster.addBattleSkillDesc(msg1);
                             long rHarm = Math.round(harm * ((50 + skill.getProbability() * 10) / 100));
-                            context.addMessage(skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "反弹了" + rHarm + "的伤害"));
+                            String msg2 = skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "反弹了" + rHarm + "的伤害");
+                            context.addMessage(msg2);
+                            monster.addBattleSkillDesc(msg2);
                             monster.addHp(-rHarm);
                             hero.addHp(-(harm - rHarm));
                             return false;
@@ -352,10 +373,14 @@ public class SkillFactory {
                                 harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1);
                             }
                             hero.addHp(-harm);
-                            context.addMessage(skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害"));
+                            String msg1 = skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害");
+                            context.addMessage(msg1);
+                            monster.addBattleSkillDesc(msg1);
                             final long atk = hero.getRandom().nextLong(Math.round(hero.getAttackValue() + hero.getAttackValue() * (25 + skill.getProbability() * 5) / 100) + 1);
                             hero.addAttackValue(atk);
-                            context.addMessage(skill.format(hero.getFormatName() + "触发了" + skill.getName() + "攻击力增加了" + atk));
+                            String msg2 = skill.format(hero.getFormatName() + "触发了" + skill.getName() + "攻击力增加了" + atk);
+                            context.addMessage(msg2);
+                            monster.addBattleSkillDesc(msg2);
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -411,13 +436,19 @@ public class SkillFactory {
                                 harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1);
                             }
                             hero.addHp(-harm);
-                            context.addMessage(skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害"));
+                            String msg1 = skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害");
+                            context.addMessage(msg1);
                             long turn = hero.getRandom().nextLong(Math.round(skill.getCount() / 200f) + 1) + 1;
-                            context.addMessage(skill.format(hero.getFormatName() + "触发了" + skill.getName() + "定住对方" + turn + "个回合"));
+                            String msg2 = skill.format(hero.getFormatName() + "触发了" + skill.getName() + "定住对方" + turn + "个回合");
+                            context.addMessage(msg2);
+                            monster.addBattleSkillDesc(msg1);
+                            monster.addBattleSkillDesc(msg2);
                             while (turn-- > 0) {
                                 harm = hero.getAttackValue();
                                 monster.addHp(-harm);
-                                context.addMessage(skill.format(hero.getFormatName() + "攻击了" + monster.getFormatName() + "造成了" + harm + "点伤害"));
+                                String msg3 = skill.format(hero.getFormatName() + "攻击了" + monster.getFormatName() + "造成了" + harm + "点伤害");
+                                context.addMessage(msg3);
+                                monster.addBattleSkillDesc(msg3);
                                 try {
                                     Thread.sleep(MainGameActivity.context.getRefreshInfoSpeed());
                                 } catch (InterruptedException e) {
@@ -472,10 +503,14 @@ public class SkillFactory {
                                 harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1);
                             }
                             hero.addHp(-harm);
-                            context.addMessage(skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害"));
+                            String msg1 = skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害");
+                            context.addMessage(msg1);
+                            monster.addBattleSkillDesc(msg1);
                             final long hp = hero.getRandom().nextLong(Math.round(hero.getAttackValue() + hero.getAttackValue() * (80 + skill.getProbability() * 5) / 100) + 1);
                             hero.addUpperHp(hp);
-                            context.addMessage(skill.format(hero.getFormatName() + "触发了" + skill.getName() + "生命值上限增加了" + hp));
+                            String msg2 = skill.format(hero.getFormatName() + "触发了" + skill.getName() + "生命值上限增加了" + hp);
+                            context.addMessage(msg2);
+                            monster.addBattleSkillDesc(msg2);
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -527,7 +562,9 @@ public class SkillFactory {
                     skill.setRelease(new UseExpression() {
                         @Override
                         public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                            context.addMessage(skill.format(hero.getFormatName() + "触发了" + skill.getName() + "，逃离了战斗\n-----------------------------"));
+                            String msg = skill.format(hero.getFormatName() + "触发了" + skill.getName() + "，逃离了战斗\n-----------------------------");
+                            context.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                             return true;
                         }
                     });
@@ -623,7 +660,9 @@ public class SkillFactory {
                         public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                             long harm = hero.getAttackValue() + ((AttackSkill) skill).getBaseHarm() + hero.getRandom().nextLong(((AttackSkill) skill).getAdditionHarm() + 1);
                             monster.addHp(-harm);
-                            skill.addMessage(hero.getFormatName() + "使用了技能" + skill.getName() + "，对" + monster.getName() + "造成了" + harm + "点伤害");
+                            String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，对" + monster.getName() + "造成了" + harm + "点伤害";
+                            skill.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                             return false;
                         }
                     });
@@ -674,11 +713,15 @@ public class SkillFactory {
                             long harm = monster.getAtk() - hero.getDefenseValue();
                             if (harm >= hero.getHp()) {
                                 hero.addHp(-harm);
-                                skill.addMessage(monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了" + harm + "的伤害");
+                                String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了" + harm + "的伤害";
+                                skill.addMessage(msg);
+                                monster.addBattleSkillDesc(msg);
                                 return false;
                             }
                             hero.restore();
-                            skill.addMessage(hero.getFormatName() + "使用了技能" + skill.getName() + "，HP全部恢复了");
+                            String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，HP全部恢复了";
+                            skill.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                             return false;
                         }
                     });
@@ -723,7 +766,9 @@ public class SkillFactory {
                             long n = hero.getRandom().nextLong(((AttackSkill) skill).getBaseHarm() + 1) + 1;
                             long harm = n * hero.getAttackValue();
                             monster.addHp(-harm);
-                            skill.addMessage(hero.getFormatName() + "使用了技能" + skill.getName() + "，对" + monster.getFormatName() + "造成了" + harm + "伤害");
+                            String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，对" + monster.getFormatName() + "造成了" + harm + "伤害";
+                            skill.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                             return false;
                         }
                     });
@@ -743,7 +788,7 @@ public class SkillFactory {
                         }
                     });
                 } else if (name.equals("寻宝")) {
-                    final PropertySkill iskll = new PropertySkill(2900, 0, 0, 0, 0, 0, 0);
+                    final PropertySkill iskll = new PropertySkill(29000, 0, 0, 0, 0, 0, 0);
                     skill = iskll;
                     iskll.setName("寻宝");
                     iskll.setHero(hero);
@@ -807,11 +852,15 @@ public class SkillFactory {
                                 long p = hero.getHp();
                                 hero.setHp(monster.getHp());
                                 monster.addHp(-monster.getHp() + p);
-                                skill.addMessage(hero.getFormatName() + "使用了技能" + skill.getName() + "，和" + monster.getFormatName() + "交换了HP");
+                                String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，和" + monster.getFormatName() + "交换了HP";
+                                skill.addMessage(msg);
+                                monster.addBattleSkillDesc(msg);
                             } else {
                                 long harm = hero.getAttackValue();
                                 monster.addHp(-harm);
-                                MainGameActivity.context.addMessage(hero.getFormatName() + "攻击了" + monster.getFormatName() + "造成了" + harm + "点伤害");
+                                String msg1 = hero.getFormatName() + "攻击了" + monster.getFormatName() + "造成了" + harm + "点伤害";
+                                MainGameActivity.context.addMessage(msg1);
+                                monster.addBattleSkillDesc(msg1);
                             }
                             return false;
                         }
@@ -830,13 +879,14 @@ public class SkillFactory {
                     });
                 } else if (name.equals("超防御")) {
                     final PropertySkill iskll = new PropertySkill(0, 0, 0, 0, 0, 0, 0) {
-                        public void setActive(boolean active) {
-                            if (active && !isActive()) {
+                        public void setOnUsed(boolean used) {
+                            if (used && !isOnUsed() && MainGameActivity.context != null) {
                                 getHero().setDefenseValue(getHero().getBaseDefense() * 2);
-                            } else if (!active && isActive()) {
+                                Toast.makeText(MainGameActivity.context, "激活" + getName(), Toast.LENGTH_SHORT).show();
+                            } else if (!used && isOnUsed()) {
                                 getHero().setDefenseValue(getHero().getBaseDefense() / 2);
                             }
-                            super.setActive(active);
+                            this.onUsed = used;
                         }
                     };
                     skill = iskll;
@@ -896,7 +946,9 @@ public class SkillFactory {
                         @Override
                         public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                             monster.addHp(-(monster.getHp() / 2));
-                            skill.addMessage(hero.getFormatName() + "使用了技能" + skill.getName() + "，使得" + monster.getFormatName() + "的生命值减半了。");
+                            String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，使得" + monster.getFormatName() + "的生命值减半了。";
+                            skill.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                             return false;
                         }
 
@@ -940,12 +992,20 @@ public class SkillFactory {
                             final long hp = hero.getHp() * iskll.getBaseHarm();
                             hero.addUpperHp(hp);
                             final long n = hero.getRandom().nextLong(hero.getMaxMazeLev() / 100l + 10l);
-                            skill.addMessage(hero.getFormatName() + "使用了技能" + skill.getName() + "，使得自身的生命值上限增加了" + iskll.getBaseHarm() + "倍，持续" + n + "回合。");
+                            String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，使得自身的生命值上限增加了" + iskll.getBaseHarm() + "倍，持续" + n + "回合。";
+                            skill.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
                                     int i = 0;
                                     while (i < n) {
+                                        try {
+                                            Thread.sleep(MainGameActivity.context.getRefreshInfoSpeed());
+                                        } catch (InterruptedException e) {
+                                            Thread.currentThread().interrupt();
+                                            e.printStackTrace();
+                                        }
                                         i++;
                                     }
                                     hero.addUpperHp(-hp);
@@ -994,7 +1054,9 @@ public class SkillFactory {
                         @Override
                         public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                             monster.setHitRate(monster.getHitRate() / 2);
-                            skill.addMessage(hero.getFormatName() + "使用了技能" + skill.getName() + "，降低了" + monster.getFormatName() + "的命中率。");
+                            String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，降低了" + monster.getFormatName() + "的命中率。";
+                            skill.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                             return false;
                         }
 
@@ -1067,12 +1129,8 @@ public class SkillFactory {
                                     setLife(-getLife());
                                     setStr(-getStr());
                                 }
-                                getHero().addAgility(getAgi());
-                                getHero().addStrength(getStr());
-                                getHero().addLife(getLife());
-                                Toast.makeText(MainGameActivity.context, onUsed ? "激活" : "取消激活" + getName(), Toast.LENGTH_SHORT).show();
+                                super.setOnUsed(used);
                             }
-                            this.onUsed = used;
                         }
                     };
                     skill.setName("精神力");
@@ -1135,7 +1193,9 @@ public class SkillFactory {
                         @Override
                         public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                             hero.restore();
-                            skill.addMessage(hero.getFormatName() + "使用了技能" + iskll.getName() + "，原地满血复活，并且逃离了战斗。");
+                            String msg = hero.getFormatName() + "使用了技能" + iskll.getName() + "，原地满血复活，并且逃离了战斗。";
+                            skill.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                             return true;
                         }
 
@@ -1151,7 +1211,7 @@ public class SkillFactory {
                         }
                     });
                     if (!skill.load()) {
-                        skill.setProbability(1.0f);
+                        skill.setProbability(5.0f);
                     }
                 } else if (name.equals("闪电")) {
                     final AttackSkill iskll = new AttackSkill();
@@ -1170,7 +1230,7 @@ public class SkillFactory {
                             StringBuilder builder = new StringBuilder();
                             builder.append("从虚空中拉出一条闪电攻击敌人。<br>").append(skill.getProbability()).
                                     append("的概率释放。造成额外的").append(iskll.getBaseHarm()).append("-").
-                                    append(iskll.getBaseHarm()+iskll.getAdditionHarm()).append("闪电伤害");
+                                    append(iskll.getBaseHarm() + iskll.getAdditionHarm()).append("闪电伤害");
                             return builder.toString();
                         }
                     });
@@ -1179,8 +1239,10 @@ public class SkillFactory {
                         public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                             long harm = hero.getAttackValue() + iskll.getBaseHarm() + hero.getRandom().nextLong(iskll.getAdditionHarm() + 1);
                             monster.addHp(-harm);
-                            skill.addMessage(hero.getFormatName() + "使用了技能" + iskll.getName() + "，对" +
-                                    monster.getFormatName() + "造成了" + harm + "的闪电伤害");
+                            String msg = hero.getFormatName() + "使用了技能" + iskll.getName() + "，对" +
+                                    monster.getFormatName() + "造成了" + harm + "的闪电伤害";
+                            skill.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                             return false;
                         }
 
@@ -1229,11 +1291,15 @@ public class SkillFactory {
                             if (harm <= 0) {
                                 harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1);
                             }
-                            skill.addMessage(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "的伤害。");
+                            String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "的伤害。";
+                            skill.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                             double v = harm * (iskll.getProbability() + 80d) / 100d;
                             harm = (long) (harm - v);
-                            skill.addMessage(hero.getFormatName() + "使用了技能" + iskll.getName() + "，抵消了" +
-                                    v + "的伤害");
+                            String msg1 = hero.getFormatName() + "使用了技能" + iskll.getName() + "，抵消了" +
+                                    v + "的伤害";
+                            skill.addMessage(msg1);
+                            monster.addBattleSkillDesc(msg1);
                             hero.addHp(-harm);
                             return false;
                         }
@@ -1276,8 +1342,10 @@ public class SkillFactory {
                     skill.setRelease(new UseExpression() {
                         @Override
                         public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                            context.addMessage(skill.format(hero.getFormatName() + "触发了" + skill.getName() +
-                                    "，反杀了" + monster.getFormatName() + "\n-----------------------------"));
+                            String msg = skill.format(hero.getFormatName() + "触发了" + skill.getName() +
+                                    "，反杀了" + monster.getFormatName() + "\n-----------------------------");
+                            context.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                             monster.addHp(monster.getHp());
                             return false;
                         }
@@ -1326,13 +1394,21 @@ public class SkillFactory {
                             hero.setName(monster.getName());
                             hero.setAttackValue(monster.getAtk());
                             hero.setUpperHp(monster.getMaxHP());
-                            skill.addMessage(hero.getFormatName() + "使用了技能" + iskll.getName() + "变身成为了" +
-                                    monster.getFormatName());
+                            String msg = hero.getFormatName() + "使用了技能" + iskll.getName() + "变身成为了" +
+                                    monster.getFormatName();
+                            skill.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
                                     int i = 0;
                                     while (i < iskll.getBaseHarm()) {
+                                        try {
+                                            Thread.sleep(MainGameActivity.context.getRefreshInfoSpeed());
+                                        } catch (InterruptedException e) {
+                                            Thread.currentThread().interrupt();
+                                            e.printStackTrace();
+                                        }
                                         i++;
                                     }
                                     iskll.addMessage(older + "的变身效果消失了");
@@ -1388,7 +1464,9 @@ public class SkillFactory {
                             long harm = monster.getHp() * (iskll.getBaseHarm() / 100);
                             monster.addHp(-harm);
                             hero.addHp(harm);
-                            skill.addMessage(hero.getFormatName() + "使用了技能" + skill.getName() + "，吸收了" + monster.getFormatName() + "的" + harm + "点生命值。");
+                            String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，吸收了" + monster.getFormatName() + "的" + harm + "点生命值。";
+                            skill.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                             return false;
                         }
 
@@ -1400,13 +1478,14 @@ public class SkillFactory {
                                 skill.setProbability(skill.getProbability() + 3.1f);
                                 return true;
                             }
-                            iskll.setBaseHarm(iskll.getBaseHarm() + 3);
+                            if (iskll.getBaseHarm() < 70)
+                                iskll.setBaseHarm(iskll.getBaseHarm() + 3);
                             return false;
                         }
                     });
                     if (!skill.load()) {
-                        skill.setProbability(1.0f);
-                        iskll.setBaseHarm(3l);
+                        skill.setProbability(2.0f);
+                        iskll.setBaseHarm(10l);
                     }
                 } else if (name.equals("多重攻击")) {
                     final AttackSkill iskll = new AttackSkill();
@@ -1436,8 +1515,10 @@ public class SkillFactory {
                             long i = hero.getRandom().nextLong(iskll.getAdditionHarm() + 1);
                             long l = -harm * i;
                             monster.addHp(l);
-                            skill.addMessage(hero.getFormatName() + "使用了技能" + skill.getName() + "，对" +
-                                    monster.getFormatName() + "进行了" + i + "次攻击，总共造成了" + l + "伤害。");
+                            String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，对" +
+                                    monster.getFormatName() + "进行了" + i + "次攻击，总共造成了" + l + "伤害。";
+                            skill.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                             return false;
                         }
 
@@ -1445,7 +1526,7 @@ public class SkillFactory {
                     skill.setLevelUp(new EnableExpression() {
                         @Override
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                            if (skill.getProbability() < 35 ) {
+                            if (skill.getProbability() < 35) {
                                 skill.setProbability(skill.getProbability() + 3.1f);
                                 return true;
                             }
@@ -1455,7 +1536,7 @@ public class SkillFactory {
                         }
                     });
                     if (!skill.load()) {
-                        skill.setProbability(1.0f);
+                        skill.setProbability(3.0f);
                         iskll.setBaseHarm(60l);
                         iskll.setAdditionHarm(5l);
                     }
@@ -1534,7 +1615,6 @@ public class SkillFactory {
                 point++;
             }
         }
-        Achievement.reBird.enable(null);
         return point;
     }
 }

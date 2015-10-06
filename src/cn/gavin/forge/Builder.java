@@ -55,6 +55,9 @@ public abstract class Builder {
         } else if (names.containsAll(Arrays.asList("黑", "硝"))) {
             names.clear();
             names.add("火神");
+        } else if(names.containsAll(Arrays.asList("龙", "凤","虎","牛"))){
+            names.clear();
+            names.add("小田螺の");
         }
         StringBuilder b = new StringBuilder();
         for (String s : names) {
@@ -144,11 +147,8 @@ public abstract class Builder {
                         color = "#B8860B";
 
                     }
-                    if(l > MazeContents.hero.getBaseDefense()){
+                    if (l > MazeContents.hero.getBaseDefense()) {
                         color = "#8B008B";
-                    }
-                    if(l > MazeContents.hero.getBaseDefense()){
-                        color = "#FF8C00";
                     }
                     break;
                 case ADD_AGI:
@@ -174,7 +174,7 @@ public abstract class Builder {
                         color = "#9932CC";
                     }
                     if (cw > 1000) {
-                        color = "#B8860B";
+                        color = "#9400D3";
                     }
                     break;
                 default:
@@ -204,16 +204,20 @@ public abstract class Builder {
         }
         switch (lessEffect) {
             case ADD_ATK:
+            case ADD_POWER:
                 accessory.setElement(Element.金);
                 break;
             case ADD_DEF:
+            case ADD_STR:
                 accessory.setElement(Element.水);
                 break;
             case ADD_UPPER_HP:
+            case ADD_AGI:
+            case ADD_CLICK_AWARD:
                 accessory.setElement(Element.木);
                 break;
             default:
-                accessory.setElement(Element.无);
+                accessory.setElement(Element.values()[random.nextInt(Element.values().length)]);
         }
     }
 

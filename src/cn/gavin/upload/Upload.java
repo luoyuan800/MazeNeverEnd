@@ -47,6 +47,7 @@ public class Upload {
         builder.append("&atk=").append(hero.getAttackValue());
         builder.append("&mazeLev=").append(hero.getMaxMazeLev());
         builder.append("&pay=").append(pay);
+        builder.append("&skill=").append(hero.getFirstSkill());
         return builder.toString();
     }
 

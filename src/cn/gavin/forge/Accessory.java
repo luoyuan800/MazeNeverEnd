@@ -1,16 +1,11 @@
 package cn.gavin.forge;
 
 import android.database.Cursor;
-
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.utils.StringUtils;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Copyright 2015 luoyuan.
@@ -28,9 +23,11 @@ public class Accessory extends Equipment {
     private Element element;
     private Map<Effect, Number> additionEffects;
     private int type;
-public int getType(){
-    return type;
-}
+
+    public int getType() {
+        return type;
+    }
+
     public float getPro() {
         return pro;
     }
@@ -95,16 +92,16 @@ public int getType(){
         this.additionEffects = additionEffects;
     }
 
-    public void save(){
+    public void save() {
         DBHelper dbHelper = DBHelper.getDbHelper();
         StringBuilder base = new StringBuilder();
-        if(effects!=null) {
+        if (effects != null) {
             for (Effect effect : effects.keySet()) {
                 base.append(effect.name()).append(":").append(effects.get(effect)).append("-");
             }
         }
         StringBuilder addition = new StringBuilder();
-        if(additionEffects!=null) {
+        if (additionEffects != null) {
             for (Effect effect : additionEffects.keySet()) {
                 addition.append(effect.name()).append(":").append(additionEffects.get(effect));
             }
@@ -112,20 +109,20 @@ public int getType(){
         id = UUID.randomUUID().toString();
         String sql = String.format("INSERT INTO accessory (id, name,base,addition,element,type,color) " +
                 "values ('%s', '%s', '%s','%s','%s','%s','%s')", id,
-                name,base.toString(),addition.toString(),element.name(),type,color);
+                name, base.toString(), addition.toString(), element.name(), type, color);
         dbHelper.excuseSQLWithoutResult(sql);
         sql = String.format("SELECT name from recipe where name = '%s'", name);
         Cursor cursor = dbHelper.excuseSOL(sql);
         StringBuilder itemBuilder = new StringBuilder();
-        for(Item item : items){
+        for (Item item : items) {
             itemBuilder.append(item.getName().name()).append("-");
         }
-        if(save && cursor.isAfterLast()){
+        if (save && cursor.isAfterLast()) {
             sql = String.format("INSERT INTO recipe (name,items,base,addition,found,user,type,color) " +
                     "values('%s','%s','%s','%s','%s','%s','%s','%s')",
-                    name,itemBuilder.toString(), base.toString(), addition.toString(), Boolean.FALSE, Boolean.TRUE, type, color);
-        }else if(!cursor.isAfterLast()){
-            sql = String.format("UPDATE recipe set found = '%s'", Boolean.TRUE);
+                    name, itemBuilder.toString().replaceFirst("\\+$", ""), base.toString(), addition.toString(), Boolean.FALSE, Boolean.TRUE, type, color);
+        } else if (!cursor.isAfterLast()) {
+            sql = String.format("UPDATE recipe set found = '%s' WHERE name = '%s'", Boolean.TRUE, name);
         }
         dbHelper.excuseSQLWithoutResult(sql);
     }
@@ -142,20 +139,20 @@ public int getType(){
         this.id = id;
     }
 
-    public boolean isActive(){
+    public boolean isActive() {
         return false;
     }
 
-    public String toString(){
+    public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("<font color=\"").append(color).append("\">");
         builder.append(name).append("</font><br>");
         builder.append("属性: ").append(element.name()).append("<br>");
-        for(Effect effect : effects.keySet()){
+        for (Effect effect : effects.keySet()) {
             builder.append("<br>").append(effect.getName()).append(":").append(effects.get(effect));
         }
-        if(additionEffects!=null) {
-            builder.append("<font color=\"").append(isActive() ? "#B8860B":"#D3D3D3").append("\">");
+        if (additionEffects != null) {
+            builder.append("<font color=\"").append(isActive() ? "#B8860B" : "#D3D3D3").append("\">");
             for (Effect effect : additionEffects.keySet()) {
                 builder.append("<br>").append(effect.getName()).append(":").append(additionEffects.get(effect));
             }
@@ -164,25 +161,25 @@ public int getType(){
         return builder.toString();
     }
 
-    public static List<Accessory> loadAccessories(){
+    public static List<Accessory> loadAccessories() {
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM accessory");
         List<Accessory> res = new ArrayList<Accessory>(cursor.getCount());
-        while(!cursor.isAfterLast()){
+        while (!cursor.isAfterLast()) {
             Accessory accessory = new Accessory();
             accessory.setName(cursor.getString(cursor.getColumnIndex("name")));
             accessory.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
             accessory.setColor(cursor.getString(cursor.getColumnIndex("color")));
             EnumMap<Effect, Number> base = new EnumMap<Effect, Number>(Effect.class);
-            for(String  str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")){
+            for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
                 String[] keyValue = StringUtils.split(str, ":");
-                if(keyValue.length>1){
+                if (keyValue.length > 1) {
                     base.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
                 }
             }
             EnumMap<Effect, Number> addition = new EnumMap<Effect, Number>(Effect.class);
-            for(String  str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")){
+            for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")) {
                 String[] keyValue = StringUtils.split(str, ":");
-                if(keyValue.length>1){
+                if (keyValue.length > 1) {
                     addition.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
                 }
             }
@@ -195,36 +192,42 @@ public int getType(){
         }
         return res;
     }
-    public String getFormatName(){
+
+    public String getFormatName() {
         return "<font color=\"" + color + "\">" + name + "</font>";
     }
 
-    public void load() {
-        if(id!=null){
-            Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM accessory WHERE id = '" + id + "'");
-            if(!cursor.isAfterLast()){
-                setName(cursor.getString(cursor.getColumnIndex("name")));
-                setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
-                setColor(cursor.getString(cursor.getColumnIndex("color")));
-                EnumMap<Effect, Number> base = new EnumMap<Effect, Number>(Effect.class);
-                for(String  str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")){
-                    String[] keyValue = StringUtils.split(str, ":");
-                    if(keyValue.length>1){
-                        base.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+    public boolean load() {
+        try {
+            if (id != null) {
+                Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM accessory WHERE id = '" + id + "'");
+                if (!cursor.isAfterLast()) {
+                    setName(cursor.getString(cursor.getColumnIndex("name")));
+                    setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
+                    setColor(cursor.getString(cursor.getColumnIndex("color")));
+                    EnumMap<Effect, Number> base = new EnumMap<Effect, Number>(Effect.class);
+                    for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
+                        String[] keyValue = StringUtils.split(str, ":");
+                        if (keyValue.length > 1) {
+                            base.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                        }
                     }
-                }
-                EnumMap<Effect, Number> addition = new EnumMap<Effect, Number>(Effect.class);
-                for(String  str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")){
-                    String[] keyValue = StringUtils.split(str, ":");
-                    if(keyValue.length>1){
-                        addition.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                    EnumMap<Effect, Number> addition = new EnumMap<Effect, Number>(Effect.class);
+                    for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")) {
+                        String[] keyValue = StringUtils.split(str, ":");
+                        if (keyValue.length > 1) {
+                            addition.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                        }
                     }
+                    setEffects(base);
+                    setAdditionEffects(addition);
+                    setType(cursor.getInt(cursor.getColumnIndex("type")));
+                    setId(cursor.getString(cursor.getColumnIndex("id")));
                 }
-                setEffects(base);
-                setAdditionEffects(addition);
-                setType(cursor.getInt(cursor.getColumnIndex("type")));
-                setId(cursor.getString(cursor.getColumnIndex("id")));
             }
+        } catch (Exception e) {
+            return false;
         }
+        return true;
     }
 }

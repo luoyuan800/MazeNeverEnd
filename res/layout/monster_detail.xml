@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/monster_detail">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:orientation="vertical" android:layout_weight="1">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="攻最高"
+                    android:layout_gravity="center_horizontal"/>
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:text="max_atk_name: name"
+                      android:id="@+id/max_atk_name"/>
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:text="hp: 123456"
+                      android:id="@+id/max_atk_hp"/>
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:text="max_atk_atk: 123456"
+                      android:id="@+id/max_atk_atk" android:textStyle="bold" android:textColor="#d40210"/>
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:text="max_atk_lev: 123"
+                      android:id="@+id/max_atk_lev"/>
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:text="被虐得满地找牙"
+                      android:id="@+id/max_atk_desc"
+                    />
+
+        </LinearLayout>
+        <Space
+                android:layout_width="30px"
+                android:layout_height="20px"
+                android:layout_gravity="right|center_vertical"/>
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:orientation="vertical" android:layout_weight="1">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="血最厚"
+                    android:gravity="center" android:layout_gravity="center_horizontal"/>
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:text="max_atk_name: name"
+                      android:id="@+id/max_hp_name"/>
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:text="hp: 123456"
+                      android:id="@+id/max_hp_hp" android:textColor="#d40210" android:textStyle="bold"/>
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:text="max_atk_atk: 123456"
+                      android:id="@+id/max_hp_atk"/>
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:text="max_atk_lev: 123"
+                      android:id="@+id/max_hp_lev"/>
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:text="轻松干掉"
+                      android:id="@+id/max_hp_desc"
+                    />
+        </LinearLayout>
+    </LinearLayout>
+        <Space
+                android:layout_width="20px"
+                android:layout_height="45px"
+                android:background="@drawable/arrow_up_normal" android:layout_gravity="center"/>
+        <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:orientation="vertical">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="狙杀次数"
+                android:id="@+id/kill_count"
+                android:layout_gravity="center" android:gravity="start"/>
+            <Space
+                    android:layout_width="20px"
+                    android:layout_height="25px"
+                    />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="被狙杀次数"
+                android:id="@+id/killed_count"
+                android:layout_gravity="center" android:gravity="start" android:textColor="#d40210"/>
+    </LinearLayout>
+    </LinearLayout>
+</ScrollView>

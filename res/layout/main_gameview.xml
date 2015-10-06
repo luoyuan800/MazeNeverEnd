@@ -221,27 +221,26 @@
                             android:id="@+id/main_contri_def"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:textSize="12sp" android:gravity="center"/>
+                            android:textSize="12sp" android:gravity="center" android:text="1"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:orientation="horizontal" android:gravity="center">
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="25sp"
-                            android:gravity="center_vertical"
                             android:text="@string/sword_label"
-                            android:textSize="12sp" />
+                            android:textSize="12sp" android:gravity="center_vertical"/>
 
                         <TextView
                             android:id="@+id/main_contri_level"
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
                             android:singleLine="false"
-                            android:textSize="12sp"/>
+                            android:textSize="12sp" android:gravity="center" android:text="1"/>
 
                     </LinearLayout>
 
@@ -253,15 +252,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="25sp"
-                            android:layout_weight="1"
                             android:text="@string/armor_label"
-                            android:textSize="12sp" android:gravity="center"/>
+                            android:textSize="12sp"/>
 
                         <TextView
                             android:id="@+id/main_armor_level"
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:textSize="12sp"/>
+                            android:textSize="12sp" android:gravity="center" android:text="12"/>
 
 
                     </LinearLayout>
@@ -282,8 +280,8 @@
                             android:id="@+id/main_contri_currentexp"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:gravity="center_vertical"
-                            android:textSize="12sp" />
+                            android:gravity="center|center_vertical"
+                            android:textSize="12sp" android:text="1234"/>
 
                     </LinearLayout>
 
@@ -301,10 +299,10 @@
 
                         <TextView
                             android:id="@+id/main_contri_needexp"
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:gravity="center_vertical"
-                            android:textSize="12sp" />
+                            android:gravity="center|center_vertical"
+                            android:textSize="12sp" android:text="1234" android:textAlignment="center"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="fill_parent"

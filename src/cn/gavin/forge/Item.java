@@ -7,10 +7,10 @@ import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.monster.Monster;
+import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -34,7 +34,7 @@ public class Item {
         return builder.toString();
     }
 
-    public String buildProperties(){
+    public String buildProperties() {
         StringBuilder builder = new StringBuilder(name.name());
         builder.append("<br>");
         if (effect != null) builder.append(effect.name()).append(":").append(effectValue).append("<br>");
@@ -82,18 +82,18 @@ public class Item {
         this.effectValue = effectValue;
     }
 
-    public static Item buildItem(Hero hero, ItemName name){
+    public static Item buildItem(Hero hero, ItemName name) {
         Item item = new Item();
         item.setName(name);
         Random random = hero.getRandom();
         Effect e = Effect.values()[random.nextInt(Effect.values().length)];
         item.setEffect(e);
-        item.setEffectValue(1000);
+        item.setEffectValue(e.calculate(hero));
         if (random.nextBoolean()) {
             Effect e1 = Effect.values()[random.nextInt(Effect.values().length)];
             if (e1 != e) {
                 item.setEffect1(e1);
-                item.setEffect1Value(1000);
+                item.setEffect1Value(e1.calculate(hero));
             }
         }
         return item;

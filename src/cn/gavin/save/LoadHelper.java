@@ -49,7 +49,7 @@ public class LoadHelper {
             heroN.setStrength(preferences.getLong("strength", heroN.getRandom().nextLong(5)));
             heroN.setPower(preferences.getLong("power", heroN.getRandom().nextLong(5)));
             heroN.setAgility(preferences.getLong("agility", heroN.getRandom().nextLong(5)));
-            heroN.setClickAward(preferences.getLong("clickAward", 0));
+            heroN.setClickAward(preferences.getLong("clickAward", 1));
             heroN.setSword(Sword.valueOf(preferences.getString("swordName", Sword.木剑.name())));
             heroN.setArmor(Armor.valueOf(preferences.getString("armorName", Armor.破布.name())));
             heroN.setDeathCount(preferences.getLong("death", 0));
@@ -71,22 +71,22 @@ public class LoadHelper {
             if (ringId != null) {
                 Accessory ring = new Accessory();
                 ring.setId(ringId);
-                ring.load();
-                heroN.setRing(ring);
+                if (ring.load())
+                    heroN.setRing(ring);
             }
             String necklaceId = preferences.getString("necklace", null);
             if (necklaceId != null) {
                 Accessory necklace = new Accessory();
                 necklace.setId(necklaceId);
-                necklace.load();
-                heroN.setNecklace(necklace);
+                if (necklace.load())
+                    heroN.setNecklace(necklace);
             }
             String hatId = preferences.getString("hat", null);
             if (hatId != null) {
                 Accessory hat = new Accessory();
-                hat.setId(necklaceId);
-                hat.load();
-                heroN.setHat(hat);
+                hat.setId(hatId);
+                if (hat.load())
+                    heroN.setHat(hat);
             }
         }
         MazeContents.hero = heroN;
