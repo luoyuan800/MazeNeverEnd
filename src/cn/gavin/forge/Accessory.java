@@ -23,6 +23,7 @@ public class Accessory extends Equipment {
     private Element element;
     private Map<Effect, Number> additionEffects;
     private int type;
+    private boolean active;
 
     public int getType() {
         return type;
@@ -120,7 +121,7 @@ public class Accessory extends Equipment {
         if (save && cursor.isAfterLast()) {
             sql = String.format("INSERT INTO recipe (name,items,base,addition,found,user,type,color) " +
                     "values('%s','%s','%s','%s','%s','%s','%s','%s')",
-                    name, itemBuilder.toString().replaceFirst("\\+$", ""), base.toString(), addition.toString(), Boolean.FALSE, Boolean.TRUE, type, color);
+                    name, itemBuilder.toString().replaceFirst("\\-$", ""), base.toString(), addition.toString(), Boolean.FALSE, Boolean.TRUE, type, color);
         } else if (!cursor.isAfterLast()) {
             sql = String.format("UPDATE recipe set found = '%s' WHERE name = '%s'", Boolean.TRUE, name);
         }
@@ -140,7 +141,7 @@ public class Accessory extends Equipment {
     }
 
     public boolean isActive() {
-        return false;
+        return active;
     }
 
     public String toString() {
@@ -229,5 +230,9 @@ public class Accessory extends Equipment {
             return false;
         }
         return true;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

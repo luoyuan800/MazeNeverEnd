@@ -86,13 +86,16 @@ public class Maze {
                 hero.addPoint(point);
                 hero.addHp(random.nextLong(hero.getUpperHp() / 890 + 1) +10);
                 context.addMessage("-------------------");
-            } else if (random.nextLong(100) > 97) {
-                long mate = random.nextLong(level * 30 + 1) + random.nextLong(hero.getAgility() / 1000 + 1) + 10;
+            } else if (random.nextLong(1000) > 993 && random.nextLong(hero.getAgility()) > random.nextLong(6971)) {
+                long mate = random.nextLong(level * 300 + 1) + random.nextLong(hero.getAgility() / 1000 + 100) + 10;
                 context.addMessage(hero.getFormatName() + "找到了一个宝箱， 获得了<font color=\"#FF8C00\">" + mate + "</font>材料");
                 hero.addMaterial(mate);
                 context.addMessage("-------------------");
             } else if (hero.getHp() < hero.getUpperHp() && random.nextLong(1000) > 985) {
-                long hel = random.nextLong(hero.getUpperHp() / 70 + 1) + random.nextLong(hero.getPower() / 1000);
+                long hel = random.nextLong(hero.getUpperHp() / 70 + 1) + random.nextLong(hero.getPower() / 500);
+                if(hel > hero.getUpperHp()/2){
+                    hel = random.nextLong(hero.getUpperHp()/2 + 1) +1;
+                }
                 context.addMessage(hero.getFormatName() + "休息了一会，恢复了<font color=\"#556B2F\">" + hel + "</font>点HP");
                 hero.addHp(hel);
                 context.addMessage("-------------------");
@@ -219,6 +222,7 @@ public class Maze {
                         context.addMessage(itemmsg);
                         monster.addBattleDesc(itemmsg);
                     }
+                    monsterBook.addMonster(monster);
                 } else {
                     Skill notDieSkill = SkillFactory.getSkill("不死之身", hero, context.getSkillDialog());
                     if (notDieSkill.isActive() && notDieSkill.perform()) {
@@ -235,7 +239,6 @@ public class Maze {
                         this.level = 1;
                         hero.restore();
                         monster.setDefeat(false);
-                        monster.setMazeLev(level);
                         lastSave = level;
                         monsterBook.addMonster(monster);
                     }

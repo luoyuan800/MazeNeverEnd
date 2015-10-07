@@ -122,6 +122,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private Button buyLockBoxButton;
     private Button monsterBookButton;
     private MonsterBook monsterBook;
+    private Button reincaenationButton;
+    private Button upgradeHSwordButton;
+    private Button upgradeHArmorButton;
 
 
     //Get Function
@@ -378,17 +381,21 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     //Popup dialog
-    private void showRestDialog() {
+    private void showReincarnationDialog() {
         AlertDialog dialog = new Builder(this).create();
-        dialog.setTitle("是否确认重置角色信息？");
+        dialog.setTitle("是否确认转生？");
         TextView tv = new TextView(context);
-        tv.setText("注意：重置角色信息后，所有的等级归零，包括迷宫记录。只会保留点击次数和内购次数。");
+        tv.setText("注意：\n1.  你会失去迷宫记录，技能等级，材料和能力点数\n" +
+                "2.  装备着的饰品会继承下来\n" +
+                "3.  转生后的基础属性会根据转生前的属性得到加强（基础属性影响人物的成长）\n" +
+                "4. 转生后，之前的角色会成为迷宫守护者。");
+        dialog.setView(tv);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        reset();
+                        heroN.reincarnation();
                         dialog.dismiss();
                     }
 
@@ -962,6 +969,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         buyLockBoxButton.setOnClickListener(this);
         monsterBookButton = (Button) findViewById(R.id.monster_button);
         monsterBookButton.setOnClickListener(this);
+        reincaenationButton = (Button) findViewById(R.id.rebirth_button);
+        reincaenationButton.setOnClickListener(this);
+        upgradeHArmorButton = (Button) findViewById(R.id.up_h_armor);
+        upgradeHArmorButton.setOnClickListener(this);
+        upgradeHSwordButton = (Button) findViewById(R.id.up_h_sword);
+        upgradeHSwordButton.setOnClickListener(this);
         refresh();
     }
 
@@ -984,6 +997,15 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         } else {
             upSword.setEnabled(false);
             upTSwordButton.setEnabled(false);
+        }
+        if(heroN.getMaterial() > 100 * (80 + heroN.getArmorLev())){
+            upgradeHArmorButton.setEnabled(true);
+        }else{
+            upgradeHArmorButton.setEnabled(false);
+        }if(heroN.getMaterial() > 100 * (100 + heroN.getSwordLev())){
+            upgradeHSwordButton.setEnabled(true);
+        }else{
+            upgradeHSwordButton.setEnabled(false);
         }
         if (heroN.getMaterial() >= 80 + heroN.getArmorLev()) {
             upArmor.setEnabled(true);
@@ -1254,6 +1276,18 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.up_h_armor:
+                heroN.upgradeArmor(100);
+                handler.sendEmptyMessage(0);
+                break;
+            case R.id.up_h_sword:
+                heroN.upgradeSword(100);
+                handler.sendEmptyMessage(0);
+                break;
+            case R.id.rebirth_button:
+                showReincarnationDialog();
+                handler.sendEmptyMessage(0);
+                break;
             case R.id.monster_button:
                 monsterBook.showBook(context);
                 break;
@@ -1261,7 +1295,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 getLockBox();
                 break;
             case R.id.local_box:
-                if (heroN.getKeyCount() > 0) {
+                if (heroN.getKeyCount() > 0 && heroN.getLockBox() > 0) {
                     heroN.setKeyCount(heroN.getKeyCount() - 1);
                     showLockBox();
                 }

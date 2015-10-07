@@ -60,7 +60,7 @@ public class MonsterBook {
                 item.setMaxATKDefeat(monster.isDefeat());
                 item.setMaxATKDesc(monster.getBattleMsg());
             }
-            if (monster.getHp() > hp) {
+            if (monster.getMaxHP() > hp) {
                 item.setMaxHPName(monster.getFormatName());
                 item.setMaxHPATK(monster.getAtk() + "");
                 item.setMaxHPHP(monster.getMaxHP() + "");
@@ -133,6 +133,7 @@ public class MonsterBook {
         MonsterView name;
         MonsterView name1;
         MonsterView name2;
+        MonsterView name3;
     }
 
     static class MonsterView {
@@ -209,6 +210,8 @@ public class MonsterBook {
                 holder.name1 = new MonsterView((Button) convertView.findViewById(R.id.monster_name_1), detailDialog);
 
                 holder.name2 = new MonsterView((Button) convertView.findViewById(R.id.monster_name_2), detailDialog);
+
+                holder.name3 = new MonsterView((Button) convertView.findViewById(R.id.monster_name_3), detailDialog);
                 convertView.setTag(holder);
             } else {
                 holder = (MonsterViewHolder) convertView.getTag();
@@ -216,6 +219,7 @@ public class MonsterBook {
             holder.name.updateMonster(item.a0);
             holder.name1.updateMonster(item.a1);
             holder.name2.updateMonster(item.a2);
+            holder.name3.updateMonster(item.a3);
             return convertView;
         }
     }

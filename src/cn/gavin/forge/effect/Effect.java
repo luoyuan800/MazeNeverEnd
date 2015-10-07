@@ -103,6 +103,9 @@ public enum Effect {
         Maze maze = new Maze();
         maze.setLevel(hero.getMaxMazeLev());
         Monster monster = new Monster(hero, maze);
+        if(hero.getRandom().nextInt(100) > 95){
+            monster.setMazeLev(maze.getLev()*2);
+        }
         return calculate(hero, monster).longValue();
     }
 

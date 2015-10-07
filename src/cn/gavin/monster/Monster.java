@@ -24,8 +24,8 @@ public class Monster {
     public final static String[] lastNames = {"蟑螂", "大蚯蚓", "异壳虫", "巨型飞蛾", "猪", "老鼠", "嗜血蚁",
             "老虎", "蛟", "变异蝎", "食人鸟", "丑蝙蝠", "蛇", "野牛", "龟", "三头蛇", "刺猬", "狼", "精灵",
             "僵尸", "骷髅", "凤凰", "龙", "作者"};
-    private final static long[] baseHP = {13, 30, 55, 75, 95, 115, 400, 1000, 800, 520, 280, 350, 380, 450, 530, 1000, 1500, 2300, 4000, 4500, 6000, 10000, 20000, 50000};
-    private final static long[] baseAtk = {8, 15, 35, 55, 75, 105, 200, 250, 1500, 2000, 310, 350, 400, 900, 1000, 1430, 1500, 2000, 3000, 5000, 6000, 7000, 10000, 50000};
+    private final static long[] baseHP = {13, 20, 55, 75, 95, 115, 400, 1000, 800, 520, 280, 350, 380, 450, 530, 1000, 1500, 2300, 4000, 4500, 6000, 10000, 20000, 50000};
+    private final static long[] baseAtk = {1, 10, 35, 55, 75, 105, 200, 250, 1500, 2000, 310, 350, 400, 900, 1000, 1430, 1500, 2000, 3000, 5000, 6000, 7000, 10000, 50000};
     private final static List[] itemNames = {
             Arrays.asList(ItemName.原石),
             Arrays.asList(ItemName.硝石),
@@ -52,13 +52,13 @@ public class Monster {
             Arrays.asList(ItemName.龙皮, ItemName.冷杉木, ItemName.原石, ItemName.银矿石, ItemName.龙骨, ItemName.龙筋, ItemName.龙须),
             Arrays.asList(ItemName.牛皮, ItemName.原石, ItemName.银矿石, ItemName.萤石, ItemName.白云石, ItemName.龙须木, ItemName.青檀木, ItemName.白杏木, ItemName.银矿石, ItemName.铁矿石)
     };
-    private final static LongSparseArray<String> defender = new LongSparseArray<String>();
+    public final static LongSparseArray<String> defender = new LongSparseArray<String>();
 
     static {
-        defender.put(324l, "name:沁玟_hp:138645_atk:37889");
-        defender.put(101l, "name:夏文进_hp:24990_atk:12911");
-        defender.put(113l, "name:傻瓜_hp:41331_atk:4542");
-        defender.put(200l, "name:自己的爸爸_hp:40046_atk:9329");
+        defender.put(324l, "name:沁玟_hp:238645_atk:47889");
+        defender.put(101l, "name:夏文进_hp:44990_atk:22911");
+        defender.put(113l, "name:傻瓜_hp:81331_atk:5542");
+        defender.put(200l, "name:自己的爸爸_hp:80046_atk:10329");
     }
 
     private String firstName;
@@ -101,7 +101,10 @@ public class Monster {
             }
             monster = buildDefaultDefender(maze, hero, random);
         }
-        monster.material = random.nextLong(maze.getLev() + monster.atk + 1) / 100 + 5;
+        monster.material = random.nextLong(maze.getLev() * monster.atk + 1) / 100 + 25;
+        if(monster.material > 40000){
+            monster.material = random.nextLong(50000);
+        }
         monster.items = Arrays.asList(ItemName.原石, ItemName.铁矿石, ItemName.冷杉木,
                 ItemName.萤石, ItemName.白云石);
         monster.formatName(hero);
@@ -161,14 +164,14 @@ public class Monster {
         if (hp > hero.getAttackValue() * 19) {
             hp = hero.getAttackValue() * 20;
         }
-        if(atk < hero.getDefenseValue()){
+        if (atk < hero.getDefenseValue()) {
             atk += random.nextLong(hero.getDefenseValue() * 2);
         }
         if (hp <= 0) hp = Integer.MAX_VALUE - 10;
         if (atk <= 0) hp = Integer.MAX_VALUE - 100;
         long m1 = random.nextLong(hp + 1) / 180 + 5;
-        long m2 = random.nextLong(atk + 1) / 409;
-        material = random.nextLong((m1 + m2) / 20 + 1) + 3 + random.nextLong(maze.getLev() * 10 + 1);
+        long m2 = random.nextLong(atk + 1) / 409 + 10;
+        material = random.nextLong((m1 + m2) / 20 + 1) + 10 + random.nextLong(maze.getLev() * 10 + 1);
         maxHP = hp;
         formatName(hero);
         builder = new StringBuilder("第");
@@ -251,16 +254,18 @@ public class Monster {
     }
 
     private StringBuilder builder;
-    public void addBattleDesc(String desc){
-        if(builder == null) builder = new StringBuilder();
+
+    public void addBattleDesc(String desc) {
+        if (builder == null) builder = new StringBuilder();
         builder.append("<br>").append(desc);
     }
-    public void addBattleSkillDesc(String desc){
-        if(builder == null) builder = new StringBuilder();
+
+    public void addBattleSkillDesc(String desc) {
+        if (builder == null) builder = new StringBuilder();
         builder.append("<br><font color=\"#8B0000\">").append(desc).append("</font>");
     }
 
-    public String getBattleMsg(){
+    public String getBattleMsg() {
         return builder.toString();
     }
 }

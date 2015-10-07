@@ -107,7 +107,7 @@ public class AccessoryAdapter extends BaseAdapter {
         }
         AccessoryList item = getItem(position);
         if (item.a1 != null) {
-            holder.name1.setText(Html.fromHtml(item.a1.getFormatName()));
+            holder.name1.setText(Html.fromHtml(item.a1.getFormatName() + (checkOnUsed(item.a1)?"<font color=\"#006400\">u</font>" : "")));
             holder.name1.setEnabled(true);
             holder.name1.setOnClickListener(buildOnClick(item.a1));
         } else {
@@ -116,7 +116,7 @@ public class AccessoryAdapter extends BaseAdapter {
         }
 
         if (item.a2 != null) {
-            holder.name2.setText(Html.fromHtml(item.a2.getFormatName()));
+            holder.name2.setText(Html.fromHtml(item.a2.getFormatName() + (checkOnUsed(item.a1)?"<font color=\"#006400\">u</font>" : "")));
             holder.name2.setEnabled(true);
             holder.name2.setOnClickListener(buildOnClick(item.a2));
         } else {
@@ -125,7 +125,7 @@ public class AccessoryAdapter extends BaseAdapter {
         }
 
         if (item.a3 != null) {
-            holder.name3.setText(Html.fromHtml(item.a3.getFormatName()));
+            holder.name3.setText(Html.fromHtml(item.a3.getFormatName()+ (checkOnUsed(item.a1)?"<font color=\"#006400\">u</font>" : "")));
             holder.name3.setEnabled(true);
             holder.name3.setOnClickListener(buildOnClick(item.a3));
         } else {
@@ -133,7 +133,7 @@ public class AccessoryAdapter extends BaseAdapter {
             holder.name3.setEnabled(false);
         }
         if (item.a4 != null) {
-            holder.name4.setText(Html.fromHtml(item.a4.getFormatName()));
+            holder.name4.setText(Html.fromHtml(item.a4.getFormatName()+ (checkOnUsed(item.a1)?"<font color=\"#006400\">u</font>" : "")));
             holder.name4.setEnabled(true);
             holder.name4.setOnClickListener(buildOnClick(item.a4));
         } else {
@@ -152,21 +152,8 @@ public class AccessoryAdapter extends BaseAdapter {
                 TextView tv = new TextView(alertDialog.getContext());
                 tv.setText(Html.fromHtml(a.toString()));
                 alertDialog.setView(tv);
-                boolean isOnUsed = false;
-                switch (a.getType()) {
-                    case RingBuilder.type:
-                        Accessory ring = MazeContents.hero.getRing();
-                        isOnUsed = ring!=null && ring.getId().equalsIgnoreCase(a.getId());
-                        break;
-                    case NecklaceBuilder.type:
-                        Accessory necklace = MazeContents.hero.getNecklace();
-                        isOnUsed = necklace!=null && necklace.getId().equalsIgnoreCase(a.getId());
-                        break;
-                    case HatBuilder.type:
-                        Accessory hat = MazeContents.hero.getHat();
-                        isOnUsed = hat!=null && hat.getId().equalsIgnoreCase(a.getId());
-                        break;
-                }
+                boolean isOnUsed;
+                isOnUsed = checkOnUsed(a);
                 if (isOnUsed) {
                     alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "卸下", new DialogInterface.OnClickListener() {
                         @Override
@@ -215,5 +202,24 @@ public class AccessoryAdapter extends BaseAdapter {
                 alertDialog.show();
             }
         };
+    }
+
+    private boolean checkOnUsed(Accessory a) {
+        boolean onUsed = false;
+        switch (a.getType()) {
+            case RingBuilder.type:
+                Accessory ring = MazeContents.hero.getRing();
+                onUsed = ring!=null && ring.getId().equalsIgnoreCase(a.getId());
+                break;
+            case NecklaceBuilder.type:
+                Accessory necklace = MazeContents.hero.getNecklace();
+                onUsed = necklace!=null && necklace.getId().equalsIgnoreCase(a.getId());
+                break;
+            case HatBuilder.type:
+                Accessory hat = MazeContents.hero.getHat();
+                onUsed = hat!=null && hat.getId().equalsIgnoreCase(a.getId());
+                break;
+        }
+        return onUsed;
     }
 }

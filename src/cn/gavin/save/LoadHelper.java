@@ -65,8 +65,8 @@ public class LoadHelper {
             }
             MazeContents.payTime = preferences.getLong("swordLev", 0);
             heroN.setAwardCount(preferences.getLong("awardCount", 0));
-            heroN.setLockBox(preferences.getLong("lockBox", 0));
-            heroN.setKeyCount(preferences.getLong("keyCount", 0));
+            heroN.setLockBox(preferences.getLong("lockBox", 1));
+            heroN.setKeyCount(preferences.getLong("keyCount", 1));
             String ringId = preferences.getString("ring", null);
             if (ringId != null) {
                 Accessory ring = new Accessory();

@@ -28,4 +28,13 @@
         android:layout_weight="1"
         android:textSize="15sp"
         />
+    <Button
+            android:id="@+id/monster_name_3"
+            android:background="#ffff"
+            android:layout_height="50sp"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            />
 </LinearLayout>

@@ -1,9 +1,11 @@
 package cn.gavin;
 
+import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.Skill;
+import cn.gavin.skill.SkillFactory;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.RestoreSkill;
@@ -22,11 +24,11 @@ public class Hero {
     public static long MAX_GOODS_COUNT = 50;
 
     // 血上限成长(每点生命点数增加）
-    public static final long MAX_HP_RISE = 5;
+    public long MAX_HP_RISE = 5;
     // 攻击成长（每点力量点数增加）
-    public static final long ATR_RISE = 2;
+    public long ATR_RISE = 2;
     // 防御成长 （每点敏捷点数增加）
-    public static final long DEF_RISE = 1;
+    public long DEF_RISE = 1;
     private String formatName;
     private long click;
     private String name;
@@ -91,6 +93,7 @@ public class Hero {
 
     private void calculateAdditionEffectE(EnumMap<Effect, Long> effectLongEnumMap, Accessory accessory, Accessory other1, Accessory other2) {
         if (accessory.getAdditionEffects() != null && ((other1 != null && other1.getElement().isReinforce(accessory.getElement())) || ((other2 != null && other2.getElement().isReinforce(accessory.getElement()))))) {
+            accessory.setActive(true);
             for (EnumMap.Entry<Effect, Number> effect : accessory.getAdditionEffects().entrySet()) {
                 Long value = effectLongEnumMap.get(effect.getKey());
                 if (value != null) {
@@ -99,6 +102,8 @@ public class Hero {
                     effectLongEnumMap.put(effect.getKey(), effect.getValue().longValue());
                 }
             }
+        } else {
+            accessory.setActive(false);
         }
     }
 
@@ -148,11 +153,11 @@ public class Hero {
     }
 
     public long getUpperAtk() {
-        return attackValue + sword.getBase() + swordLev;
+        return attackValue + sword.getBase() + swordLev*ATR_RISE;
     }
 
     public long getUpperDef() {
-        long def = defenseValue + armorLev + armor.getBase();
+        long def = defenseValue + armorLev*DEF_RISE + armor.getBase();
         if (def >= 10000) {
             Achievement.fearDeath.enable(this);
         }
@@ -160,7 +165,7 @@ public class Hero {
     }
 
     public long getAttackValue() {
-        return attackValue + random.nextLong(sword.getBase()) + random.nextLong(swordLev + 1);
+        return attackValue + random.nextLong(sword.getBase()) + random.nextLong(swordLev + 1)*DEF_RISE;
     }
 
     public void addAttackValue(long attackValue) {
@@ -174,8 +179,8 @@ public class Hero {
     private boolean isParry = false;
 
     public long getDefenseValue() {
-        long defend = defenseValue + random.nextLong(armor.getBase()) + random.nextLong(armorLev * 2 + 1);
-        if (random.nextLong(100) + parry + random.nextLong(agility + 1) / 1000 > 96 + random.nextLong(strength + 1) / 1000) {
+        long defend = defenseValue + random.nextLong(armor.getBase()) + random.nextLong(armorLev + 1) * ATR_RISE;
+        if (random.nextLong(100) + parry + random.nextLong(agility + 1) / 5000 > 97 +random.nextInt(20) + random.nextLong(strength + 1) / 5000) {
             defend *= 3;
             isParry = true;
         } else {
@@ -315,10 +320,9 @@ public class Hero {
     public void addStrength(long str) {
         if (str < 0 || strength < (Long.MAX_VALUE - strength - 100)) {
             strength += str;
-            if (str < 0 || attackValue < (Long.MAX_VALUE - ATR_RISE * str)){
+            if (str < 0 || attackValue < (Long.MAX_VALUE - ATR_RISE * str)) {
                 attackValue += ATR_RISE * str;
-            }
-            else {
+            } else {
                 attackValue = Long.MAX_VALUE;
                 Achievement.extreme.enable(this);
             }
@@ -744,5 +748,51 @@ public class Hero {
         cleanEffect();
         this.hat = hat;
         appendEffect();
+    }
+
+    public void reincarnation() {
+        Monster.defender.put(maxMazeLev, String.format("name:'%s'_hp:'%s'_atk:'%s'", name, getUpperAtk() + getAttackValue(), getAttackValue()));
+        MAX_HP_RISE = random.nextLong(power / 5000 + 4) + 5;
+        DEF_RISE = random.nextLong(agility / 5000 + 2) + 1;
+        ATR_RISE = random.nextLong(strength / 5000 + 3) + 2;
+        maxMazeLev = 1;
+        material = 0;
+        attackValue = random.nextLong(20) + 10;
+        defenseValue = random.nextLong(20) + 10;
+        setUpperHp(random.nextLong(20) + 25);
+        point = 1;
+        parry = 0;
+        armor = Armor.破布;
+        sword = Sword.木剑;
+        armorLev = 1;
+        swordLev = 1;
+        power = 5;
+        strength = 5;
+        agility = 5;
+        skillPoint = 1;
+
+        DBHelper dbHelper = DBHelper.getDbHelper();
+        dbHelper.beginTransaction();
+        dbHelper.excuseSQLWithoutResult("DELETE FROM item");
+        dbHelper.excuseSQLWithoutResult("DELETE FROM accessory");
+        SkillFactory.clean();
+        dbHelper.endTransaction();
+        Accessory ring = getRing();
+        if (ring != null) {
+            setRing(ring);
+            ring.save();
+        }
+        Accessory necklace = getNecklace();
+        if (necklace != null) {
+            setNecklace(necklace);
+            necklace.save();
+        }
+        Accessory hat = getHat();
+        if (hat != null) {
+            setHat(hat);
+            hat.save();
+        }
+        Achievement.reBird.enable(this);
+
     }
 }

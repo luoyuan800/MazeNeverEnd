@@ -19,7 +19,7 @@
                       android:layout_height="wrap_content"
                       android:textAppearance="?android:attr/textAppearanceMedium"
                       android:text="max_atk_name: name"
-                      android:id="@+id/max_atk_name"/>
+                      android:id="@+id/max_atk_name" android:textSize="15sp"/>
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:textAppearance="?android:attr/textAppearanceMedium"
@@ -40,7 +40,7 @@
                       android:textAppearance="?android:attr/textAppearanceMedium"
                       android:text="被虐得满地找牙"
                       android:id="@+id/max_atk_desc"
-                    />
+                      android:textSize="14sp"/>
 
         </LinearLayout>
         <Space
@@ -59,7 +59,7 @@
                       android:layout_height="wrap_content"
                       android:textAppearance="?android:attr/textAppearanceMedium"
                       android:text="max_atk_name: name"
-                      android:id="@+id/max_hp_name"/>
+                      android:id="@+id/max_hp_name" android:textSize="15sp"/>
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:textAppearance="?android:attr/textAppearanceMedium"
@@ -80,7 +80,7 @@
                       android:textAppearance="?android:attr/textAppearanceMedium"
                       android:text="轻松干掉"
                       android:id="@+id/max_hp_desc"
-                    />
+                      android:textSize="14sp"/>
         </LinearLayout>
     </LinearLayout>
         <Space

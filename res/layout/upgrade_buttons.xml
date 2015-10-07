@@ -18,7 +18,7 @@
             android:gravity="center"
             android:singleLine="false"
             android:text="+1武器"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
 
         <Button
             android:id="@+id/up_t_sword"
@@ -36,7 +36,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="+100 武器"
-            android:textSize="12sp" android:enabled="false"/>
+            android:textSize="10sp" android:enabled="true"/>
     </LinearLayout>
 
     <LinearLayout
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:singleLine="true"
+            android:singleLine="false"
             android:text="+1防具"
             android:textSize="10sp" />
 
@@ -70,7 +70,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="+100 防具"
-            android:textSize="10sp" android:enabled="false"/>
+            android:textSize="10sp" android:enabled="true"/>
     </LinearLayout>
 
     <LinearLayout
@@ -118,7 +118,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="+n力"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
 
         <Button
             android:id="@+id/add_n_power"
@@ -127,7 +127,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="+n体"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
 
         <Button
             android:id="@+id/add_n_agi"
@@ -136,7 +136,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="+n敏"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
     </LinearLayout>
 
 
