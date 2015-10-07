@@ -396,6 +396,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         heroN.reincarnation();
+                        skillDialog.init();
                         dialog.dismiss();
                     }
 

@@ -1,5 +1,7 @@
 package cn.gavin;
 
+import android.widget.Toast;
+import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
 import cn.gavin.forge.effect.Effect;
@@ -154,11 +156,11 @@ public class Hero {
     }
 
     public long getUpperAtk() {
-        return attackValue + sword.getBase() + swordLev*ATR_RISE;
+        return attackValue + sword.getBase() + swordLev * ATR_RISE;
     }
 
     public long getUpperDef() {
-        long def = defenseValue + armorLev*DEF_RISE + armor.getBase();
+        long def = defenseValue + armorLev * DEF_RISE + armor.getBase();
         if (def >= 10000) {
             Achievement.fearDeath.enable(this);
         }
@@ -166,7 +168,7 @@ public class Hero {
     }
 
     public long getAttackValue() {
-        return attackValue + random.nextLong(sword.getBase()) + random.nextLong(swordLev + 1)*DEF_RISE;
+        return attackValue + random.nextLong(sword.getBase()) + random.nextLong(swordLev + 1) * DEF_RISE;
     }
 
     public void addAttackValue(long attackValue) {
@@ -181,7 +183,7 @@ public class Hero {
 
     public long getDefenseValue() {
         long defend = defenseValue + random.nextLong(armor.getBase()) + random.nextLong(armorLev + 1) * ATR_RISE;
-        if (random.nextLong(100) + parry + random.nextLong(agility + 1) / 5000 > 97 +random.nextInt(20) + random.nextLong(strength + 1) / 5000) {
+        if (random.nextLong(100) + parry + random.nextLong(agility + 1) / 5000 > 97 + random.nextInt(20) + random.nextLong(strength + 1) / 5000) {
             defend *= 3;
             isParry = true;
         } else {
@@ -752,48 +754,57 @@ public class Hero {
     }
 
     public void reincarnation() {
-        Defender.addDefender(StringUtils.toHexString(name),getUpperHp(),getUpperAtk(),getMaxMazeLev(), getFirstSkill().getName(), 10);
-        MAX_HP_RISE = random.nextLong(power / 5000 + 4) + 5;
-        DEF_RISE = random.nextLong(agility / 5000 + 2) + 1;
-        ATR_RISE = random.nextLong(strength / 5000 + 3) + 2;
-        maxMazeLev = 1;
-        material = 0;
-        attackValue = random.nextLong(20) + 10;
-        defenseValue = random.nextLong(20) + 10;
-        setUpperHp(random.nextLong(20) + 25);
-        point = 1;
-        parry = 0;
-        armor = Armor.破布;
-        sword = Sword.木剑;
-        armorLev = 1;
-        swordLev = 1;
-        power = 5;
-        strength = 5;
-        agility = 5;
-        skillPoint = 1;
+        if (material < 100101) {
+            Toast.makeText(MainGameActivity.context, "锻造点数不足100101！" + getName(), Toast.LENGTH_SHORT).show();
+        } else {
+            Skill skill;
+            if (getFirstSkill() != null) {
+                skill = getFirstSkill();
+            } else {
+                skill = getThirdSkill();
+            }
+            Defender.addDefender(StringUtils.toHexString(name), getUpperHp() + getUpperDef(), getUpperAtk(), getMaxMazeLev(), skill == null ? "重击" : skill.getName(), 10);
+            MAX_HP_RISE = random.nextLong(power / 5000 + 4) + 5;
+            DEF_RISE = random.nextLong(agility / 5000 + 2) + 1;
+            ATR_RISE = random.nextLong(strength / 5000 + 3) + 2;
+            maxMazeLev = 1;
+            material = 0;
+            attackValue = random.nextLong(20) + 10;
+            defenseValue = random.nextLong(20) + 10;
+            setUpperHp(random.nextLong(20) + 25);
+            point = 1;
+            parry = 0;
+            armor = Armor.破布;
+            sword = Sword.木剑;
+            armorLev = 1;
+            swordLev = 1;
+            power = 5;
+            strength = 5;
+            agility = 5;
+            skillPoint = 1;
 
-        DBHelper dbHelper = DBHelper.getDbHelper();
-        dbHelper.beginTransaction();
-        dbHelper.excuseSQLWithoutResult("DELETE FROM item");
-        dbHelper.excuseSQLWithoutResult("DELETE FROM accessory");
-        SkillFactory.clean();
-        dbHelper.endTransaction();
-        Accessory ring = getRing();
-        if (ring != null) {
-            setRing(ring);
-            ring.save();
+            DBHelper dbHelper = DBHelper.getDbHelper();
+            dbHelper.beginTransaction();
+            dbHelper.excuseSQLWithoutResult("DELETE FROM item");
+            dbHelper.excuseSQLWithoutResult("DELETE FROM accessory");
+            SkillFactory.clean();
+            Accessory ring = getRing();
+            if (ring != null) {
+                setRing(ring);
+                ring.save();
+            }
+            Accessory necklace = getNecklace();
+            if (necklace != null) {
+                setNecklace(necklace);
+                necklace.save();
+            }
+            Accessory hat = getHat();
+            if (hat != null) {
+                setHat(hat);
+                hat.save();
+            }
+            Achievement.reBird.enable(this);
+            dbHelper.endTransaction();
         }
-        Accessory necklace = getNecklace();
-        if (necklace != null) {
-            setNecklace(necklace);
-            necklace.save();
-        }
-        Accessory hat = getHat();
-        if (hat != null) {
-            setHat(hat);
-            hat.save();
-        }
-        Achievement.reBird.enable(this);
-
     }
 }

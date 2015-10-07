@@ -51,11 +51,11 @@ public class Defender {
         db.execSQL("CREATE UNIQUE INDEX maze_lev ON defender (lev)");
         String addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev) values('沁玟','324','238645','47889','重击','1')";
         db.execSQL(addDefender);
-        addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev) values('夏文进','99','44990','22911','重击','1')";
+        addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev) values('夏文进','101','44990','22911','重击','1')";
         db.execSQL(addDefender);
-        addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev) values('傻瓜','102','81331','5542','重击','1')";
+        addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev) values('傻瓜','112','81331','5542','重击','1')";
         db.execSQL(addDefender);
-        addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev) values('自己的爸爸','105','80046','10329','重击','1')";
+        addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev) values('自己的爸爸','200','80046','10329','重击','1')";
         db.execSQL(addDefender);
         addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev) values('SunKnight','527','85677','519','重击','1')";
         db.execSQL(addDefender);
@@ -75,7 +75,6 @@ public class Defender {
         db.execSQL(addDefender);
         addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev) values('0x590f65878fdb','163','30692','30265','重击','1')";
         db.execSQL(addDefender);
-        addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev) values('0x81ea5df1768472387238','200','50046','10329','重击','1')";
-        db.execSQL(addDefender);
+
     }
 }

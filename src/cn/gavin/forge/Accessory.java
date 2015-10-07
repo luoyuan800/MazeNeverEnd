@@ -115,17 +115,20 @@ public class Accessory extends Equipment {
         sql = String.format("SELECT name from recipe where name = '%s'", name);
         Cursor cursor = dbHelper.excuseSOL(sql);
         StringBuilder itemBuilder = new StringBuilder();
-        for (Item item : items) {
-            itemBuilder.append(item.getName().name()).append("-");
+        if (items != null) {
+            for (Item item : items) {
+                itemBuilder.append(item.getName().name()).append("-");
+            }
+
+            if (save && cursor.isAfterLast()) {
+                sql = String.format("INSERT INTO recipe (name,items,base,addition,found,user,type,color) " +
+                        "values('%s','%s','%s','%s','%s','%s','%s','%s')",
+                        name, itemBuilder.toString().replaceFirst("\\-$", ""), base.toString(), addition.toString(), Boolean.FALSE, Boolean.TRUE, type, color);
+            } else if (!cursor.isAfterLast()) {
+                sql = String.format("UPDATE recipe set found = '%s' WHERE name = '%s'", Boolean.TRUE, name);
+            }
+            dbHelper.excuseSQLWithoutResult(sql);
         }
-        if (save && cursor.isAfterLast()) {
-            sql = String.format("INSERT INTO recipe (name,items,base,addition,found,user,type,color) " +
-                    "values('%s','%s','%s','%s','%s','%s','%s','%s')",
-                    name, itemBuilder.toString().replaceFirst("\\-$", ""), base.toString(), addition.toString(), Boolean.FALSE, Boolean.TRUE, type, color);
-        } else if (!cursor.isAfterLast()) {
-            sql = String.format("UPDATE recipe set found = '%s' WHERE name = '%s'", Boolean.TRUE, name);
-        }
-        dbHelper.excuseSQLWithoutResult(sql);
     }
 
     public void setType(int type) {
