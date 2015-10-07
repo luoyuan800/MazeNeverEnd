@@ -3,10 +3,7 @@ package cn.gavin.skill;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
-import cn.gavin.Achievement;
-import cn.gavin.Hero;
-import cn.gavin.Maze;
-import cn.gavin.Sword;
+import cn.gavin.*;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
@@ -1259,7 +1256,7 @@ public class SkillFactory {
                         }
                     });
                     if (!skill.load()) {
-                        skill.setProbability(1.0f);
+                        skill.setProbability(5.0f);
                         iskll.setBaseHarm(10000l);
                         iskll.setAdditionHarm(70000l);
                     }
@@ -1271,14 +1268,14 @@ public class SkillFactory {
                     skill.setEnableExpression(new EnableExpression() {
                         @Override
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                            return hero.getSkillPoint() > 0 && SkillFactory.getSkill("闪电", hero, dialog).isActive();
+                            return hero.getArmor().equalsIgnoreCase(Armor.水波甲.name()) && hero.getSkillPoint() > 0 && SkillFactory.getSkill("闪电", hero, dialog).isActive();
                         }
                     });
                     skill.setDescription(new DescExpression() {
                         @Override
                         public String buildDescription(Skill skill) {
                             StringBuilder builder = new StringBuilder();
-                            builder.append("柔则克刚。<br>").append(skill.getProbability()).
+                            builder.append("柔则克刚。需要防具升级为水波甲的时候才可以激活。<br>").append(skill.getProbability()).
                                     append("的概率释放。受到攻击的时候抵消").append(iskll.getProbability() + 40).append("%的伤害");
                             return builder.toString();
                         }
@@ -1296,7 +1293,7 @@ public class SkillFactory {
                             double v = harm * (iskll.getProbability() + 80d) / 100d;
                             harm = (long) (harm - v);
                             String msg1 = hero.getFormatName() + "使用了技能" + iskll.getName() + "，抵消了" +
-                                    v + "的伤害";
+                                    (long)v + "的伤害";
                             skill.addMessage(msg1);
                             monster.addBattleSkillDesc(msg1);
                             hero.addHp(-harm);
@@ -1308,14 +1305,14 @@ public class SkillFactory {
                         @Override
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                             if (skill.getProbability() < 45) {
-                                skill.setProbability(skill.getProbability() + 10.5f);
+                                skill.setProbability(skill.getProbability() + 6.5f);
                                 return true;
                             }
                             return false;
                         }
                     });
                     if (!skill.load()) {
-                        skill.setProbability(10.0f);
+                        skill.setProbability(8.0f);
                     }
                 } else if (name.equals("反杀")) {
                     skill = new PropertySkill(0, 0, 0, 0, 0, 0, 0);
@@ -1345,7 +1342,7 @@ public class SkillFactory {
                                     "，反杀了" + monster.getFormatName() + "\n-----------------------------");
                             context.addMessage(msg);
                             monster.addBattleSkillDesc(msg);
-                            monster.addHp(monster.getHp());
+                            monster.addHp(-monster.getHp());
                             return false;
                         }
                     });
@@ -1423,12 +1420,12 @@ public class SkillFactory {
                     skill.setLevelUp(new EnableExpression() {
                         @Override
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                            if (skill.getProbability() > 35) {
+                            if (skill.getProbability() < 35) {
                                 skill.setProbability(skill.getProbability() + 3.1f);
-                                return false;
+                                iskll.setBaseHarm(iskll.getBaseHarm() + 10);
+                                return true;
                             }
-                            iskll.setBaseHarm(iskll.getBaseHarm() + 10);
-                            return true;
+                            return false;
                         }
                     });
 
@@ -1460,10 +1457,10 @@ public class SkillFactory {
                     skill.setRelease(new UseExpression() {
                         @Override
                         public boolean release(final Hero hero, Monster monster, MainGameActivity context, final Skill skill) {
-                             double harm = monster.getHp() * (iskll.getBaseHarm() / 100d);
-                            monster.addHp(-(long)harm);
-                            hero.addHp((long)harm);
-                            String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，吸收了" + monster.getFormatName() + "的" + harm + "点生命值。";
+                            double harm = monster.getHp() * (iskll.getBaseHarm() / 100d);
+                            monster.addHp(-(long) harm);
+                            hero.addHp((long) harm);
+                            String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，吸收了" + monster.getFormatName() + "的" + (long)harm + "点生命值。";
                             skill.addMessage(msg);
                             monster.addBattleSkillDesc(msg);
                             return false;
@@ -1475,16 +1472,15 @@ public class SkillFactory {
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                             if (skill.getProbability() < 35) {
                                 skill.setProbability(skill.getProbability() + 3.1f);
-                                return true;
                             }
-                            if (iskll.getBaseHarm() < 70)
+                            if (iskll.getBaseHarm() < 80)
                                 iskll.setBaseHarm(iskll.getBaseHarm() + 3);
                             return false;
                         }
                     });
                     if (!skill.load()) {
-                        skill.setProbability(2.0f);
-                        iskll.setBaseHarm(10l);
+                        skill.setProbability(3.0f);
+                        iskll.setBaseHarm(30l);
                     }
                 } else if (name.equals("多重攻击")) {
                     final AttackSkill iskll = new AttackSkill();
@@ -1511,11 +1507,11 @@ public class SkillFactory {
                         @Override
                         public boolean release(final Hero hero, Monster monster, MainGameActivity context, final Skill skill) {
                             double harm = hero.getAttackValue() * (iskll.getBaseHarm() / 100d);
-                            long i = hero.getRandom().nextLong(iskll.getAdditionHarm() + 1);
-                            long l = -(long)harm * i;
+                            long i = hero.getRandom().nextLong(iskll.getAdditionHarm() + 1) + 1;
+                            long l = -(long) harm * i;
                             monster.addHp(l);
                             String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，对" +
-                                    monster.getFormatName() + "进行了" + i + "次攻击，总共造成了" + l + "伤害。";
+                                    monster.getFormatName() + "进行了" + i + "次攻击，总共造成了" + -l + "伤害。";
                             skill.addMessage(msg);
                             monster.addBattleSkillDesc(msg);
                             return false;
@@ -1527,7 +1523,6 @@ public class SkillFactory {
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                             if (skill.getProbability() < 35) {
                                 skill.setProbability(skill.getProbability() + 3.1f);
-                                return true;
                             }
                             iskll.setBaseHarm(iskll.getBaseHarm() + 1);
                             iskll.setAdditionHarm(iskll.getAdditionHarm() + 2);
@@ -1617,7 +1612,7 @@ public class SkillFactory {
         return point;
     }
 
-    public static void clean(){
+    public static void clean() {
         reset();
         skillMap.clear();
         DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM skill");

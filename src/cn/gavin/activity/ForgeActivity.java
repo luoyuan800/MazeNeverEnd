@@ -44,6 +44,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainGameActivity.context.setPause(true);
         setContentView(R.layout.forge_view);
         systemName = (TextView) findViewById(R.id.forge_system_name);
         systemName.setText(systemNames[index]);
@@ -90,6 +91,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MainGameActivity.context.setPause(false);
     }
 
     int index = 0;

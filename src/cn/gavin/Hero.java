@@ -3,6 +3,7 @@ package cn.gavin;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
 import cn.gavin.forge.effect.Effect;
+import cn.gavin.monster.Defender;
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;
@@ -751,7 +752,7 @@ public class Hero {
     }
 
     public void reincarnation() {
-        Monster.defender.put(maxMazeLev, String.format("name:'%s'_hp:'%s'_atk:'%s'", name, getUpperAtk() + getAttackValue(), getAttackValue()));
+        Defender.addDefender(StringUtils.toHexString(name),getUpperHp(),getUpperAtk(),getMaxMazeLev(), getFirstSkill().getName(), 10);
         MAX_HP_RISE = random.nextLong(power / 5000 + 4) + 5;
         DEF_RISE = random.nextLong(agility / 5000 + 2) + 1;
         ATR_RISE = random.nextLong(strength / 5000 + 3) + 2;

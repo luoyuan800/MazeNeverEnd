@@ -86,8 +86,8 @@ public class Maze {
                 hero.addPoint(point);
                 hero.addHp(random.nextLong(hero.getUpperHp() / 890 + 1) +10);
                 context.addMessage("-------------------");
-            } else if (random.nextLong(1000) > 993 && random.nextLong(hero.getAgility()) > random.nextLong(6971)) {
-                long mate = random.nextLong(level * 300 + 1) + random.nextLong(hero.getAgility() / 1000 + 100) + 10;
+            } else if (random.nextLong(1000) > 983 && random.nextLong(hero.getAgility()) > random.nextLong(6971)) {
+                long mate = random.nextLong(level * 300 + 1) + random.nextLong(hero.getAgility() / 1000 + 100) + 100;
                 context.addMessage(hero.getFormatName() + "找到了一个宝箱， 获得了<font color=\"#FF8C00\">" + mate + "</font>材料");
                 hero.addMaterial(mate);
                 context.addMessage("-------------------");

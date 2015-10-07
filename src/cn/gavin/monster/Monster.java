@@ -24,7 +24,7 @@ public class Monster {
     public final static String[] lastNames = {"蟑螂", "大蚯蚓", "异壳虫", "巨型飞蛾", "猪", "老鼠", "嗜血蚁",
             "老虎", "蛟", "变异蝎", "食人鸟", "丑蝙蝠", "蛇", "野牛", "龟", "三头蛇", "刺猬", "狼", "精灵",
             "僵尸", "骷髅", "凤凰", "龙", "作者"};
-    private final static long[] baseHP = {13, 20, 55, 75, 95, 115, 400, 1000, 800, 520, 280, 350, 380, 450, 530, 1000, 1500, 2300, 4000, 4500, 6000, 10000, 20000, 50000};
+    private final static long[] baseHP = {8, 20, 55, 75, 95, 115, 400, 1000, 800, 520, 280, 350, 380, 450, 530, 1000, 1500, 2300, 4000, 4500, 6000, 10000, 20000, 50000};
     private final static long[] baseAtk = {1, 10, 35, 55, 75, 105, 200, 250, 1500, 2000, 310, 350, 400, 900, 1000, 1430, 1500, 2000, 3000, 5000, 6000, 7000, 10000, 50000};
     private final static List[] itemNames = {
             Arrays.asList(ItemName.原石),
@@ -52,14 +52,6 @@ public class Monster {
             Arrays.asList(ItemName.龙皮, ItemName.冷杉木, ItemName.原石, ItemName.银矿石, ItemName.龙骨, ItemName.龙筋, ItemName.龙须),
             Arrays.asList(ItemName.牛皮, ItemName.原石, ItemName.银矿石, ItemName.萤石, ItemName.白云石, ItemName.龙须木, ItemName.青檀木, ItemName.白杏木, ItemName.银矿石, ItemName.铁矿石)
     };
-    public final static LongSparseArray<String> defender = new LongSparseArray<String>();
-
-    static {
-        defender.put(324l, "name:沁玟_hp:238645_atk:47889");
-        defender.put(101l, "name:夏文进_hp:44990_atk:22911");
-        defender.put(113l, "name:傻瓜_hp:81331_atk:5542");
-        defender.put(200l, "name:自己的爸爸_hp:80046_atk:10329");
-    }
 
     private String firstName;
     private String secondName;
@@ -86,16 +78,8 @@ public class Monster {
 
     public static Monster getBoss(Maze maze, Hero hero) {
         Random random = new Random();
-        String desc = defender.get(maze.getLev());
-        Monster monster;
-        if (StringUtils.isNotEmpty(desc)) {
-            String[] strings = desc.split("_");
-            String name = strings[0].split(":")[1];
-            long hp = Long.parseLong(strings[1].split(":")[1]);
-            long atk = Long.parseLong(strings[2].split(":")[1]);
-            monster = new Monster("", "【守护者】", name, hp, atk);
-            monster.setFormatName("<b>" + monster.getName() + "</b>");
-        } else {
+        Monster monster = Defender.buildDefender(maze.getLev());
+        if(monster == null) {
             if (random.nextInt(100) < 25) {
                 return null;
             }
@@ -132,7 +116,7 @@ public class Monster {
                 atk);
     }
 
-    private Monster(String firstName, String secondName, String lastName, long hp, long atk) {
+    public Monster(String firstName, String secondName, String lastName, long hp, long atk) {
         this.atk = atk;
         this.hp = hp;
         maxHP = hp;

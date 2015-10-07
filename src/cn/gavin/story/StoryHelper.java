@@ -19,7 +19,7 @@ public class StoryHelper {
         } else if (Achievement.story.isEnable() && b && hero.getRandom().nextBoolean() && hero.getRandom().nextLong(hero.getAgility() + 1) > 500 && 3 > (hero.getRandom().nextLong(hero.getLockBox() + 1) + 1)&& hero.getRandom().nextInt(1003) > 987) {
             MainGameActivity.context.addMessage(hero.getFormatName() + "找到一个带锁的宝箱");
             hero.setLockBox(hero.getLockBox() + 1);
-        } else if (Achievement.story.isEnable() && hero.getKeyCount() < 15 && hero.getRandom().nextLong(hero.getAgility() + 1) > 600 && hero.getRandom().nextInt(1000) > 797) {
+        } else if (Achievement.story.isEnable() && hero.getKeyCount() < 15 && hero.getRandom().nextLong(hero.getAgility() + 1) > 100 && hero.getRandom().nextInt(1000) > 597) {
             MainGameActivity.context.addMessage(hero.getFormatName() + "找到一把宝箱钥匙");
             hero.setKeyCount(hero.getKeyCount() + 1);
         }

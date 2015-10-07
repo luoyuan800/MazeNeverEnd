@@ -30,7 +30,7 @@ public class StringUtils {
         }
 
         try {
-            s = new String(baKeyword, "utf-8");//UTF-16le:Not
+            s = new String(baKeyword, "utf-16");//UTF-16le:Not
         } catch (Exception e1) {
             e1.printStackTrace();
         }
@@ -47,5 +47,9 @@ public class StringUtils {
         }else{
             return new String[]{};
         }
+    }
+
+    public static void main(String...args){
+        System.out.print(toStringHex("0x6c81739f"));
     }
 }

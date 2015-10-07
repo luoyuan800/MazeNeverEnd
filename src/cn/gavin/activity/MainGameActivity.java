@@ -1135,6 +1135,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         return monsterBook;
     }
 
+    public void setPause(boolean pause) {
+        this.pause = pause;
+    }
+
     private class GameThread extends Thread {
 
         @Override
@@ -1318,7 +1322,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 showAccessory();
                 break;
             case R.id.forge_button:
-                pause = true;
                 handler.sendEmptyMessage(103);
                 Intent intent = new Intent(this, ForgeActivity.class);
                 startActivity(intent);

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.forge.ForgeDB;
+import cn.gavin.monster.Defender;
 
 /**
  * Created by gluo on 9/14/2015.
@@ -93,6 +94,7 @@ public class DBHelper {
             db.execSQL("CREATE UNIQUE INDEX monster_index ON monster (name)");
             ForgeDB forgeDB = new ForgeDB();
             forgeDB.createTable(db);
+            Defender.createDB(db);
             endTransaction();
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,6 +104,7 @@ public class DBHelper {
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if(oldVersion == 8){
+            db.beginTransaction();
             String createTable = "CREATE TABLE monster(" +
                     "name TEXT NOT NULL PRIMARY KEY," +
                     "max_hp_name TEXT," +
@@ -113,12 +116,16 @@ public class DBHelper {
                     "max_hp_hp TEXT," +
                     "max_atk_hp TEXT," +
                     "max_atk_lev TEXT," +
+                    "max_atk_battle TEXT," +
+                    "max_hp_battle TEXT," +
                     "max_hp_lev TEXT," +
                     "defeat TEXT," +
                     "defeated TEXT" +
                     ")";
-
             db.execSQL(createTable);
+            Defender.createDB(db);
+            db.setTransactionSuccessful();
+            db.endTransaction();
         }
     }
 

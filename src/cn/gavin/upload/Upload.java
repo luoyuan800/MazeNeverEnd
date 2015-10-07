@@ -44,7 +44,7 @@ public class Upload {
         builder.append("?");
         builder.append("name=").append(name);
         builder.append("&hp=").append((hero.getUpperHp() + hero.getDefenseValue()));
-        builder.append("&atk=").append(hero.getAttackValue());
+        builder.append("&atk=").append(hero.getUpperAtk());
         builder.append("&mazeLev=").append(hero.getMaxMazeLev());
         builder.append("&pay=").append(pay);
         builder.append("&skill=").append(hero.getFirstSkill());
