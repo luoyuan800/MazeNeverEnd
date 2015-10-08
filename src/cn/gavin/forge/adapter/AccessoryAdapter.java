@@ -116,7 +116,7 @@ public class AccessoryAdapter extends BaseAdapter {
         }
 
         if (item.a2 != null) {
-            holder.name2.setText(Html.fromHtml(item.a2.getFormatName() + (checkOnUsed(item.a1)?"<font color=\"#006400\">u</font>" : "")));
+            holder.name2.setText(Html.fromHtml(item.a2.getFormatName() + (checkOnUsed(item.a2)?"<font color=\"#006400\">u</font>" : "")));
             holder.name2.setEnabled(true);
             holder.name2.setOnClickListener(buildOnClick(item.a2));
         } else {
@@ -125,7 +125,7 @@ public class AccessoryAdapter extends BaseAdapter {
         }
 
         if (item.a3 != null) {
-            holder.name3.setText(Html.fromHtml(item.a3.getFormatName()+ (checkOnUsed(item.a1)?"<font color=\"#006400\">u</font>" : "")));
+            holder.name3.setText(Html.fromHtml(item.a3.getFormatName()+ (checkOnUsed(item.a3)?"<font color=\"#006400\">u</font>" : "")));
             holder.name3.setEnabled(true);
             holder.name3.setOnClickListener(buildOnClick(item.a3));
         } else {
@@ -133,7 +133,7 @@ public class AccessoryAdapter extends BaseAdapter {
             holder.name3.setEnabled(false);
         }
         if (item.a4 != null) {
-            holder.name4.setText(Html.fromHtml(item.a4.getFormatName()+ (checkOnUsed(item.a1)?"<font color=\"#006400\">u</font>" : "")));
+            holder.name4.setText(Html.fromHtml(item.a4.getFormatName()+ (checkOnUsed(item.a4)?"<font color=\"#006400\">u</font>" : "")));
             holder.name4.setEnabled(true);
             holder.name4.setOnClickListener(buildOnClick(item.a4));
         } else {

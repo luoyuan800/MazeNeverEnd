@@ -26,7 +26,7 @@ public class LogHelper {
             StringBuilder log=new StringBuilder();
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                log.append(line + "\n");
+                log.append(line).append("\n");
             }
            File path = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze/log/");
            if(!path.exists()){
@@ -40,7 +40,7 @@ public class LogHelper {
             writer.write(log.toString());
             writer.flush();
             writer.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

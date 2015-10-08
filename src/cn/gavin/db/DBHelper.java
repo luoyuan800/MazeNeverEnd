@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.forge.ForgeDB;
+import cn.gavin.log.LogHelper;
 import cn.gavin.monster.Defender;
 
 /**
@@ -103,29 +104,35 @@ public class DBHelper {
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(oldVersion == 8){
-            db.beginTransaction();
-            String createTable = "CREATE TABLE monster(" +
-                    "name TEXT NOT NULL PRIMARY KEY," +
-                    "max_hp_name TEXT," +
-                    "max_atk_name TEXT," +
-                    "max_hp_defeat CHAR(5)," +
-                    "max_atk_defeat CHAR(5)," +
-                    "max_atk_atk TEXT," +
-                    "max_hp_atk TEXT," +
-                    "max_hp_hp TEXT," +
-                    "max_atk_hp TEXT," +
-                    "max_atk_lev TEXT," +
-                    "max_atk_battle TEXT," +
-                    "max_hp_battle TEXT," +
-                    "max_hp_lev TEXT," +
-                    "defeat TEXT," +
-                    "defeated TEXT" +
-                    ")";
-            db.execSQL(createTable);
-            Defender.createDB(db);
-            db.setTransactionSuccessful();
-            db.endTransaction();
+        try {
+            if (oldVersion == 8) {
+                db.beginTransaction();
+                String createTable = "CREATE TABLE monster(" +
+                        "name TEXT NOT NULL PRIMARY KEY," +
+                        "max_hp_name TEXT," +
+                        "max_atk_name TEXT," +
+                        "max_hp_defeat CHAR(5)," +
+                        "max_atk_defeat CHAR(5)," +
+                        "max_atk_atk TEXT," +
+                        "max_hp_atk TEXT," +
+                        "max_hp_hp TEXT," +
+                        "max_atk_hp TEXT," +
+                        "max_atk_lev TEXT," +
+                        "max_atk_battle TEXT," +
+                        "max_hp_battle TEXT," +
+                        "max_hp_lev TEXT," +
+                        "defeat TEXT," +
+                        "defeated TEXT" +
+                        ")";
+                db.execSQL(createTable);
+                Defender.createDB(db);
+                db.setTransactionSuccessful();
+                db.endTransaction();
+            }
+        }catch(Exception e){
+            Log.e("MazeNeverEnd",e.getMessage());
+            LogHelper.writeLog();
+            e.printStackTrace();
         }
     }
 

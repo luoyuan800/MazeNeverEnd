@@ -179,12 +179,14 @@ public abstract class Skill {
     }
 
     public void addCount() {
-        this.count++;
-        if (count % 1000 == 0) {
-            levelUp();
-        }
-        if (count % 8000 == 0) {
-            hero.setSkillPoint(hero.getSkillPoint() + 1);
+        if(this.count < Long.MAX_VALUE - 1000) {
+            this.count++;
+            if (count % 1005 == 0) {
+                levelUp();
+            }
+            if (count % 6000 == 0) {
+                hero.setSkillPoint(hero.getSkillPoint() + 1);
+            }
         }
     }
 
@@ -224,7 +226,6 @@ public abstract class Skill {
     }
 
     public boolean load() {
-        MainGameActivity context = MainGameActivity.context;
         DBHelper helper = DBHelper.getDbHelper();
         String sql = String.format("select * from skill where name='%s'",
                 getName());

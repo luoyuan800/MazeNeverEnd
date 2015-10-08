@@ -3,16 +3,24 @@ package cn.gavin.save;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import cn.gavin.*;
+import android.util.Log;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+
+import cn.gavin.Achievement;
+import cn.gavin.Armor;
+import cn.gavin.Hero;
+import cn.gavin.Maze;
+import cn.gavin.Sword;
+import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MainMenuActivity;
 import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
+import cn.gavin.log.LogHelper;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
-
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 
 /**
  * Copyright 2015 gluo.
@@ -30,65 +38,61 @@ public class LoadHelper {
     public void loadHero() {
         Hero heroN = new Hero("勇者");
         Maze maze = new Maze(heroN);
-        if (loadOlderSaveFile(heroN, maze)) {
-            context.deleteFile("yzcmg.ave");
-            Achievement.linger.enable(heroN);
-        } else {
-            SharedPreferences preferences = context.getSharedPreferences("hero", Context.MODE_PRIVATE);
-            heroN.setName(preferences.getString("name", "勇者"));
-            heroN.setHp(preferences.getLong("hp", 20));
-            heroN.setUpperHp(preferences.getLong("upperHp", 10));
-            heroN.setAttackValue(preferences.getLong("baseAttackValue", 10));
-            heroN.setDefenseValue(preferences.getLong("baseDefense", 1));
-            heroN.setClick(preferences.getLong("click", 0));
-            heroN.setPoint(preferences.getLong("point", 0));
-            heroN.setMaterial(preferences.getLong("material", 0));
-            heroN.setSwordLev(preferences.getLong("swordLev", 0));
-            heroN.setArmorLev(preferences.getLong("armorLev", 0));
-            heroN.setMaxMazeLev(preferences.getLong("maxMazeLev", 1));
-            heroN.setStrength(preferences.getLong("strength", heroN.getRandom().nextLong(5)));
-            heroN.setPower(preferences.getLong("power", heroN.getRandom().nextLong(5)));
-            heroN.setAgility(preferences.getLong("agility", heroN.getRandom().nextLong(5)));
-            heroN.setClickAward(preferences.getLong("clickAward", 1));
-            heroN.setSword(Sword.valueOf(preferences.getString("swordName", Sword.木剑.name())));
-            heroN.setArmor(Armor.valueOf(preferences.getString("armorName", Armor.破布.name())));
-            heroN.setDeathCount(preferences.getLong("death", 0));
-            heroN.setSkillPoint(preferences.getLong("skillPoint", 1));
-            MazeContents.lastUpload = preferences.getLong("lastUploadLev", 0);
-            maze.setLevel(preferences.getLong("currentMazeLev", 1));
-            String ach = preferences.getString("achievement", "0");
-            for (int i = 0; i < ach.length() && i < Achievement.values().length; i++) {
-                int enable = Integer.parseInt(ach.charAt(i) + "");
-                if (enable == 1) {
-                    Achievement.values()[i].enable();
-                }
-            }
-            MazeContents.payTime = preferences.getLong("swordLev", 0);
-            heroN.setAwardCount(preferences.getLong("awardCount", 0));
-            heroN.setLockBox(preferences.getLong("lockBox", 1));
-            heroN.setKeyCount(preferences.getLong("keyCount", 1));
-            String ringId = preferences.getString("ring", null);
-            if (ringId != null) {
-                Accessory ring = new Accessory();
-                ring.setId(ringId);
-                if (ring.load())
-                    heroN.setRing(ring);
-            }
-            String necklaceId = preferences.getString("necklace", null);
-            if (necklaceId != null) {
-                Accessory necklace = new Accessory();
-                necklace.setId(necklaceId);
-                if (necklace.load())
-                    heroN.setNecklace(necklace);
-            }
-            String hatId = preferences.getString("hat", null);
-            if (hatId != null) {
-                Accessory hat = new Accessory();
-                hat.setId(hatId);
-                if (hat.load())
-                    heroN.setHat(hat);
+        SharedPreferences preferences = context.getSharedPreferences("hero", Context.MODE_PRIVATE);
+        heroN.setName(preferences.getString("name", "勇者"));
+        heroN.setHp(preferences.getLong("hp", 20));
+        heroN.setUpperHp(preferences.getLong("upperHp", 10));
+        heroN.setAttackValue(preferences.getLong("baseAttackValue", 10));
+        heroN.setDefenseValue(preferences.getLong("baseDefense", 1));
+        heroN.setClick(preferences.getLong("click", 0));
+        heroN.setPoint(preferences.getLong("point", 0));
+        heroN.setMaterial(preferences.getLong("material", 0));
+        heroN.setSwordLev(preferences.getLong("swordLev", 0));
+        heroN.setArmorLev(preferences.getLong("armorLev", 0));
+        heroN.setMaxMazeLev(preferences.getLong("maxMazeLev", 1));
+        heroN.setStrength(preferences.getLong("strength", heroN.getRandom().nextLong(5)));
+        heroN.setPower(preferences.getLong("power", heroN.getRandom().nextLong(5)));
+        heroN.setAgility(preferences.getLong("agility", heroN.getRandom().nextLong(5)));
+        heroN.setClickAward(preferences.getLong("clickAward", 1));
+        heroN.setSword(Sword.valueOf(preferences.getString("swordName", Sword.木剑.name())));
+        heroN.setArmor(Armor.valueOf(preferences.getString("armorName", Armor.破布.name())));
+        heroN.setDeathCount(preferences.getLong("death", 0));
+        heroN.setSkillPoint(preferences.getLong("skillPoint", 1));
+        MazeContents.lastUpload = preferences.getLong("lastUploadLev", 0);
+        maze.setLevel(preferences.getLong("currentMazeLev", 1));
+        String ach = preferences.getString("achievement", "0");
+        for (int i = 0; i < ach.length() && i < Achievement.values().length; i++) {
+            int enable = Integer.parseInt(ach.charAt(i) + "");
+            if (enable == 1) {
+                Achievement.values()[i].enable();
             }
         }
+        MazeContents.payTime = preferences.getLong("swordLev", 0);
+        heroN.setAwardCount(preferences.getLong("awardCount", 0));
+        heroN.setLockBox(preferences.getLong("lockBox", 1));
+        heroN.setKeyCount(preferences.getLong("keyCount", 1));
+        String ringId = preferences.getString("ring", null);
+        if (ringId != null) {
+            Accessory ring = new Accessory();
+            ring.setId(ringId);
+            if (ring.load())
+                heroN.setAccessory(ring);
+        }
+        String necklaceId = preferences.getString("necklace", null);
+        if (necklaceId != null) {
+            Accessory necklace = new Accessory();
+            necklace.setId(necklaceId);
+            if (necklace.load())
+                heroN.setAccessory(necklace);
+        }
+        String hatId = preferences.getString("hat", null);
+        if (hatId != null) {
+            Accessory hat = new Accessory();
+            hat.setId(hatId);
+            if (hat.load())
+                heroN.setAccessory(hat);
+        }
+        Achievement.linger.enable(heroN);
         MazeContents.hero = heroN;
         MazeContents.maze = maze;
     }
@@ -152,6 +156,8 @@ public class LoadHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(MainGameActivity.TAG, e.getMessage(), e);
+            LogHelper.writeLog();
             return false;
         }
     }

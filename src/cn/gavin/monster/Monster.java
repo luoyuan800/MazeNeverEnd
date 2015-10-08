@@ -1,15 +1,14 @@
 package cn.gavin.monster;
 
 
-import android.util.LongSparseArray;
+import java.util.Arrays;
+import java.util.List;
+
 import cn.gavin.Hero;
 import cn.gavin.Maze;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * gluo on 8/26/2015.
@@ -79,14 +78,14 @@ public class Monster {
     public static Monster getBoss(Maze maze, Hero hero) {
         Random random = new Random();
         Monster monster = Defender.buildDefender(maze.getLev());
-        if(monster == null) {
+        if (monster == null) {
             if (random.nextInt(100) < 25) {
                 return null;
             }
             monster = buildDefaultDefender(maze, hero, random);
         }
         monster.material = random.nextLong(maze.getLev() * monster.atk + 1) / 100 + 25;
-        if(monster.material > 40000){
+        if (monster.material > 40000) {
             monster.material = random.nextLong(50000);
         }
         monster.items = Arrays.asList(ItemName.原石, ItemName.铁矿石, ItemName.冷杉木,
@@ -105,8 +104,8 @@ public class Monster {
         if (atk > hero.getUpperHp() + hero.getDefenseValue()) {
             atk = atk / 2;
         }
-        if (hp > hero.getAttackValue() * 20) {
-            hp = hero.getAttackValue() * 21;
+        if (hp > hero.getAttackValue() * 30) {
+            hp = hero.getAttackValue() * 30;
         }
         if (atk < hero.getDefenseValue()) {
             atk += random.nextLong(hero.getDefenseValue() * 3);
@@ -136,11 +135,12 @@ public class Monster {
         secondName = secondNames[second];
         lastName = lastNames[last];
         this.items = itemNames[last];
-        if (hero.getAttackValue() != 0)
-            hp += maze.getLev() * random.nextLong(hero.getStrength() / 600 + 1);
-        if (hero.getAgility() != 0)
-            atk += random.nextLong(hero.getAgility() / 1000 + 1) * random.nextLong(maze.getLev() + 1);
-        atk += random.nextLong(hero.getDefenseValue() / 1500 + 1) * random.nextLong(maze.getLev() + 1);
+        if (hero.getStrength() > 100 && hero.getAgility()>1000 && hero.getPower() > 100 && random.nextBoolean()) {
+            hp += maze.getLev() * random.nextLong((hero.getStrength()+ hero.getAgility() + hero.getPower())/ 100 + 1);
+            atk += maze.getLev() * random.nextLong((hero.getStrength()+ hero.getAgility() + hero.getPower())/ 800 + 1);
+        }
+        atk += baseAtk[last] * random.nextLong(maze.getLev() + 1);
+        hp += baseHP[last] * random.nextLong(maze.getLev() + 1);
         if (hp < hero.getAttackValue()) {
             hp += random.nextLong(hero.getAttackValue() * 2);
         }

@@ -4,6 +4,9 @@ import android.widget.Toast;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
+import cn.gavin.forge.HatBuilder;
+import cn.gavin.forge.NecklaceBuilder;
+import cn.gavin.forge.RingBuilder;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.monster.Defender;
 import cn.gavin.monster.Monster;
@@ -805,6 +808,20 @@ public class Hero {
             }
             Achievement.reBird.enable(this);
             dbHelper.endTransaction();
+        }
+    }
+
+    public void setAccessory(Accessory accessory){
+        switch (accessory.getType()){
+            case RingBuilder.type:
+                this.ring = accessory;
+                break;
+            case NecklaceBuilder.type:
+                this.necklace = accessory;
+                break;
+            case HatBuilder.type:
+                this.hat = accessory;
+                break;
         }
     }
 }

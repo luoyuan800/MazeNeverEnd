@@ -82,7 +82,9 @@ public class SkillFactory {
                                 as.setAdditionHarm(as.getAdditionHarm() * 3);
                                 return true;
                             }
-                            as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 30 + 1));
+                            if(as.getBaseHarm() < hero.getBaseAttackValue() * 100) {
+                                as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 30 + 1));
+                            }
                             return false;
                         }
                     });
@@ -132,7 +134,7 @@ public class SkillFactory {
                             if (skill.getProbability() > 25) {
                                 return false;
                             }
-                            skill.setProbability(skill.getProbability() + 1.1f);
+                            skill.setProbability(skill.getProbability() + 3.1f);
                             return true;
                         }
                     });
@@ -223,7 +225,7 @@ public class SkillFactory {
                     skill.setLevelUp(new EnableExpression() {
                         @Override
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                            if (skill.getProbability() < 15) {
+                            if (skill.getProbability() < 35) {
                                 skill.setProbability(skill.getProbability() + 1.1f);
                                 return true;
                             }
@@ -678,7 +680,9 @@ public class SkillFactory {
                                 attackSkill.setBaseHarm(attackSkill.getBaseHarm() * 2);
                                 return true;
                             }
-                            attackSkill.setAdditionHarm(attackSkill.getAdditionHarm() * 2);
+                            if(attackSkill.getAdditionHarm() < hero.getBaseAttackValue() * 10) {
+                                attackSkill.setAdditionHarm(attackSkill.getAdditionHarm() * 2);
+                            }
                             return false;
                         }
                     });
@@ -1250,8 +1254,10 @@ public class SkillFactory {
                             if (skill.getProbability() < 25) {
                                 skill.setProbability(skill.getProbability() + 1.1f);
                             }
-                            iskll.setBaseHarm(iskll.getBaseHarm() + 2000);
-                            iskll.setAdditionHarm(iskll.getAdditionHarm() * 2);
+                            if(iskll.getAdditionHarm() < hero.getBaseAttackValue() * 100) {
+                                iskll.setBaseHarm(iskll.getBaseHarm() + 2000);
+                                iskll.setAdditionHarm(iskll.getAdditionHarm() * 2);
+                            }
                             return false;
                         }
                     });
@@ -1523,9 +1529,10 @@ public class SkillFactory {
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                             if (skill.getProbability() < 35) {
                                 skill.setProbability(skill.getProbability() + 3.1f);
+                                iskll.setBaseHarm(iskll.getBaseHarm() + 2);
+                                iskll.setAdditionHarm(iskll.getAdditionHarm() + 2);
+                                return true;
                             }
-                            iskll.setBaseHarm(iskll.getBaseHarm() + 1);
-                            iskll.setAdditionHarm(iskll.getAdditionHarm() + 2);
                             return false;
                         }
                     });
