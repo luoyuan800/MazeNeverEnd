@@ -12,18 +12,18 @@ import cn.gavin.activity.MainGameActivity;
  * Created by gluo on 9/1/2015.
  */
 public class Alipay {
-    private int payTime;
+    private long payTime;
     private MainGameActivity context;
     private BmobPay bmobPay;
     private ProgressDialog dialog;
 
-    public Alipay(MainGameActivity context, int time) {
+    public Alipay(MainGameActivity context, long time) {
         this.payTime = time;
         this.context = context;
         bmobPay = new BmobPay(context);
     }
 
-    public int getPayTime() {
+    public long getPayTime() {
         return payTime;
     }
 

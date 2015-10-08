@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:layout_gravity="left|center_vertical"
+        android:gravity="fill">
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="勇"
+            android:gravity="center"
+            android:id="@+id/base_skill_r_button" android:layout_gravity="center"
+            android:typeface="serif"
+            android:textStyle="bold|italic"
+            android:textColor="@color/disable"/>
+
+    <ImageView
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView" android:layout_gravity="center" android:src="@drawable/line_2_center"
+            android:adjustViewBounds="true"/>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="闪"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/base_skill_s_button" android:layout_gravity="center|top" android:textColor="@color/un_active"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="铁"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_base_t_button" android:layout_gravity="center|top"
+                android:textColor="@color/active"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/image2" android:layout_gravity="right|top"
+                android:src="@drawable/line_2_right" android:adjustViewBounds="false" android:layout_weight="1"
+                />
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/image3" android:layout_gravity="center|top"
+                android:src="@drawable/line_2_left" android:adjustViewBounds="false"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="反"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_base_f_button" android:layout_gravity="center|top" android:textColor="@color/onUse"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="巨"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_base_j_button" android:layout_gravity="center|top" android:singleLine="false"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="定"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_base_d_button" android:layout_gravity="center|top"/>
+    </LinearLayout>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView2" android:layout_gravity="center" android:src="@drawable/line_3_center"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="超"
+            android:id="@+id/skill_base_c_button" android:layout_gravity="center"
+            android:typeface="serif"
+            android:textStyle="bold|italic"
+            android:gravity="center"
+            />
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView3" android:layout_gravity="center"
+            android:src="@drawable/line_3_center_down"/>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="瞬"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_base_sy_button" android:layout_gravity="center|top"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="斩"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_base_zj_button" android:layout_gravity="center|top"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="裂"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_base_lkj_button" android:layout_gravity="center|top"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/line_1_center"
+                android:id="@+id/imageView4" android:layout_gravity="left|top"
+                android:layout_weight="1" android:adjustViewBounds="false"/>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView5" android:layout_gravity="center|top"
+                android:src="@drawable/line_1_center" android:layout_weight="1"
+                android:adjustViewBounds="false"/>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView6" android:layout_gravity="center|top"
+                android:src="@drawable/line_1_center" android:layout_weight="1"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="传"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_base_cs_button" android:layout_gravity="center|top"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="错"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_base_cw_button" android:layout_gravity="center|top"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="原"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_base_ynl_button" android:layout_gravity="center|top"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/line_1_center"
+                android:id="@+id/imageView7" android:layout_gravity="left|top"
+                android:layout_weight="1" android:adjustViewBounds="false"/>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView8" android:layout_gravity="center|top"
+                android:src="@drawable/line_1_center" android:layout_weight="1"
+                android:adjustViewBounds="false"/>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView9" android:layout_gravity="center|top"
+                android:src="@drawable/line_1_center" android:layout_weight="1"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="宝"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_base_xb_button" android:layout_gravity="center|top"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="御"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_base_cfy_button" android:layout_gravity="center|top"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="重"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/skill_base_hit_button" android:layout_gravity="center|top"/>
+    </LinearLayout>
+</LinearLayout>

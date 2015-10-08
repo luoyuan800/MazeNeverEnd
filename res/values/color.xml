@@ -4,4 +4,8 @@
     <color name="current_item">#7a31ff</color>
     <color name="transparent">#00000000</color>
     <color name="red">#FFF72B42</color>
+    <color name="disable">#b4a6b0</color>
+    <color name="onUse">#d40210</color>
+    <color name="un_active">#453e22</color>
+    <color name="active">#da5f0a</color>
 </resources>

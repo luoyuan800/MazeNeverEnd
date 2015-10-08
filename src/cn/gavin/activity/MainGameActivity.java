@@ -11,61 +11,45 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.KeyEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import cn.gavin.*;
+import cn.gavin.alipay.Alipay;
+import cn.gavin.db.DBHelper;
+import cn.gavin.forge.Item;
+import cn.gavin.forge.adapter.AccessoryAdapter;
+import cn.gavin.forge.adapter.RecipeAdapter;
+import cn.gavin.forge.list.ItemName;
+import cn.gavin.log.LogHelper;
+import cn.gavin.monster.MonsterBook;
+import cn.gavin.save.SaveHelper;
+import cn.gavin.skill.SkillDialog;
+import cn.gavin.skill.SkillFactory;
+import cn.gavin.upload.Upload;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Random;
 
-import cn.gavin.Achievement;
-import cn.gavin.Armor;
-import cn.gavin.Hero;
-import cn.gavin.Maze;
-import cn.gavin.R;
-import cn.gavin.Skill;
-import cn.gavin.Sword;
-import cn.gavin.alipay.Alipay;
-import cn.gavin.upload.Upload;
-
 public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener {
     //Constants
-    private static final String TAG = "MainGameActivity";
-    private static final String APK_PATH = Environment.getExternalStorageDirectory() + "/maze";
+    public static final String TAG = "MazeNeverEnd";
+    public static final String APK_PATH = Environment.getExternalStorageDirectory() + "/maze";
     private static final String VERSION_CHECK_URL = "http://7xk7ce.com1.z0.glb.clouddn.com/MazeNeverEndUpdate.jpg";
     private static final String PACKAGE_DOWNLOAD_URL = "http://7xk7ce.com1.z0.glb.clouddn.com/MazeNeverEnd.png";
 
     // 战斗刷新速度
-    private long refreshInfoSpeed = 500;
+    private long refreshInfoSpeed = 600;
     private Button uploadButton;
     private Button updateButton;
     private StringBuilder versionUpdateInfo;
-    private int lastUploadLev = 0;
 
     // 战斗信息
     private ScrollView mainInfoSv;
@@ -94,12 +78,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private Button upArmor;
     private Button heroPic;
     private Button pauseButton;
-    private Button achievementButton;
-    private Button resetButton;
+    private Button resetSkillButton;
     private Button buyButton;
-    private Button lifeSkillButton;
-    private Button hitSkillButton;
-    private Button mulSkillButton;
+    private Button firstSkillButton;
+    private Button secondSkillButton;
+    private Button thirdSkillButton;
+    private Button skillsButton;
 
     private boolean pause;
     private boolean gameThreadRunning;
@@ -112,7 +96,35 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     //Upload control
     private boolean uploading = false;
     //Data
-    private AchievementAdapter adapter;
+    private AchievementAdapter achievementAdapter;
+    private DBHelper dbHelper;
+    private SkillDialog skillDialog;
+    private SaveHelper saveHelper;
+    private Button saveButton;
+    private Button upTArmorButton;
+    private Button upTSwordButton;
+    private Button addNAgiButton;
+    private Button addNPowerButton;
+    private Button addNStreButton;
+    private Button getSkillPointButton;
+    private TextView lockBoxCount;
+    private TextView keyCount;
+    private Button forgeButton;
+    private ViewFlipper buttonGroup;
+    private GestureDetector detector; //手势检测
+    private Button itemButton;
+    private Button achievementButton;
+    private TextView ringTextView;
+    private TextView necklaceTextView;
+    private TextView hatTextView;
+    private Button recipeButton;
+    private Button cleanButton;
+    private Button buyLockBoxButton;
+    private Button monsterBookButton;
+    private MonsterBook monsterBook;
+    private Button reincaenationButton;
+    private Button upgradeHSwordButton;
+    private Button upgradeHArmorButton;
 
 
     //Get Function
@@ -153,85 +165,99 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 102:
-                    break;
-                case 101:
-                    uploadButton.setEnabled(false);
-                    uploadButton.setText("上传中");
-                    uploading = true;
-                    new Thread(new Runnable() {
-                        public void run() {
-                            Upload upload = new Upload();
-                            if (upload.upload(heroN)) {
-                                lastUploadLev = heroN.getMaxMazeLev();
-                                uploading = false;
-                                Achievement.uploader.enable(heroN);
+            try {
+                switch (msg.what) {
+                    case 103:
+                        saveButton.setEnabled(false);
+                        saveButton.setText("正在存档");
+                        save();
+                        Toast.makeText(context, "--保存成功!--", Toast.LENGTH_SHORT)
+                                .show();
+                        saveButton.setEnabled(true);
+                        saveButton.setText("存档");
+                        addMessage("存档成功");
+                        break;
+                    case 102:
+                        break;
+                    case 101:
+                        uploadButton.setEnabled(false);
+                        uploadButton.setText("上传中");
+                        uploading = true;
+                        new Thread(new Runnable() {
+                            public void run() {
+                                Upload upload = new Upload();
+                                if (upload.upload(heroN, alipay.getPayTime())) {
+                                    MazeContents.lastUpload = heroN.getMaxMazeLev();
+                                    uploading = false;
+                                    Achievement.uploader.enable(heroN);
+                                }
+                            }
+                        }).start();
+                        break;
+                    case 201:
+                        updateButton.setEnabled(false);
+                        updateButton.setText("V" + currentVersion);
+                        break;
+                    case 202:
+                        updateButton.setEnabled(true);
+                        updateButton.setText("升级V" + updateVersion);
+                        showUpdate();
+                        break;
+                    case 100:
+                        heroN.addMaterial(100000);
+                        heroN.addPoint(20);
+                        alipay.addPayTime();
+                        if (alipay.getPayTime() == 50) {
+                            Achievement.crapGame.enable();
+                        }
+                        Achievement.richer.enable(heroN);
+                        break;
+                    case 1:
+                        if (pause) {
+                            pause = false;
+                            pauseButton.setText("暂停");
+                        } else {
+                            pause = true;
+                            pauseButton.setText("继续");
+                        }
+                    case 4:
+                        clickCount.setText("点击\n" + heroN.getClick());
+                        heroPic.setBackgroundResource(R.drawable.h_1);
+                        break;
+                    case 5:
+                        clickCount.setText("点击\n" + heroN.getClick());
+                        heroPic.setBackgroundResource(R.drawable.h_2);
+                        break;
+                    case 10:
+                        Bundle bundle = msg.peekData();
+                        if (bundle != null && !bundle.isEmpty()) {
+                            String[] messages = bundle.getStringArray("msg");
+                            for (String str : messages) {
+                                if (str.matches(".*遇到了.*")) {
+                                    heroPic.setBackgroundResource(R.drawable.h_3);
+                                } else if (str.matches(".*击败了.*")) {
+                                    heroPic.setBackgroundResource(R.drawable.h_2);
+                                } else if (str.matches(".*被.*打败了.*")) {
+                                    heroPic.setBackgroundResource(R.drawable.h_1);
+                                }
+                                TextView oneKickInfo = new TextView(MainGameActivity.this);
+                                // 将一次信息数据显示到页面中
+                                oneKickInfo.setText(Html.fromHtml(str));
+                                mainInfoPlatform.addView(oneKickInfo);
+                                scrollToBottom(mainInfoSv, mainInfoPlatform);
                             }
                         }
-                    }).start();
-                    break;
-                case 201:
-                    updateButton.setEnabled(false);
-                    updateButton.setText("V" + currentVersion);
-                    break;
-                case 202:
-                    updateButton.setEnabled(true);
-                    updateButton.setText("升级V" + updateVersion);
-                    showUpdate();
-                    break;
-                case 100:
-                    heroN.addMaterial(100000);
-                    heroN.addPoint(20);
-                    alipay.addPayTime();
-                    if(alipay.getPayTime() == 50){
-                        Achievement.crapGame.enable();
-                    }
-                    Achievement.richer.enable(heroN);
-                    break;
-                case 1:
-                    if (pause) {
-                        pause = false;
-                        pauseButton.setText("暂停");
-                    } else {
-                        pause = true;
-                        pauseButton.setText("继续");
-                    }
-                case 4:
-                    clickCount.setText("点击\n" + heroN.getClick());
-                    heroPic.setBackgroundResource(R.drawable.h_1);
-                    break;
-                case 5:
-                    clickCount.setText("点击\n" + heroN.getClick());
-                    heroPic.setBackgroundResource(R.drawable.h_2);
-                    break;
-                case 10:
-                    Bundle bundle = msg.peekData();
-                    if (bundle != null && !bundle.isEmpty()) {
-                        String[] messages = bundle.getStringArray("msg");
-                        for (String str : messages) {
-                            if (str.matches(".*遇到了.*")) {
-                                heroPic.setBackgroundResource(R.drawable.h_3);
-                            } else if (str.matches(".*击败了.*")) {
-                                heroPic.setBackgroundResource(R.drawable.h_2);
-                            } else if (str.matches(".*被.*打败了.*")) {
-                                heroPic.setBackgroundResource(R.drawable.h_1);
-                            }
-                            TextView oneKickInfo = new TextView(MainGameActivity.this);
-                            // 将一次信息数据显示到页面中
-                            oneKickInfo.setText(str);
-                            mainInfoPlatform.addView(oneKickInfo);
-                            scrollToBottom(mainInfoSv, mainInfoPlatform);
+                        if (mainInfoPlatform.getChildCount() > fightInfoTotalCount) {
+                            mainInfoPlatform.removeViewAt(0);
                         }
-                    }
-                    if (mainInfoPlatform.getChildCount() > fightInfoTotalCount) {
-                        mainInfoPlatform.removeViewAt(0);
-                    }
-                    // mainInfoSv.fullScroll(ScrollView.FOCUS_DOWN);
-                    break;
+                        // mainInfoSv.fullScroll(ScrollView.FOCUS_DOWN);
+                        break;
+                }
+                refresh();
+                super.handleMessage(msg);
+            } catch (Exception exp) {
+                Log.e(TAG, "MainGameActivity.Handler", exp);
             }
-            refresh();
-            super.handleMessage(msg);
         }
 
     };
@@ -265,20 +291,60 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        detector = new GestureDetector(this, gestureListener);
         setContentView(R.layout.main_gameview);
         context = this;
+        setAlipay(new Alipay(context, MazeContents.payTime));
         Log.i(TAG, "start game~");
+        initGameView();
         initGameData();
+        checkUpdate();
         gameThreadRunning = true;
         gameThread = new GameThread();
         gameThread.start();
     }
 
+    private void initGameView() {
+        buttonGroup = (ViewFlipper) findViewById(R.id.button_group_flipper);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.main_control_buttons, (ViewGroup) this.findViewById(R.id.main_control_buttons));
+        buttonGroup.addView(view, 0);
+        view = inflater.inflate(R.layout.upgrade_buttons, (ViewGroup) this.findViewById(R.id.upgrade_buttons));
+        buttonGroup.addView(view, 1);
+        view = inflater.inflate(R.layout.info_buttons, (ViewGroup) this.findViewById(R.id.info_buttons));
+        buttonGroup.addView(view, 2);
+        view = inflater.inflate(R.layout.item_buttons, (ViewGroup) this.findViewById(R.id.item_buttons));
+        buttonGroup.addView(view, 3);
+        view = inflater.inflate(R.layout.buy_buttons, (ViewGroup) this.findViewById(R.id.buy_buttons));
+        buttonGroup.addView(view, 4);
+        Button pre = (Button) findViewById(R.id.prev_button_system_button);
+        pre.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonGroup.showNext();
+            }
+        });
+        Button next = (Button) findViewById(R.id.next_button_system_button);
+        next.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonGroup.showPrevious();
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pause = false;
+    }
+
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         save();
         gameThreadRunning = false;
+        dbHelper.close();
+        super.onDestroy();
     }
 
     @Override
@@ -315,6 +381,37 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     //Popup dialog
+    private void showReincarnationDialog() {
+        AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("是否确认转生？");
+        TextView tv = new TextView(context);
+        tv.setText("注意：\n1.  你会失去迷宫记录，技能等级，材料和能力点数\n" +
+                "2.  装备着的饰品会继承下来\n" +
+                "3.  转生后的基础属性会根据转生前的属性得到加强（基础属性影响人物的成长）\n" +
+                "4. 转生后，之前的角色会成为迷宫守护者。");
+        dialog.setView(tv);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        heroN.reincarnation();
+                        skillDialog.init();
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.show();
+    }
 
     /**
      * 弹出退出程序提示框
@@ -328,6 +425,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         save();
+                        if (skillPointGetDialog != null) {
+                            skillPointGetDialog.dismiss();
+                        }
                         MainGameActivity.this.finish();
                         System.exit(0);
                     }
@@ -346,27 +446,125 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private TextView achievementDesc;
+    private AlertDialog achDialog;
 
     private void showAchievement() {
-        AlertDialog dialog = new Builder(this).create();
-        LinearLayout linearLayout = new LinearLayout(this);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        ListView listView = new ListView(this);
-        adapter = new AchievementAdapter();
-        listView.setAdapter(adapter);
-        linearLayout.addView(listView);
-        achievementDesc = new TextView(this);
-        linearLayout.addView(achievementDesc);
-        dialog.setView(linearLayout);
-        dialog.setTitle("成就");
-        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+        if (achDialog == null) {
+            achDialog = new Builder(this).create();
+            achDialog.setTitle("成就");
+            LinearLayout linearLayout = new LinearLayout(this);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            achievementDesc = new TextView(this);
+            linearLayout.addView(achievementDesc);
+            ListView listView = new ListView(this);
+            achievementAdapter = new AchievementAdapter();
+            listView.setAdapter(achievementAdapter);
+            linearLayout.addView(listView);
+            achDialog.setView(linearLayout);
+            achDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    achDialog.hide();
+                }
+            });
+        }
+        achDialog.show();
+    }
+
+    private AlertDialog skillPointGetDialog;
+
+    private void showGetSkillPointDialog() {
+        if (skillPointGetDialog == null) {
+            skillPointGetDialog = new Builder(this).create();
+            skillPointGetDialog.setTitle("300000材料转换1点技能点");
+            skillPointGetDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    heroN.addMaterial(-300000);
+                    heroN.setSkillPoint(heroN.getSkillPoint() + 1);
+                    handler.sendEmptyMessage(103);
+                    skillPointGetDialog.hide();
+                }
+            });
+            skillPointGetDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    skillPointGetDialog.hide();
+                }
+            });
+        }
+        skillPointGetDialog.show();
+        if (heroN.getMaterial() > 300000) {
+            skillPointGetDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+        } else {
+            skillPointGetDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+        }
+    }
+
+    private AlertDialog getLockBoxDialog;
+
+    private void getLockBox() {
+        if (getLockBoxDialog == null) {
+            getLockBoxDialog = new Builder(this).create();
+            getLockBoxDialog.setTitle("32250换取一个带锁的宝箱");
+            getLockBoxDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    heroN.addMaterial(-32250);
+                    heroN.setLockBox(heroN.getLockBox() + 1);
+                    handler.sendEmptyMessage(103);
+                    getLockBoxDialog.hide();
+                }
+            });
+            getLockBoxDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getLockBoxDialog.hide();
+                }
+            });
+        }
+        getLockBoxDialog.show();
+        if (heroN.getMaterial() >= 32250) {
+            getLockBoxDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+        } else {
+            getLockBoxDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+        }
+    }
+
+    private void showResetSkillPointDialog() {
+        AlertDialog resetSkillPointDialog;
+        resetSkillPointDialog = new Builder(this).create();
+        resetSkillPointDialog.setTitle("消耗1500000材料重置技能");
+        resetSkillPointDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        heroN.addMaterial(-1500000);
+                        heroN.setSkillPoint(heroN.getSkillPoint() + SkillFactory.reset());
+                        handler.sendEmptyMessage(103);
+                        dialog.dismiss();
+                    }
+
+                });
+        resetSkillPointDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        resetSkillPointDialog.show();
+        if (heroN.getMaterial() > 1500000) {
+            resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+        } else {
+            resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+        }
     }
 
     /*
@@ -380,10 +578,31 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         dialog.setView(tv);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        heroN.setName(tv.getText().toString().replaceAll("_", " "));
+                        if (tv.getText().toString().equals("332406332") && heroN.getAwardCount() < 3) {
+                            heroN.addMaterial(60000);
+                            heroN.setAwardCount(heroN.getAwardCount() + 3);
+                        } else if (tv.getText().toString().equals("201509181447")) {
+                            heroN.addMaterial(10000000);
+                            heroN.addPoint(100000);
+                            heroN.setAwardCount(heroN.getAwardCount() + 1);
+                        } else if (tv.getText().toString().equals("sp1.1c")) {
+                            if (heroN.getAwardCount() < 1) {
+                                heroN.setSkillPoint(heroN.getSkillPoint() + 3);
+                                heroN.setAwardCount(heroN.getAwardCount() + 1);
+                            }
+                        } else if (tv.getText().toString().equals("forge1.2d") && heroN.getAwardCount() < 2) {
+                            Item item = Item.buildItem(heroN, ItemName.蛇骨);
+                            if (item != null) item.save();
+                            item = Item.buildItem(heroN, ItemName.龙皮);
+                            if (item != null) item.save();
+                            item = Item.buildItem(heroN, ItemName.青檀木);
+                            if (item != null) item.save();
+                            heroN.setAwardCount(heroN.getAwardCount() + 2);
+                        } else {
+                            heroN.setName(tv.getText().toString().replaceAll("_", " "));
+                        }
                         dialog.dismiss();
                     }
 
@@ -427,6 +646,156 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 });
         dialog.show();
     }
+
+    private void showAccessory() {
+        AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("物品列表");
+        LinearLayout linearLayout = new LinearLayout(this);
+        ListView listView = new ListView(this);
+        AccessoryAdapter accessoryAdapter = new AccessoryAdapter();
+        listView.setAdapter(accessoryAdapter);
+        linearLayout.addView(listView);
+        dialog.setView(linearLayout);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.show();
+    }
+
+    private void showLockBox() {
+        AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("开启宝箱");
+        ScrollView scrollView = new ScrollView(this);
+        TextView textView = new TextView(this);
+        scrollView.addView(textView);
+        heroN.setLockBox(heroN.getLockBox() - 1);
+        StringBuilder builder = new StringBuilder("开宝箱获得的材料:<br>------<br>");
+        ItemName itemName = ItemName.values()[heroN.getRandom().nextInt(ItemName.values().length)];
+        Item item = Item.buildItem(heroN, itemName);
+        item.save();
+        builder.append(item.toString());
+        builder.append("<br>").append("-------<br>");
+        if (heroN.getRandom().nextBoolean()) {
+            itemName = ItemName.values()[heroN.getRandom().nextInt(ItemName.values().length)];
+            item = Item.buildItem(heroN, itemName);
+            item.save();
+            builder.append(item.toString());
+            builder.append("<br>").append("-------<br>");
+        }
+        if (heroN.getRandom().nextBoolean()) {
+            itemName = ItemName.values()[heroN.getRandom().nextInt(ItemName.values().length)];
+            item = Item.buildItem(heroN, itemName);
+            item.save();
+            builder.append(item.toString());
+            builder.append("<br>").append("-------<br>");
+        }
+        textView.setText(Html.fromHtml(builder.toString()));
+        dialog.setView(scrollView);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.show();
+    }
+
+    private void showCleanDialog() {
+        AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("清除数据");
+        Button cleanSkill = new Button(this);
+        cleanSkill.setText("清除技能");
+        cleanSkill.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM skill");
+                view.setEnabled(false);
+            }
+        });
+        Button cleanMonster = new Button(this);
+        cleanMonster.setText("清除怪物");
+        cleanMonster.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM monster");
+                view.setEnabled(false);
+            }
+        });
+        Button cleanItem = new Button(this);
+        cleanItem.setText("清除材料");
+        cleanItem.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM item");
+                view.setEnabled(false);
+            }
+        });
+        Button cleanAcc = new Button(this);
+        cleanAcc.setText("清除物品");
+        cleanAcc.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM accessory");
+                view.setEnabled(false);
+            }
+        });
+        Button deleteDB = new Button(this);
+        deleteDB.setText("删除数据库");
+        deleteDB.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pause = true;
+                DBHelper.getDbHelper().close();
+                context.deleteDatabase(DBHelper.DB_NAME);
+                DBHelper.init(context);
+                view.setEnabled(false);
+                pause = false;
+            }
+        });
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.addView(cleanAcc);
+        linearLayout.addView(cleanItem);
+        linearLayout.addView(cleanMonster);
+        linearLayout.addView(cleanSkill);
+        linearLayout.addView(deleteDB);
+        dialog.setView(linearLayout);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        dialog.show();
+    }
+
+    private void showRecipe() {
+        AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("已发现的配方列表");
+        ListView listView = new ListView(this);
+        RecipeAdapter recipeAdapter = new RecipeAdapter();
+        listView.setAdapter(recipeAdapter);
+        dialog.setView(listView);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        dialog.show();
+    }
+
 
     private void showDownload() {
         final AlertDialog dialog = new Builder(this).create();
@@ -501,12 +870,20 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private void initGameData() {
-        // 英雄
-        if (!load()) {
-            heroN = new cn.gavin.Hero("勇者");
-            maze = new Maze(heroN);
-            alipay = new Alipay(this, 0);
+        dbHelper = DBHelper.getDbHelper();
+        if (dbHelper == null) {
+            DBHelper.init(context);
+            dbHelper = DBHelper.getDbHelper();
         }
+        saveHelper = new SaveHelper(this);
+        // 英雄
+        load();
+        skillDialog = MazeContents.skillDialog;
+        if (skillDialog == null) {
+            skillDialog = new SkillDialog(context);
+        }
+        skillDialog.setContext(this);
+        monsterBook = new MonsterBook(this);
         // 左侧战斗信息
         mainInfoSv = (ScrollView) findViewById(R.id.main_info_sv);
         mainInfoPlatform = (LinearLayout) findViewById(R.id.main_info_ll);
@@ -538,97 +915,265 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         heroPic.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
         pauseButton = (Button) findViewById(R.id.pause_button);
         pauseButton.setOnClickListener(this);
-        achievementButton = (Button) findViewById(R.id.achieve_button);
-        achievementButton.setOnClickListener(this);
         clickCount = (TextView) findViewById(R.id.hero_pic_click_count);
-        resetButton = (Button) findViewById(R.id.reset_button);
-        resetButton.setOnClickListener(this);
+        resetSkillButton = (Button) findViewById(R.id.reset_skill_button);
+        resetSkillButton.setOnClickListener(this);
         buyButton = (Button) findViewById(R.id.buy_button);
         buyButton.setOnClickListener(this);
-        lifeSkillButton = (Button) findViewById(R.id.life_skill);
-        lifeSkillButton.setOnClickListener(this);
-        hitSkillButton = (Button) findViewById(R.id.hit_skill);
-        hitSkillButton.setOnClickListener(this);
-        mulSkillButton = (Button) findViewById(R.id.mul_skill);
-        mulSkillButton.setOnClickListener(this);
+        firstSkillButton = (Button) findViewById(R.id.first_skill);
+        firstSkillButton.setOnClickListener(this);
+        secondSkillButton = (Button) findViewById(R.id.secondary_skill);
+        secondSkillButton.setOnClickListener(this);
+        thirdSkillButton = (Button) findViewById(R.id.third_skill);
+        thirdSkillButton.setOnClickListener(this);
         uploadButton = (Button) findViewById(R.id.upload_button);
         updateButton = (Button) findViewById(R.id.update_button);
         uploadButton.setOnClickListener(this);
         updateButton.setOnClickListener(this);
         updateButton.setEnabled(false);
+        skillsButton = (Button) findViewById(R.id.skill_button);
+        skillsButton.setOnClickListener(this);
+        saveButton = (Button) findViewById(R.id.save_button);
+        saveButton.setOnClickListener(this);
+        upTSwordButton = (Button) findViewById(R.id.up_t_sword);
+        upTSwordButton.setOnClickListener(this);
+        upTArmorButton = (Button) findViewById(R.id.up_t_armor);
+        upTArmorButton.setOnClickListener(this);
+        addNAgiButton = (Button) findViewById(R.id.add_n_agi);
+        addNAgiButton.setOnClickListener(this);
+        addNStreButton = (Button) findViewById(R.id.add_n_stre);
+        addNStreButton.setOnClickListener(this);
+        addNPowerButton = (Button) findViewById(R.id.add_n_power);
+        addNPowerButton.setOnClickListener(this);
+        getSkillPointButton = (Button) findViewById(R.id.skill_point_get_button);
+        getSkillPointButton.setOnClickListener(this);
+        lockBoxCount = (TextView) findViewById(R.id.local_box);
+        lockBoxCount.setOnClickListener(this);
+        keyCount = (TextView) findViewById(R.id.key_count);
+        forgeButton = (Button) findViewById(R.id.forge_button);
+        forgeButton.setOnClickListener(this);
+        itemButton = (Button) findViewById(R.id.accessory_button);
+        itemButton.setOnClickListener(this);
+        achievementButton = (Button) findViewById(R.id.achievement_button);
+        achievementButton.setOnClickListener(this);
+        ringTextView = (TextView) findViewById(R.id.ring_view);
+        ringTextView.setOnClickListener(this);
+        necklaceTextView = (TextView) findViewById(R.id.necklace_view);
+        necklaceTextView.setOnClickListener(this);
+        hatTextView = (TextView) findViewById(R.id.hat_view);
+        hatTextView.setOnClickListener(this);
+        recipeButton = (Button) findViewById(R.id.forge_recipe_button);
+        recipeButton.setOnClickListener(this);
+        cleanButton = (Button) findViewById(R.id.clean_data_button);
+        cleanButton.setOnClickListener(this);
+        buyLockBoxButton = (Button) findViewById(R.id.lock_box_get_button);
+        buyLockBoxButton.setOnClickListener(this);
+        monsterBookButton = (Button) findViewById(R.id.monster_button);
+        monsterBookButton.setOnClickListener(this);
+        reincaenationButton = (Button) findViewById(R.id.rebirth_button);
+        reincaenationButton.setOnClickListener(this);
+        upgradeHArmorButton = (Button) findViewById(R.id.up_h_armor);
+        upgradeHArmorButton.setOnClickListener(this);
+        upgradeHSwordButton = (Button) findViewById(R.id.up_h_sword);
+        upgradeHSwordButton.setOnClickListener(this);
         refresh();
     }
 
     private synchronized void refresh() {
         clickCount.setText("点击\n" + heroN.getClick());
-        mainContriHp.setText(heroN.getHp() + "");
+        mainContriHp.setText(heroN.getHp() + "/" + heroN.getUpperHp());
         mainContriAtt.setText(heroN.getUpperAtk() + "");
         mainContriDef.setText(heroN.getUpperDef() + "");
-        swordLev.setText(heroN.getSword() + "\n+" + heroN.getSwordLev());
-        armorLev.setText(heroN.getArmor() + "\n+" + heroN.getArmorLev());
+        swordLev.setText(heroN.getSword() + "+" + heroN.getSwordLev());
+        armorLev.setText(heroN.getArmor() + "+" + heroN.getArmorLev());
         mainContriCurMaterial.setText(heroN.getMaterial() + "");
         heroPointValue.setText(heroN.getPoint() + "");
         if (heroN.getMaterial() >= 100 + heroN.getSwordLev()) {
             upSword.setEnabled(true);
+            if (heroN.getMaterial() > 10 * (100 + heroN.getSwordLev())) {
+                upTSwordButton.setEnabled(true);
+            } else {
+                upTSwordButton.setEnabled(false);
+            }
         } else {
             upSword.setEnabled(false);
+            upTSwordButton.setEnabled(false);
+        }
+        if(heroN.getMaterial() > 100 * (80 + heroN.getArmorLev())){
+            upgradeHArmorButton.setEnabled(true);
+        }else{
+            upgradeHArmorButton.setEnabled(false);
+        }if(heroN.getMaterial() > 100 * (100 + heroN.getSwordLev())){
+            upgradeHSwordButton.setEnabled(true);
+        }else{
+            upgradeHSwordButton.setEnabled(false);
         }
         if (heroN.getMaterial() >= 80 + heroN.getArmorLev()) {
             upArmor.setEnabled(true);
+            if (heroN.getMaterial() > 10 * (80 + heroN.getArmorLev())) {
+                upTArmorButton.setEnabled(true);
+            } else {
+                upTArmorButton.setEnabled(false);
+            }
         } else {
             upArmor.setEnabled(false);
+            upTArmorButton.setEnabled(false);
         }
         if (heroN.getPoint() > 0) {
             addpow.setEnabled(true);
             addstr.setEnabled(true);
             addagi.setEnabled(true);
+            addNPowerButton.setEnabled(true);
+            addNStreButton.setEnabled(true);
+            addNAgiButton.setEnabled(true);
         } else {
             addpow.setEnabled(false);
             addstr.setEnabled(false);
             addagi.setEnabled(false);
+            addNPowerButton.setEnabled(false);
+            addNStreButton.setEnabled(false);
+            addNAgiButton.setEnabled(false);
         }
         itembarContri.setText(heroN.getName() + "\n迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
         heroPic.setText(heroN.getSword() + "\n\n\n " + heroN.getArmor());
-        lifeSkillButton.setText(heroN.getSkill(Skill.治疗).getCount() + "");
-        hitSkillButton.setText(heroN.getSkill(Skill.重击).getCount() + "");
-        mulSkillButton.setText(heroN.getSkill(Skill.多重攻击).getCount() + "");
+        if (heroN.getFirstSkill() != null) {
+            firstSkillButton.setText(heroN.getFirstSkill().getDisplayName());
+            firstSkillButton.setEnabled(true);
+        } else {
+            firstSkillButton.setText("");
+            firstSkillButton.setEnabled(false);
+        }
+        if (heroN.getSecondSkill() != null) {
+            secondSkillButton.setText(heroN.getSecondSkill().getDisplayName());
+            secondSkillButton.setEnabled(true);
+        } else {
+            secondSkillButton.setText("");
+            secondSkillButton.setEnabled(false);
+        }
+        if (heroN.getThirdSkill() != null) {
+            thirdSkillButton.setText(heroN.getThirdSkill().getDisplayName());
+            thirdSkillButton.setEnabled(true);
+        } else {
+            thirdSkillButton.setText("");
+            thirdSkillButton.setEnabled(false);
+        }
         if (!uploading) {
-            if (lastUploadLev + 100 <= heroN.getMaxMazeLev()) {
+            if (MazeContents.lastUpload + 100 <= heroN.getMaxMazeLev()) {
                 uploadButton.setEnabled(true);
                 uploadButton.setText("上传角色信息");
             } else {
                 uploadButton.setEnabled(false);
-                uploadButton.setText("还差" + (100 - heroN.getMaxMazeLev() + lastUploadLev) + "层");
+                uploadButton.setText("还差" + (100 - heroN.getMaxMazeLev() + MazeContents.lastUpload) + "层");
             }
+        }
+
+        lockBoxCount.setText("X " + heroN.getLockBox());
+        keyCount.setText("X " + heroN.getKeyCount());
+        if (heroN.getRing() != null) {
+            ringTextView.setText(Html.fromHtml(heroN.getRing().getFormatName()));
+        } else {
+            ringTextView.setText("未装备");
+        }
+        if (heroN.getNecklace() != null) {
+            necklaceTextView.setText(Html.fromHtml(heroN.getNecklace().getFormatName()));
+        } else {
+            necklaceTextView.setText("未装备");
+        }
+        if (heroN.getHat() != null) {
+            hatTextView.setText(Html.fromHtml(heroN.getHat().getFormatName()));
+        } else {
+            hatTextView.setText("未装备");
         }
     }
 
     private long saveTime = 0;
 
+    public DBHelper getDbHelper() {
+        return dbHelper;
+    }
+
+    public void setDbHelper(DBHelper dbHelper) {
+        this.dbHelper = dbHelper;
+    }
+
+    public Hero getHero() {
+        return heroN;
+    }
+
+    public Maze getMaze() {
+        return maze;
+    }
+
+    public long getLastUploadLev() {
+        return MazeContents.lastUpload;
+    }
+
+    public Alipay getAlipay() {
+        return alipay;
+    }
+
+    public void setAlipay(Alipay alipay) {
+        this.alipay = alipay;
+    }
+
+    public void setLastUploadLev(long lastUploadLev) {
+        MazeContents.lastUpload = lastUploadLev;
+    }
+
+    public void setHeroN(Hero heroN) {
+        this.heroN = heroN;
+    }
+
+    public void setMaze(Maze maze) {
+        this.maze = maze;
+    }
+
+    public SkillDialog getSkillDialog() {
+        return skillDialog;
+    }
+
+    public MonsterBook getMonsterBook() {
+        return monsterBook;
+    }
+
+    public void setPause(boolean pause) {
+        this.pause = pause;
+    }
+
     private class GameThread extends Thread {
 
         @Override
         public void run() {
-            checkUpdate();
-            new MoveThread().start();
-            while (gameThreadRunning) {
-                try {
-                    Thread.sleep(refreshInfoSpeed);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            try {
+                new MoveThread().start();
+                while (gameThreadRunning) {
+                    try {
+                        Thread.sleep(refreshInfoSpeed);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-                if (!pause) {
-                    saveTime += refreshInfoSpeed;
-                    if (saveTime >= refreshInfoSpeed * 200)
-                        save();
-                }
+//                if (!pause) {
+//                    saveTime += refreshInfoSpeed;
+//                    if (saveTime >= refreshInfoSpeed * 300)
+//                        handler.sendEmptyMessage(103);
+//                }
+            } catch (Exception exp) {
+                Log.e(TAG, "MainGameActivity.GameThread", exp);
+                LogHelper.writeLog();
             }
         }
     }
 
     private class MoveThread extends Thread {
         public void run() {
-            maze.move(context);
+            try {
+                maze.move(context);
+            } catch (Exception e) {
+                Log.e(TAG, "MainGameActivity.GameThread", e);
+                LogHelper.writeLog();
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -718,6 +1263,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             return true;
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG, "DownloadUpdate", e);
         }
         handler.sendEmptyMessage(-1);
         return false;
@@ -735,32 +1281,118 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.up_h_armor:
+                heroN.upgradeArmor(100);
+                handler.sendEmptyMessage(0);
+                break;
+            case R.id.up_h_sword:
+                heroN.upgradeSword(100);
+                handler.sendEmptyMessage(0);
+                break;
+            case R.id.rebirth_button:
+                showReincarnationDialog();
+                handler.sendEmptyMessage(0);
+                break;
+            case R.id.monster_button:
+                monsterBook.showBook(context);
+                break;
+            case R.id.lock_box_get_button:
+                getLockBox();
+                break;
+            case R.id.local_box:
+                if (heroN.getKeyCount() > 0 && heroN.getLockBox() > 0) {
+                    heroN.setKeyCount(heroN.getKeyCount() - 1);
+                    showLockBox();
+                }
+                break;
+            case R.id.clean_data_button:
+                showCleanDialog();
+                break;
+            case R.id.ring_view:
+            case R.id.necklace_view:
+            case R.id.hat_view:
+                showAccessory();
+                break;
+            case R.id.forge_recipe_button:
+                showRecipe();
+                break;
+            case R.id.achievement_button:
+                showAchievement();
+                break;
+            case R.id.accessory_button:
+                showAccessory();
+                break;
+            case R.id.forge_button:
+                handler.sendEmptyMessage(103);
+                Intent intent = new Intent(this, ForgeActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.skill_point_get_button:
+                showGetSkillPointDialog();
+                break;
+            case R.id.add_n_agi:
+                long agi = heroN.getRandom().nextLong(heroN.getPoint() + 1);
+                heroN.addAgility(agi);
+                heroN.addPoint(-agi);
+                handler.sendEmptyMessage(0);
+                heroN.click(false);
+                break;
+            case R.id.add_n_power:
+                long life = heroN.getRandom().nextLong(heroN.getPoint() + 1);
+                heroN.addLife(life);
+                heroN.addPoint(-life);
+                handler.sendEmptyMessage(0);
+                heroN.click(false);
+                break;
+            case R.id.add_n_stre:
+                long str = heroN.getRandom().nextLong(heroN.getPoint() + 1);
+                heroN.addStrength(str);
+                heroN.addPoint(-str);
+                handler.sendEmptyMessage(0);
+                heroN.click(false);
+                break;
+            case R.id.up_t_armor:
+                heroN.upgradeArmor(10);
+                handler.sendEmptyMessage(0);
+                heroN.click(false);
+                break;
+            case R.id.up_t_sword:
+                heroN.upgradeSword(10);
+                handler.sendEmptyMessage(0);
+                heroN.click(false);
+                break;
+            case R.id.save_button:
+                handler.sendEmptyMessage(103);
+                break;
+            case R.id.skill_button:
+                if (!skillDialog.isInit()) {
+                    skillDialog.init();
+                }
+                skillDialog.show(heroN);
+                break;
             case R.id.update_button:
                 showDownload();
                 break;
             case R.id.upload_button:
                 showUpload();
                 break;
-            case R.id.life_skill:
-                Skill health = heroN.getSkill(Skill.治疗);
-                if (health != null) {
-                    health.addCount();
+            case R.id.first_skill:
+                if (heroN.getFirstSkill() != null) {
+                    heroN.getFirstSkill().addCount();
                 }
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
                 break;
-            case R.id.hit_skill:
-                Skill hit = heroN.getSkill(Skill.重击);
-                if (hit != null) {
-                    hit.addCount();
+            case R.id.secondary_skill:
+                if (heroN.getSecondSkill() != null) {
+                    heroN.getSecondSkill().addCount();
                 }
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
                 break;
-            case R.id.mul_skill:
-                Skill mul = heroN.getSkill(Skill.多重攻击);
-                if (mul != null) {
-                    mul.addCount();
+            case R.id.third_skill:
+                if (heroN.getThirdSkill() != null) {
+                    heroN.getThirdSkill().addCount();
                 }
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
@@ -773,26 +1405,21 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 showNameDialog();
                 heroN.click(false);
                 break;
-            case R.id.reset_button:
-                reset();
-                handler.sendEmptyMessage(0);
+            case R.id.reset_skill_button:
+                showResetSkillPointDialog();
                 heroN.click(false);
                 break;
             case R.id.pause_button:
                 handler.sendEmptyMessage(1);
                 heroN.click(false);
                 break;
-            case R.id.achieve_button:
-                showAchievement();
-                heroN.click(false);
-                break;
             case R.id.up_armor:
-                heroN.upgradeArmor();
+                heroN.upgradeArmor(1);
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
                 break;
             case R.id.up_sword:
-                heroN.upgradeSword();
+                heroN.upgradeSword(1);
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
                 break;
@@ -830,103 +1457,14 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     }
 
-    private void save() {
-        try {
-            FileOutputStream fos = this.openFileOutput("yzcmg.ave", Activity.MODE_PRIVATE);
-            StringBuffer sb = new StringBuffer();
-            sb.append(heroN.getName()).append("_").append(heroN.getHp()).append("_").append(heroN.getUpperHp()).
-                    append("_").append(heroN.getBaseAttackValue()).append("_").append(heroN.getBaseDefense()).append("_").
-                    append(heroN.getClick()).append("_").append(heroN.getPoint()).append("_").append(heroN.getMaterial())
-                    .append("_").append(heroN.getSwordLev()).append("_").append(heroN.getArmorLev()).append("_").
-                    append(heroN.getSword()).append("_").append(heroN.getArmor()).append("_").append(heroN.getMaxMazeLev())
-                    .append("_").append(heroN.getStrength()).append("_").append(heroN.getPower()).append("_").
-                    append(heroN.getAgility()).append("_").append(heroN.getClickAward());
-            sb.append("_");
-            for (Achievement achievement : Achievement.values()) {
-                if (achievement.isEnable()) {
-                    sb.append(1);
-                } else {
-                    sb.append(0);
-                }
-            }
-            sb.append("_");
-            sb.append(maze.getLev());
-            sb.append("_").append(alipay.getPayTime());
-            sb.append("_").append(heroN.getDeathCount());
-            sb.append("_").append(heroN.getExistSkill().get(0).getCount());
-            sb.append("_").append(heroN.getExistSkill().get(1).getCount());
-            sb.append("_").append(heroN.getExistSkill().get(2).getCount());
-            sb.append("_").append(lastUploadLev);
-            fos.write(sb.toString().getBytes("UTF-8"));
-            fos.flush();
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public synchronized void save() {
+        saveHelper.save();
     }
 
-    private boolean load() {
-        try {
-            FileInputStream fis = openFileInput("yzcmg.ave");
-            byte[] b = new byte[1];
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            while (fis.read(b) != -1) {
-                baos.write(b, 0, b.length);
-            }
-            baos.close();
-            fis.close();
-            String save = baos.toString("UTF-8");
-            String[] atts = save.split("_");
-            if (atts.length >= 20) {
-                heroN = new Hero(atts[0]);
-                heroN.setHp(Integer.parseInt(atts[1]));
-                heroN.setUpperHp(Integer.parseInt(atts[2]));
-                heroN.setAttackValue(Integer.parseInt(atts[3]));
-                heroN.setDefenseValue(Integer.parseInt(atts[4]));
-                heroN.setClick(Integer.parseInt(atts[5]));
-                heroN.setPoint(Integer.parseInt(atts[6]));
-                heroN.setMaterial(Integer.parseInt(atts[7]));
-                heroN.setSwordLev(Integer.parseInt(atts[8]));
-                heroN.setArmorLev(Integer.parseInt(atts[9]));
-                heroN.setMaxMazeLev(Integer.parseInt(atts[12]));
-                heroN.setStrength(Integer.parseInt(atts[13]));
-                heroN.setPower(Integer.parseInt(atts[14]));
-                heroN.setAgility(Integer.parseInt(atts[15]));
-                heroN.setClickAward(Integer.parseInt(atts[16]));
-                heroN.setSword(Sword.valueOf(atts[10]));
-                heroN.setArmor(Armor.valueOf(atts[11]));
-                if (atts.length >= 24) {
-                    heroN.setDeathCount(Integer.parseInt(atts[20]));
-                    heroN.getExistSkill().get(0).setCount(Integer.parseInt(atts[21]));
-                    heroN.getExistSkill().get(1).setCount(Integer.parseInt(atts[22]));
-                    heroN.getExistSkill().get(2).setCount(Integer.parseInt(atts[23]));
-                }
-                if (atts.length >= 25) {
-                    lastUploadLev = Integer.parseInt(atts[24]);
-                }
-                maze = new Maze(heroN);
-                maze.setLevel(Integer.parseInt(atts[18]));
-                if (maze.getLev() > heroN.getMaxMazeLev()) {
-                    maze.setLevel(heroN.getMaxMazeLev());
-                }
-                for (int i = 0; i < atts[17].length() && i < Achievement.values().length; i++) {
-                    int enable = Integer.parseInt(atts[17].charAt(i) + "");
-                    if (enable == 1) {
-                        Achievement.values()[i].enable();
-                    }
-                }
-                alipay = new Alipay(this, Integer.parseInt(atts[19]));
-                Achievement.linger.enable(heroN);
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    private void load() {
+        heroN = MazeContents.hero;
+        maze = MazeContents.maze;
+        //saveHelper.loadHero();
     }
 
     public static class AchievementList {
@@ -1037,4 +1575,23 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         }
 
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return detector.onTouchEvent(event);
+    }
+
+    public GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener() {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (e1.getX() - e2.getX() > 100) {
+                buttonGroup.showNext();
+                return true;
+            } else if (e1.getX() - e2.getY() < -100) {
+                buttonGroup.showPrevious();
+                return true;
+            }
+            return false;
+        }
+    };
 }

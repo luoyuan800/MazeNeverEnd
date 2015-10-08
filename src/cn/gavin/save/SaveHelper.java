@@ -1,0 +1,88 @@
+package cn.gavin.save;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import cn.gavin.Achievement;
+import cn.gavin.Hero;
+import cn.gavin.Maze;
+import cn.gavin.activity.MainGameActivity;
+import cn.gavin.monster.MonsterBook;
+import cn.gavin.skill.SkillFactory;
+
+/**
+ * Copyright 2015 gluo.
+ * ALL RIGHTS RESERVED.
+ * Created by gluo on 9/16/2015.
+ */
+public class SaveHelper {
+    private MainGameActivity context;
+
+    public SaveHelper(MainGameActivity activity) {
+        context = activity;
+    }
+
+    public SaveHelper() {
+
+    }
+
+    public void saveHero() {
+        Hero heroN = context.getHero();
+        Maze maze = context.getMaze();
+        SharedPreferences preferences = context.getSharedPreferences("hero", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("name", heroN.getName());
+        editor.putLong("hp", heroN.getHp());
+        editor.putLong("upperHp", heroN.getUpperHp());
+        editor.putLong("baseAttackValue", heroN.getBaseAttackValue());
+        editor.putLong("baseDefense", heroN.getBaseDefense());
+        editor.putLong("click", heroN.getClick());
+        editor.putLong("point", heroN.getPoint());
+        editor.putLong("material", heroN.getMaterial());
+        editor.putLong("swordLev", heroN.getSwordLev());
+        editor.putLong("armorLev", heroN.getArmorLev());
+        editor.putString("swordName", heroN.getSword());
+        editor.putString("armorName", heroN.getArmor());
+        editor.putLong("maxMazeLev", heroN.getMaxMazeLev());
+        editor.putLong("strength", heroN.getStrength());
+        editor.putLong("power", heroN.getPower());
+        editor.putLong("agility", heroN.getAgility());
+        editor.putLong("clickAward", heroN.getClickAward());
+        if (heroN.getRing() != null) {
+            editor.putString("ring", heroN.getRing().getId());
+        }
+        if (heroN.getNecklace() != null) {
+            editor.putString("necklace", heroN.getNecklace().getId());
+        }
+        if (heroN.getHat() != null) {
+            editor.putString("hat", heroN.getHat().getId());
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Achievement achievement : Achievement.values()) {
+            if (achievement.isEnable()) {
+                sb.append(1);
+            } else {
+                sb.append(0);
+            }
+        }
+        editor.putString("achievement", sb.toString());
+        editor.putLong("currentMazeLev", maze.getLev());
+        editor.putLong("payTime", context.getAlipay().getPayTime());
+        editor.putLong("death", heroN.getDeathCount());
+        editor.putLong("lastUploadLev", context.getLastUploadLev());
+        editor.putLong("skillPoint", heroN.getSkillPoint());
+        editor.putLong("awardCount", heroN.getAwardCount());
+        editor.putLong("lockBox", heroN.getLockBox());
+        editor.putLong("keyCount", heroN.getKeyCount());
+        editor.apply();
+    }
+
+    public void saveSkill() {
+        SkillFactory.save();
+    }
+
+
+    public void save() {
+        saveHero();
+        saveSkill();
+    }
+}

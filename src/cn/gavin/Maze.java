@@ -1,18 +1,38 @@
 package cn.gavin;
 
-import java.util.Random;
-
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.forge.Item;
+import cn.gavin.forge.list.ItemName;
+import cn.gavin.monster.Monster;
+import cn.gavin.monster.MonsterBook;
+import cn.gavin.skill.Skill;
+import cn.gavin.skill.SkillFactory;
+import cn.gavin.story.StoryHelper;
+import cn.gavin.utils.Random;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Created by gluo on 8/26/2015.
  */
 public class Maze {
+    private int csmgl = 8977;
     private Hero hero;
-    private int level;
+    private long level;
     private boolean moving;
-    private int step;
-    private int streaking;
+    private long step;
+    private long streaking;
+    private float meetRate = 100f;
+    private MonsterBook monsterBook;
+    private StoryHelper storyHelper;
+    private long lastSave;
+
+    public void setCsmgl(int csmgl) {
+        this.csmgl = csmgl;
+    }
+
+    public int getCsmgl() {
+        return csmgl;
+    }
 
     public boolean isMoving() {
         return moving;
@@ -20,43 +40,69 @@ public class Maze {
 
     private Random random = new Random();
 
+    public Maze(){
+
+    }
+
     public Maze(Hero hero) {
         this.hero = hero;
+        storyHelper = new StoryHelper();
+    }
+
+    public Maze(Hero hero, MonsterBook monsterBook) {
+        this.hero = hero;
+        this.monsterBook = monsterBook;
+        storyHelper = new StoryHelper();
     }
 
     public void move(MainGameActivity context) {
+        this.monsterBook = context.getMonsterBook();
         while (context.isGameThreadRunning()) {
             if (context.isPause()) {
                 continue;
             }
+            if (storyHelper != null && storyHelper.trigger()) {
+                continue;
+            }
             moving = true;
             step++;
-            if (random.nextInt(10000) > 9985 || step > random.nextInt(22) || random.nextInt(streaking + level + 1) > 20 + level) {
+            if (random.nextLong(10000) > 9985 || step > random.nextLong(22) || random.nextLong(streaking + 1) > 20 + level) {
+                if ((level - lastSave) > 50) {
+                    lastSave = level;
+                    context.save();
+                }
                 step = 0;
                 level++;
                 mazeLevelDetect();
-                int point = 2 + random.nextInt(level + 1) / 2;
-                context.addMessage(hero.getName() + "进入了" + level + "层迷宫， 获得了" + point + "点数奖励");
+                long point = 1 + level / 10 + random.nextLong(level + 1) / 300;
+                if(point > 100){
+                    point = 100;
+                }
+                context.addMessage(hero.getFormatName() + "进入了" + level + "层迷宫， 获得了<font color=\"#FF8C00\">" + point + "</font>点数奖励");
                 if (level > hero.getMaxMazeLev()) {
                     hero.addMaxMazeLev();
                 }
+
                 hero.addPoint(point);
-                hero.addHp(hero.getUpperHp() / (random.nextInt(level + 1) + 1) * (random.nextInt(level + 1) + 1));
+                hero.addHp(random.nextLong(hero.getUpperHp() / 890 + 1) +10);
                 context.addMessage("-------------------");
-            } else if (random.nextInt(100) > 95) {
-                int mate = random.nextInt(level * 2 + 1) + random.nextInt(hero.getAgility() + 1) + 2;
-                context.addMessage(hero.getName() + "找到了一个宝箱， 获得了" + mate + "材料");
+            } else if (random.nextLong(1000) > 983 && random.nextLong(hero.getAgility()) > random.nextLong(6971)) {
+                long mate = random.nextLong(level * 300 + 1) + random.nextLong(hero.getAgility() / 1000 + 100) + 100;
+                context.addMessage(hero.getFormatName() + "找到了一个宝箱， 获得了<font color=\"#FF8C00\">" + mate + "</font>材料");
                 hero.addMaterial(mate);
                 context.addMessage("-------------------");
-            } else if (hero.getHp() < hero.getUpperHp() && random.nextInt(100) > 85) {
-                int hel = random.nextInt(hero.getUpperHp() + 1);
-                context.addMessage(hero.getName() + "休息了一会，恢复了" + hel + "点HP");
+            } else if (hero.getHp() < hero.getUpperHp() && random.nextLong(1000) > 985) {
+                long hel = random.nextLong(hero.getUpperHp() / 70 + 1) + random.nextLong(hero.getPower() / 500);
+                if(hel > hero.getUpperHp()/2){
+                    hel = random.nextLong(hero.getUpperHp()/2 + 1) +1;
+                }
+                context.addMessage(hero.getFormatName() + "休息了一会，恢复了<font color=\"#556B2F\">" + hel + "</font>点HP");
                 hero.addHp(hel);
                 context.addMessage("-------------------");
-            } else if (random.nextInt(9000) > 8977) {
+            } else if (random.nextLong(9000) > csmgl) {
                 step = 0;
-                int levJ = random.nextInt(hero.getMaxMazeLev() + 5) + 1;
-                context.addMessage(hero.getName() + "踩到了传送门，被传送到了迷宫第" + levJ + "层");
+                long levJ = random.nextLong(hero.getMaxMazeLev() + 5) + 1;
+                context.addMessage(hero.getFormatName() + "踩到了传送门，被传送到了迷宫第" + levJ + "层");
                 level = levJ;
                 if (level > hero.getMaxMazeLev()) {
                     hero.setMaxMazeLev(level);
@@ -64,34 +110,82 @@ public class Maze {
                 mazeLevelDetect();
                 context.addMessage("-------------------");
             } else if (random.nextBoolean()) {
-                Monster monster;
-                if (random.nextInt(1000) > 899) {
+                Skill skill1 = SkillFactory.getSkill("隐身", hero, context.getSkillDialog());
+                if (skill1.isActive() && skill1.perform()) {
+                    continue;
+                }
+                Monster monster = null;
+                if (random.nextLong(1000) > 899) {
                     monster = Monster.getBoss(this, hero);
                     step += 21;
-                } else {
+                }
+                if (monster == null) {
                     monster = new Monster(hero, this);
                 }
-                context.addMessage(hero.getName() + "遇到了" + monster.getName());
+                monster.setMazeLev(level);
+                String msg = hero.getFormatName() + "遇到了" + monster.getFormatName();
+                context.addMessage(msg);
+                monster.addBattleDesc(msg);
                 boolean atk = hero.getAgility() > monster.getHp() / 2 || random.nextBoolean();
-                while (monster.getHp() > 0 && hero.getHp() > 0) {
+                Skill skill;
+                boolean isJump = false;
+                while (!isJump && monster.getHp() > 0 && hero.getHp() > 0) {
                     if (context.isPause()) {
                         continue;
                     }
                     if (atk) {
-                        Skill skill = hero.useSkill();
+                        skill = hero.useAttackSkill(monster);
+                        isJump = false;
                         if (skill != null) {
-                            context.addMessages(skill.release(hero, monster));
+                            isJump = skill.release(monster);
                         } else {
-                            monster.addHp(-(hero.getAttackValue()));
-                            context.addMessage(hero.getName() + "攻击了" + monster.getName() + "，造成了" + hero.getAttackValue() + "点伤害。");
+                            if (hero.getHp() < hero.getUpperHp()) {
+                                skill = hero.useRestoreSkill();
+                            }
+                            if (skill != null) {
+                                isJump = skill.release(monster);
+                            } else {
+                                monster.addHp(-(hero.getAttackValue()));
+                                String atkmsg = hero.getFormatName() + "攻击了" + monster.getFormatName() + "，造成了<font color=\"red\">" + hero.getAttackValue() + "</font>点伤害。";
+                                context.addMessage(atkmsg);
+                            monster.addBattleDesc(atkmsg);
+                            }
                         }
                     } else {
-                        int harm = monster.getAtk() - hero.getDefenseValue();
-                        if (harm <= 0) {
-                            harm = random.nextInt(level + 1);
+                        skill = hero.useDefendSkill(monster);
+                        if (skill != null) {
+                            isJump = skill.release(monster);
+                        } else {
+                            long harm = monster.getAtk() - hero.getDefenseValue();
+                            if (harm <= 0 || hero.getRandom().nextInt(100) > monster.getHitRate()) {
+                                String s = monster.getFormatName() + "攻击偏离了";
+                                context.addMessage(s);
+                                monster.addBattleDesc(s);
+                                harm = random.nextLong(level + 1);
+                            }
+                            if (harm >= hero.getHp()) {
+                                Skill sy = SkillFactory.getSkill("瞬间移动", hero, context.getSkillDialog());
+                                if (sy.isActive() && sy.perform()) {
+                                    isJump = sy.release(monster);
+                                    continue;
+                                } else {
+                                    sy = SkillFactory.getSkill("反杀", hero, context.getSkillDialog());
+                                    if (sy.isActive() && sy.perform()) {
+                                        isJump = sy.release(monster);
+                                        continue;
+                                    }
+                                }
+                            }
+                            hero.addHp(-harm);
+                            if(hero.isParry()){
+                                String parrymsg = hero.getFormatName() + "成功格挡一次攻击，减少了当前受到的伤害！";
+                                context.addMessage(parrymsg);
+                                monster.addBattleDesc(parrymsg);
+                            }
+                            String defmsg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了<font color=\"red\">" + harm + "</font>点伤害。";
+                            context.addMessage(defmsg);
+                            monster.addBattleDesc(defmsg);
                         }
-                        hero.addHp(-harm);
-                        context.addMessage(monster.getName() + "攻击了" + hero.getName() + "，造成了" + harm + "点伤害。");
                     }
                     atk = !atk;
                     try {
@@ -100,19 +194,54 @@ public class Maze {
                         e.printStackTrace();
                     }
                 }
+                if (isJump){
+                    continue;
+                }
                 if (monster.getHp() <= 0) {
                     streaking++;
                     if (streaking >= 100) {
                         Achievement.unbeaten.enable(hero);
                     }
-                    context.addMessage(hero.getName() + "击败了" + monster.getName() + "， 获得了" + monster.getMaterial() + "份锻造材料。");
+                    String defeatmsg = hero.getFormatName() + "击败了" + monster.getFormatName() + "， 获得了<font color=\"blue\">" + monster.getMaterial() + "</font>份锻造材料。";
+                    context.addMessage(defeatmsg);
+                    monster.addBattleDesc(defeatmsg);
                     hero.addMaterial(monster.getMaterial());
+                    monster.setDefeat(true);
+                    //monsterBook.addMonster(monster);
+                    StringBuilder items = new StringBuilder();
+                    for (ItemName item : monster.getItems()) {
+                        Item i = Item.buildItem(hero, this, monster);
+                        if (i != null) {
+                            i.save();
+                            items.append(item.name()).append(" ");
+                        }
+                    }
+                    String str = items.toString();
+                    if (StringUtils.isNotEmpty(str)) {
+                        String itemmsg = hero.getFormatName() + "获得了:" + str;
+                        context.addMessage(itemmsg);
+                        monster.addBattleDesc(itemmsg);
+                    }
+                    monsterBook.addMonster(monster);
                 } else {
-                    streaking = 0;
-                    step = 0;
-                    context.addMessage(hero.getName() + "被" + monster.getName() + "打败了，回到迷宫第一层。");
-                    this.level = 1;
-                    hero.restore();
+                    Skill notDieSkill = SkillFactory.getSkill("不死之身", hero, context.getSkillDialog());
+                    if (notDieSkill.isActive() && notDieSkill.perform()) {
+                        isJump = notDieSkill.release(monster);
+                    } else {
+                        streaking = 0;
+                        step = 0;
+                        String defeatedmsg = hero.getFormatName() + "被" + monster.getFormatName() + "打败了，回到迷宫第一层。";
+                        context.addMessage(defeatedmsg);
+                        monster.addBattleDesc(defeatedmsg);
+                        if(level > 25){
+                            context.save();
+                        }
+                        this.level = 1;
+                        hero.restore();
+                        monster.setDefeat(false);
+                        lastSave = level;
+                        monsterBook.addMonster(monster);
+                    }
                 }
                 context.addMessage("-----------------------------");
             }
@@ -122,40 +251,56 @@ public class Maze {
                 e.printStackTrace();
             }
         }
+
         moving = false;
     }
 
     private void mazeLevelDetect() {
-        switch (level) {
-            case 50:
-                Achievement.maze50.enable(hero);
-                break;
-            case 100:
-                Achievement.maze100.enable(hero);
-                break;
-            case 500:
-                if (hero.getArmorLev() == 0 && hero.getSwordLev() == 0) {
+        if (level > Integer.MAX_VALUE) {
+            if (level > Long.MAX_VALUE - 100) {
+                level--;
+            }
+        } else {
+            switch ((int) level) {
+                case 50:
+                    Achievement.maze50.enable(hero);
+                    break;
+                case 100:
+                    Achievement.maze100.enable(hero);
+                    break;
+                case 500:
+                    if (hero.getArmorLev() == 0 && hero.getSwordLev() == 0) {
 
-                }
-                Achievement.maze500.enable(hero);
-                break;
-            case 1000:
-                Achievement.maze1000.enable(hero);
-                break;
-            case 10000:
-                Achievement.maze10000.enable(hero);
-                break;
-            case 50000:
-                Achievement.maze50000.enable(hero);
-                break;
+                    }
+                    Achievement.maze500.enable(hero);
+                    break;
+                case 1000:
+                    Achievement.maze1000.enable(hero);
+                    break;
+                case 10000:
+                    Achievement.maze10000.enable(hero);
+                    break;
+                case 50000:
+                    Achievement.maze50000.enable(hero);
+                    break;
+
+            }
         }
     }
 
-    public int getLev() {
+    public long getLev() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(long level) {
         this.level = level;
+    }
+
+    public float getMeetRate() {
+        return meetRate;
+    }
+
+    public void setMeetRate(float meetRate) {
+        this.meetRate = meetRate;
     }
 }
