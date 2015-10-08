@@ -139,7 +139,7 @@ public class SkillFactory {
                         }
                     });
                     if (!skill.load()) {
-                        skill.setProbability(2.2f);
+                        skill.setProbability(3.0f);
                     }
                 } else if (name.equals("闪避")) {
                     skill = new DefendSkill();

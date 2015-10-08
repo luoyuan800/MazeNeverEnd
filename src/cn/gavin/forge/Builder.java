@@ -19,10 +19,13 @@ public abstract class Builder {
     public Accessory a2;
     public List<Item> items;
 
+    public abstract boolean isEnough();
+
     public Accessory build(List<Item> items) {
         if (this.items != items || !items.containsAll(this.items)) {
             detect(items);
         }
+        if(isEnough()){
         int p = random.nextInt(100);
         if (a1 != null && p < a1.getPro()) {
             build(a1, false);
@@ -35,6 +38,9 @@ public abstract class Builder {
             buildName(accessory);
             build(accessory, true);
             return accessory;
+        }
+        }else{
+            return null;
         }
     }
 
@@ -88,6 +94,7 @@ public abstract class Builder {
         }
         accessory.setName(name);
         accessory.setItems(items);
+
     }
 
     private void build(Accessory accessory, boolean detectSave) {
@@ -315,4 +322,10 @@ public abstract class Builder {
     public abstract int getType();
 
     public abstract Cursor queryRecipe();
+
+
+    public List<Item> getItems() {
+        return items;
+    }
+    public abstract String notEnough();
 }

@@ -51,8 +51,7 @@ public enum ItemName {
     龙骨(ItemName.骨头),
     虎骨(ItemName.骨头),
     鼠骨(ItemName.骨头),
-    牛骨(ItemName.骨头),
-    EMPTY(ItemName.筋);
+    牛骨(ItemName.骨头);
     private int type;
 
     private ItemName(int type) {
@@ -74,7 +73,7 @@ public enum ItemName {
 
     public static final int 木材 = 0, 皮毛 = 1, 石头 = 2, 骨头 = 3, 筋 = 4;
 
-    private int getType() {
+    public int getType() {
         return type;
     }
 

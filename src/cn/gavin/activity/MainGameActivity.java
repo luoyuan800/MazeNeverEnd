@@ -46,7 +46,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private static final String PACKAGE_DOWNLOAD_URL = "http://7xk7ce.com1.z0.glb.clouddn.com/MazeNeverEnd.png";
 
     // 战斗刷新速度
-    private long refreshInfoSpeed = 600;
+    private long refreshInfoSpeed = 480;
     private Button uploadButton;
     private Button updateButton;
     private StringBuilder versionUpdateInfo;
@@ -477,7 +477,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private void showGetSkillPointDialog() {
         if (skillPointGetDialog == null) {
             skillPointGetDialog = new Builder(this).create();
-            skillPointGetDialog.setTitle("300000材料转换1点技能点");
+            skillPointGetDialog.setTitle("20000材料转换1点技能点");
             skillPointGetDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -586,6 +586,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         } else if (tv.getText().toString().equals("201509181447")) {
                             heroN.addMaterial(10000000);
                             heroN.addPoint(100000);
+                            heroN.setLockBox(heroN.getLockBox() + 1000);
+                            heroN.setKeyCount(heroN.getKeyCount() + 1000);
                             heroN.setAwardCount(heroN.getAwardCount() + 1);
                         } else if (tv.getText().toString().equals("sp1.1c")) {
                             if (heroN.getAwardCount() < 1) {
@@ -1153,11 +1155,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         e.printStackTrace();
                     }
                 }
-//                if (!pause) {
-//                    saveTime += refreshInfoSpeed;
-//                    if (saveTime >= refreshInfoSpeed * 300)
-//                        handler.sendEmptyMessage(103);
-//                }
+                if (!pause) {
+                    saveTime += refreshInfoSpeed;
+                    if (saveTime >= refreshInfoSpeed * 300)
+                        save();
+                }
             } catch (Exception exp) {
                 Log.e(TAG, "MainGameActivity.GameThread", exp);
                 LogHelper.writeLog();

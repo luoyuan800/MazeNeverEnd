@@ -23,8 +23,8 @@ public class Monster {
     public final static String[] lastNames = {"蟑螂", "大蚯蚓", "异壳虫", "巨型飞蛾", "猪", "老鼠", "嗜血蚁",
             "老虎", "蛟", "变异蝎", "食人鸟", "丑蝙蝠", "蛇", "野牛", "龟", "三头蛇", "刺猬", "狼", "精灵",
             "僵尸", "骷髅", "凤凰", "龙", "作者"};
-    private final static long[] baseHP = {8, 20, 55, 75, 95, 115, 400, 1000, 800, 520, 280, 350, 380, 450, 530, 1000, 1500, 2300, 4000, 4500, 6000, 10000, 20000, 50000};
-    private final static long[] baseAtk = {1, 10, 35, 55, 75, 105, 200, 250, 1500, 2000, 310, 350, 400, 900, 1000, 1430, 1500, 2000, 3000, 5000, 6000, 7000, 10000, 50000};
+    private final static long[] baseHP = {8, 20, 55, 75, 95, 115, 400, 1000, 800, 520, 280, 350, 380, 450, 530, 1000, 1500, 2300, 4000, 4500, 6000, 10000, 20000, 70000};
+    private final static long[] baseAtk = {1, 10, 35, 55, 75, 105, 200, 250, 1500, 2000, 310, 350, 400, 900, 1000, 1430, 1500, 2000, 3000, 5000, 6000, 7000, 10000, 70000};
     private final static List[] itemNames = {
             Arrays.asList(ItemName.原石),
             Arrays.asList(ItemName.硝石),
@@ -135,11 +135,12 @@ public class Monster {
         secondName = secondNames[second];
         lastName = lastNames[last];
         this.items = itemNames[last];
-        if (hero.getStrength() > 100 && hero.getAgility()>1000 && hero.getPower() > 100 && random.nextBoolean()) {
-            hp += maze.getLev() * random.nextLong((hero.getStrength()+ hero.getAgility() + hero.getPower())/ 100 + 1);
+        if (hero.getStrength() > 100 && hero.getAgility()>1000 && hero.getPower() > 100 && random.nextLong(maze.getLev()/100+ 1) > 100 && random.nextInt(100) < 15) {
+            hp += random.nextLong((maze.getLev()+hero.getMaxMazeLev())/200) * random.nextLong((hero.getStrength()+ hero.getAgility() + hero.getStrength())/ 100 + 1);
             atk += maze.getLev() * random.nextLong((hero.getStrength()+ hero.getAgility() + hero.getPower())/ 800 + 1);
+            atk += baseAtk[last] * random.nextLong(maze.getLev() + hero.getMaxMazeLev()/100 + 1);
+            if(atk < hero.getDefenseValue()) atk = random.nextLong(hero.getAttackValue() * 2);
         }
-        atk += baseAtk[last] * random.nextLong(maze.getLev() + 1);
         hp += baseHP[last] * random.nextLong(maze.getLev() + 1);
         if (hp < hero.getAttackValue()) {
             hp += random.nextLong(hero.getAttackValue() * 2);
@@ -148,9 +149,7 @@ public class Monster {
         if (hp > hero.getAttackValue() * 19) {
             hp = hero.getAttackValue() * 20;
         }
-        if (atk < hero.getDefenseValue()) {
-            atk += random.nextLong(hero.getDefenseValue() * 2);
-        }
+
         if (hp <= 0) hp = Integer.MAX_VALUE - 10;
         if (atk <= 0) hp = Integer.MAX_VALUE - 100;
         long m1 = random.nextLong(hp + 1) / 180 + 5;

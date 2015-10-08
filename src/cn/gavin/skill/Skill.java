@@ -184,7 +184,7 @@ public abstract class Skill {
             if (count % 1005 == 0) {
                 levelUp();
             }
-            if (count % 6000 == 0) {
+            if (count % 7000 == 0) {
                 hero.setSkillPoint(hero.getSkillPoint() + 1);
             }
         }

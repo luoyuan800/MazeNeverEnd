@@ -172,10 +172,4 @@ public class Item {
         dbHelper.excuseSQLWithoutResult(sql);
     }
 
-
-    public static Item emptyItem() {
-        Item item = new Item();
-        item.setName(ItemName.EMPTY);
-        return item;
-    }
 }

@@ -2,6 +2,7 @@ package cn.gavin.forge;
 
 import android.database.Cursor;
 import cn.gavin.db.DBHelper;
+import cn.gavin.forge.list.ItemName;
 
 /**
  * Copyright 2015 gluo.
@@ -17,5 +18,25 @@ public class RingBuilder extends Builder {
 
     public int getType(){
         return type;
+    }
+
+    @Override
+    public boolean isEnough() {
+        boolean containOne = false;
+        for (Item item : getItems()) {
+            if (item.getName().getType() == ItemName.木材 || item.getName().getType() == ItemName.石头) {
+                if (!containOne) {
+                    containOne = true;
+                } else {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String notEnough(){
+        return "打造材料中缺少木材或者石头";
     }
 }

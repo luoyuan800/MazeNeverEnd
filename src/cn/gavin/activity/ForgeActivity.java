@@ -196,25 +196,31 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                     if (item3 != null) items.add(item3);
                     if (item4 != null) items.add(item4);
                     if (item5 != null) items.add(item5);
-                    Accessory accessory = null;
+                    Builder builder = ringBuilder;
                     if (items.size() > 2) {
                         switch (index) {
                             case RingBuilder.type:
-                                accessory = ringBuilder.build(items);
+                                builder = ringBuilder;
                                 break;
                             case NecklaceBuilder.type:
-                                accessory = necklaceBuilder.build(items);
+                                builder = necklaceBuilder;
                                 break;
                             case HatBuilder.type:
-                                accessory = hatBuilder.build(items);
+                                builder = hatBuilder;
                                 break;
                         }
+                        Accessory accessory = builder.build(items);
+                        if(accessory!=null){
                         showResult(accessory);
                         clean();
+                        }else{
+                            resultText.setText(Html.fromHtml(builder.notEnough()));
+                        }
                     }
                 }else{
                     Toast.makeText(this, "--锻造点数不足30250!--", Toast.LENGTH_SHORT)
                             .show();
+                    resultText.setText("--锻造点数不足30250!--");
                 }
         }
 
