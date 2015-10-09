@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import cn.gavin.Hero;
-import cn.gavin.Maze;
+import cn.gavin.maze.Maze;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
@@ -55,9 +55,9 @@ public class Monster {
     private String firstName;
     private String secondName;
     private String lastName;
-    private long atk;
-    private long hp;
-    private long material;
+    protected long atk;
+    protected long hp;
+    protected long material;
     private long mazeLev;
     private boolean defeat;
     private long maxHP;
@@ -136,7 +136,7 @@ public class Monster {
         lastName = lastNames[last];
         this.items = itemNames[last];
         if (hero.getStrength() > 100 && hero.getAgility()>1000 && hero.getPower() > 100 && random.nextLong(maze.getLev()/100+ 1) > 100 && random.nextInt(100) < 15) {
-            hp += random.nextLong((maze.getLev()+hero.getMaxMazeLev())/200) * random.nextLong((hero.getStrength()+ hero.getAgility() + hero.getStrength())/ 100 + 1);
+            hp += random.nextLong((maze.getLev() + hero.getMaxMazeLev()) / 200) * random.nextLong((hero.getStrength()+ hero.getAgility() + hero.getStrength())/ 100 + 1);
             atk += maze.getLev() * random.nextLong((hero.getStrength()+ hero.getAgility() + hero.getPower())/ 800 + 1);
             atk += baseAtk[last] * random.nextLong(maze.getLev() + hero.getMaxMazeLev()/100 + 1);
             if(atk < hero.getDefenseValue()) atk = random.nextLong(hero.getAttackValue() * 2);

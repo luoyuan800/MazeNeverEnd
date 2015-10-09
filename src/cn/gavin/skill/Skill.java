@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.widget.Button;
 
 import cn.gavin.Hero;
-import cn.gavin.Maze;
+import cn.gavin.maze.Maze;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;

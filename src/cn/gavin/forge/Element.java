@@ -8,6 +8,6 @@ package cn.gavin.forge;
 public enum Element {
         金,水,木,火,土,无;
 public boolean isReinforce(Element e){
-    return e.ordinal() > ordinal() || (e.ordinal() == 5 && ordinal() == 0);
+    return (e!=无) &&((e.ordinal()== ordinal()+1) || (e.ordinal() == 4 && ordinal() == 0));
 }
 }

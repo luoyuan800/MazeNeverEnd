@@ -5,7 +5,7 @@ package cn.gavin.skill.expression;
  */
 
 import cn.gavin.Hero;
-import cn.gavin.Maze;
+import cn.gavin.maze.Maze;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.skill.Skill;
 

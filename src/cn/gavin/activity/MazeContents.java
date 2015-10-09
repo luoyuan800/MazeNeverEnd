@@ -1,7 +1,7 @@
 package cn.gavin.activity;
 
 import cn.gavin.Hero;
-import cn.gavin.Maze;
+import cn.gavin.maze.Maze;
 import cn.gavin.skill.SkillDialog;
 
 /**

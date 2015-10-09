@@ -1,5 +1,7 @@
-package cn.gavin;
+package cn.gavin.maze;
 
+import cn.gavin.Achievement;
+import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.forge.Item;
 import cn.gavin.forge.list.ItemName;
@@ -17,14 +19,14 @@ import cn.gavin.utils.StringUtils;
 public class Maze {
     private int csmgl = 8977;
     private Hero hero;
-    private long level;
+    protected long level;
     private boolean moving;
-    private long step;
-    private long streaking;
+    protected long step;
+    protected long streaking;
     private float meetRate = 100f;
     private MonsterBook monsterBook;
     private StoryHelper storyHelper;
-    private long lastSave;
+    protected long lastSave;
 
     public void setCsmgl(int csmgl) {
         this.csmgl = csmgl;
@@ -66,7 +68,7 @@ public class Maze {
             }
             moving = true;
             step++;
-            if (random.nextLong(10000) > 9985 || step > random.nextLong(22) || random.nextLong(streaking + 1) > 20 + level) {
+            if (random.nextLong(10000) > 9985 || step > random.nextLong(22) || random.nextLong(streaking + 1) > 50 + level) {
                 if ((level - lastSave) > 50) {
                     lastSave = level;
                     context.save();
@@ -158,10 +160,13 @@ public class Maze {
                         } else {
                             long harm = monster.getAtk() - hero.getDefenseValue();
                             if (harm <= 0 || hero.getRandom().nextInt(100) > monster.getHitRate()) {
-                                String s = monster.getFormatName() + "攻击偏离了";
+                                harm = random.nextLong(hero.getMaxMazeLev() + 1);
+                            }
+                            if (hero.getRandom().nextInt(100) > monster.getHitRate()) {
+                                harm = random.nextLong(level + 1);
+                                String s = monster.getFormatName() + "攻击打偏了";
                                 context.addMessage(s);
                                 monster.addBattleDesc(s);
-                                harm = random.nextLong(level + 1);
                             }
                             if (harm >= hero.getHp()) {
                                 Skill sy = SkillFactory.getSkill("瞬间移动", hero, context.getSkillDialog());

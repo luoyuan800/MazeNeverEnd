@@ -26,7 +26,9 @@ import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.adapter.RecipeAdapter;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.log.LogHelper;
+import cn.gavin.maze.Maze;
 import cn.gavin.monster.MonsterBook;
+import cn.gavin.monster.PalaceAdapt;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
@@ -125,6 +127,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private Button reincaenationButton;
     private Button upgradeHSwordButton;
     private Button upgradeHArmorButton;
+    private Button palaceButton;
 
 
     //Get Function
@@ -188,9 +191,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                                 Upload upload = new Upload();
                                 if (upload.upload(heroN, alipay.getPayTime())) {
                                     MazeContents.lastUpload = heroN.getMaxMazeLev();
-                                    uploading = false;
                                     Achievement.uploader.enable(heroN);
                                 }
+                                uploading = false;
                             }
                         }).start();
                         break;
@@ -331,12 +334,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 buttonGroup.showPrevious();
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        pause = false;
     }
 
     @Override
@@ -624,8 +621,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private void showUpdate() {
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("有更新版本-" + updateVersion);
+        ScrollView scrollView = new ScrollView(this);
         final TextView tv = new TextView(context);
-        dialog.setView(tv);
+        scrollView.addView(tv);
+        dialog.setView(scrollView);
         tv.setText(versionUpdateInfo);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定升级",
                 new DialogInterface.OnClickListener() {
@@ -669,7 +668,35 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 });
         dialog.show();
     }
+    private void showDefenders() {
+        AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("殿堂");
+        LinearLayout linearLayout = new LinearLayout(this);
+        ListView listView = new ListView(this);
+        PalaceAdapt palaceAdapt = new PalaceAdapt();
+        listView.setAdapter(palaceAdapt);
+        linearLayout.addView(listView);
+        dialog.setView(linearLayout);
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出",
+                new DialogInterface.OnClickListener() {
 
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "挑战殿堂",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //dialog.dismiss();
+                    }
+
+                });
+        dialog.show();
+    }
     private void showLockBox() {
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("开启宝箱");
@@ -850,10 +877,15 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     private void showUpload() {
         final AlertDialog dialog = new Builder(this).create();
+        LinearLayout linearLayout = new LinearLayout(this);
         TextView info = new TextView(this);
         info.setText("上传勇者角色信息到服务器，下个版本您的角色将会作为迷宫的守护者拦截各个挑战的勇者。\n" +
-                "上传成功后，下一次上传必须是再前进100层迷宫之后。");
-        dialog.setView(info);
+                "上传成功后，下一次上传必须是再前进100层迷宫之后。\n输入你的口号：");
+        linearLayout.addView(info);
+        EditText textView = new EditText(this);
+        textView.setText("遇見了吾，你將止步於此！");
+        linearLayout.addView(textView);
+        dialog.setView(linearLayout);
         dialog.setTitle("上传角色信息");
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
             @Override
@@ -898,8 +930,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         mainContriDef = (TextView) findViewById(R.id.main_contri_def);
         swordLev = (TextView) findViewById(R.id.main_contri_level);
         armorLev = (TextView) findViewById(R.id.main_armor_level);
-        heroPointValue = (TextView) findViewById(R.id.main_contri_needexp);
-        mainContriCurMaterial = (TextView) findViewById(R.id.main_contri_currentexp);
+        heroPointValue = (TextView) findViewById(R.id.hero_points);
+        mainContriCurMaterial = (TextView) findViewById(R.id.hero_material_count);
         addstr = (Button) findViewById(R.id.main_contri_add_str);
         addstr.setOnClickListener(this);
         addagi = (Button) findViewById(R.id.main_contri_add_agi);
@@ -978,6 +1010,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         upgradeHArmorButton.setOnClickListener(this);
         upgradeHSwordButton = (Button) findViewById(R.id.up_h_sword);
         upgradeHSwordButton.setOnClickListener(this);
+        palaceButton = (Button) findViewById(R.id.palace_button);
+        pauseButton.setOnClickListener(this);
         refresh();
     }
 
@@ -1283,6 +1317,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.palace_button:
+                showDefenders();
+                break;
             case R.id.up_h_armor:
                 heroN.upgradeArmor(100);
                 handler.sendEmptyMessage(0);
@@ -1452,7 +1489,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 break;
         }
     }
-
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

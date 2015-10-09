@@ -14,12 +14,9 @@ import android.widget.Button;
 
 import com.bmob.pay.tool.BmobPay;
 
-import cn.gavin.Hero;
-import cn.gavin.Maze;
 import cn.gavin.R;
 import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;
-import cn.gavin.monster.MonsterBook;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.skill.SkillDialog;
 

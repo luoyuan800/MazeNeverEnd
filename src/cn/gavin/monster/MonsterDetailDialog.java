@@ -68,12 +68,12 @@ public class MonsterDetailDialog implements View.OnClickListener {
         maxAtkNameText.setText(Html.fromHtml(monster.getMaxATKName()));
         maxAtkHpText.setText("HP：" + monster.getMaxATKHP());
         maxAtkAtkText.setText("ATK：" + monster.getMaxATKATK());
-        maxAtkLvText.setText("层数：" + monster.getMaxATKLev());
+        maxAtkLvText.setText("层数：" + (monster.getMaxATKName().contains("殿堂") ? "殿堂_":"") +monster.getMaxATKLev());
         maxAtkDescText.setText("结果：" +(monster.isMaxATKDefeat()?"轻松击败！\n(点击查看）" : "被虐得满地找牙！\n(点击查看)"));
         maxHpNameText.setText(Html.fromHtml(monster.getMaxHPName()));
         maxHpHpText.setText("HP：" + monster.getMaxHPHP());
         maxHpAtkText.setText("ATK：" +monster.getMaxHPATK());
-        maxHpLvText.setText("层数：" +monster.getMaxHPLev());
+        maxHpLvText.setText("层数：" +(monster.getMaxHPName().contains("殿堂") ? "殿堂_":"") + monster.getMaxHPLev());
         maxHpDescText.setText("结果：" + (monster.isMaxHPDefeat()?"轻松击败！\n(点击查看）" : "被虐得满地找牙！\n(点击查看)"));
         killCountText.setText("击败次数：" + monster.getDefeat());
         killedCountText.setText("被狙杀次数：" + monster.getDefeated());

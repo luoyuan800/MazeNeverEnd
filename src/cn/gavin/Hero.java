@@ -175,7 +175,11 @@ public class Hero {
     }
 
     public void addAttackValue(long attackValue) {
-        this.attackValue += attackValue;
+        if((this.attackValue + attackValue) > 0) {
+            this.attackValue += attackValue;
+        }else{
+            this.attackValue = 10;
+        }
     }
 
     public long getBaseDefense() {
@@ -196,7 +200,11 @@ public class Hero {
     }
 
     public void addDefenseValue(long defenseValue) {
-        this.defenseValue += defenseValue;
+        if((this.defenseValue + defenseValue)> 0) {
+            this.defenseValue += defenseValue;
+        }else{
+            this.defenseValue = 10;
+        }
     }
 
     public Queue<Skill> getExistSkill() {
@@ -511,7 +519,11 @@ public class Hero {
     }
 
     public void addUpperHp(long hp) {
-        this.upperHp += hp;
+        if((this.upperHp + hp) > 0) {
+            this.upperHp += hp;
+        }else{
+            upperHp = 10;
+        }
         //addHp(hp);
     }
 
@@ -793,16 +805,19 @@ public class Hero {
             SkillFactory.clean();
             Accessory ring = getRing();
             if (ring != null) {
+                this.ring = null;
                 setRing(ring);
                 ring.save();
             }
             Accessory necklace = getNecklace();
             if (necklace != null) {
+                this.necklace = null;
                 setNecklace(necklace);
                 necklace.save();
             }
             Accessory hat = getHat();
             if (hat != null) {
+                this.hat = null;
                 setHat(hat);
                 hat.save();
             }

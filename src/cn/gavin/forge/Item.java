@@ -2,7 +2,7 @@ package cn.gavin.forge;
 
 import android.database.Cursor;
 import cn.gavin.Hero;
-import cn.gavin.Maze;
+import cn.gavin.maze.Maze;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.forge.list.ItemName;

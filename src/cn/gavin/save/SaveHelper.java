@@ -4,9 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import cn.gavin.Achievement;
 import cn.gavin.Hero;
-import cn.gavin.Maze;
+import cn.gavin.maze.Maze;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.monster.MonsterBook;
 import cn.gavin.skill.SkillFactory;
 
 /**

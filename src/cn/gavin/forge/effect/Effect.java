@@ -1,7 +1,7 @@
 package cn.gavin.forge.effect;
 
 import cn.gavin.Hero;
-import cn.gavin.Maze;
+import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
 import cn.gavin.utils.Random;
 

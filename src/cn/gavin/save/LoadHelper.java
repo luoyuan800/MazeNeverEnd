@@ -11,7 +11,7 @@ import java.io.FileInputStream;
 import cn.gavin.Achievement;
 import cn.gavin.Armor;
 import cn.gavin.Hero;
-import cn.gavin.Maze;
+import cn.gavin.maze.Maze;
 import cn.gavin.Sword;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MainMenuActivity;
