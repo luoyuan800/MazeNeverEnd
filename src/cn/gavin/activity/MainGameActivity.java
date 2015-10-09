@@ -1011,7 +1011,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         upgradeHSwordButton = (Button) findViewById(R.id.up_h_sword);
         upgradeHSwordButton.setOnClickListener(this);
         palaceButton = (Button) findViewById(R.id.palace_button);
-        pauseButton.setOnClickListener(this);
+        palaceButton.setOnClickListener(this);
         refresh();
     }
 
