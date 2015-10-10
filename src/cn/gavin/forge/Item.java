@@ -2,18 +2,19 @@ package cn.gavin.forge;
 
 import android.database.Cursor;
 import android.util.Log;
-import cn.gavin.Hero;
-import cn.gavin.activity.MainGameActivity;
-import cn.gavin.maze.Maze;
-import cn.gavin.db.DBHelper;
-import cn.gavin.forge.effect.Effect;
-import cn.gavin.forge.list.ItemName;
-import cn.gavin.monster.Monster;
-import cn.gavin.utils.Random;
-import cn.gavin.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.UUID;
+
+import cn.gavin.Hero;
+import cn.gavin.activity.MainGameActivity;
+import cn.gavin.db.DBHelper;
+import cn.gavin.forge.effect.Effect;
+import cn.gavin.forge.list.ItemName;
+import cn.gavin.maze.Maze;
+import cn.gavin.monster.Monster;
+import cn.gavin.utils.Random;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 gluo.
@@ -31,7 +32,8 @@ public class Item {
     public String toString() {
         StringBuilder builder = new StringBuilder(name.name());
         builder.append("<br>");
-        if (effect != null) builder.append(effect.getName()).append(":").append(effectValue).append("<br>");
+        if (effect != null)
+            builder.append(effect.getName()).append(":").append(effectValue).append("<br>");
         if (effect1 != null) builder.append(effect1.getName()).append(":").append(effect1Value);
         return builder.toString();
     }
@@ -39,7 +41,8 @@ public class Item {
     public String buildProperties() {
         StringBuilder builder = new StringBuilder(name.name());
         builder.append("<br>");
-        if (effect != null) builder.append(effect.name()).append(":").append(effectValue).append("<br>");
+        if (effect != null)
+            builder.append(effect.name()).append(":").append(effectValue).append("<br>");
         if (effect1 != null) builder.append(effect1.name()).append(":").append(effect1Value);
         return builder.toString();
     }
@@ -130,35 +133,36 @@ public class Item {
         DBHelper dbHelper = DBHelper.getDbHelper();
         String sql = "SELECT * FROM item";
         ArrayList<Item> items = new ArrayList<Item>();
-        try{
-        Cursor cursor = dbHelper.excuseSOL(sql);
-        while (!cursor.isAfterLast()) {
-            ItemName name = ItemName.valueOfName(cursor.getString(cursor.getColumnIndex("name")));
-            Item item = new Item();
-            item.setName(name);
-            item.id = cursor.getString(cursor.getColumnIndex("id"));
-            String properties = cursor.getString(cursor.getColumnIndex("properties"));
-            if (StringUtils.isNotEmpty(properties)) {
-                String[] props = properties.split("<br>");
-                for (String pro : props) {
-                    String[] proVal = pro.split(":");
-                    if (proVal.length > 1) {
-                        Effect e = Effect.valueOf(proVal[0]);
-                        Long value = Long.parseLong(proVal[1]);
-                        if (item.getEffect() == null) {
-                            item.setEffect(e);
-                            item.setEffectValue(value);
-                        } else {
-                            item.setEffect1(e);
-                            item.setEffect1Value(value);
+        try {
+            Cursor cursor = dbHelper.excuseSOL(sql);
+            while (!cursor.isAfterLast()) {
+                ItemName name = ItemName.valueOfName(cursor.getString(cursor.getColumnIndex("name")));
+                Item item = new Item();
+                item.setName(name);
+                item.id = cursor.getString(cursor.getColumnIndex("id"));
+                String properties = cursor.getString(cursor.getColumnIndex("properties"));
+                if (StringUtils.isNotEmpty(properties)) {
+                    String[] props = properties.split("<br>");
+                    for (String pro : props) {
+                        String[] proVal = pro.split(":");
+                        if (proVal.length > 1) {
+                            Effect e = Effect.valueOf(proVal[0]);
+                            Long value = Long.parseLong(proVal[1]);
+                            if (item.getEffect() == null) {
+                                item.setEffect(e);
+                                item.setEffectValue(value);
+                            } else {
+                                item.setEffect1(e);
+                                item.setEffect1Value(value);
+                            }
                         }
                     }
                 }
+                items.add(item);
+                cursor.moveToNext();
             }
-            items.add(item);
-            cursor.moveToNext();
-        }
-        }catch (Exception e){
+            cursor.close();
+        } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "loadItems", e);
         }

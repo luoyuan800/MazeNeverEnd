@@ -1,15 +1,19 @@
 package cn.gavin.forge;
 
 import android.database.Cursor;
-
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.utils.StringUtils;
-
-import java.util.*;
 
 /**
  * Copyright 2015 luoyuan.
@@ -113,7 +117,7 @@ public class Accessory extends Equipment {
         }
         id = UUID.randomUUID().toString();
         String sql = String.format("INSERT INTO accessory (id, name,base,addition,element,type,color) " +
-                "values ('%s', '%s', '%s','%s','%s','%s','%s')", id,
+                        "values ('%s', '%s', '%s','%s','%s','%s','%s')", id,
                 name, base.toString(), addition.toString(), element.name(), type, color);
         dbHelper.excuseSQLWithoutResult(sql);
         sql = String.format("SELECT name from recipe where name = '%s'", name);
@@ -126,13 +130,14 @@ public class Accessory extends Equipment {
 
             if (save && cursor.isAfterLast()) {
                 sql = String.format("INSERT INTO recipe (name,items,base,addition,found,user,type,color) " +
-                        "values('%s','%s','%s','%s','%s','%s','%s','%s')",
+                                "values('%s','%s','%s','%s','%s','%s','%s','%s')",
                         name, itemBuilder.toString().replaceFirst("\\-$", ""), base.toString(), addition.toString(), Boolean.FALSE, Boolean.TRUE, type, color);
             } else if (!cursor.isAfterLast()) {
                 sql = String.format("UPDATE recipe set found = '%s' WHERE name = '%s'", Boolean.TRUE, name);
             }
             dbHelper.excuseSQLWithoutResult(sql);
         }
+        cursor.close();
     }
 
     public void setType(int type) {
@@ -171,35 +176,36 @@ public class Accessory extends Equipment {
 
     public static List<Accessory> loadAccessories() {
         List<Accessory> res = new ArrayList<Accessory>();
-        try{
-        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM accessory");
-        while (!cursor.isAfterLast()) {
-            Accessory accessory = new Accessory();
-            accessory.setName(cursor.getString(cursor.getColumnIndex("name")));
-            accessory.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
-            accessory.setColor(cursor.getString(cursor.getColumnIndex("color")));
-            EnumMap<Effect, Number> base = new EnumMap<Effect, Number>(Effect.class);
-            for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
-                String[] keyValue = StringUtils.split(str, ":");
-                if (keyValue.length > 1) {
-                    base.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+        try {
+            Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM accessory");
+            while (!cursor.isAfterLast()) {
+                Accessory accessory = new Accessory();
+                accessory.setName(cursor.getString(cursor.getColumnIndex("name")));
+                accessory.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
+                accessory.setColor(cursor.getString(cursor.getColumnIndex("color")));
+                EnumMap<Effect, Number> base = new EnumMap<Effect, Number>(Effect.class);
+                for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
+                    String[] keyValue = StringUtils.split(str, ":");
+                    if (keyValue.length > 1) {
+                        base.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                    }
                 }
-            }
-            EnumMap<Effect, Number> addition = new EnumMap<Effect, Number>(Effect.class);
-            for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")) {
-                String[] keyValue = StringUtils.split(str, ":");
-                if (keyValue.length > 1) {
-                    addition.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                EnumMap<Effect, Number> addition = new EnumMap<Effect, Number>(Effect.class);
+                for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")) {
+                    String[] keyValue = StringUtils.split(str, ":");
+                    if (keyValue.length > 1) {
+                        addition.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                    }
                 }
+                accessory.setEffects(base);
+                accessory.setAdditionEffects(addition);
+                accessory.setType(cursor.getInt(cursor.getColumnIndex("type")));
+                accessory.setId(cursor.getString(cursor.getColumnIndex("id")));
+                res.add(accessory);
+                cursor.moveToNext();
             }
-            accessory.setEffects(base);
-            accessory.setAdditionEffects(addition);
-            accessory.setType(cursor.getInt(cursor.getColumnIndex("type")));
-            accessory.setId(cursor.getString(cursor.getColumnIndex("id")));
-            res.add(accessory);
-            cursor.moveToNext();
-        }
-        }catch (Exception e){
+            cursor.close();
+        } catch (Exception e) {
             Log.e(MainGameActivity.TAG, "loadAccessories", e);
             e.printStackTrace();
         }
@@ -237,6 +243,7 @@ public class Accessory extends Equipment {
                     setType(cursor.getInt(cursor.getColumnIndex("type")));
                     setId(cursor.getString(cursor.getColumnIndex("id")));
                 }
+                cursor.close();
             }
         } catch (Exception e) {
             DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM accessory WHERE id = '" + id + "'");

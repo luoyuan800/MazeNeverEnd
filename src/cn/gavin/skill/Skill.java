@@ -222,6 +222,7 @@ public abstract class Skill {
             sql = String.format("update skill set is_active = '%s', is_on_use = '%s', probability = '%s', count = '%s' where name = '%s'",
                     isActive(), isOnUsed(), getProbability(), getCount(), getName());
         }
+        cursor.close();
         helper.excuseSQLWithoutResult(sql);
     }
 
@@ -238,6 +239,7 @@ public abstract class Skill {
                 count = (Long.parseLong(cursor.getString(cursor.getColumnIndex("count"))));
                 return true;
             }
+            cursor.close();
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "loadSkill", e);

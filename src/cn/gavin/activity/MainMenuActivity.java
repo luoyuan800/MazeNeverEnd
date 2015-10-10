@@ -46,6 +46,12 @@ public MainMenuActivity context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //这是为了应用程序安装完后直接打开，按home键退出后，再次打开程序出现的BUG
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+            //结束你的activity
+            this.finish();
+            return;
+        }
         context = this;
         setContentView(R.layout.activity_main_menu);
         BmobPay.init(MainMenuActivity.this, "4de7673ec85955af7568cfa1494c6498");

@@ -9,15 +9,50 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
-import android.os.*;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.*;
+import android.view.GestureDetector;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import cn.gavin.*;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.List;
+import java.util.Random;
+
+import cn.gavin.Achievement;
+import cn.gavin.Armor;
+import cn.gavin.Hero;
+import cn.gavin.R;
+import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Item;
@@ -33,12 +68,6 @@ import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.upload.Upload;
-
-import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.List;
-import java.util.Random;
 
 public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener {
     //Constants
@@ -291,6 +320,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         });
     }
 
+    private final Intent service = new Intent(MazeService.ACTION);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -303,8 +334,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         initGameData();
         checkUpdate();
         gameThreadRunning = true;
-        Intent service = new Intent(MazeService.ACTION);
-        service.setPackage(getPackageName());
+        startService(service);
         bindService(service, connection, BIND_AUTO_CREATE);
     }
 
@@ -312,11 +342,13 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     public void onPause() {
         save();
         moveTaskToBack(true);
+        super.onPause();
     }
 
     @Override
     public void onSaveInstanceState(Bundle bundle) {
         save();
+        super.onSaveInstanceState(bundle);
     }
 
     private ServiceConnection connection = new ServiceConnection() {
@@ -362,6 +394,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     @Override
     protected void onDestroy() {
+        MainGameActivity.this.stopService(service);
         save();
         gameThreadRunning = false;
         dbHelper.close();
@@ -373,6 +406,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
                 showExitDialog();
+
                 return true;
 
             default:
@@ -533,7 +567,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             getLockBoxDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    heroN.addMaterial(-32250);
+                    heroN.addMaterial(-12250);
                     heroN.setLockBox(heroN.getLockBox() + 1);
                     handler.sendEmptyMessage(103);
                     getLockBoxDialog.hide();
@@ -548,7 +582,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             });
         }
         getLockBoxDialog.show();
-        if (heroN.getMaterial() >= 32250) {
+        if (heroN.getMaterial() >= 12250) {
             getLockBoxDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         } else {
             getLockBoxDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -558,13 +592,13 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private void showResetSkillPointDialog() {
         AlertDialog resetSkillPointDialog;
         resetSkillPointDialog = new Builder(this).create();
-        resetSkillPointDialog.setTitle("消耗1500000材料重置技能");
+        resetSkillPointDialog.setTitle("消耗99988材料重置技能");
         resetSkillPointDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        heroN.addMaterial(-1500000);
+                        heroN.addMaterial(-99988);
                         heroN.setSkillPoint(heroN.getSkillPoint() + SkillFactory.reset());
                         handler.sendEmptyMessage(103);
                         dialog.dismiss();
@@ -581,7 +615,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
                 });
         resetSkillPointDialog.show();
-        if (heroN.getMaterial() > 1500000) {
+        if (heroN.getMaterial() > 99988) {
             resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         } else {
             resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -699,12 +733,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private void showDefenders() {
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("殿堂");
-        LinearLayout linearLayout = new LinearLayout(this);
+        ScrollView scrollView = new ScrollView(this);
         ListView listView = new ListView(this);
         PalaceAdapt palaceAdapt = new PalaceAdapt();
         listView.setAdapter(palaceAdapt);
-        linearLayout.addView(listView);
-        dialog.setView(linearLayout);
+        scrollView.addView(listView);
+        dialog.setView(scrollView);
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出",
                 new DialogInterface.OnClickListener() {
 
@@ -912,11 +946,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         LinearLayout linearLayout = new LinearLayout(this);
         TextView info = new TextView(this);
         info.setText("上传勇者角色信息到服务器，下个版本您的角色将会作为迷宫的守护者拦截各个挑战的勇者。\n" +
-                "上传成功后，下一次上传必须是再前进100层迷宫之后。\n输入你的口号：");
+                "上传成功后，下一次上传必须是再前进100层迷宫之后。");
         linearLayout.addView(info);
-        EditText textView = new EditText(this);
+        /*EditText textView = new EditText(this);
         textView.setText("遇見了吾，你將止步於此！");
-        linearLayout.addView(textView);
+        linearLayout.addView(textView);*/
         dialog.setView(linearLayout);
         dialog.setTitle("上传角色信息");
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {

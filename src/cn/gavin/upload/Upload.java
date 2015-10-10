@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import cn.gavin.Hero;
+import cn.gavin.skill.Skill;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -47,7 +48,10 @@ public class Upload {
         builder.append("&atk=").append(hero.getUpperAtk());
         builder.append("&mazeLev=").append(hero.getMaxMazeLev());
         builder.append("&pay=").append(pay);
-        builder.append("&skill=").append(hero.getFirstSkill());
+        Skill skill = hero.getFirstSkill();
+        if(skill!=null){
+            builder.append("&skill=").append(StringUtils.toHexString(skill.getName())).append("_").append(skill.getCount());
+        }
         return builder.toString();
     }
 

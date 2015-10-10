@@ -194,6 +194,7 @@ public class MonsterItem {
         } else {
             setLoad(false);
         }
+        cursor.close();
     }
 
     public static List<MonsterItem> loadMonsterItems() {
@@ -235,6 +236,7 @@ public class MonsterItem {
             list.add(item);
             cursor.moveToNext();
         }
+        cursor.close();
         return list;
     }
 

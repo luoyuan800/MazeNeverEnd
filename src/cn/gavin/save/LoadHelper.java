@@ -11,7 +11,6 @@ import java.io.FileInputStream;
 import cn.gavin.Achievement;
 import cn.gavin.Armor;
 import cn.gavin.Hero;
-import cn.gavin.maze.Maze;
 import cn.gavin.Sword;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MainMenuActivity;
@@ -19,6 +18,7 @@ import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
 import cn.gavin.log.LogHelper;
+import cn.gavin.maze.Maze;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 
@@ -58,7 +58,7 @@ public class LoadHelper {
         heroN.setArmor(Armor.valueOf(preferences.getString("armorName", Armor.破布.name())));
         heroN.setDeathCount(preferences.getLong("death", 0));
         heroN.setSkillPoint(preferences.getLong("skillPoint", 1));
-        MazeContents.lastUpload = preferences.getLong("lastUploadLev", 0);
+        MazeContents.lastUpload = preferences.getLong("lastUploadLev", 1);
         maze.setLevel(preferences.getLong("currentMazeLev", 1));
         String ach = preferences.getString("achievement", "0");
         for (int i = 0; i < ach.length() && i < Achievement.values().length; i++) {
@@ -164,13 +164,14 @@ public class LoadHelper {
 
     public void loadSkill(Hero hero, SkillDialog dialog) {
         String sql = "select name from skill";
-        try{
-        Cursor cursor = DBHelper.getDbHelper().excuseSOL(sql);
-        while (!cursor.isAfterLast()) {
-            SkillFactory.getSkill(cursor.getString(cursor.getColumnIndex("name")), hero, dialog);
-            cursor.moveToNext();
-        }
-        }catch (Exception e){
+        try {
+            Cursor cursor = DBHelper.getDbHelper().excuseSOL(sql);
+            while (!cursor.isAfterLast()) {
+                SkillFactory.getSkill(cursor.getString(cursor.getColumnIndex("name")), hero, dialog);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "loadSkills", e);
         }

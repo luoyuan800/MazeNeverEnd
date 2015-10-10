@@ -91,6 +91,7 @@ public class Recipe {
                 recipeList.add(recipe);
                 cursor.moveToNext();
             }
+            cursor.close();
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "loadRecipe", e);

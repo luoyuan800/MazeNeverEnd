@@ -27,6 +27,7 @@ public class AttackSkill extends Skill {
             sql = String.format("update skill set is_active = '%s', is_on_use = '%s', probability = '%s', count = '%s', base_harm = '%s', addition_harm = '%s' where name = '%s'",
                     isActive(), isOnUsed(), getProbability(), getCount(), baseHarm, additionHarm, getName());
         }
+        cursor.close();
         helper.excuseSQLWithoutResult(sql);
     }
 
@@ -46,6 +47,7 @@ public class AttackSkill extends Skill {
                 additionHarm = Long.parseLong(cursor.getString(cursor.getColumnIndex("addition_harm")));
                 return true;
             }
+            cursor.close();
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "LoadAttackSkill", e);

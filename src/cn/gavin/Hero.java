@@ -767,7 +767,7 @@ public class Hero {
     }
 
     public void reincarnation() {
-        if (material < 100101) {
+        if (material < 200101) {
             Toast.makeText(MainGameActivity.context, "锻造点数不足100101！" + getName(), Toast.LENGTH_SHORT).show();
         } else {
             Skill skill;

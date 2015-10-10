@@ -97,6 +97,7 @@ public class PalaceMonster extends Monster {
                     this.material = random.nextLong(maze.getLev() * atk + 1) / 100 + random.nextLong(material + 1);
                     setHello(cursor.getString(cursor.getColumnIndex("hello")));
                 }
+                cursor.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }

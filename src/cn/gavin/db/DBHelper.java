@@ -53,7 +53,7 @@ public class DBHelper {
         return database;
     }
 
-    private SQLiteDatabase getDB() {
+    private synchronized SQLiteDatabase getDB() {
         SQLiteDatabase db = database;
         if (db == null || !db.isOpen()) {
             db = openOrCreateInnerDB();
@@ -63,7 +63,7 @@ public class DBHelper {
 
     public void onCreate(SQLiteDatabase db) {
         try {
-            beginTransaction();
+            db.beginTransaction();
             String createTable = "CREATE TABLE monster(" +
                     "name TEXT NOT NULL PRIMARY KEY," +
                     "max_hp_name TEXT," +
@@ -97,7 +97,8 @@ public class DBHelper {
             ForgeDB forgeDB = new ForgeDB();
             forgeDB.createTable(db);
             Defender.createDB(db);
-            endTransaction();
+            db.setTransactionSuccessful();
+            db.endTransaction();
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "CreateTable", e);

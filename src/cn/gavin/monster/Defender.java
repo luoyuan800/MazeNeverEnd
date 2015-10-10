@@ -25,9 +25,9 @@ public class Defender {
     private String skill;
     private String skillLev;
 
-    public void save(){
+    public void save(SQLiteDatabase db){
         String sql = String.format("INSERT INTO defender(name, lev, hp, atk, skill, skill_lev, hello) values('%s','%s','%s','%s','%s','%s','%s')", name, lev, hp, atk,skill,skillLev,hello);
-        DBHelper.getDbHelper().excuseSOL(sql);
+        db.execSQL(sql);
     }
 
     public static Stack<Defender> loadAllDefender(SQLiteDatabase db) {
@@ -35,6 +35,7 @@ public class Defender {
         Cursor cursor ;
         if(db!=null){
             cursor = db.rawQuery("SELECT * FROM defender ORDER BY lev DESC", null);
+            cursor.moveToFirst();
         }else {
             cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM defender ORDER BY lev DESC");
         }
@@ -45,17 +46,25 @@ public class Defender {
                 name = StringUtils.toStringHex(name);
             }
             String lev = cursor.getString(cursor.getColumnIndex("lev"));
-            d.desc = String.format("<font color=\"#9932CC\">%s</font> - %s %s", name, lev, lev.equalsIgnoreCase(MazeContents.hero.getMaxMazeLev() + "") ? " <--- 你也在这里!" : "");
+            if(MazeContents.hero !=null) {
+                d.desc = String.format("<font color=\"#9932CC\">%s</font> - %s %s", name, lev, lev.equalsIgnoreCase(MazeContents.hero.getMaxMazeLev() + "") ? " <--- 你也在这里!" : "");
+            }
             d.lev = lev;
             d.name = name;
             d.atk = cursor.getString(cursor.getColumnIndex("atk"));
             d.hp = cursor.getString(cursor.getColumnIndex("hp"));
-            d.hello  = cursor.getString(cursor.getColumnIndex("hello"));
+            int index = cursor.getColumnIndex("hello");
+            if(index!=-1) {
+                d.hello = cursor.getString(index);
+            }else{
+                d.hello = "遇見了吾，你將止步於此！";
+            }
             d.skill  = cursor.getString(cursor.getColumnIndex("skill"));
             d.skillLev  = cursor.getString(cursor.getColumnIndex("skill_lev"));
             defenders.push(d);
             cursor.moveToNext();
         }
+        cursor.close();
         return defenders;
     }
 
@@ -64,8 +73,8 @@ public class Defender {
     }
 
     public static void addDefender(String name, long hp, long atk, long lev, String skillName, long skillLev, String hello) {
-        String addDefender = String.format("REPLACE INTO defender(name, lev, hp, atk, skill, skill_lev) " +
-                "values('%s','%s','%s','%s','%s','%s')", name, lev, hp, atk, skillName, skillLev);
+        String addDefender = String.format("REPLACE INTO defender(name, lev, hp, atk, skill, skill_lev, hello) " +
+                "values('%s','%s','%s','%s','%s','%s', '%s')", name, lev, hp, atk, skillName, skillLev, hello);
         DBHelper.getDbHelper().excuseSQLWithoutResult(addDefender);
     }
 
@@ -127,6 +136,8 @@ public class Defender {
         db.execSQL(addDefender);
         addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev,hello) values('0x590f65878fdb','163','30692','30265','重击','1','遇見了吾，你將止步於此！')";
         db.execSQL(addDefender);
+        addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev,hello) values('我是神，有本事上来！','10000','1931377600','208206500','重击','2','你是不可能超越我的！')";
+        db.execSQL(addDefender);
     }
 
     public static void upgradeDB9To10(SQLiteDatabase db) {
@@ -144,8 +155,14 @@ public class Defender {
         db.execSQL(createTable);
         db.execSQL("CREATE UNIQUE INDEX maze_lev ON defender (lev)");
         for(Defender d : defenders){
-            d.save();
+            d.save(db);
         }
+        String addDefender = "REPLACE INTO defender(name, lev, hp, atk, skill, skill_lev,hello) values('我是神，有本事上来！','10000','1931377600','208206500','重击','2','你是不可能超越我的！')";
+        db.execSQL(addDefender);
+        addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev,hello) values('某鸟','212','981331','95542','重击','1','我有台词，你咬我呀！')";
+        db.execSQL(addDefender);
+        addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev,hello) values('笨牛','121','81331','65542','重击','1','我很帅很帅，哈哈哈哈！')";
+        db.execSQL(addDefender);
     }
 
     public String getDesc() {

@@ -222,6 +222,8 @@ public abstract class Builder {
                 break;
             case ADD_UPPER_HP:
             case ADD_AGI:
+                accessory.setElement(Element.火);
+                break;
             case ADD_CLICK_AWARD:
                 accessory.setElement(Element.木);
                 break;
