@@ -300,6 +300,7 @@ public class Maze {
 
             }
         }
+
     }
 
     public long getLev() {

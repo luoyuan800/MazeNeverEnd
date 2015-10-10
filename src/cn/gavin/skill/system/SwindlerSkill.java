@@ -255,7 +255,7 @@ public class SwindlerSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("欺诈游戏", hero, dialog).isActive();
+                    return SkillFactory.getSkill("点攻", hero, dialog).isActive()||SkillFactory.getSkill("点防",hero,dialog).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
