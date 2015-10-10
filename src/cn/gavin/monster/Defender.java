@@ -26,7 +26,7 @@ public class Defender {
     private String skillLev;
 
     public void save(SQLiteDatabase db){
-        String sql = String.format("INSERT INTO defender(name, lev, hp, atk, skill, skill_lev, hello) values('%s','%s','%s','%s','%s','%s','%s')", name, lev, hp, atk,skill,skillLev,hello);
+        String sql = String.format("REPLACE INTO defender(name, lev, hp, atk, skill, skill_lev, hello) values('%s','%s','%s','%s','%s','%s','%s')", name, lev, hp, atk,skill,skillLev,hello);
         db.execSQL(sql);
     }
 
@@ -159,9 +159,9 @@ public class Defender {
         }
         String addDefender = "REPLACE INTO defender(name, lev, hp, atk, skill, skill_lev,hello) values('我是神，有本事上来！','10000','1931377600','208206500','重击','2','你是不可能超越我的！')";
         db.execSQL(addDefender);
-        addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev,hello) values('某鸟','212','981331','95542','重击','1','我有台词，你咬我呀！')";
+        addDefender = "REPLACE INTO defender(name, lev, hp, atk, skill, skill_lev,hello) values('某鸟','212','981331','95542','重击','1','我有台词，你咬我呀！')";
         db.execSQL(addDefender);
-        addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev,hello) values('笨牛','121','81331','65542','重击','1','我很帅很帅，哈哈哈哈！')";
+        addDefender = "REPLACE INTO defender(name, lev, hp, atk, skill, skill_lev,hello) values('笨牛','121','81331','65542','重击','1','我很帅很帅，哈哈哈哈！')";
         db.execSQL(addDefender);
     }
 
