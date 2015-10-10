@@ -24,7 +24,7 @@ public class PalaceAdapt extends BaseAdapter{
         TextView name1;
     }
 
-    private final Stack<Defender> adapterData = Defender.loadAllDefender();
+    private final Stack<Defender> adapterData = Defender.loadAllDefender(null);
 
     @Override
     public int getCount() {

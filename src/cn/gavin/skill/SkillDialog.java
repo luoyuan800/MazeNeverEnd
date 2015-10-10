@@ -24,6 +24,7 @@ import cn.gavin.activity.MainGameActivity;
 import cn.gavin.skill.system.BaseSkill;
 import cn.gavin.skill.system.EvilSkill;
 import cn.gavin.skill.system.LongSkill;
+import cn.gavin.skill.system.SwindlerSkill;
 import cn.gavin.skill.type.PropertySkill;
 
 /**
@@ -84,13 +85,19 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         View view = inflater.inflate(R.layout.skill_dialog, (ViewGroup) context.findViewById(R.id.skill_dialog));
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.skill_dialog);
         viewFlipper = new ViewFlipper(context);
+
         BaseSkill baseSkill = new BaseSkill(context);
         baseSkill.init(this);
 
         EvilSkill evilSkill = new EvilSkill(context);
         evilSkill.init(this);
+
+        SwindlerSkill swindlerSkill = new SwindlerSkill(context);
+        swindlerSkill.init(this);
+
         viewFlipper.addView(baseSkill);
         viewFlipper.addView(evilSkill);
+        viewFlipper.addView(swindlerSkill);
         linearLayout.addView(viewFlipper);
         detector = new GestureDetector(context, this);
         alertDialog.setView(view);
@@ -124,7 +131,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
     }
 
     int index = 0;
-    String[] systemNames = {"勇者技能", "魔王技能"};
+    String[] systemNames = {"勇者技能", "魔王技能", "欺诈师技能"};
 
     private String getNextSystemName() {
         if (index >= systemNames.length - 1) {

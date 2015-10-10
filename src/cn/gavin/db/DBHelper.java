@@ -15,7 +15,8 @@ import cn.gavin.monster.Defender;
 public class DBHelper {
     private static String DB_PATH = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze/data/demon";
     public final static String DB_NAME = "mazeNeverEnd";
-    private static int DB_VERSION = 9;
+    private static int DB_VERSION_1_2_1 = 9;
+    private static int DB_VERSION = 10;
 
     private Context context;
     private SQLiteDatabase database;
@@ -104,9 +105,9 @@ public class DBHelper {
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.beginTransaction();
         try {
             if (oldVersion == 8) {
-                db.beginTransaction();
                 String createTable = "CREATE TABLE monster(" +
                         "name TEXT NOT NULL PRIMARY KEY," +
                         "max_hp_name TEXT," +
@@ -126,14 +127,24 @@ public class DBHelper {
                         ")";
                 db.execSQL(createTable);
                 Defender.createDB(db);
-                db.setTransactionSuccessful();
-                db.endTransaction();
             }
         }catch(Exception e){
             Log.e("MazeNeverEnd",e.getMessage());
             LogHelper.writeLog();
             e.printStackTrace();
         }
+        try {
+
+            if (oldVersion == 9) {
+                Defender.upgradeDB9To10(db);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("MazeNeverEnd",e.getMessage());
+            LogHelper.writeLog();
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     private static DBHelper dbHelper;
@@ -143,7 +154,6 @@ public class DBHelper {
     }
 
     public static DBHelper getDbHelper() {
-
         return dbHelper;
     }
 

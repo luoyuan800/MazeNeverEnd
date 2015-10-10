@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import cn.gavin.Hero;
-import cn.gavin.maze.Maze;
 import cn.gavin.forge.list.ItemName;
+import cn.gavin.maze.Maze;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
@@ -24,7 +24,7 @@ public class Monster {
             "老虎", "蛟", "变异蝎", "食人鸟", "丑蝙蝠", "蛇", "野牛", "龟", "三头蛇", "刺猬", "狼", "精灵",
             "僵尸", "骷髅", "凤凰", "龙", "作者"};
     private final static long[] baseHP = {8, 20, 55, 75, 95, 115, 400, 1000, 800, 520, 280, 350, 380, 450, 530, 1000, 1500, 2300, 4000, 4500, 6000, 10000, 20000, 70000};
-    private final static long[] baseAtk = {1, 10, 35, 55, 75, 105, 200, 250, 1500, 2000, 310, 350, 400, 900, 1000, 1430, 1500, 2000, 3000, 5000, 6000, 7000, 10000, 70000};
+    private final static long[] baseAtk = {1, 5, 15, 25, 35, 56, 100, 120, 305, 40, 60, 125, 200, 450, 500, 700, 720, 1000, 1500, 2500, 300, 3400, 5000, 70000};
     private final static List[] itemNames = {
             Arrays.asList(ItemName.原石),
             Arrays.asList(ItemName.硝石),
@@ -104,6 +104,12 @@ public class Monster {
         if (atk > hero.getUpperHp() + hero.getDefenseValue()) {
             atk = atk / 2;
         }
+        if(maze.getLev() < 100){
+            atk /= 2;
+        }
+        if (maze.getLev() < 100) {
+            atk /= 2;
+        }
         if (hp > hero.getAttackValue() * 30) {
             hp = hero.getAttackValue() * 30;
         }
@@ -126,7 +132,7 @@ public class Monster {
 
     public Monster(Hero hero, Maze maze) {
         Random random = new Random();
-        int first = (int) random.nextLong(maze.getLev() / 20 < firstNames.length ? maze.getLev() / 20 + 1 : firstNames.length);
+        int first = (int) random.nextLong(maze.getLev() / 50 < firstNames.length ? maze.getLev() / 50 + 1 : firstNames.length);
         int second = (int) random.nextLong(maze.getLev() < secondNames.length ? maze.getLev() + 1 : secondNames.length);
         int last = (int) random.nextLong(maze.getLev() < lastNames.length ? maze.getLev() + 1 : lastNames.length);
         hp = baseHP[last] + firstAdditionHP[first] + secondAdditionHP[second];
@@ -135,11 +141,11 @@ public class Monster {
         secondName = secondNames[second];
         lastName = lastNames[last];
         this.items = itemNames[last];
-        if (hero.getStrength() > 100 && hero.getAgility()>1000 && hero.getPower() > 100 && random.nextLong(maze.getLev()/100+ 1) > 100 && random.nextInt(100) < 15) {
-            hp += random.nextLong((maze.getLev() + hero.getMaxMazeLev()) / 200) * random.nextLong((hero.getStrength()+ hero.getAgility() + hero.getStrength())/ 100 + 1);
-            atk += maze.getLev() * random.nextLong((hero.getStrength()+ hero.getAgility() + hero.getPower())/ 800 + 1);
-            atk += baseAtk[last] * random.nextLong(maze.getLev() + hero.getMaxMazeLev()/100 + 1);
-            if(atk < hero.getDefenseValue()) atk = random.nextLong(hero.getAttackValue() * 2);
+        if (hero.getStrength() > 100 && hero.getAgility() > 1000 && hero.getPower() > 100 && random.nextLong(maze.getLev() / 100 + 1) > 100 && random.nextInt(100) < 15) {
+            hp += random.nextLong((maze.getLev() + hero.getMaxMazeLev()) / 200) * random.nextLong((hero.getStrength() + hero.getAgility() + hero.getStrength()) / 100 + 1);
+            atk += maze.getLev() * random.nextLong((hero.getStrength() + hero.getAgility() + hero.getPower()) / 800 + 1);
+            atk += baseAtk[last] * random.nextLong(maze.getLev() + hero.getMaxMazeLev() / 100 + 1);
+            if (atk < hero.getDefenseValue()) atk = random.nextLong(hero.getAttackValue() * 2);
         }
         hp += baseHP[last] * random.nextLong(maze.getLev() + 1);
         if (hp < hero.getAttackValue()) {
@@ -152,6 +158,9 @@ public class Monster {
 
         if (hp <= 0) hp = Integer.MAX_VALUE - 10;
         if (atk <= 0) hp = Integer.MAX_VALUE - 100;
+        if (maze.getLev() < 150) {
+            atk /= 2;
+        }
         long m1 = random.nextLong(hp + 1) / 180 + 5;
         long m2 = random.nextLong(atk + 1) / 409 + 10;
         material = random.nextLong((m1 + m2) / 20 + 1) + 10 + random.nextLong(maze.getLev() * 10 + 1);

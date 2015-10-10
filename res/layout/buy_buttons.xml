@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="fill_horizontal"
             android:layout_weight="1"
-            android:text="购买宝箱"
+            android:text="获取宝箱"
             android:textSize="12sp" />
     </LinearLayout>
 

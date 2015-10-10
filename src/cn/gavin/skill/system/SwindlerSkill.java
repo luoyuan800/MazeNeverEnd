@@ -72,7 +72,7 @@ public class SwindlerSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getSkillPoint() > 0 && Achievement.click50000.isEnable();
+                    return  SkillFactory.getSkill("欺诈游戏", hero, dialog).isActive()&& Achievement.click50000.isEnable();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -120,7 +120,7 @@ public class SwindlerSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getSkillPoint() > 0 && Achievement.click50000.isEnable();
+                    return SkillFactory.getSkill("欺诈游戏", hero, dialog).isActive() && Achievement.click50000.isEnable();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -180,8 +180,7 @@ public class SwindlerSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("点防", hero, dialog).isActive()
-                            || SkillFactory.getSkill("点防", hero, dialog).isActive();
+                    return (skill.isActive() || hero.getSkillPoint() > 0);
                 }
             });
             skill.setDescription(new DescExpression() {

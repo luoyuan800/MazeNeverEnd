@@ -1,6 +1,8 @@
 package cn.gavin.forge;
 
 import android.database.Cursor;
+
+import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.utils.StringUtils;
@@ -144,7 +146,7 @@ public class Accessory extends Equipment {
     }
 
     public boolean isActive() {
-        return active;
+        return MazeContents.hero.isReinforce(this);
     }
 
     public String toString() {

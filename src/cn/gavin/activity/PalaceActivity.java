@@ -143,13 +143,7 @@ public class PalaceActivity extends Activity implements OnClickListener {
                         if (bundle != null && !bundle.isEmpty()) {
                             String[] messages = bundle.getStringArray("msg");
                             for (String str : messages) {
-                                if (str.matches(".*遇到了.*")) {
-                                    heroPic.setBackgroundResource(R.drawable.h_3);
-                                } else if (str.matches(".*击败了.*")) {
-                                    heroPic.setBackgroundResource(R.drawable.h_2);
-                                } else if (str.matches(".*被.*打败了.*")) {
-                                    heroPic.setBackgroundResource(R.drawable.h_1);
-                                }
+
                                 TextView oneKickInfo = new TextView(PalaceActivity.this);
                                 // 将一次信息数据显示到页面中
                                 oneKickInfo.setText(Html.fromHtml(str));
@@ -202,51 +196,17 @@ public class PalaceActivity extends Activity implements OnClickListener {
         setContentView(R.layout.palace_game_view);
         context = this;
         Log.i(TAG, "start palace~");
-        initGameView();
         initGameData();
         gameThreadRunning = true;
         gameThread = new GameThread();
         gameThread.start();
     }
 
-    private void initGameView() {
-        buttonGroup = (ViewFlipper) findViewById(R.id.button_group_flipper);
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View view = inflater.inflate(R.layout.main_control_buttons, (ViewGroup) this.findViewById(R.id.main_control_buttons));
-        buttonGroup.addView(view, 0);
-        view = inflater.inflate(R.layout.upgrade_buttons, (ViewGroup) this.findViewById(R.id.upgrade_buttons));
-        buttonGroup.addView(view, 1);
-        view = inflater.inflate(R.layout.info_buttons, (ViewGroup) this.findViewById(R.id.info_buttons));
-        buttonGroup.addView(view, 2);
-        view = inflater.inflate(R.layout.item_buttons, (ViewGroup) this.findViewById(R.id.item_buttons));
-        buttonGroup.addView(view, 3);
-        view = inflater.inflate(R.layout.buy_buttons, (ViewGroup) this.findViewById(R.id.buy_buttons));
-        buttonGroup.addView(view, 4);
-        Button pre = (Button) findViewById(R.id.prev_button_system_button);
-        pre.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                buttonGroup.showNext();
-            }
-        });
-        Button next = (Button) findViewById(R.id.next_button_system_button);
-        next.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                buttonGroup.showPrevious();
-            }
-        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        pause = false;
-    }
 
     @Override
     protected void onDestroy() {
         gameThreadRunning = false;
+        MainGameActivity.context.setPause(false);
         super.onDestroy();
     }
 
@@ -309,8 +269,8 @@ public class PalaceActivity extends Activity implements OnClickListener {
         mainContriDef = (TextView) findViewById(R.id.main_contri_def);
         swordLev = (TextView) findViewById(R.id.main_contri_level);
         armorLev = (TextView) findViewById(R.id.main_armor_level);
-        heroPointValue = (TextView) findViewById(R.id.hero_points);
-        mainContriCurMaterial = (TextView) findViewById(R.id.hero_material_count);
+        heroPointValue = (TextView) findViewById(R.id.hero_point);
+        mainContriCurMaterial = (TextView) findViewById(R.id.hero_material);
         heroPic = (Button) findViewById(R.id.hero_pic);
         heroPic.setOnClickListener(this);
         heroPic.setBackgroundResource(R.drawable.h_1);

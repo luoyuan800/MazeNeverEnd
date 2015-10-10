@@ -6,7 +6,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" android:layout_gravity="left|center_vertical"
     android:gravity="center|fill">
-
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="欺诈游戏"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:typeface="serif"
+            android:textStyle="bold|italic"
+            android:id="@+id/skill_swindler_qg_button" android:layout_gravity="center|top"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center|top"
+            android:src="@drawable/line_2_center" android:adjustViewBounds="false"/>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" android:layout_gravity="center_horizontal">
@@ -40,29 +62,7 @@
             android:layout_gravity="center|top"
             android:src="@drawable/line_2_center_down" android:adjustViewBounds="false"/>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:layout_gravity="center">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="欺诈游戏"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:typeface="serif"
-            android:textStyle="bold|italic"
-            android:id="@+id/skill_swindler_qg_button" android:layout_gravity="center|top"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|top"
-            android:src="@drawable/line_1_center" android:adjustViewBounds="false" android:layout_weight="1"
-            />
-    </LinearLayout>
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" android:layout_gravity="center">

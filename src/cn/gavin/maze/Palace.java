@@ -22,10 +22,13 @@ import cn.gavin.utils.StringUtils;
 public class Palace extends Maze {
     private Stack<PalaceMonster> monsters;
     private PalaceActivity context;
+
     public void move(PalaceActivity context) {
         this.context = context;
         Hero hero = context.getHero();
         Random random = hero.getRandom();
+        monsters = PalaceMonster.getPalaceMonsters(hero, this);
+        context.addMessage(hero.getFormatName() + "进入了殿堂，并且向各层殿堂主发起了挑战！");
         while (context.isGameThreadRunning() && level <= hero.getMaxMazeLev()) {
             if (context.isPause()) {
                 continue;
@@ -33,7 +36,7 @@ public class Palace extends Maze {
             step++;
             if (monsters.isEmpty()) {
                 context.addMessage("恭喜你擊敗關卡主！");
-                if(random.nextBoolean()) {
+                if (random.nextBoolean()) {
                     hero.setLockBox(hero.getLockBox() + 1);
                     context.addMessage("获得了一个带锁的宝箱");
                 }
@@ -75,7 +78,7 @@ public class Palace extends Maze {
                 String msg = hero.getFormatName() + "遇到了" + monster.getFormatName();
                 context.addMessage(msg);
                 monster.addBattleDesc(msg);
-                if(monster instanceof  PalaceMonster.PalaceBoss){
+                if (monster instanceof PalaceMonster.PalaceBoss) {
                     context.addMessage(((PalaceMonster.PalaceBoss) monster).getHello());
                     monster.addBattleDesc(((PalaceMonster.PalaceBoss) monster).getHello());
                 }
@@ -154,22 +157,24 @@ public class Palace extends Maze {
                         hero.addMaterial(monster.getMaterial());
                         monster.setDefeat(true);
                         StringBuilder items = new StringBuilder();
-                        for (ItemName item : monster.getItems()) {
-                            Item i = Item.buildItem(hero, this, monster);
-                            if (i != null) {
-                                i.save();
-                                items.append(item.name()).append(" ");
+                        if (monster.getItems() != null) {
+                            for (ItemName item : monster.getItems()) {
+                                Item i = Item.buildItem(hero, this, monster);
+                                if (i != null) {
+                                    i.save();
+                                    items.append(item.name()).append(" ");
+                                }
                             }
-                        }
-                        String str = items.toString();
-                        if (StringUtils.isNotEmpty(str)) {
-                            String itemmsg = hero.getFormatName() + "获得了:" + str;
-                            context.addMessage(itemmsg);
-                            monster.addBattleDesc(itemmsg);
+                            String str = items.toString();
+                            if (StringUtils.isNotEmpty(str)) {
+                                String itemmsg = hero.getFormatName() + "获得了:" + str;
+                                context.addMessage(itemmsg);
+                                monster.addBattleDesc(itemmsg);
+                            }
                         }
                         context.getMonsterBook().addMonster(monster);
                         break;
-                    } else if(hero.getHp() <= 0){
+                    } else if (hero.getHp() <= 0) {
                         Skill notDieSkill = SkillFactory.getSkill("不死之身", hero, context.getSkillDialog());
                         if (notDieSkill.isActive() && notDieSkill.perform()) {
                             notDieSkill.release(monster);
@@ -210,7 +215,7 @@ public class Palace extends Maze {
         }
     }
 
-    public void addMessage(String message){
+    public void addMessage(String message) {
         context.addMessage(message);
     }
 }

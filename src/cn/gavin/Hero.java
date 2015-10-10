@@ -73,15 +73,15 @@ public class Hero {
         EnumMap<Effect, Long> effectLongEnumMap = new EnumMap<Effect, Long>(Effect.class);
         if (ring != null) {
             calculateEffect(effectLongEnumMap, ring);
-            calculateAdditionEffectE(effectLongEnumMap, ring, hat, necklace);
+            calculateAdditionEffectE(effectLongEnumMap, ring);
         }
         if (necklace != null) {
             calculateEffect(effectLongEnumMap, necklace);
-            calculateAdditionEffectE(effectLongEnumMap, necklace, ring, hat);
+            calculateAdditionEffectE(effectLongEnumMap, necklace);
         }
         if (hat != null) {
             calculateEffect(effectLongEnumMap, hat);
-            calculateAdditionEffectE(effectLongEnumMap, hat, necklace, ring);
+            calculateAdditionEffectE(effectLongEnumMap, hat);
         }
         return effectLongEnumMap;
     }
@@ -97,9 +97,9 @@ public class Hero {
         }
     }
 
-    private void calculateAdditionEffectE(EnumMap<Effect, Long> effectLongEnumMap, Accessory accessory, Accessory other1, Accessory other2) {
-        if (accessory.getAdditionEffects() != null && ((other1 != null && other1.getElement().isReinforce(accessory.getElement())) || ((other2 != null && other2.getElement().isReinforce(accessory.getElement()))))) {
-            accessory.setActive(true);
+    private void calculateAdditionEffectE(EnumMap<Effect, Long> effectLongEnumMap, Accessory accessory) {
+        if (accessory.getAdditionEffects() != null &&
+                isReinforce(accessory)) {
             for (EnumMap.Entry<Effect, Number> effect : accessory.getAdditionEffects().entrySet()) {
                 Long value = effectLongEnumMap.get(effect.getKey());
                 if (value != null) {
@@ -108,8 +108,6 @@ public class Hero {
                     effectLongEnumMap.put(effect.getKey(), effect.getValue().longValue());
                 }
             }
-        } else {
-            accessory.setActive(false);
         }
     }
 
@@ -778,7 +776,7 @@ public class Hero {
             } else {
                 skill = getThirdSkill();
             }
-            Defender.addDefender(StringUtils.toHexString(name), getUpperHp() + getUpperDef(), getUpperAtk(), getMaxMazeLev(), skill == null ? "重击" : skill.getName(), 10);
+            Defender.addDefender(StringUtils.toHexString(name), getUpperHp() + getUpperDef(), getUpperAtk(), getMaxMazeLev(), skill == null ? "重击" : skill.getName(), 10, "遇見了吾，你將止步於此！");
             MAX_HP_RISE = random.nextLong(power / 5000 + 4) + 5;
             DEF_RISE = random.nextLong(agility / 5000 + 2) + 1;
             ATR_RISE = random.nextLong(strength / 5000 + 3) + 2;
@@ -837,6 +835,22 @@ public class Hero {
             case HatBuilder.type:
                 this.hat = accessory;
                 break;
+        }
+    }
+
+    public boolean isReinforce(Accessory accessory){
+        switch (accessory.getType()){
+            case RingBuilder.type:
+                return ring!=null && ring.getId().equals(accessory.getId()) &&
+                        ((necklace!=null && necklace.getElement().isReinforce(accessory.getElement())) || (hat!=null && hat.getElement().isReinforce(accessory.getElement())));
+            case NecklaceBuilder.type:
+                return necklace!=null && necklace.getId().equals(accessory.getId()) &&
+                        ((ring!=null && ring.getElement().isReinforce(accessory.getElement())) || (hat!=null && hat.getElement().isReinforce(accessory.getElement())));
+            case HatBuilder.type:
+                return hat!=null && hat.getId().equals(accessory.getId()) &&
+                        ((necklace!=null && necklace.getElement().isReinforce(accessory.getElement())) || (ring!=null && ring.getElement().isReinforce(accessory.getElement())));
+            default:
+                return false;
         }
     }
 }

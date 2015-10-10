@@ -8,6 +8,7 @@ import cn.gavin.Hero;
 import cn.gavin.db.DBHelper;
 import cn.gavin.maze.Palace;
 import cn.gavin.utils.Random;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 gluo.
@@ -58,7 +59,11 @@ public class PalaceMonster extends Monster {
     }
 
     public void setHello(String hello) {
-        this.hello = hello;
+        if(StringUtils.isNotEmpty(hello) && !"null".equals(hello)) {
+            this.hello = hello;
+        }else{
+            this.hello = "我没有什么话好说的，战斗吧！";
+        }
     }
 
 

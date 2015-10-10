@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.Stack;
 
+import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.utils.StringUtils;
 
@@ -16,23 +17,53 @@ import cn.gavin.utils.StringUtils;
 public class Defender {
 
     private String desc;
+    private String name;
+    private String atk;
+    private String hp;
+    private String lev;
+    private String hello;
+    private String skill;
+    private String skillLev;
 
-    public static Stack<Defender> loadAllDefender(){
+    public void save(){
+        String sql = String.format("INSERT INTO defender(name, lev, hp, atk, skill, skill_lev, hello) values('%s','%s','%s','%s','%s','%s','%s')", name, lev, hp, atk,skill,skillLev,hello);
+        DBHelper.getDbHelper().excuseSOL(sql);
+    }
+
+    public static Stack<Defender> loadAllDefender(SQLiteDatabase db) {
         Stack<Defender> defenders = new Stack<Defender>();
-        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM defender ORDER BY lev ASC");
-        while(cursor.isAfterLast()){
+        Cursor cursor ;
+        if(db!=null){
+            cursor = db.rawQuery("SELECT * FROM defender ORDER BY lev DESC", null);
+        }else {
+            cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM defender ORDER BY lev DESC");
+        }
+        while (!cursor.isAfterLast()) {
             Defender d = new Defender();
-            d.desc = String.format("<font color=\"#9932CC\">%s</font> - %s" , cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("lev")));
+            String name = cursor.getString(cursor.getColumnIndex("name"));
+            if (name != null && name.startsWith("0x")) {
+                name = StringUtils.toStringHex(name);
+            }
+            String lev = cursor.getString(cursor.getColumnIndex("lev"));
+            d.desc = String.format("<font color=\"#9932CC\">%s</font> - %s %s", name, lev, lev.equalsIgnoreCase(MazeContents.hero.getMaxMazeLev() + "") ? " <--- 你也在这里!" : "");
+            d.lev = lev;
+            d.name = name;
+            d.atk = cursor.getString(cursor.getColumnIndex("atk"));
+            d.hp = cursor.getString(cursor.getColumnIndex("hp"));
+            d.hello  = cursor.getString(cursor.getColumnIndex("hello"));
+            d.skill  = cursor.getString(cursor.getColumnIndex("skill"));
+            d.skillLev  = cursor.getString(cursor.getColumnIndex("skill_lev"));
             defenders.push(d);
+            cursor.moveToNext();
         }
         return defenders;
     }
 
-    public String toString(){
+    public String toString() {
         return desc;
     }
 
-    public static void addDefender(String name, long hp, long atk, long lev, String skillName, long skillLev){
+    public static void addDefender(String name, long hp, long atk, long lev, String skillName, long skillLev, String hello) {
         String addDefender = String.format("REPLACE INTO defender(name, lev, hp, atk, skill, skill_lev) " +
                 "values('%s','%s','%s','%s','%s','%s')", name, lev, hp, atk, skillName, skillLev);
         DBHelper.getDbHelper().excuseSQLWithoutResult(addDefender);
@@ -43,7 +74,7 @@ public class Defender {
             Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM defender WHERE lev = '" + lev + "' AND skill_lev IS NOT '0'");
             if (!cursor.isAfterLast()) {
                 String name = cursor.getString(cursor.getColumnIndex("name"));
-                if(name!=null && name.startsWith("0x")){
+                if (name != null && name.startsWith("0x")) {
                     name = StringUtils.toStringHex(name);
                 }
                 String hp = cursor.getString(cursor.getColumnIndex("hp"));
@@ -61,7 +92,7 @@ public class Defender {
     public static void createDB(SQLiteDatabase db) {
         String createTable = "CREATE TABLE defender(" +
                 "name TEXT NOT NULL," +
-                "lev TEXT NOT NULL PRIMARY KEY," +
+                "lev INTEGER NOT NULL PRIMARY KEY," +
                 "hp TEXT," +
                 "atk TEXT," +
                 "skill TEXT," +
@@ -98,9 +129,23 @@ public class Defender {
         db.execSQL(addDefender);
     }
 
-    public static void upgradeDB(SQLiteDatabase db){
+    public static void upgradeDB9To10(SQLiteDatabase db) {
+        Stack<Defender> defenders = Defender.loadAllDefender(db);
         db.execSQL("DROP TABLE defender");
-        createDB(db);
+        String createTable = "CREATE TABLE defender(" +
+                "name TEXT NOT NULL," +
+                "lev INTEGER NOT NULL PRIMARY KEY," +
+                "hp TEXT," +
+                "atk TEXT," +
+                "skill TEXT," +
+                "skill_lev TEXT," +
+                "hello TEXT" +
+                ")";
+        db.execSQL(createTable);
+        db.execSQL("CREATE UNIQUE INDEX maze_lev ON defender (lev)");
+        for(Defender d : defenders){
+            d.save();
+        }
     }
 
     public String getDesc() {

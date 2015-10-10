@@ -3,22 +3,56 @@ package cn.gavin.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.*;
+import android.view.GestureDetector;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import cn.gavin.*;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.List;
+import java.util.Random;
+
+import cn.gavin.Achievement;
+import cn.gavin.Armor;
+import cn.gavin.Hero;
+import cn.gavin.R;
+import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Item;
@@ -27,18 +61,13 @@ import cn.gavin.forge.adapter.RecipeAdapter;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
+import cn.gavin.maze.MazeService;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.monster.PalaceAdapt;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.upload.Upload;
-
-import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.List;
-import java.util.Random;
 
 public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener {
     //Constants
@@ -303,9 +332,22 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         initGameData();
         checkUpdate();
         gameThreadRunning = true;
-        gameThread = new GameThread();
-        gameThread.start();
+        Intent service = new Intent(MazeService.ACTION);
+        service.setPackage(getPackageName());
+        bindService(service, connection, BIND_AUTO_CREATE);
     }
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     private void initGameView() {
         buttonGroup = (ViewFlipper) findViewById(R.id.button_group_flipper);
@@ -474,11 +516,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private void showGetSkillPointDialog() {
         if (skillPointGetDialog == null) {
             skillPointGetDialog = new Builder(this).create();
-            skillPointGetDialog.setTitle("20000材料转换1点技能点");
+            skillPointGetDialog.setTitle("30000材料转换1点技能点");
             skillPointGetDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    heroN.addMaterial(-300000);
+                    heroN.addMaterial(-30000);
                     heroN.setSkillPoint(heroN.getSkillPoint() + 1);
                     handler.sendEmptyMessage(103);
                     skillPointGetDialog.hide();
@@ -493,7 +535,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             });
         }
         skillPointGetDialog.show();
-        if (heroN.getMaterial() > 300000) {
+        if (heroN.getMaterial() > 30000) {
             skillPointGetDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         } else {
             skillPointGetDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -505,7 +547,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private void getLockBox() {
         if (getLockBoxDialog == null) {
             getLockBoxDialog = new Builder(this).create();
-            getLockBoxDialog.setTitle("32250换取一个带锁的宝箱");
+            getLockBoxDialog.setTitle("12250换取一个带锁的宝箱");
             getLockBoxDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -585,6 +627,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                             heroN.addPoint(100000);
                             heroN.setLockBox(heroN.getLockBox() + 1000);
                             heroN.setKeyCount(heroN.getKeyCount() + 1000);
+                            heroN.setClick(49990);
+                            heroN.setMaxMazeLev(101);
+                            maze.setLevel(99);
                             heroN.setAwardCount(heroN.getAwardCount() + 1);
                         } else if (tv.getText().toString().equals("sp1.1c")) {
                             if (heroN.getAwardCount() < 1) {
@@ -668,6 +713,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 });
         dialog.show();
     }
+
     private void showDefenders() {
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("殿堂");
@@ -691,12 +737,16 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //dialog.dismiss();
+                        handler.sendEmptyMessage(103);
+                        Intent intent = new Intent(context, PalaceActivity.class);
+                        startActivity(intent);
                     }
 
                 });
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
         dialog.show();
     }
+
     private void showLockBox() {
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("开启宝箱");
@@ -1035,13 +1085,14 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             upSword.setEnabled(false);
             upTSwordButton.setEnabled(false);
         }
-        if(heroN.getMaterial() > 100 * (80 + heroN.getArmorLev())){
+        if (heroN.getMaterial() > 100 * (80 + heroN.getArmorLev())) {
             upgradeHArmorButton.setEnabled(true);
-        }else{
+        } else {
             upgradeHArmorButton.setEnabled(false);
-        }if(heroN.getMaterial() > 100 * (100 + heroN.getSwordLev())){
+        }
+        if (heroN.getMaterial() > 100 * (100 + heroN.getSwordLev())) {
             upgradeHSwordButton.setEnabled(true);
-        }else{
+        } else {
             upgradeHSwordButton.setEnabled(false);
         }
         if (heroN.getMaterial() >= 80 + heroN.getArmorLev()) {
@@ -1174,6 +1225,15 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     public void setPause(boolean pause) {
         this.pause = pause;
+    }
+
+    public void startMaze() {
+        new GameThread().start();
+    }
+
+    public void stopMaze() {
+        gameThreadRunning = false;
+        save();
     }
 
     private class GameThread extends Thread {
