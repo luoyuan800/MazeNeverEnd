@@ -253,7 +253,7 @@ public abstract class Skill {
         return "<i>" + desc + "</i>";
     }
 
-    protected void addMessage(String msg){
+    public void addMessage(String msg){
         MainGameActivity.context.addMessage(format(msg));
     }
 }
