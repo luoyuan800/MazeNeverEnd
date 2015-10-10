@@ -110,6 +110,7 @@ public class Defender {
                 ")";
         db.execSQL(createTable);
         db.execSQL("CREATE UNIQUE INDEX maze_lev ON defender (lev)");
+        db.beginTransaction();
         String addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev, hello) values('沁玟','324','238645','47889','重击','1','遇見了吾，你將止步於此！')";
         db.execSQL(addDefender);
         addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev,hello) values('夏文进','101','44990','22911','重击','1','遇見了吾，你將止步於此！')";
@@ -138,6 +139,8 @@ public class Defender {
         db.execSQL(addDefender);
         addDefender = "INSERT INTO defender(name, lev, hp, atk, skill, skill_lev,hello) values('我是神，有本事上来！','10000','1931377600','208206500','重击','2','你是不可能超越我的！')";
         db.execSQL(addDefender);
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     public static void upgradeDB9To10(SQLiteDatabase db) {
@@ -157,12 +160,15 @@ public class Defender {
         for(Defender d : defenders){
             d.save(db);
         }
+        db.beginTransaction();
         String addDefender = "REPLACE INTO defender(name, lev, hp, atk, skill, skill_lev,hello) values('我是神，有本事上来！','10000','1931377600','208206500','重击','2','你是不可能超越我的！')";
         db.execSQL(addDefender);
         addDefender = "REPLACE INTO defender(name, lev, hp, atk, skill, skill_lev,hello) values('某鸟','212','981331','95542','重击','1','我有台词，你咬我呀！')";
         db.execSQL(addDefender);
         addDefender = "REPLACE INTO defender(name, lev, hp, atk, skill, skill_lev,hello) values('笨牛','121','81331','65542','重击','1','我很帅很帅，哈哈哈哈！')";
         db.execSQL(addDefender);
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     public String getDesc() {

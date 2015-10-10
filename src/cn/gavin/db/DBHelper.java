@@ -106,7 +106,6 @@ public class DBHelper {
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.beginTransaction();
         try {
             if (oldVersion == 8) {
                 String createTable = "CREATE TABLE monster(" +
@@ -144,8 +143,7 @@ public class DBHelper {
             Log.e("MazeNeverEnd",e.getMessage());
             LogHelper.writeLog();
         }
-        db.setTransactionSuccessful();
-        db.endTransaction();
+
     }
 
     private static DBHelper dbHelper;
