@@ -87,7 +87,7 @@ public class Maze {
                 }
 
                 hero.addPoint(point);
-                hero.addHp(random.nextLong(hero.getUpperHp() / 10 + 1) +10);
+                hero.addHp(random.nextLong(hero.getUpperHp() / 5 + 1) +10);
                 addMessage(context, "-------------------");
             } else if (random.nextLong(1000) > 983 && random.nextLong(hero.getAgility()) > random.nextLong(6971)) {
                 long mate = random.nextLong(level * 300 + 1) + random.nextLong(hero.getAgility() / 1000 + 100) + 100;
@@ -95,7 +95,7 @@ public class Maze {
                 hero.addMaterial(mate);
                 addMessage(context, "-------------------");
             } else if (hero.getHp() < hero.getUpperHp() && random.nextLong(1000) > 985) {
-                long hel = random.nextLong(hero.getUpperHp() / 70 + 1) + random.nextLong(hero.getPower() / 500);
+                long hel = random.nextLong(hero.getUpperHp() / 20 + 1) + random.nextLong(hero.getPower() / 500);
                 if(hel > hero.getUpperHp()/2){
                     hel = random.nextLong(hero.getUpperHp()/2 + 1) +1;
                 }
@@ -300,7 +300,17 @@ public class Maze {
 
             }
         }
-
+        if(level%100==0){
+            Skill fSkill = SkillFactory.getSkill("浮生百刃", hero, MainGameActivity.context.getSkillDialog());
+            Skill xSkill = SkillFactory.getSkill("虚无吞噬", hero, MainGameActivity.context.getSkillDialog());
+            boolean qzs = SkillFactory.getSkill("欺诈师", hero, MainGameActivity.context.getSkillDialog()).isActive();
+            if(qzs && (random.nextLong(hero.getMaxMazeLev() + 1000) > 1100)){
+                fSkill.setActive(true);
+            }
+            if(qzs && (random.nextLong(hero.getMaxMazeLev() + 1000) > 1150)){
+                xSkill.setActive(true);
+            }
+        }
     }
 
     public long getLev() {

@@ -210,11 +210,7 @@ public class SwindlerSkill extends SkillLayout {
                         skill.addMessage(coin);
                         monster.addBattleSkillDesc(coin);
                     }
-                    if (hero.isParry()) {
-                        String parrymsg = hero.getFormatName() + "成功格挡一次攻击，减少了当前受到的伤害！";
-                        skill.addMessage(parrymsg);
-                        monster.addBattleDesc(parrymsg);
-                    }
+
                     if (coinSide) {
                         long harm = n * hero.getAttackValue();
                         monster.addHp(-harm);
@@ -224,6 +220,14 @@ public class SwindlerSkill extends SkillLayout {
                         monster.addBattleDesc(msg);
                     } else {
                         long harm = n * monster.getAtk() - hero.getDefenseValue();
+                        if(harm < 0){
+                            harm = hero.getMaxMazeLev();
+                        }
+                        if (hero.isParry()) {
+                            String parrymsg = hero.getFormatName() + "成功格挡一次攻击，减少了当前受到的伤害！";
+                            skill.addMessage(parrymsg);
+                            monster.addBattleDesc(parrymsg);
+                        }
                         hero.addHp(-harm);
                         String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() +
                                 " 造成了" + harm + "的伤害。";

@@ -1,6 +1,8 @@
 package cn.gavin.forge;
 
 import android.database.Cursor;
+import android.util.Log;
+import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ public class Recipe {
     }
 
     public String getItems() {
-        if(!found && user){
+        if (!found && user) {
             return items.substring(0, items.lastIndexOf("+")) + "+ ?";
         }
         return items;
@@ -73,20 +75,25 @@ public class Recipe {
 
     public static List<Recipe> loadRecipes() {
         List<Recipe> recipeList = new ArrayList<Recipe>();
-        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT name,items,found,user,type,color FROM recipe WHERE found = 'true' OR user = 'true'");
-        while (!cursor.isAfterLast()) {
-            Recipe recipe = new Recipe();
-            recipe.name = cursor.getString(cursor.getColumnIndex("name"));
-            recipe.items = cursor.getString(cursor.getColumnIndex("items"));
-            if (recipe.items != null) {
-                recipe.items = recipe.items.replaceAll("-", "+");
+        try {
+            Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT name,items,found,user,type,color FROM recipe WHERE found = 'true' OR user = 'true'");
+            while (!cursor.isAfterLast()) {
+                Recipe recipe = new Recipe();
+                recipe.name = cursor.getString(cursor.getColumnIndex("name"));
+                recipe.items = cursor.getString(cursor.getColumnIndex("items"));
+                if (recipe.items != null) {
+                    recipe.items = recipe.items.replaceAll("-", "+");
+                }
+                recipe.found = Boolean.getBoolean(cursor.getString(cursor.getColumnIndex("found")));
+                recipe.user = Boolean.getBoolean(cursor.getString(cursor.getColumnIndex("user")));
+                recipe.type = cursor.getInt(cursor.getColumnIndex("type"));
+                recipe.color = cursor.getString(cursor.getColumnIndex("color"));
+                recipeList.add(recipe);
+                cursor.moveToNext();
             }
-            recipe.found = Boolean.getBoolean(cursor.getString(cursor.getColumnIndex("found")));
-            recipe.user = Boolean.getBoolean(cursor.getString(cursor.getColumnIndex("user")));
-            recipe.type = cursor.getInt(cursor.getColumnIndex("type"));
-            recipe.color = cursor.getString(cursor.getColumnIndex("color"));
-            recipeList.add(recipe);
-            cursor.moveToNext();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(MainGameActivity.TAG, "loadRecipe", e);
         }
         return recipeList;
     }

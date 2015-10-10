@@ -1,6 +1,8 @@
 package cn.gavin.forge;
 
 import android.database.Cursor;
+import android.util.Log;
+import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MazeContents;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.utils.Random;
@@ -232,6 +234,8 @@ public abstract class Builder {
         a1 = null;
         a2 = null;
         this.items = items;
+        StringBuilder builder = new StringBuilder();
+        try{
         Cursor cursor = queryRecipe();
         while (!cursor.isAfterLast()) {
             float pro = 0.0f;
@@ -296,7 +300,6 @@ public abstract class Builder {
                 a1 = null;
             }
         }
-        StringBuilder builder = new StringBuilder();
         if (a1 != null && a1.getPro() > 0) {
             builder.append("<font color=\"").append(a1.getColor()).append("\">");
             builder.append(a1.getName()).append(" : ").append(a1.getPro()).append("%</font>");
@@ -315,6 +318,10 @@ public abstract class Builder {
         }
         if (normalP > 0) {
             builder.append("<br>").append("??? : ").append(normalP);
+        }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e(MainGameActivity.TAG, "build_detect",e);
         }
         return builder.toString();
     }

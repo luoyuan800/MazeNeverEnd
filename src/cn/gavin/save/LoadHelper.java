@@ -164,10 +164,15 @@ public class LoadHelper {
 
     public void loadSkill(Hero hero, SkillDialog dialog) {
         String sql = "select name from skill";
+        try{
         Cursor cursor = DBHelper.getDbHelper().excuseSOL(sql);
         while (!cursor.isAfterLast()) {
             SkillFactory.getSkill(cursor.getString(cursor.getColumnIndex("name")), hero, dialog);
             cursor.moveToNext();
+        }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e(MainGameActivity.TAG, "loadSkills", e);
         }
     }
 

@@ -2,6 +2,8 @@ package cn.gavin.forge;
 
 import android.database.Cursor;
 
+import android.util.Log;
+import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
@@ -168,8 +170,9 @@ public class Accessory extends Equipment {
     }
 
     public static List<Accessory> loadAccessories() {
+        List<Accessory> res = new ArrayList<Accessory>();
+        try{
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM accessory");
-        List<Accessory> res = new ArrayList<Accessory>(cursor.getCount());
         while (!cursor.isAfterLast()) {
             Accessory accessory = new Accessory();
             accessory.setName(cursor.getString(cursor.getColumnIndex("name")));
@@ -195,6 +198,10 @@ public class Accessory extends Equipment {
             accessory.setId(cursor.getString(cursor.getColumnIndex("id")));
             res.add(accessory);
             cursor.moveToNext();
+        }
+        }catch (Exception e){
+            Log.e(MainGameActivity.TAG, "loadAccessories", e);
+            e.printStackTrace();
         }
         return res;
     }
@@ -232,6 +239,7 @@ public class Accessory extends Equipment {
                 }
             }
         } catch (Exception e) {
+            DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM accessory WHERE id = '" + id + "'");
             return false;
         }
         return true;

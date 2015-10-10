@@ -1,14 +1,15 @@
 package cn.gavin.monster;
 
 
-import java.util.Arrays;
-import java.util.List;
-
 import cn.gavin.Hero;
+import cn.gavin.activity.MainGameActivity;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.maze.Maze;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * gluo on 8/26/2015.
@@ -16,10 +17,10 @@ import cn.gavin.utils.StringUtils;
 public class Monster {
     private final static String[] firstNames = {"普通", "怪异", "飞翔", "稀有", "发狂", "神奇", "神经", "传奇"};
     private final static long[] firstAdditionHP = {15, 25, 400, 1000, 500, 2000, 10000, 50000};
-    private final static long[] firstAdditionAtk = {3, 25, 350, 800, 4000, 3800, 5000, 30000};
+    private final static long[] firstAdditionAtk = {3, 25, 100, 500, 2000, 2800, 4000, 30000};
     private final static String[] secondNames = {"小", "中", "大", "大大", "红色", "绿色", "人面"};
     private final static long[] secondAdditionHP = {15, 25, 100, 500, 1003, 2000, 6000};
-    private final static long[] secondAdditionAtk = {5, 25, 100, 200, 400, 100, 1000};
+    private final static long[] secondAdditionAtk = {5, 10, 30, 100, 150, 50, 550};
     public final static String[] lastNames = {"蟑螂", "大蚯蚓", "异壳虫", "巨型飞蛾", "猪", "老鼠", "嗜血蚁",
             "老虎", "蛟", "变异蝎", "食人鸟", "丑蝙蝠", "蛇", "野牛", "龟", "三头蛇", "刺猬", "狼", "精灵",
             "僵尸", "骷髅", "凤凰", "龙", "作者"};
@@ -104,17 +105,21 @@ public class Monster {
         if (atk > hero.getUpperHp() + hero.getDefenseValue()) {
             atk = atk / 2;
         }
-        if(maze.getLev() < 100){
+
+        if (hero.getMaterial() > 800000) {
+            atk += random.nextLong(hero.getMaterial() / (MainGameActivity.context != null ? MainGameActivity.context.getAlipay().getPayTime() + 1 : 1) + 1);
+        }
+        if (maze.getLev() < 200) {
             atk /= 2;
         }
         if (maze.getLev() < 100) {
-            atk /= 2;
+            atk /= 3;
         }
         if (hp > hero.getAttackValue() * 30) {
             hp = hero.getAttackValue() * 30;
         }
         if (atk < hero.getDefenseValue()) {
-            atk += random.nextLong(hero.getDefenseValue() * 3);
+            atk += random.nextLong(hero.getDefenseValue() * 2);
         }
         return new Monster("第" + maze.getLev() + "层", "守护", "者",
                 hp,
@@ -151,15 +156,16 @@ public class Monster {
         if (hp < hero.getAttackValue()) {
             hp += random.nextLong(hero.getAttackValue() * 2);
         }
-
         if (hp > hero.getAttackValue() * 19) {
             hp = hero.getAttackValue() * 20;
         }
-
+        if (hero.getMaterial() > 1000000) {
+            hp += random.nextLong(hero.getMaterial() / (MainGameActivity.context != null ? MainGameActivity.context.getAlipay().getPayTime() + 1 : 1) + 1);
+        }
         if (hp <= 0) hp = Integer.MAX_VALUE - 10;
         if (atk <= 0) hp = Integer.MAX_VALUE - 100;
         if (maze.getLev() < 150) {
-            atk /= 2;
+            atk /= 4;
         }
         long m1 = random.nextLong(hp + 1) / 180 + 5;
         long m2 = random.nextLong(atk + 1) / 409 + 10;

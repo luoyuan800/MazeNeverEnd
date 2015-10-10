@@ -1,7 +1,9 @@
 package cn.gavin.forge;
 
 import android.database.Cursor;
+import android.util.Log;
 import cn.gavin.Hero;
+import cn.gavin.activity.MainGameActivity;
 import cn.gavin.maze.Maze;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
@@ -127,8 +129,9 @@ public class Item {
     public static ArrayList<Item> loadItems() {
         DBHelper dbHelper = DBHelper.getDbHelper();
         String sql = "SELECT * FROM item";
+        ArrayList<Item> items = new ArrayList<Item>();
+        try{
         Cursor cursor = dbHelper.excuseSOL(sql);
-        ArrayList<Item> items = new ArrayList<Item>(cursor.getCount());
         while (!cursor.isAfterLast()) {
             ItemName name = ItemName.valueOfName(cursor.getString(cursor.getColumnIndex("name")));
             Item item = new Item();
@@ -154,6 +157,10 @@ public class Item {
             }
             items.add(item);
             cursor.moveToNext();
+        }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e(MainGameActivity.TAG, "loadItems", e);
         }
         return items;
     }

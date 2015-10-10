@@ -1,13 +1,13 @@
 package cn.gavin.skill;
 
 import android.database.Cursor;
+import android.util.Log;
 import android.widget.Button;
-
 import cn.gavin.Hero;
-import cn.gavin.maze.Maze;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
+import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.expression.DescExpression;
 import cn.gavin.skill.expression.EnableExpression;
@@ -108,7 +108,7 @@ public abstract class Skill {
 
     public void refresh() {
         if (skillButton != null) {
-            if(!skillButton.hasOnClickListeners()) {
+            if (!skillButton.hasOnClickListeners()) {
                 skillButton.setOnClickListener(skillDialog.getClickListener(this));
                 skillButton.setOnLongClickListener(skillDialog.getLongClickListener(this));
             }
@@ -160,7 +160,7 @@ public abstract class Skill {
         for (int i = 0; i < str.length(); i++) {
             result += Integer.parseInt(str.charAt(i) + "");
         }
-        if(result > 50){
+        if (result > 50) {
             result = hero.getRandom().nextInt(50);
         }
         return result;
@@ -179,7 +179,7 @@ public abstract class Skill {
     }
 
     public void addCount() {
-        if(this.count < Long.MAX_VALUE - 1000) {
+        if (this.count < Long.MAX_VALUE - 1000) {
             this.count++;
             if (count % 1005 == 0) {
                 levelUp();
@@ -226,16 +226,21 @@ public abstract class Skill {
     }
 
     public boolean load() {
-        DBHelper helper = DBHelper.getDbHelper();
-        String sql = String.format("select * from skill where name='%s'",
-                getName());
-        Cursor cursor = helper.excuseSOL(sql);
-        if (!cursor.isAfterLast()) {
-            setOnUsed(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_on_use"))));
-            active = (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_active"))));
-            setProbability(Float.parseFloat(cursor.getString(cursor.getColumnIndex("probability"))));
-            count = (Long.parseLong(cursor.getString(cursor.getColumnIndex("count"))));
-            return true;
+        try {
+            DBHelper helper = DBHelper.getDbHelper();
+            String sql = String.format("select * from skill where name='%s'",
+                    getName());
+            Cursor cursor = helper.excuseSOL(sql);
+            if (!cursor.isAfterLast()) {
+                setOnUsed(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_on_use"))));
+                active = (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_active"))));
+                setProbability(Float.parseFloat(cursor.getString(cursor.getColumnIndex("probability"))));
+                count = (Long.parseLong(cursor.getString(cursor.getColumnIndex("count"))));
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(MainGameActivity.TAG, "loadSkill", e);
         }
         return false;
     }
@@ -249,11 +254,11 @@ public abstract class Skill {
         this.levelUp = levelUp;
     }
 
-    public String format(String desc){
+    public String format(String desc) {
         return "<i>" + desc + "</i>";
     }
 
-    public void addMessage(String msg){
+    public void addMessage(String msg) {
         MainGameActivity.context.addMessage(format(msg));
     }
 }

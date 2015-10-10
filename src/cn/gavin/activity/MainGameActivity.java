@@ -9,50 +9,15 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
+import android.os.*;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.GestureDetector;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ViewFlipper;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.List;
-import java.util.Random;
-
-import cn.gavin.Achievement;
-import cn.gavin.Armor;
-import cn.gavin.Hero;
-import cn.gavin.R;
-import cn.gavin.Sword;
+import cn.gavin.*;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Item;
@@ -68,6 +33,12 @@ import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.upload.Upload;
+
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.List;
+import java.util.Random;
 
 public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener {
     //Constants
@@ -337,15 +308,26 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         bindService(service, connection, BIND_AUTO_CREATE);
     }
 
+    @Override
+    public void onPause() {
+        save();
+        moveTaskToBack(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        save();
+    }
+
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-
+            load();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
+            save();
         }
     };
 
