@@ -743,8 +743,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     }
 
                 });
-        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
         dialog.show();
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
     }
 
     private void showLockBox() {
