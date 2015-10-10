@@ -349,6 +349,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     public void onSaveInstanceState(Bundle bundle) {
         save();
         super.onSaveInstanceState(bundle);
+        this.finish();
     }
 
     private ServiceConnection connection = new ServiceConnection() {
@@ -733,12 +734,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private void showDefenders() {
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("殿堂");
-        ScrollView scrollView = new ScrollView(this);
         ListView listView = new ListView(this);
         PalaceAdapt palaceAdapt = new PalaceAdapt();
         listView.setAdapter(palaceAdapt);
-        scrollView.addView(listView);
-        dialog.setView(scrollView);
+        dialog.setView(listView);
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出",
                 new DialogInterface.OnClickListener() {
 

@@ -29,6 +29,9 @@ public MainMenuActivity context;
     private final Handler handler = new Handler(){
         public void handleMessage(Message msg){
             switch (msg.what){
+                case 3:
+                    menuStart.setText("加载存档");
+                    break;
                 case 2:
                     menuStart.setText("加载技能");
                     break;
@@ -58,13 +61,14 @@ public MainMenuActivity context;
         menuStart = (Button) findViewById(R.id.menu_start);
         menuStart.setOnClickListener(this);
         menuStart.setEnabled(false);
-        menuStart.setText("加载存档");
+        menuStart.setText("初始化数据");
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     DBHelper.init(MainMenuActivity.this);
                     MazeContents.skillDialog = new SkillDialog();
+                    handler.sendEmptyMessage(3);
                     LoadHelper saveHelper = new LoadHelper(context);
                     saveHelper.loadHero();
                     handler.sendEmptyMessage(2);
