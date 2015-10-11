@@ -180,28 +180,32 @@ public class Accessory extends Equipment {
             Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM accessory");
             while (!cursor.isAfterLast()) {
                 Accessory accessory = new Accessory();
-                accessory.setName(cursor.getString(cursor.getColumnIndex("name")));
-                accessory.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
-                accessory.setColor(cursor.getString(cursor.getColumnIndex("color")));
-                EnumMap<Effect, Number> base = new EnumMap<Effect, Number>(Effect.class);
-                for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
-                    String[] keyValue = StringUtils.split(str, ":");
-                    if (keyValue.length > 1) {
-                        base.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
-                    }
-                }
-                EnumMap<Effect, Number> addition = new EnumMap<Effect, Number>(Effect.class);
-                for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")) {
-                    String[] keyValue = StringUtils.split(str, ":");
-                    if (keyValue.length > 1) {
-                        addition.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
-                    }
-                }
-                accessory.setEffects(base);
-                accessory.setAdditionEffects(addition);
-                accessory.setType(cursor.getInt(cursor.getColumnIndex("type")));
                 accessory.setId(cursor.getString(cursor.getColumnIndex("id")));
-                res.add(accessory);
+                try {
+                    accessory.setName(cursor.getString(cursor.getColumnIndex("name")));
+                    accessory.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
+                    accessory.setColor(cursor.getString(cursor.getColumnIndex("color")));
+                    EnumMap<Effect, Number> base = new EnumMap<Effect, Number>(Effect.class);
+                    for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
+                        String[] keyValue = StringUtils.split(str, ":");
+                        if (keyValue.length > 1) {
+                            base.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                        }
+                    }
+                    EnumMap<Effect, Number> addition = new EnumMap<Effect, Number>(Effect.class);
+                    for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")) {
+                        String[] keyValue = StringUtils.split(str, ":");
+                        if (keyValue.length > 1) {
+                            addition.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                        }
+                    }
+                    accessory.setEffects(base);
+                    accessory.setAdditionEffects(addition);
+                    accessory.setType(cursor.getInt(cursor.getColumnIndex("type")));
+                    res.add(accessory);
+                }catch (Exception e){
+                    accessory.delete();
+                }
                 cursor.moveToNext();
             }
             cursor.close();
@@ -210,6 +214,10 @@ public class Accessory extends Equipment {
             e.printStackTrace();
         }
         return res;
+    }
+
+    private void delete() {
+        DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM accessory WHERE id = '" + id + "'");
     }
 
     public String getFormatName() {

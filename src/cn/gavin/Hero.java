@@ -175,7 +175,7 @@ public class Hero {
     }
 
     public void addAttackValue(long attackValue) {
-        if((this.attackValue + attackValue) > 0) {
+        if((this.attackValue + attackValue) > 10) {
             this.attackValue += attackValue;
         }else{
             this.attackValue = 10;
@@ -200,7 +200,7 @@ public class Hero {
     }
 
     public void addDefenseValue(long defenseValue) {
-        if((this.defenseValue + defenseValue)> 0) {
+        if((this.defenseValue + defenseValue)> 10) {
             this.defenseValue += defenseValue;
         }else{
             this.defenseValue = 10;
@@ -342,7 +342,7 @@ public class Hero {
             }
         }
         if (strength < 0) strength = 0;
-        if (attackValue < 0) attackValue = 0;
+        if (attackValue < 0) attackValue = 5;
     }
 
     public long getPower() {
@@ -519,7 +519,7 @@ public class Hero {
     }
 
     public void addUpperHp(long hp) {
-        if((this.upperHp + hp) > 0) {
+        if((this.upperHp + hp) > 9) {
             this.upperHp += hp;
         }else{
             upperHp = 10;
@@ -834,6 +834,7 @@ public class Hero {
             }
             Achievement.reBird.enable(this);
             dbHelper.endTransaction();
+            MainGameActivity.context.addMessage(getFormatName() + "成功转生！");
         }
     }
 

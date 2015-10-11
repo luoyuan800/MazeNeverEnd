@@ -77,7 +77,7 @@ public enum ItemName {
         return type;
     }
 
-    public static ItemName valueOfName(String name) {
+    public static ItemName valueOfName(String name) throws Exception {
         if (StringUtils.isNotEmpty(name)) {
             for (ItemName itemName : values()) {
                 if (itemName.name().equalsIgnoreCase(name.trim())) {
@@ -85,6 +85,6 @@ public enum ItemName {
                 }
             }
         }
-        return null;
+        throw new Exception("NotSuchName :" + name);
     }
 }

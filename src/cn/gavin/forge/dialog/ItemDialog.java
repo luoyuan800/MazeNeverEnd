@@ -227,8 +227,8 @@ public class ItemDialog {
     }
 
     private List<ItemList> getItemListAdp() {
-        ArrayList<Item> list = Item.loadItems();
         ItemList itemList = new ItemList();
+        ArrayList<Item> list = Item.loadItems();
         ArrayList<ItemList> rs = new ArrayList<ItemList>(list.size() / 3);
         rs.add(itemList);
         for (Item item : list) {

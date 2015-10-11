@@ -48,12 +48,18 @@ public class SaveHelper {
         editor.putLong("clickAward", heroN.getClickAward());
         if (heroN.getRing() != null) {
             editor.putString("ring", heroN.getRing().getId());
+        }else{
+            editor.putString("ring", "");
         }
         if (heroN.getNecklace() != null) {
             editor.putString("necklace", heroN.getNecklace().getId());
+        }else{
+            editor.putString("necklace","");
         }
         if (heroN.getHat() != null) {
             editor.putString("hat", heroN.getHat().getId());
+        }else{
+            editor.putString("hat", "");
         }
         StringBuilder sb = new StringBuilder();
         for (Achievement achievement : Achievement.values()) {

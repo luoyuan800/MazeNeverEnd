@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.log.LogHelper;
 
 /**
  * Copyright 2015 gluo.
@@ -30,6 +31,7 @@ public class MazeService extends Service {
             wakeLock.release();
         }
         MainGameActivity.context.stopMaze();
+        LogHelper.writeLog();
     }
 
     @Override

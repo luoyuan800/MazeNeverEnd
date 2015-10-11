@@ -22,6 +22,7 @@ import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 gluo.
@@ -34,6 +35,7 @@ public class LoadHelper {
     public LoadHelper(MainMenuActivity activity) {
         context = activity;
     }
+
     public LoadHelper(MainGameActivity activity) {
         context = activity;
     }
@@ -76,21 +78,21 @@ public class LoadHelper {
         heroN.setLockBox(preferences.getLong("lockBox", 1));
         heroN.setKeyCount(preferences.getLong("keyCount", 1));
         String ringId = preferences.getString("ring", null);
-        if (ringId != null) {
+        if (StringUtils.isNotEmpty(ringId)) {
             Accessory ring = new Accessory();
             ring.setId(ringId);
             if (ring.load())
                 heroN.setAccessory(ring);
         }
         String necklaceId = preferences.getString("necklace", null);
-        if (necklaceId != null) {
+        if (StringUtils.isNotEmpty(necklaceId)) {
             Accessory necklace = new Accessory();
             necklace.setId(necklaceId);
             if (necklace.load())
                 heroN.setAccessory(necklace);
         }
         String hatId = preferences.getString("hat", null);
-        if (hatId != null) {
+        if (StringUtils.isNotEmpty(hatId)) {
             Accessory hat = new Accessory();
             hat.setId(hatId);
             if (hat.load())

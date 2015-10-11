@@ -91,6 +91,8 @@ public abstract class Builder {
         String name = b.toString();
         name = name.replaceAll("硝", "火");
         name = name.replaceAll("食", "宏");
+        name = name.replaceAll("精", "魔");
+        name = name.replaceAll("原", "神");
         if (name.startsWith("龟")) {
             name = name.replaceAll("龟", "寿");
         }
@@ -140,6 +142,7 @@ public abstract class Builder {
         }
         color = "#000000";
         Map<Effect, Number> effectNumberMap = accessory.getEffects();
+        boolean save = false;
         for (Effect effect : effectNumberMap.keySet()) {
             switch (effect) {
                 case ADD_ATK:
@@ -151,10 +154,12 @@ public abstract class Builder {
                     }
                     if (l > 100000) {
                         color = "#9932CC";
+                        save = true;
                     }
                     if (l > 10000000) {
                         color = "#B8860B";
 
+                        save = true;
                     }
                     if (l > MazeContents.hero.getBaseDefense()) {
                         color = "#8B008B";
@@ -169,21 +174,25 @@ public abstract class Builder {
                     }
                     if (sml > 10000) {
                         color = "#9932CC";
+                        save = true;
                     }
                     if (sml > 100000) {
                         color = "#B8860B";
+                        save = true;
                     }
                     break;
                 case ADD_CLICK_AWARD:
                     long cw = effectNumberMap.get(effect).longValue();
-                    if (cw > 50) {
+                    if (cw > 100) {
                         color = "#0000FF";
                     }
-                    if (cw > 100) {
-                        color = "#9932CC";
-                    }
                     if (cw > 1000) {
+                        color = "#9932CC";
+                        save = true;
+                    }
+                    if (cw > 5000) {
                         color = "#9400D3";
+                        save = true;
                     }
                     break;
                 default:
@@ -191,7 +200,7 @@ public abstract class Builder {
             }
         }
         accessory.setColor(color);
-        if (!color.equalsIgnoreCase("#000000") && detectSave) {
+        if (!color.equalsIgnoreCase("#000000") && detectSave && save) {
             accessory.setSave(true);
         }
     }

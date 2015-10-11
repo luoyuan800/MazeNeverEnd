@@ -35,7 +35,7 @@ public class LogHelper {
                     if (!file.exists()) {
                         file.createNewFile();
                     }
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
                     writer.write(log.toString());
                     writer.flush();
                     writer.close();
