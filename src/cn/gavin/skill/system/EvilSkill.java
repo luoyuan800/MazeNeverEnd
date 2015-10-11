@@ -621,7 +621,7 @@ public class EvilSkill extends SkillLayout {
                         hero.setChangeUhp(monster.getMaxHP());
                         hero.setChangeHp(hero.getHp());
                         hero.setOnChange(true);
-                        String msg = hero.getFormatName() + "使用了技能" + iskll.getName() + "变身成为了" +
+                        String msg = hero.getName() + "使用了技能" + iskll.getName() + "变身成为了" +
                                 monster.getFormatName();
                         skill.addMessage(msg);
                         monster.addBattleSkillDesc(msg);
@@ -638,7 +638,7 @@ public class EvilSkill extends SkillLayout {
                                     }
                                     i++;
                                 }
-                                iskll.addMessage(hero.getFormatName() + "的变身效果消失了");
+                                iskll.addMessage(hero.getName() + "的变身效果消失了");
                                 hero.setOnChange(false);
                             }
                         }).start();
