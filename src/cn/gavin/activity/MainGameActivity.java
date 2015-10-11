@@ -1063,7 +1063,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         hatTextView.setOnClickListener(this);
         recipeButton = (Button) findViewById(R.id.forge_recipe_button);
         recipeButton.setOnClickListener(this);
-        cleanButton = (Button) findViewById(R.id.clean_data_button);
+        cleanButton = (Button) findViewById(R.id.transfer_button);
         cleanButton.setOnClickListener(this);
         buyLockBoxButton = (Button) findViewById(R.id.lock_box_get_button);
         buyLockBoxButton.setOnClickListener(this);
@@ -1419,7 +1419,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     showLockBox();
                 }
                 break;
-            case R.id.clean_data_button:
+            case R.id.transfer_button:
                 showCleanDialog();
                 break;
             case R.id.ring_view:

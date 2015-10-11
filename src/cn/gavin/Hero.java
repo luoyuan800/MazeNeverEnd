@@ -87,12 +87,14 @@ public class Hero {
     }
 
     private void calculateEffect(EnumMap<Effect, Long> effectLongEnumMap, Accessory accessory) {
-        for (EnumMap.Entry<Effect, Number> effect : accessory.getEffects().entrySet()) {
-            Long value = effectLongEnumMap.get(effect.getKey());
-            if (value != null) {
-                effectLongEnumMap.put(effect.getKey(), value + effect.getValue().longValue());
-            } else {
-                effectLongEnumMap.put(effect.getKey(), effect.getValue().longValue());
+        if(accessory.getEffects()!=null) {
+            for (EnumMap.Entry<Effect, Number> effect : accessory.getEffects().entrySet()) {
+                Long value = effectLongEnumMap.get(effect.getKey());
+                if (value != null) {
+                    effectLongEnumMap.put(effect.getKey(), value + effect.getValue().longValue());
+                } else {
+                    effectLongEnumMap.put(effect.getKey(), effect.getValue().longValue());
+                }
             }
         }
     }
@@ -674,8 +676,12 @@ public class Hero {
 
     public void setRing(Accessory ring) {
         cleanEffect();
-        this.ring = ring;
-        appendEffect();
+        if(ring!=null) {
+            this.ring = ring;
+            appendEffect();
+        }else{
+            this.ring = null;
+        }
     }
 
     private void appendEffect() {
@@ -748,8 +754,12 @@ public class Hero {
 
     public void setNecklace(Accessory necklace) {
         cleanEffect();
-        this.necklace = necklace;
-        appendEffect();
+        if(necklace!=null) {
+            this.necklace = necklace;
+            appendEffect();
+        }else{
+            this.necklace = null;
+        }
     }
 
     public Accessory getHat() {
@@ -762,13 +772,17 @@ public class Hero {
 
     public void setHat(Accessory hat) {
         cleanEffect();
-        this.hat = hat;
-        appendEffect();
+        if(hat!=null) {
+            this.hat = hat;
+            appendEffect();
+        }else{
+            this.hat = null;
+        }
     }
 
     public void reincarnation() {
         if (material < 200101) {
-            Toast.makeText(MainGameActivity.context, "锻造点数不足100101！" + getName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainGameActivity.context, "锻造点数不足200101！" + getName(), Toast.LENGTH_SHORT).show();
         } else {
             Skill skill;
             if (getFirstSkill() != null) {
@@ -781,7 +795,7 @@ public class Hero {
             DEF_RISE = random.nextLong(agility / 5000 + 2) + 1;
             ATR_RISE = random.nextLong(strength / 5000 + 3) + 2;
             maxMazeLev = 1;
-            material = 0;
+            material -= 200101;
             attackValue = random.nextLong(20) + 10;
             defenseValue = random.nextLong(20) + 10;
             setUpperHp(random.nextLong(20) + 25);
@@ -794,7 +808,6 @@ public class Hero {
             power = 5;
             strength = 5;
             agility = 5;
-            skillPoint = 1;
 
             DBHelper dbHelper = DBHelper.getDbHelper();
             dbHelper.beginTransaction();

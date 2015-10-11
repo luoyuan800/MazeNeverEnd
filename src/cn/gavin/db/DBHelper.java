@@ -173,4 +173,8 @@ public class DBHelper {
         if (database != null && database.isOpen())
             database.close();
     }
+
+    public SQLiteDatabase getDatabase() {
+        return database;
+    }
 }

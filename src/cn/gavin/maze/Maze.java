@@ -17,7 +17,7 @@ import cn.gavin.utils.StringUtils;
  * Created by gluo on 8/26/2015.
  */
 public class Maze {
-    private int csmgl = 8977;
+    private int csmgl = 8997;
     private Hero hero;
     protected long level;
     private boolean moving;
@@ -87,15 +87,15 @@ public class Maze {
                 }
 
                 hero.addPoint(point);
-                hero.addHp(random.nextLong(hero.getUpperHp() / 5 + 1) +10);
+                hero.addHp(random.nextLong(hero.getUpperHp() / 20 + 1) + random.nextLong(hero.getPower()/100));
                 addMessage(context, "-------------------");
             } else if (random.nextLong(1000) > 993 && random.nextLong(hero.getAgility()) > random.nextLong(6971)) {
                 long mate = random.nextLong(level * 300 + 1) + random.nextLong(hero.getAgility() / 1000 + 100) + 100;
                 addMessage(context, hero.getFormatName() + "找到了一个宝箱， 获得了<font color=\"#FF8C00\">" + mate + "</font>材料");
                 hero.addMaterial(mate);
                 addMessage(context, "-------------------");
-            } else if (hero.getHp() < hero.getUpperHp() && random.nextLong(1000) > 985) {
-                long hel = random.nextLong(hero.getUpperHp() / 20 + 1) + random.nextLong(hero.getPower() / 500);
+            } else if (hero.getHp() < hero.getUpperHp() && random.nextLong(1000) > 989) {
+                long hel = random.nextLong(hero.getUpperHp() / 10 + 1) + random.nextLong(hero.getPower() / 100);
                 if(hel > hero.getUpperHp()/2){
                     hel = random.nextLong(hero.getUpperHp()/2 + 1) +1;
                 }
@@ -161,7 +161,7 @@ public class Maze {
                         } else {
                             long harm = monster.getAtk() - hero.getDefenseValue();
                             if (harm <= 0 || hero.getRandom().nextInt(100) > monster.getHitRate()) {
-                                harm = hero.getMaxMazeLev();
+                                harm = random.nextLong(hero.getMaxMazeLev());
                             }
                             if (hero.getRandom().nextInt(100) > monster.getHitRate()) {
                                 harm = random.nextLong(level + 1);

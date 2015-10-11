@@ -160,7 +160,8 @@ public class Monster {
         if (hp > hero.getAttackValue() * 19) {
             hp = hero.getAttackValue() * 20;
         }
-        if (hero.getMaterial() > 1000000) {
+        if (hero.getMaterial() > 5000000) {
+            atk += random.nextLong(hero.getAttackValue()/(hero.getMaxMazeLev()+1));
             hp += random.nextLong(hero.getMaterial() / (MainGameActivity.context != null ? MainGameActivity.context.getAlipay().getPayTime() + 1 : 1) + 1);
         }
         if (hp <= 0) hp = Integer.MAX_VALUE - 10;
@@ -170,7 +171,7 @@ public class Monster {
         }
         long m1 = random.nextLong(hp + 1) / 180 + 5;
         long m2 = random.nextLong(atk + 1) / 409 + 10;
-        material = random.nextLong((m1 + m2) / 22 + 2) + 12 + random.nextLong(maze.getLev() * 10 + 1);
+        material = random.nextLong((m1 + m2) / 22 + 2) + 10 + random.nextLong(maze.getLev() * 9 + 1);
         maxHP = hp;
         formatName(hero);
         builder = new StringBuilder("第");

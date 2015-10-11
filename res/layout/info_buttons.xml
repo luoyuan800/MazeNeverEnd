@@ -35,7 +35,7 @@
                 android:layout_gravity="fill_horizontal"
                 android:layout_weight="1"
                 android:enabled="false"
-                android:text="排名"
+                android:text="竞技"
                 android:textSize="12sp"/>
     </LinearLayout>
     <LinearLayout

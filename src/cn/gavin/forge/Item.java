@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.forge.list.ItemName;
@@ -165,8 +166,24 @@ public class Item {
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "loadItems", e);
+            rebuildItemTable();
         }
         return items;
+    }
+
+    private static void rebuildItemTable() {
+        try {
+            MazeContents.hero.setNecklace(null);
+            MazeContents.hero.setRing(null);
+            MazeContents.hero.setHat(null);
+            DBHelper.getDbHelper().excuseSQLWithoutResult("DROP TABLE item");
+            DBHelper.getDbHelper().excuseSQLWithoutResult("DROP TABLE recipe");
+            DBHelper.getDbHelper().excuseSQLWithoutResult("DROP TABLE accessory");
+            new ForgeDB().createTable(DBHelper.getDbHelper().getDatabase());
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e(MainGameActivity.TAG, "RebuildTable", e);
+        }
     }
 
     public void save() {

@@ -176,7 +176,7 @@ public abstract class Builder {
                     break;
                 case ADD_CLICK_AWARD:
                     long cw = effectNumberMap.get(effect).longValue();
-                    if (cw > 20) {
+                    if (cw > 50) {
                         color = "#0000FF";
                     }
                     if (cw > 100) {

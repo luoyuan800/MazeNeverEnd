@@ -219,15 +219,16 @@ public class SwindlerSkill extends SkillLayout {
                         skill.addMessage(msg);
                         monster.addBattleDesc(msg);
                     } else {
-                        long harm = n * monster.getAtk() - hero.getDefenseValue();
+                        long harm = monster.getAtk() - hero.getDefenseValue();
                         if(harm < 0){
-                            harm = hero.getMaxMazeLev();
+                            harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1) + 1;
                         }
                         if (hero.isParry()) {
                             String parrymsg = hero.getFormatName() + "成功格挡一次攻击，减少了当前受到的伤害！";
                             skill.addMessage(parrymsg);
                             monster.addBattleDesc(parrymsg);
                         }
+                        harm *= n;
                         hero.addHp(-harm);
                         String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() +
                                 " 造成了" + harm + "的伤害。";

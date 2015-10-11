@@ -528,7 +528,7 @@ public class EvilSkill extends SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if (skill.getProbability() < 45) {
+                    if (skill.getProbability() < 50) {
                         skill.setProbability(skill.getProbability() + 6.5f);
                         return true;
                     }

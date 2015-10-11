@@ -216,6 +216,8 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                         }else{
                             resultText.setText(Html.fromHtml(builder.notEnough()));
                         }
+                    }else{
+                        resultText.setText("选择的打造材料不足，请继续添加!");
                     }
                 }else{
                     Toast.makeText(this, "--锻造点数不足30250!--", Toast.LENGTH_SHORT)
