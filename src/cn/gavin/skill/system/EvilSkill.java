@@ -608,32 +608,41 @@ public class EvilSkill extends SkillLayout {
             skill.setRelease(new UseExpression() {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, final Skill skill) {
-                    hero.setChangeName(monster.getName());
-                    hero.setChangAtk(monster.getAtk());
-                    hero.setChangeUhp(monster.getMaxHP());
-                    hero.setChangeHp(hero.getHp());
-                    hero.setOnChange(true);
-                    String msg = hero.getFormatName() + "使用了技能" + iskll.getName() + "变身成为了" +
-                            monster.getFormatName();
-                    skill.addMessage(msg);
-                    monster.addBattleSkillDesc(msg);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            int i = 0;
-                            while (i < iskll.getBaseHarm()) {
-                                try {
-                                    Thread.sleep(MainGameActivity.context.getRefreshInfoSpeed());
-                                } catch (InterruptedException e) {
-                                    Thread.currentThread().interrupt();
-                                    e.printStackTrace();
+                    if(hero.isOnChange()){
+                        long harm = hero.getAttackValue();
+                        monster.addHp(-harm);
+                        String msg = hero.getFormatName() + "攻击了" +
+                                monster.getFormatName() + "造成了" + harm + "的伤害";
+                        skill.addMessage(msg);
+                        monster.addBattleSkillDesc(msg);
+                    }else {
+                        hero.setChangeName(monster.getName());
+                        hero.setChangAtk(monster.getAtk());
+                        hero.setChangeUhp(monster.getMaxHP());
+                        hero.setChangeHp(hero.getHp());
+                        hero.setOnChange(true);
+                        String msg = hero.getFormatName() + "使用了技能" + iskll.getName() + "变身成为了" +
+                                monster.getFormatName();
+                        skill.addMessage(msg);
+                        monster.addBattleSkillDesc(msg);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                int i = 0;
+                                while (i < iskll.getBaseHarm()) {
+                                    try {
+                                        Thread.sleep(MainGameActivity.context.getRefreshInfoSpeed());
+                                    } catch (InterruptedException e) {
+                                        Thread.currentThread().interrupt();
+                                        e.printStackTrace();
+                                    }
+                                    i++;
                                 }
-                                i++;
+                                iskll.addMessage(hero.getFormatName() + "的变身效果消失了");
+                                hero.setOnChange(false);
                             }
-                            iskll.addMessage(hero.getFormatName() + "的变身效果消失了");
-                            hero.setOnChange(false);
-                        }
-                    }).start();
+                        }).start();
+                    }
                     return false;
                 }
 
