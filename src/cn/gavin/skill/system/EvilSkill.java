@@ -646,7 +646,9 @@ public class EvilSkill extends SkillLayout {
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     if (skill.getProbability() < 35) {
                         skill.setProbability(skill.getProbability() + 3.1f);
-                        iskll.setBaseHarm(iskll.getBaseHarm() + 10);
+                        if(iskll.getBaseHarm() < 20) {
+                            iskll.setBaseHarm(iskll.getBaseHarm() + 3);
+                        }
                         return true;
                     }
                     return false;
@@ -748,7 +750,9 @@ public class EvilSkill extends SkillLayout {
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     if (skill.getProbability() < 35) {
                         skill.setProbability(skill.getProbability() + 3.1f);
-                        iskll.setBaseHarm(iskll.getBaseHarm() + 2);
+                        if(iskll.getBaseHarm() < 100) {
+                            iskll.setBaseHarm(iskll.getBaseHarm() + 2);
+                        }
                         iskll.setAdditionHarm(iskll.getAdditionHarm() + 2);
                         return true;
                     }

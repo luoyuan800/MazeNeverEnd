@@ -234,7 +234,7 @@ public abstract class Builder {
                 accessory.setElement(Element.火);
                 break;
             case ADD_CLICK_AWARD:
-                accessory.setElement(Element.木);
+                accessory.setElement(Element.土);
                 break;
             default:
                 accessory.setElement(Element.values()[random.nextInt(Element.values().length)]);

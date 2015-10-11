@@ -166,7 +166,6 @@ public class Item {
                     items.add(item);
                 }catch (Exception e){
                     item.delete();
-                    LogHelper.writeLog();
                 }
                 cursor.moveToNext();
             }
