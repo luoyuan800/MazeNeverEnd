@@ -68,6 +68,11 @@ public class Hero {
     private Accessory necklace;
     private Accessory hat;
     private float parry;
+    private boolean onChange;
+    private long changAtk;
+    private long changeHp;
+    private long changeUhp;
+    private String changeName;
 
     private EnumMap<Effect, Long> getAccessoryEffectMap() {
         EnumMap<Effect, Long> effectLongEnumMap = new EnumMap<Effect, Long>(Effect.class);
@@ -135,23 +140,30 @@ public class Hero {
     }
 
     public long getHp() {
-        return hp;
+        return isOnChange() ? changeHp: hp;
     }
 
     public void addHp(long hp) {
-        if (hp < 0) {
-            this.hp += hp;
-        } else if (this.hp < (Integer.MAX_VALUE - hp - 100)) {
-            this.hp += hp;
-        }
-        if (this.hp <= 0) {
-            this.hp = 0;
-            deathCount++;
-            if (deathCount == 10000) {
-                Achievement.maltreat.enable(this);
+        if(onChange){
+            this.changeHp += hp;
+            if(changeHp <=0){
+                onChange = false;
             }
+        }else {
+            if (hp < 0) {
+                this.hp += hp;
+            } else if (this.hp < (Integer.MAX_VALUE - hp - 100)) {
+                this.hp += hp;
+            }
+            if (this.hp <= 0) {
+                this.hp = 0;
+                deathCount++;
+                if (deathCount == 10000) {
+                    Achievement.maltreat.enable(this);
+                }
+            }
+            if (this.hp > upperHp) this.hp = upperHp;
         }
-        if (this.hp > upperHp) this.hp = upperHp;
     }
 
     public long getBaseAttackValue() {
@@ -171,7 +183,7 @@ public class Hero {
     }
 
     public long getAttackValue() {
-        return attackValue + random.nextLong(sword.getBase()) + random.nextLong(swordLev + 1) * DEF_RISE;
+        return isOnChange() ? changAtk : (attackValue + random.nextLong(sword.getBase()) + random.nextLong(swordLev + 1) * DEF_RISE);
     }
 
     public void addAttackValue(long attackValue) {
@@ -495,7 +507,7 @@ public class Hero {
     }
 
     public long getUpperHp() {
-        return upperHp;
+        return isOnChange()?changeUhp:upperHp;
     }
 
     public String getSword() {
@@ -640,10 +652,14 @@ public class Hero {
     }
 
     public String getFormatName() {
-        if (!StringUtils.isNotEmpty(formatName)) {
-            formatName = "<font color=\"#800080\">" + getName() + "</font>";
+        if(onChange){
+            return "<font color=\"#800080\">" + changeName + "</font>";
+        }else {
+            if (!StringUtils.isNotEmpty(formatName)) {
+                formatName = "<font color=\"#800080\">" + getName() + "</font>";
+            }
+            return formatName;
         }
-        return formatName;
     }
 
     public long getAwardCount() {
@@ -866,5 +882,37 @@ public class Hero {
             default:
                 return false;
         }
+    }
+
+    public boolean isOnChange() {
+        return onChange;
+    }
+
+    public void setOnChange(boolean onChange) {
+        this.onChange = onChange;
+    }
+
+    public long getChangeHp() {
+        return changeHp;
+    }
+
+    public void setChangeHp(long changeHp) {
+        this.changeHp = changeHp;
+    }
+
+    public long getChangAtk() {
+        return changAtk;
+    }
+
+    public void setChangAtk(long changAtk) {
+        this.changAtk = changAtk;
+    }
+
+    public void setChangeUhp(long changeUhp) {
+        this.changeUhp = changeUhp;
+    }
+
+    public void setChangeName(String changeName) {
+        this.changeName = changeName;
     }
 }

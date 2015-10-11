@@ -608,12 +608,11 @@ public class EvilSkill extends SkillLayout {
             skill.setRelease(new UseExpression() {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, final Skill skill) {
-                    final String older = hero.getName();
-                    final long hp = hero.getUpperHp();
-                    final long atk = hero.getBaseAttackValue();
-                    hero.setName(monster.getName());
-                    hero.setAttackValue(monster.getAtk());
-                    hero.setUpperHp(monster.getMaxHP());
+                    hero.setChangeName(monster.getName());
+                    hero.setChangAtk(monster.getAtk());
+                    hero.setChangeUhp(monster.getMaxHP());
+                    hero.setChangeHp(hero.getHp());
+                    hero.setOnChange(true);
                     String msg = hero.getFormatName() + "使用了技能" + iskll.getName() + "变身成为了" +
                             monster.getFormatName();
                     skill.addMessage(msg);
@@ -631,10 +630,8 @@ public class EvilSkill extends SkillLayout {
                                 }
                                 i++;
                             }
-                            iskll.addMessage(older + "的变身效果消失了");
-                            hero.setName(older);
-                            hero.setAttackValue(atk);
-                            hero.setUpperHp(hp);
+                            iskll.addMessage(hero.getFormatName() + "的变身效果消失了");
+                            hero.setOnChange(false);
                         }
                     }).start();
                     return false;
