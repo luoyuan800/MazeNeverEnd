@@ -20,7 +20,7 @@ public class MazeService extends Service {
     @Override
     public void onCreate(){
         PowerManager pm=(PowerManager)getSystemService(Context.POWER_SERVICE);
-        wakeLock=pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"mywakelock");
+        wakeLock=pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"MazeNeverEnd");
         wakeLock.acquire();
     }
 

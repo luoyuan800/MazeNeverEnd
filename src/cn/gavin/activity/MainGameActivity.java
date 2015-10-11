@@ -64,6 +64,7 @@ import cn.gavin.maze.Maze;
 import cn.gavin.maze.MazeService;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.monster.PalaceAdapt;
+import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
@@ -334,22 +335,15 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         initGameData();
         checkUpdate();
         gameThreadRunning = true;
+        service.setPackage(getPackageName());
         startService(service);
         bindService(service, connection, BIND_AUTO_CREATE);
-    }
-
-    @Override
-    public void onPause() {
-        save();
-        moveTaskToBack(true);
-        super.onPause();
     }
 
     @Override
     public void onSaveInstanceState(Bundle bundle) {
         save();
         super.onSaveInstanceState(bundle);
-        this.finish();
     }
 
     private ServiceConnection connection = new ServiceConnection() {
@@ -396,7 +390,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     @Override
     protected void onDestroy() {
         MainGameActivity.this.stopService(service);
-        save();
         gameThreadRunning = false;
         dbHelper.close();
         super.onDestroy();
@@ -1575,9 +1568,18 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private void load() {
+        if(MazeContents.hero == null) {
+            if (heroN == null) {
+                LoadHelper loadHelper = new LoadHelper(this);
+                loadHelper.loadHero();
+                DBHelper.init(MainGameActivity.this);
+                MazeContents.skillDialog = new SkillDialog();
+                loadHelper.loadHero();
+                loadHelper.loadSkill(MazeContents.hero, MazeContents.skillDialog);
+            }
+        }
         heroN = MazeContents.hero;
         maze = MazeContents.maze;
-        //saveHelper.loadHero();
     }
 
     public static class AchievementList {

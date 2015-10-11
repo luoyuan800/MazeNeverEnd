@@ -1,5 +1,6 @@
 package cn.gavin.save;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -28,9 +29,12 @@ import cn.gavin.skill.SkillFactory;
  * Created by gluo on 9/16/2015.
  */
 public class LoadHelper {
-    private MainMenuActivity context;
+    private Activity context;
 
     public LoadHelper(MainMenuActivity activity) {
+        context = activity;
+    }
+    public LoadHelper(MainGameActivity activity) {
         context = activity;
     }
 
