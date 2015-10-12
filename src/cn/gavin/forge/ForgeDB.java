@@ -1,7 +1,6 @@
 package cn.gavin.forge;
 
 import android.database.sqlite.SQLiteDatabase;
-import cn.gavin.db.DBHelper;
 
 /**
  * luoyuan on 10/4/15.
@@ -65,6 +64,15 @@ public class ForgeDB {
         sql = String.format(base,"青云冠", "青檀木-蛇皮-白杏木-玄石", "ADD_AGI:1000-ADD_DEF:10000","ADD_POWER:3000", HatBuilder.type,"#8A2BE2");
         database.execSQL(sql);
         sql = String.format(base,"星尘冠", "冷杉木-龙皮-白杏木-玄石", "ADD_ATK:30000-ADD_DEF:10000","ADD_POWER:3000", HatBuilder.type,"#FF8C00");
+        database.execSQL(sql);
+        upgradeTo1_3_2(database);
+    }
+
+    public void upgradeTo1_3_2(SQLiteDatabase database){
+        String base = "INSERT INTO recipe (name, items, base, addition, found, user, type, color) values ('%s', '%s','%s','%s','false','false','%s','%s')";
+        String sql = String.format(base,"天使眼淚", "冷杉木-龙皮-白杏木-玄石-凤凰毛-萤石-银矿石-蛇筋-龙须木-红檀木", "ADD_ATK:30000-ADD_DEF:10000","ADD_POWER:3000-ADD_CLICK_AWARD:200", NecklaceBuilder.type,"#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base,"天神戒", "蛇皮-牛骨-白杏木-玄石-凤凰毛-虎筋-蛟皮-银矿石-钢石-硝石-银矿石-冷杉木", "ADD_ATK:30000-ADD_DEF:10000","ADD_ATK:50000-ADD_CLICK_AWARD:500", RingBuilder.type,"#FF8C00");
         database.execSQL(sql);
     }
 }

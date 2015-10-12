@@ -16,7 +16,8 @@ public class DBHelper {
     private static String DB_PATH = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze/data/demon";
     public final static String DB_NAME = "mazeNeverEnd";
     private static int DB_VERSION_1_2_1 = 9;
-    private static int DB_VERSION = 10;
+    private static int DB_VERSION_1_3_1 = 10;
+    private static int DB_VERSION = 11;
 
     private Context context;
     private SQLiteDatabase database;
@@ -143,7 +144,16 @@ public class DBHelper {
             Log.e("MazeNeverEnd",e.getMessage());
             LogHelper.writeLog();
         }
+        try {
 
+            if (oldVersion == 10) {
+                new ForgeDB().upgradeTo1_3_2(db);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("MazeNeverEnd",e.getMessage());
+            LogHelper.writeLog();
+        }
     }
 
     private static DBHelper dbHelper;

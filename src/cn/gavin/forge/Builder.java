@@ -156,7 +156,7 @@ public abstract class Builder {
                         color = "#9932CC";
                         save = true;
                     }
-                    if (l > 10000000) {
+                    if (l > 500000) {
                         color = "#B8860B";
 
                         save = true;
@@ -164,20 +164,28 @@ public abstract class Builder {
                     if (l > MazeContents.hero.getBaseDefense()) {
                         color = "#8B008B";
                     }
+                    if(l > 1000000){
+                        color = "#FF8C00";
+                        save = true;
+                    }
                     break;
                 case ADD_AGI:
                 case ADD_STR:
                 case ADD_POWER:
                     long sml = effectNumberMap.get(effect).longValue();
-                    if (sml > 5000) {
+                    if (sml > 1000) {
                         color = "#0000FF";
                     }
-                    if (sml > 10000) {
+                    if (sml > 5000) {
                         color = "#9932CC";
                         save = true;
                     }
-                    if (sml > 100000) {
+                    if (sml > 8000) {
                         color = "#B8860B";
+                        save = true;
+                    }
+                    if(sml > 10000){
+                        color = "#FF8C00";
                         save = true;
                     }
                     break;
@@ -192,6 +200,10 @@ public abstract class Builder {
                     }
                     if (cw > 5000) {
                         color = "#9400D3";
+                        save = true;
+                    }
+                    if(cw > 5500){
+                        color = "#FF8C00";
                         save = true;
                     }
                     break;

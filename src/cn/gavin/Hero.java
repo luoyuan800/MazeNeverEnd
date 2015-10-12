@@ -74,19 +74,11 @@ public class Hero {
     private long changeUhp;
     private String changeName;
 
-    private EnumMap<Effect, Long> getAccessoryEffectMap() {
+    private EnumMap<Effect, Long> getAccessoryEffectMap(Accessory accessory) {
         EnumMap<Effect, Long> effectLongEnumMap = new EnumMap<Effect, Long>(Effect.class);
-        if (ring != null) {
-            calculateEffect(effectLongEnumMap, ring);
-            calculateAdditionEffectE(effectLongEnumMap, ring);
-        }
-        if (necklace != null) {
-            calculateEffect(effectLongEnumMap, necklace);
-            calculateAdditionEffectE(effectLongEnumMap, necklace);
-        }
-        if (hat != null) {
-            calculateEffect(effectLongEnumMap, hat);
-            calculateAdditionEffectE(effectLongEnumMap, hat);
+        if (accessory != null) {
+            calculateEffect(effectLongEnumMap, accessory);
+            calculateAdditionEffectE(effectLongEnumMap, accessory);
         }
         return effectLongEnumMap;
     }
@@ -128,6 +120,7 @@ public class Hero {
 
     public void addClickAward(long num) {
         clickAward += num;
+        if(clickAward <= 0) clickAward = 1;
     }
 
     public String getName() {
@@ -202,6 +195,7 @@ public class Hero {
 
     public long getDefenseValue() {
         long defend = defenseValue + random.nextLong(armor.getBase()) + random.nextLong(armorLev + 1) * ATR_RISE;
+        if(parry > 100) parry = 100;
         if (random.nextLong(100) + parry + random.nextLong(agility + 1) / 5000 > 97 + random.nextInt(20) + random.nextLong(strength + 1) / 5000) {
             defend *= 3;
             isParry = true;
@@ -261,7 +255,7 @@ public class Hero {
 
     public boolean upgradeSword(long count) {
         for (int i = 0; i < count; i++) {
-            if (swordLev + sword.getBase() + attackValue >= Long.MAX_VALUE - 100) {
+            if (swordLev*ATR_RISE + sword.getBase() + attackValue >= Long.MAX_VALUE - 100) {
                 return false;
             } else {
                 if (material >= 100 + swordLev) {
@@ -281,7 +275,7 @@ public class Hero {
 
     public boolean upgradeArmor(long count) {
         for (int i = 0; i < count; i++) {
-            if (armorLev + armor.getBase() + defenseValue >= Long.MAX_VALUE - 1000) {
+            if (armorLev*DEF_RISE + armor.getBase() + defenseValue >= Long.MAX_VALUE - 1000) {
                 return false;
             } else {
                 if (material >= 80 + armorLev) {
@@ -691,17 +685,17 @@ public class Hero {
     }
 
     public void setRing(Accessory ring) {
-        cleanEffect();
+        cleanEffect(this.ring);
         if(ring!=null) {
             this.ring = ring;
-            appendEffect();
+            appendEffect(ring);
         }else{
             this.ring = null;
         }
     }
 
-    private void appendEffect() {
-        EnumMap<Effect, Long> effectLongEnumMap = getAccessoryEffectMap();
+    private void appendEffect(Accessory accessory) {
+        EnumMap<Effect, Long> effectLongEnumMap = getAccessoryEffectMap(accessory);
         for (EnumMap.Entry<Effect, Long> effect : effectLongEnumMap.entrySet()) {
             switch (effect.getKey()) {
                 case ADD_STR:
@@ -732,8 +726,8 @@ public class Hero {
         }
     }
 
-    private void cleanEffect() {
-        EnumMap<Effect, Long> effectLongEnumMap = getAccessoryEffectMap();
+    private void cleanEffect(Accessory accessory) {
+        EnumMap<Effect, Long> effectLongEnumMap = getAccessoryEffectMap(accessory);
         for (EnumMap.Entry<Effect, Long> effect : effectLongEnumMap.entrySet()) {
             switch (effect.getKey()) {
                 case ADD_STR:
@@ -759,6 +753,7 @@ public class Hero {
                     break;
                 case ADD_PARRY:
                     parry -= effect.getValue();
+                    if(parry< 0) parry = 0;
                     break;
             }
         }
@@ -769,10 +764,10 @@ public class Hero {
     }
 
     public void setNecklace(Accessory necklace) {
-        cleanEffect();
+        cleanEffect(this.necklace);
         if(necklace!=null) {
             this.necklace = necklace;
-            appendEffect();
+            appendEffect(necklace);
         }else{
             this.necklace = null;
         }
@@ -787,10 +782,10 @@ public class Hero {
     }
 
     public void setHat(Accessory hat) {
-        cleanEffect();
+        cleanEffect(this.hat);
         if(hat!=null) {
             this.hat = hat;
-            appendEffect();
+            appendEffect(hat);
         }else{
             this.hat = null;
         }
@@ -807,14 +802,16 @@ public class Hero {
                 skill = getThirdSkill();
             }
             Defender.addDefender(StringUtils.toHexString(name), getUpperHp() + getUpperDef(), getUpperAtk(), getMaxMazeLev(), skill == null ? "重击" : skill.getName(), 10, "遇見了吾，你將止步於此！");
-            MAX_HP_RISE = random.nextLong(power / 5000 + 4) + 5;
-            DEF_RISE = random.nextLong(agility / 5000 + 2) + 1;
-            ATR_RISE = random.nextLong(strength / 5000 + 3) + 2;
-            maxMazeLev = 1;
+            MAX_HP_RISE = random.nextLong(power / 5000 + 4) + 6;
+            DEF_RISE = random.nextLong(agility / 5000 + 2) + 2;
+            ATR_RISE = random.nextLong(strength / 5000 + 3) + 3;
             material -= 200101;
-            attackValue = random.nextLong(20) + 10;
-            defenseValue = random.nextLong(20) + 10;
-            setUpperHp(random.nextLong(20) + 25);
+            long attackValue = random.nextLong(20) + 10;
+            long defenseValue = random.nextLong(20) + 10;
+            long upperHp = random.nextLong(20) + 25;
+            setUpperHp(upperHp);
+            setAttackValue(attackValue);
+            setDefenseValue(defenseValue);
             point = 1;
             parry = 0;
             armor = Armor.破布;

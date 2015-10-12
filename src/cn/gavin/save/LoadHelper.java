@@ -47,7 +47,7 @@ public class LoadHelper {
         SharedPreferences preferences = context.getSharedPreferences("hero", Context.MODE_PRIVATE);
         heroN.setName(preferences.getString("name", "勇者"));
         heroN.setHp(preferences.getLong("hp", 20));
-        heroN.setUpperHp(preferences.getLong("upperHp", 10));
+        heroN.setUpperHp(preferences.getLong("upperHp", 20));
         heroN.setAttackValue(preferences.getLong("baseAttackValue", 10));
         heroN.setDefenseValue(preferences.getLong("baseDefense", 1));
         heroN.setClick(preferences.getLong("click", 0));
@@ -99,6 +99,9 @@ public class LoadHelper {
                 heroN.setAccessory(hat);
         }
         Achievement.linger.enable(heroN);
+        heroN.MAX_HP_RISE = preferences.getLong("MAX_HP_RISE",5 );
+        heroN.ATR_RISE = preferences.getLong("ATR_RISE",2 );
+        heroN.DEF_RISE = preferences.getLong("DEF_RISE",1 );
         MazeContents.hero = heroN;
         MazeContents.maze = maze;
     }

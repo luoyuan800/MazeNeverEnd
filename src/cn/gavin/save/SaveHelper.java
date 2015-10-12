@@ -78,6 +78,9 @@ public class SaveHelper {
         editor.putLong("awardCount", heroN.getAwardCount());
         editor.putLong("lockBox", heroN.getLockBox());
         editor.putLong("keyCount", heroN.getKeyCount());
+        editor.putLong("MAX_HP_RISE", heroN.MAX_HP_RISE);
+        editor.putLong("ATR_RISE", heroN.ATR_RISE);
+        editor.putLong("DEF_RISE", heroN.DEF_RISE);
         editor.apply();
     }
 
