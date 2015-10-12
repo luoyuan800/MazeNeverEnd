@@ -343,10 +343,6 @@ public class EvilSkill extends SkillLayout {
                             setAgi((int) getHero().getAgility());
                             setStr((int) getHero().getStrength());
                             setLife((int) getHero().getPower());
-                        } else if (onUsed && !used) {
-                            setAgi(-getAgi());
-                            setLife(-getLife());
-                            setStr(-getStr());
                         }
                         super.setOnUsed(used);
                     }

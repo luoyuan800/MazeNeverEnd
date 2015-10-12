@@ -809,6 +809,7 @@ public class Hero {
             long attackValue = random.nextLong(20) + 10;
             long defenseValue = random.nextLong(20) + 10;
             long upperHp = random.nextLong(20) + 25;
+            SkillFactory.clean();
             setUpperHp(upperHp);
             setAttackValue(attackValue);
             setDefenseValue(defenseValue);
@@ -826,7 +827,6 @@ public class Hero {
             dbHelper.beginTransaction();
             dbHelper.excuseSQLWithoutResult("DELETE FROM item");
             dbHelper.excuseSQLWithoutResult("DELETE FROM accessory");
-            SkillFactory.clean();
             Accessory ring = getRing();
             if (ring != null) {
                 this.ring = null;

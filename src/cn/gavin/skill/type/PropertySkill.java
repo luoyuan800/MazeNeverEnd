@@ -18,9 +18,10 @@ public class PropertySkill extends Skill {
     private int def;
     private int atk;
 
-    public PropertySkill(){
+    public PropertySkill() {
 
     }
+
     public PropertySkill(int agi, int str, int life, int clickAward, int hp, int def, int atk) {
         super();
         this.agi = agi;
@@ -46,7 +47,7 @@ public class PropertySkill extends Skill {
         if (!isActive() && active) {
             super.setActive(true);
             setOnUsed(true);
-        }else if(isActive() && !active){
+        } else if (isActive() && !active) {
             setOnUsed(false);
         }
         this.active = active;
@@ -55,15 +56,25 @@ public class PropertySkill extends Skill {
 
     @Override
     public void setOnUsed(boolean used) {
-        if (MainGameActivity.context != null && used) {
-            getHero().addAgility(agi);
-            getHero().addStrength(str);
-            getHero().addLife(life);
-            getHero().setUpperHp(getHero().getUpperHp() + hp);
-            getHero().addAttackValue(atk);
-            getHero().addDefenseValue(def);
-            getHero().addClickAward(clickAward);
-            Toast.makeText(MainGameActivity.context, "激活" + getName(), Toast.LENGTH_SHORT).show();
+        if (MainGameActivity.context != null) {
+            if (!onUsed && used) {
+                getHero().addAgility(agi);
+                getHero().addStrength(str);
+                getHero().addLife(life);
+                getHero().setUpperHp(getHero().getUpperHp() + hp);
+                getHero().addAttackValue(atk);
+                getHero().addDefenseValue(def);
+                getHero().addClickAward(clickAward);
+                Toast.makeText(MainGameActivity.context, "激活" + getName(), Toast.LENGTH_SHORT).show();
+            } else if(!used && onUsed){
+                getHero().addAgility(-agi);
+                getHero().addStrength(-str);
+                getHero().addLife(-life);
+                getHero().setUpperHp(getHero().getUpperHp() - hp);
+                getHero().addAttackValue(-atk);
+                getHero().addDefenseValue(-def);
+                getHero().addClickAward(-clickAward);
+            }
         }
         this.onUsed = used;
     }

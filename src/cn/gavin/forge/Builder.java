@@ -308,6 +308,12 @@ public abstract class Builder {
             cursor.moveToNext();
         }
         if (a1 != null && a2 != null) {
+            if("#FF8C00".equals(a1.getColor())){
+                a1.setPro(a1.getPro()/2);
+            }
+            if("#FF8C00".equals(a2.getColor())){
+                a1.setPro(a1.getPro()/2);
+            }
             if ((a1.getPro() + a2.getPro()) >= 100) {
                 if (a1.getPro() >= a2.getPro()) {
                     a2.setPro((100 - a1.getPro()) / 2);
