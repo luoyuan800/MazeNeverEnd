@@ -685,11 +685,15 @@ public class Hero {
     }
 
     public void setRing(Accessory ring) {
-        cleanEffect(this.ring);
         if(ring!=null) {
+            if(this.ring!=null && ring.getId().equalsIgnoreCase(this.ring.getId())){
+                return;
+            }
+            cleanEffect(this.ring);
             this.ring = ring;
             appendEffect(ring);
         }else{
+            cleanEffect(this.hat);
             this.ring = null;
         }
     }
@@ -764,11 +768,15 @@ public class Hero {
     }
 
     public void setNecklace(Accessory necklace) {
-        cleanEffect(this.necklace);
         if(necklace!=null) {
+            if(this.necklace!=null && necklace.getId().equalsIgnoreCase(this.necklace.getId())){
+                return;
+            }
+            cleanEffect(this.necklace);
             this.necklace = necklace;
             appendEffect(necklace);
         }else{
+            cleanEffect(this.necklace);
             this.necklace = null;
         }
     }
@@ -782,11 +790,15 @@ public class Hero {
     }
 
     public void setHat(Accessory hat) {
-        cleanEffect(this.hat);
         if(hat!=null) {
+            if(this.hat!=null && hat.getId().equalsIgnoreCase(this.hat.getId())){
+                return;
+            }
+            cleanEffect(this.hat);
             this.hat = hat;
             appendEffect(hat);
         }else{
+            cleanEffect(this.hat);
             this.hat = null;
         }
     }
