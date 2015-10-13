@@ -276,7 +276,7 @@ public class Accessory extends Equipment {
             for (EnumMap.Entry<Effect, Number> entry : effects.entrySet()) {
                 if (item.getEffect() == null && random.nextBoolean()) {
                     item.setEffect(entry.getKey());
-                    item.setEffect1Value(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue() + 1));
+                    item.setEffectValue(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue() + 1));
                 } else if (item.getEffect1() == null && random.nextBoolean()) {
                     item.setEffect1(entry.getKey());
                     item.setEffect1Value(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue() + 1));
@@ -293,7 +293,7 @@ public class Accessory extends Equipment {
                 for (EnumMap.Entry<Effect, Number> entry : effects.entrySet()) {
                     if (item.getEffect() == null && random.nextBoolean()) {
                         item.setEffect(entry.getKey());
-                        item.setEffect1Value(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue()/2 + 1));
+                        item.setEffectValue(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue()/2 + 1));
                     } else if (item.getEffect1() == null && random.nextBoolean()) {
                         item.setEffect1(entry.getKey());
                         item.setEffect1Value(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue()/2 + 1));
@@ -319,6 +319,7 @@ public class Accessory extends Equipment {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "dismantle", e);
         }
+        delete();
         return items;
     }
 }

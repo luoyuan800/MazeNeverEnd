@@ -156,6 +156,7 @@ public class AccessoryAdapter extends BaseAdapter {
                 final AlertDialog alertDialog = new AlertDialog.Builder(MainGameActivity.context).create();
                 alertDialog.setTitle("装备信息");
                 LinearLayout linearLayout = new LinearLayout(alertDialog.getContext());
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
                 TextView tv = new TextView(alertDialog.getContext());
                 linearLayout.addView(tv);
                 ViewGroup.LayoutParams params = tv.getLayoutParams();
@@ -163,6 +164,9 @@ public class AccessoryAdapter extends BaseAdapter {
                 tv.setLayoutParams(params);
                 tv.setText(Html.fromHtml(a.toString()));
                 Button button = new Button(alertDialog.getContext());
+                ViewGroup.LayoutParams params1 = tv.getLayoutParams();
+                params1.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                button.setLayoutParams(params1);
                 button.setText("拆解装备");
                 button.setEnabled(!isOnUsed);
                 button.setOnClickListener(new View.OnClickListener() {
@@ -198,10 +202,12 @@ public class AccessoryAdapter extends BaseAdapter {
                                         dialogInterface.dismiss();
                                     }
                                 });
+                                alertDialog.dismiss();
                                 dialogInterface.dismiss();
                                 ad2.show();
                             }
                         });
+                        ad.show();
                     }
                 });
                 linearLayout.addView(button);
