@@ -15,7 +15,7 @@ public enum Effect {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
-            long atk = random.nextLong((hero.getStrength() + monster.getMaxHP()) / 100 + 1);
+            long atk = random.nextLong((hero.getStrength() + monster.getMaxHP()) / 500 + 1);
             if (atk <= 1000) atk = random.nextLong(hero.getMaxMazeLev() + 1) + 1000;
             return atk;
         }
@@ -24,7 +24,7 @@ public enum Effect {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
-            long hp = random.nextLong((hero.getAgility() + monster.getAtk()) / 100 + 1);
+            long hp = random.nextLong((hero.getAgility() + monster.getAtk()) / 500 + 1);
             if (hp <= 1000) hp = random.nextLong(hero.getMaxMazeLev() + 1) + 1000;
             return hp;
         }
@@ -42,7 +42,7 @@ public enum Effect {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
-            long agi = random.nextLong((hero.getBaseDefense() + monster.getMaxHP()) / 20000 + 1);
+            long agi = random.nextLong((hero.getBaseDefense() + monster.getMaxHP()) / 200000 + 1);
             if (agi <= 500) agi = random.nextLong(hero.getMaxMazeLev() + 1) + 499;
             return agi;
         }
@@ -69,7 +69,7 @@ public enum Effect {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
-            long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 200 + 1) + 1;
+            long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 500 + 1) + 1;
             if (award <= 10) award = random.nextLong(hero.getMaxMazeLev() + 1) + 10;
             return award;
         }

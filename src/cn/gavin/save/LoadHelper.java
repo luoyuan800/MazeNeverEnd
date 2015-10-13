@@ -102,6 +102,7 @@ public class LoadHelper {
         heroN.MAX_HP_RISE = preferences.getLong("MAX_HP_RISE",5 );
         heroN.ATR_RISE = preferences.getLong("ATR_RISE",2 );
         heroN.DEF_RISE = preferences.getLong("DEF_RISE",1 );
+        heroN.setReincaCount(preferences.getLong("reincaCount",0));
         MazeContents.hero = heroN;
         MazeContents.maze = maze;
     }

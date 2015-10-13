@@ -124,7 +124,16 @@ public abstract class Builder {
                 }
             }
         }
-        accessory.setEffects(effectNumberMap);
+        EnumMap<Effect, Number> affectEffects = new EnumMap<Effect, Number>(Effect.class);
+
+        for(EnumMap.Entry<Effect, Number> entry : effectNumberMap.entrySet()){
+            if(affectEffects.size() > 0){
+                if(random.nextBoolean()) affectEffects.put(entry.getKey(), entry.getValue());
+            }else{
+                affectEffects.put(entry.getKey(), entry.getValue());
+            }
+        }
+        accessory.setEffects(affectEffects);
         detectColor(accessory, detectSave);
         detectElement(accessory);
         accessory.setType(getType());
@@ -164,10 +173,7 @@ public abstract class Builder {
                     if (l > MazeContents.hero.getBaseDefense()) {
                         color = "#8B008B";
                     }
-                    if(l > 1000000){
-                        color = "#FF8C00";
-                        save = true;
-                    }
+
                     break;
                 case ADD_AGI:
                 case ADD_STR:
@@ -184,10 +190,7 @@ public abstract class Builder {
                         color = "#B8860B";
                         save = true;
                     }
-                    if(sml > 10000){
-                        color = "#FF8C00";
-                        save = true;
-                    }
+
                     break;
                 case ADD_CLICK_AWARD:
                     long cw = effectNumberMap.get(effect).longValue();
@@ -202,10 +205,7 @@ public abstract class Builder {
                         color = "#9400D3";
                         save = true;
                     }
-                    if(cw > 5500){
-                        color = "#FF8C00";
-                        save = true;
-                    }
+
                     break;
                 default:
                     color = "#000000";

@@ -208,29 +208,42 @@ public class EvilSkill extends SkillLayout {
             skill.setRelease(new UseExpression() {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                    final long hp = hero.getHp() * iskll.getBaseHarm();
-                    hero.addUpperHp(hp);
-                    final long n = hero.getRandom().nextLong(hero.getMaxMazeLev() / 100l + 10l);
-                    String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，使得自身的生命值上限增加了" + iskll.getBaseHarm() + "倍，持续" + n + "回合。";
-                    skill.addMessage(msg);
-                    monster.addBattleSkillDesc(msg);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            int i = 0;
-                            while (i < n) {
-                                try {
-                                    Thread.sleep(MainGameActivity.context.getRefreshInfoSpeed());
-                                } catch (InterruptedException e) {
-                                    Thread.currentThread().interrupt();
-                                    e.printStackTrace();
-                                }
-                                i++;
-                            }
-                            hero.addUpperHp(-hp);
-
+                    if(hero.isOnSkill()){
+                        long harm = monster.getAtk() - hero.getDefenseValue();
+                        if (harm <= 0) {
+                            harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1) + 1;
                         }
-                    }).start();
+                        hero.addHp(harm);
+                        String msg1 = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了<font color=\"red\">" + harm + "</font>点伤害。";
+                        skill.addMessage(msg1);
+                        monster.addBattleSkillDesc(msg1);
+                    }else {
+                        final long hp = hero.getHp() * iskll.getBaseHarm();
+                        hero.setSkillAdditionHp(hp);
+                        hero.setOnSkill(true);
+                        final long n = hero.getRandom().nextLong(hero.getMaxMazeLev() / 100l + 10l);
+                        String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，使得自身的生命值上限增加了" + iskll.getBaseHarm() + "倍，持续" + n + "回合。";
+                        skill.addMessage(msg);
+                        monster.addBattleSkillDesc(msg);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                int i = 0;
+                                while (i < n) {
+                                    try {
+                                        Thread.sleep(MainGameActivity.context.getRefreshInfoSpeed());
+                                    } catch (InterruptedException e) {
+                                        Thread.currentThread().interrupt();
+                                        e.printStackTrace();
+                                    }
+                                    i++;
+                                }
+                                iskll.addMessage("强化技能效果消失了");
+                                hero.setOnSkill(false);
+
+                            }
+                        }).start();
+                    }
                     return false;
                 }
 
@@ -418,7 +431,7 @@ public class EvilSkill extends SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if (skill.getProbability() > 25) {
+                    if (skill.getProbability() > 15) {
                         return false;
                     }
                     skill.setProbability(skill.getProbability() + 1.1f);
@@ -496,7 +509,7 @@ public class EvilSkill extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
                     builder.append("柔则克刚。需要防具升级为水波甲的时候才可以激活。<br>").append(skill.getProbability()).
-                            append("的概率释放。受到攻击的时候抵消").append(iskll.getProbability() + 40).append("%的伤害");
+                            append("的概率释放。受到攻击的时候抵消").append(iskll.getProbability()*2 + 50).append("%的伤害");
                     return builder.toString();
                 }
             });
@@ -510,7 +523,7 @@ public class EvilSkill extends SkillLayout {
                     String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "的伤害。";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
-                    double v = harm * (iskll.getProbability() + 80d) / 100d;
+                    double v = harm * (iskll.getProbability()*2 + 50d) / 100d;
                     harm = (long) (harm - v);
                     String msg1 = hero.getFormatName() + "使用了技能" + iskll.getName() + "，抵消了" +
                             (long)v + "的伤害";
@@ -524,7 +537,7 @@ public class EvilSkill extends SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if (skill.getProbability() < 50) {
+                    if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 6.5f);
                         return true;
                     }

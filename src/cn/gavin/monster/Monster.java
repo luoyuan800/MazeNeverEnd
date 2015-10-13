@@ -85,9 +85,9 @@ public class Monster {
             }
             monster = buildDefaultDefender(maze, hero, random);
         }
-        monster.material = random.nextLong(maze.getLev() * monster.atk + 1) / 100 + 25;
-        if (monster.material > 40000) {
-            monster.material = random.nextLong(50000);
+        monster.material = random.nextLong(maze.getLev() * monster.atk + 1) / 110 + 25;
+        if (monster.material > 30000) {
+            monster.material = random.nextLong(30000);
         }
         monster.items = Arrays.asList(ItemName.原石, ItemName.铁矿石, ItemName.冷杉木,
                 ItemName.萤石, ItemName.白云石);
@@ -120,7 +120,7 @@ public class Monster {
             hp = hero.getAttackValue() * 30;
         }
         if (atk < hero.getDefenseValue()) {
-            atk += random.nextLong(hero.getDefenseValue() * 2);
+            atk += random.nextLong(hero.getDefenseValue() * 3);
         }
         return new Monster("第" + maze.getLev() + "层", "守护", "者",
                 hp,
@@ -147,13 +147,14 @@ public class Monster {
         secondName = secondNames[second];
         lastName = lastNames[last];
         this.items = itemNames[last];
-        if (hero.getStrength() > 100 && hero.getAgility() > 1000 && hero.getPower() > 100 && random.nextLong(maze.getLev() / 100 + 1) > 100 && random.nextInt(100) < 15) {
+        if (hero.getStrength() > 100 && hero.getAgility() > 1000 && hero.getPower() > 100 && random.nextLong(maze.getLev() / 100 + 1) > 100 && random.nextInt(100) < 11) {
             hp += random.nextLong((maze.getLev() + hero.getMaxMazeLev()) / 200) * random.nextLong((hero.getStrength() + hero.getAgility() + hero.getStrength()) / 100 + 1);
             atk += maze.getLev() * random.nextLong((hero.getStrength() + hero.getAgility() + hero.getPower()) / 800 + 1);
             atk += baseAtk[last] * random.nextLong(maze.getLev() + hero.getMaxMazeLev() / 100 + 1);
-            if (atk < hero.getDefenseValue()) atk = random.nextLong(hero.getAttackValue() * 2);
+            if (atk < hero.getDefenseValue()) atk = random.nextLong(hero.getAttackValue() + atk);
         }
         hp += baseHP[last] * random.nextLong(maze.getLev() + 1);
+        hp += baseAtk[last] * hero.getReincaCount();
         if (hp < hero.getAttackValue()) {
             hp += random.nextLong(hero.getAttackValue() * 2);
         }

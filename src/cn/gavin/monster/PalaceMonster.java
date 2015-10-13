@@ -109,7 +109,7 @@ public class PalaceMonster extends Monster {
         PalaceBoss boss = new PalaceBoss(hero, palace);
         boss.load();
         stack.push(boss);
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 3; i++) {
             if (hero.getRandom().nextBoolean()) {
                 stack.add(new PalaceMonster(hero, palace));
             }

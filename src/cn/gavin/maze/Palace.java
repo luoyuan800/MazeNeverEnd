@@ -79,7 +79,7 @@ public class Palace extends Maze {
                 context.addMessage(msg);
                 monster.addBattleDesc(msg);
                 if (monster instanceof PalaceMonster.PalaceBoss) {
-                    context.addMessage(((PalaceMonster.PalaceBoss) monster).getHello());
+                    context.addMessage(monster.getFormatName() + ((PalaceMonster.PalaceBoss) monster).getHello());
                     monster.addBattleDesc(((PalaceMonster.PalaceBoss) monster).getHello());
                 }
                 boolean atk = hero.getAgility() > monster.getHp() / 2 || random.nextBoolean();

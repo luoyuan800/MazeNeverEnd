@@ -102,7 +102,7 @@ public class SwindlerSkill extends SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if (skill.getProbability() < 35) {
+                    if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 3);
                         return true;
                     }
@@ -162,7 +162,7 @@ public class SwindlerSkill extends SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if (skill.getProbability() < 45) {
+                    if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 2);
                         return true;
                     }
@@ -242,7 +242,7 @@ public class SwindlerSkill extends SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if (skill.getProbability() < 50) {
+                    if (skill.getProbability() < 45) {
                         skill.setProbability(skill.getProbability() + 5);
                         return true;
                     }
@@ -398,7 +398,7 @@ public class SwindlerSkill extends SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if (skill.getProbability() < 45) {
+                    if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 2);
                         return true;
                     }

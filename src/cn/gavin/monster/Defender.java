@@ -3,6 +3,8 @@ package cn.gavin.monster;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 import cn.gavin.activity.MazeContents;
@@ -30,6 +32,32 @@ public class Defender {
         db.execSQL(sql);
     }
 
+    public static Stack<Defender> loadAllDefenderWithYou(SQLiteDatabase db){
+        Stack<Defender> defenders = loadAllDefender(db);
+        if(MazeContents.hero!=null){
+            Defender defender = new Defender();
+            defender.name = MazeContents.hero.getName();
+            long lev = MazeContents.hero.getMaxMazeLev();
+            defender.lev = lev + "";
+            defender.desc = String.format("<font color=\"#D3D3D3\">%s</font> - %s       <---- 您可能会出现在这里", defender.name, lev);
+            for(int i = 1; i< defenders.size(); i++){
+                if((i == 1) && Long.parseLong(defenders.get(i-1).lev) >= lev){
+                    defenders.insertElementAt(defender, 0);
+                    break;
+                }
+                if(Long.parseLong(defenders.get(i-1).lev) < lev && Long.parseLong(defenders.get(i).lev) >=lev){
+                    defenders.insertElementAt(defender, i);
+                    break;
+                }
+                if((i == defenders.size()-1) && Long.parseLong(defenders.get(i).lev) <= lev){
+                    defenders.insertElementAt(defender, i);
+                    break;
+                }
+            }
+        }
+        return defenders;
+    }
+
     public static Stack<Defender> loadAllDefender(SQLiteDatabase db) {
         Stack<Defender> defenders = new Stack<Defender>();
         Cursor cursor ;
@@ -47,7 +75,7 @@ public class Defender {
             }
             String lev = cursor.getString(cursor.getColumnIndex("lev"));
             if(MazeContents.hero !=null) {
-                d.desc = String.format("<font color=\"#9932CC\">%s</font> - %s %s", name, lev, lev.equalsIgnoreCase(MazeContents.hero.getMaxMazeLev() + "") ? " <--- 你也在这里!" : "");
+                d.desc = String.format("<font color=\"#9932CC\">%s</font> - %s", name, lev);
             }
             d.lev = lev;
             d.name = name;
@@ -80,7 +108,10 @@ public class Defender {
 
     public static Monster buildDefender(long lev) {
         try {
-            Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM defender WHERE lev = '" + lev + "' AND skill_lev IS NOT '0'");
+            Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM defender WHERE lev = '" + lev + "'");
+            if(cursor.isAfterLast()) {
+                cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM defender WHERE lev = '" + lev + "' AND skill_lev IS NOT '0'");
+            }
             if (!cursor.isAfterLast()) {
                 String name = cursor.getString(cursor.getColumnIndex("name"));
                 if (name != null && name.startsWith("0x")) {

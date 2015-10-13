@@ -178,16 +178,22 @@ public abstract class Skill {
         return name + "\n" + count;
     }
 
+    private long latestClick = 0;
+
     public void addCount() {
-        if (this.count < Long.MAX_VALUE - 1000) {
-            this.count++;
-            if (count % 1005 == 0) {
-                levelUp();
-            }
-            if (count % 7000 == 0) {
-                hero.setSkillPoint(hero.getSkillPoint() + 1);
+        if((System.currentTimeMillis() - latestClick) > 101) {
+            if (this.count < Long.MAX_VALUE - 1000) {
+                this.count++;
+                hero.click(false);
+                if (count % 1005 == 0) {
+                    levelUp();
+                }
+                if (count % 7000 == 0) {
+                    hero.setSkillPoint(hero.getSkillPoint() + 1);
+                }
             }
         }
+        latestClick = System.currentTimeMillis();
     }
 
     protected void levelUp() {

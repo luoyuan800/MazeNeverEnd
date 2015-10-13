@@ -3,16 +3,21 @@ package cn.gavin.forge.adapter;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MazeContents;
 import cn.gavin.forge.Accessory;
 import cn.gavin.forge.HatBuilder;
+import cn.gavin.forge.Item;
 import cn.gavin.forge.NecklaceBuilder;
 import cn.gavin.forge.RingBuilder;
 
@@ -147,13 +152,60 @@ public class AccessoryAdapter extends BaseAdapter {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog alertDialog = new AlertDialog.Builder(MainGameActivity.context).create();
+                boolean isOnUsed = checkOnUsed(a);
+                final AlertDialog alertDialog = new AlertDialog.Builder(MainGameActivity.context).create();
                 alertDialog.setTitle("装备信息");
+                LinearLayout linearLayout = new LinearLayout(alertDialog.getContext());
                 TextView tv = new TextView(alertDialog.getContext());
+                linearLayout.addView(tv);
+                ViewGroup.LayoutParams params = tv.getLayoutParams();
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                tv.setLayoutParams(params);
                 tv.setText(Html.fromHtml(a.toString()));
-                alertDialog.setView(tv);
-                boolean isOnUsed;
-                isOnUsed = checkOnUsed(a);
+                Button button = new Button(alertDialog.getContext());
+                button.setText("拆解装备");
+                button.setEnabled(!isOnUsed);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog ad = new AlertDialog.Builder(alertDialog.getContext()).create();
+                        ad.setTitle("确认拆解装备吗？");
+                        final TextView textView = new TextView(ad.getContext());
+                        textView.setText(Html.fromHtml("拆解装备" + a.getFormatName() + "后你可以随机获得材料!"));
+                        ad.setView(textView);
+                        ad.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        ad.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                List<Item> items = a.dismantle();
+                                AlertDialog ad2 = new AlertDialog.Builder(alertDialog.getContext()).create();
+                                ad2.setTitle("拆解结果");
+                                TextView textView1 = new TextView(alertDialog.getContext());
+                                StringBuilder builder = new StringBuilder("您从" + a.getFormatName() + "拆解出了：");
+                                for(Item item : items){
+                                    builder.append("<br>").append(item.toString());
+                                }
+                                textView1.setText(Html.fromHtml(builder.toString()));
+                                ad2.setView(textView1);
+                                ad2.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+                                dialogInterface.dismiss();
+                                ad2.show();
+                            }
+                        });
+                    }
+                });
+                linearLayout.addView(button);
+                alertDialog.setView(linearLayout);
                 if (isOnUsed) {
                     alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "卸下", new DialogInterface.OnClickListener() {
                         @Override

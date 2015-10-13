@@ -129,7 +129,7 @@ public class Maze {
                 String msg = hero.getFormatName() + "遇到了" + monster.getFormatName();
                 addMessage(context, msg);
                 monster.addBattleDesc(msg);
-                boolean atk = hero.getAgility() > monster.getHp() / 2 || random.nextBoolean();
+                boolean atk = random.nextLong(hero.getAgility() + 100) > monster.getHp() / 2 || random.nextBoolean();
                 Skill skill;
                 boolean isJump = false;
                 while (!isJump && monster.getHp() > 0 && hero.getHp() > 0) {

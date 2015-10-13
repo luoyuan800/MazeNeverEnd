@@ -234,7 +234,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
         item3 = null;
         item4 = null;
         item5 = null;
-        items.clear();
+        if(items!=null && !items.isEmpty())items.clear();
         item1Button.setText("");
         item2Button.setText("");
         item3Button.setText("");

@@ -526,11 +526,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private void showGetSkillPointDialog() {
         if (skillPointGetDialog == null) {
             skillPointGetDialog = new Builder(this).create();
-            skillPointGetDialog.setTitle("30000材料转换1点技能点");
+            skillPointGetDialog.setTitle("88888材料转换1点技能点");
             skillPointGetDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    heroN.addMaterial(-30000);
+                    heroN.addMaterial(-88888);
                     heroN.setSkillPoint(heroN.getSkillPoint() + 1);
                     handler.sendEmptyMessage(103);
                     skillPointGetDialog.hide();
@@ -545,7 +545,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             });
         }
         skillPointGetDialog.show();
-        if (heroN.getMaterial() > 30000) {
+        if (heroN.getMaterial() > 88888) {
             skillPointGetDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         } else {
             skillPointGetDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -557,11 +557,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private void getLockBox() {
         if (getLockBoxDialog == null) {
             getLockBoxDialog = new Builder(this).create();
-            getLockBoxDialog.setTitle("12250换取一个带锁的宝箱");
+            getLockBoxDialog.setTitle("32250换取一个带锁的宝箱");
             getLockBoxDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    heroN.addMaterial(-12250);
+                    heroN.addMaterial(-32250);
                     heroN.setLockBox(heroN.getLockBox() + 1);
                     handler.sendEmptyMessage(103);
                     getLockBoxDialog.hide();
@@ -576,7 +576,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             });
         }
         getLockBoxDialog.show();
-        if (heroN.getMaterial() >= 12250) {
+        if (heroN.getMaterial() >= 32250) {
             getLockBoxDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         } else {
             getLockBoxDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -586,13 +586,13 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private void showResetSkillPointDialog() {
         AlertDialog resetSkillPointDialog;
         resetSkillPointDialog = new Builder(this).create();
-        resetSkillPointDialog.setTitle("消耗99988材料重置技能");
+        resetSkillPointDialog.setTitle("消耗199988材料重置技能");
         resetSkillPointDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        heroN.addMaterial(-99988);
+                        heroN.addMaterial(-199988);
                         heroN.setSkillPoint(heroN.getSkillPoint() + SkillFactory.reset());
                         handler.sendEmptyMessage(103);
                         dialog.dismiss();
@@ -609,7 +609,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
                 });
         resetSkillPointDialog.show();
-        if (heroN.getMaterial() > 99988) {
+        if (heroN.getMaterial() > 199988) {
             resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         } else {
             resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -705,7 +705,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     private void showAccessory() {
         AlertDialog dialog = new Builder(this).create();
-        dialog.setTitle("物品列表");
+        dialog.setTitle("装备列表");
         LinearLayout linearLayout = new LinearLayout(this);
         ListView listView = new ListView(this);
         AccessoryAdapter accessoryAdapter = new AccessoryAdapter();
@@ -1129,7 +1129,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             addNStreButton.setEnabled(false);
             addNAgiButton.setEnabled(false);
         }
-        itembarContri.setText(heroN.getName() + "\n迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
+        itembarContri.setText(heroN.getName() + (heroN.getReincaCount() != 0 ? ("(" + heroN.getReincaCount() + ")") : "") +
+                "\n迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
         heroPic.setText(heroN.getSword() + "\n\n\n " + heroN.getArmor());
         if (heroN.getFirstSkill() != null) {
             firstSkillButton.setText(heroN.getFirstSkill().getDisplayName());
@@ -1568,7 +1569,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private void load() {
-        if(MazeContents.hero == null) {
+        if (MazeContents.hero == null) {
             if (heroN == null) {
                 LoadHelper loadHelper = new LoadHelper(this);
                 loadHelper.loadHero();

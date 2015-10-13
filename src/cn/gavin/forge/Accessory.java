@@ -13,6 +13,8 @@ import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
+import cn.gavin.forge.list.ItemName;
+import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -112,7 +114,7 @@ public class Accessory extends Equipment {
         StringBuilder addition = new StringBuilder();
         if (additionEffects != null) {
             for (Effect effect : additionEffects.keySet()) {
-                addition.append(effect.name()).append(":").append(additionEffects.get(effect));
+                addition.append(effect.name()).append(":").append(additionEffects.get(effect)).append("-");
             }
         }
         id = UUID.randomUUID().toString();
@@ -203,7 +205,7 @@ public class Accessory extends Equipment {
                     accessory.setAdditionEffects(addition);
                     accessory.setType(cursor.getInt(cursor.getColumnIndex("type")));
                     res.add(accessory);
-                }catch (Exception e){
+                } catch (Exception e) {
                     accessory.delete();
                 }
                 cursor.moveToNext();
@@ -262,5 +264,61 @@ public class Accessory extends Equipment {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public List<Item> dismantle() {
+        Random random = new Random();
+        ArrayList<Item> items = new ArrayList<Item>(5);
+        try {
+            Item item;
+            item = new Item();
+            item.setName(ItemName.values()[random.nextInt(ItemName.values().length)]);
+            for (EnumMap.Entry<Effect, Number> entry : effects.entrySet()) {
+                if (item.getEffect() == null && random.nextBoolean()) {
+                    item.setEffect(entry.getKey());
+                    item.setEffect1Value(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue() + 1));
+                } else if (item.getEffect1() == null && random.nextBoolean()) {
+                    item.setEffect1(entry.getKey());
+                    item.setEffect1Value(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue() + 1));
+                }
+                if (item.getEffect() != null && item.getEffect1() != null) {
+                    break;
+                }
+            }
+            item.save();
+            items.add(item);
+            if (random.nextBoolean()) {
+                item = new Item();
+                item.setName(ItemName.values()[random.nextInt(ItemName.values().length)]);
+                for (EnumMap.Entry<Effect, Number> entry : effects.entrySet()) {
+                    if (item.getEffect() == null && random.nextBoolean()) {
+                        item.setEffect(entry.getKey());
+                        item.setEffect1Value(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue()/2 + 1));
+                    } else if (item.getEffect1() == null && random.nextBoolean()) {
+                        item.setEffect1(entry.getKey());
+                        item.setEffect1Value(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue()/2 + 1));
+                    }
+                    if (item.getEffect() != null && item.getEffect1() != null) {
+                        break;
+                    }
+                }
+                item.save();
+                items.add(item);
+            }
+            if(getAdditionEffects()!=null && !additionEffects.isEmpty()){
+                for (EnumMap.Entry<Effect, Number> entry : additionEffects.entrySet()) {
+                    item = new Item();
+                    item.setName(ItemName.values()[random.nextInt(ItemName.values().length)]);
+                    item.setEffect(entry.getKey());
+                    item.setEffect1Value(entry.getValue().longValue() / 3 + random.nextLong(entry.getValue().longValue() + 1));
+                    item.save();
+                    items.add(item);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e(MainGameActivity.TAG, "dismantle", e);
+        }
+        return items;
     }
 }

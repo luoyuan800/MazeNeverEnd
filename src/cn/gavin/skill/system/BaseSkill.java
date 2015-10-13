@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import android.widget.Toast;
-import cn.gavin.*;
+import cn.gavin.Achievement;
+import cn.gavin.Hero;
+import cn.gavin.R;
+import cn.gavin.Sword;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MazeContents;
 import cn.gavin.maze.Maze;
@@ -45,68 +47,68 @@ public class BaseSkill extends SkillLayout {
         Button button = (Button) view.findViewById(R.id.base_skill_r_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("闪避",hero, dialog);
-        button = (Button)view.findViewById(R.id.base_skill_s_button);
+        skill = SkillFactory.getSkill("闪避", hero, dialog);
+        button = (Button) view.findViewById(R.id.base_skill_s_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("铁拳",hero, dialog);
-        button = (Button)view.findViewById(R.id.skill_base_t_button);
+        skill = SkillFactory.getSkill("铁拳", hero, dialog);
+        button = (Button) view.findViewById(R.id.skill_base_t_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("反弹",hero, dialog);
-        button = (Button)view.findViewById(R.id.skill_base_f_button);
+        skill = SkillFactory.getSkill("反弹", hero, dialog);
+        button = (Button) view.findViewById(R.id.skill_base_f_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("巨大化",hero, dialog);
-        button = (Button)view.findViewById(R.id.skill_base_j_button);
+        skill = SkillFactory.getSkill("巨大化", hero, dialog);
+        button = (Button) view.findViewById(R.id.skill_base_j_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("定身",hero, dialog);
-        button = (Button)view.findViewById(R.id.skill_base_d_button);
+        skill = SkillFactory.getSkill("定身", hero, dialog);
+        button = (Button) view.findViewById(R.id.skill_base_d_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("超能量",hero, dialog);
-        button = (Button)view.findViewById(R.id.skill_base_c_button);
+        skill = SkillFactory.getSkill("超能量", hero, dialog);
+        button = (Button) view.findViewById(R.id.skill_base_c_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("瞬间移动",hero, dialog);
-        button = (Button)view.findViewById(R.id.skill_base_sy_button);
+        skill = SkillFactory.getSkill("瞬间移动", hero, dialog);
+        button = (Button) view.findViewById(R.id.skill_base_sy_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("斩击",hero, dialog);
-        button = (Button)view.findViewById(R.id.skill_base_zj_button);
+        skill = SkillFactory.getSkill("斩击", hero, dialog);
+        button = (Button) view.findViewById(R.id.skill_base_zj_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("裂空剑",hero, dialog);
-        button = (Button)view.findViewById(R.id.skill_base_lkj_button);
+        skill = SkillFactory.getSkill("裂空剑", hero, dialog);
+        button = (Button) view.findViewById(R.id.skill_base_lkj_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("传送",hero, dialog);
-        button = (Button)view.findViewById(R.id.skill_base_cs_button);
+        skill = SkillFactory.getSkill("传送", hero, dialog);
+        button = (Button) view.findViewById(R.id.skill_base_cs_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("错位",hero, dialog);
-        button = (Button)view.findViewById(R.id.skill_base_cw_button);
+        skill = SkillFactory.getSkill("错位", hero, dialog);
+        button = (Button) view.findViewById(R.id.skill_base_cw_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("原能力",hero, dialog);
-        button = (Button)view.findViewById(R.id.skill_base_ynl_button);
+        skill = SkillFactory.getSkill("原能力", hero, dialog);
+        button = (Button) view.findViewById(R.id.skill_base_ynl_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("寻宝",hero, dialog);
-        button = (Button)view.findViewById(R.id.skill_base_xb_button);
+        skill = SkillFactory.getSkill("寻宝", hero, dialog);
+        button = (Button) view.findViewById(R.id.skill_base_xb_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("超防御",hero, dialog);
-        button = (Button)view.findViewById(R.id.skill_base_cfy_button);
+        skill = SkillFactory.getSkill("超防御", hero, dialog);
+        button = (Button) view.findViewById(R.id.skill_base_cfy_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("重击",hero, dialog);
-        button = (Button)view.findViewById(R.id.skill_base_hit_button);
+        skill = SkillFactory.getSkill("重击", hero, dialog);
+        button = (Button) view.findViewById(R.id.skill_base_hit_button);
         skill.setSkillButton(button);
     }
 
-    public static Skill getSkill(String name, Hero hero, final SkillDialog dialog){
+    public static Skill getSkill(String name, Hero hero, final SkillDialog dialog) {
         Skill skill = null;
         if (name.equals("勇者之击")) {
             AttackSkill attackSkill = new AttackSkill();
@@ -154,9 +156,9 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     AttackSkill as = (AttackSkill) skill;
-                    if (skill.getProbability() < 35) {
+                    if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 1.3f);
-                        as.setAdditionHarm(as.getAdditionHarm() * 3);
+                        as.setAdditionHarm(as.getAdditionHarm() * 4);
                         return true;
                     }
                     if (as.getBaseHarm() < hero.getBaseAttackValue() * 100) {
@@ -204,7 +206,7 @@ public class BaseSkill extends SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if (skill.getProbability() < 12) {
+                    if (skill.getProbability() < 10) {
                         skill.setProbability(skill.getProbability() + 1.1f);
                         return true;
                     }
@@ -249,7 +251,7 @@ public class BaseSkill extends SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if (skill.getProbability() < 35) {
+                    if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 1.1f);
                         return true;
                     }
@@ -309,7 +311,7 @@ public class BaseSkill extends SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if (skill.getProbability() < 25) {
+                    if (skill.getProbability() < 20) {
                         skill.setProbability(skill.getProbability() + 1.1f);
                         return true;
                     }
@@ -399,22 +401,25 @@ public class BaseSkill extends SkillLayout {
                     String msg1 = skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害");
                     context.addMessage(msg1);
                     monster.addBattleSkillDesc(msg1);
-                    final long atk = hero.getRandom().nextLong(Math.round(hero.getAttackValue() + hero.getAttackValue() * (25f + skill.getProbability() * 5f) / 100f) + 1);
-                    hero.addAttackValue(atk);
-                    String msg2 = skill.format(hero.getFormatName() + "触发了" + skill.getName() + "攻击力增加了" + atk);
-                    context.addMessage(msg2);
-                    monster.addBattleSkillDesc(msg2);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                Thread.sleep(MainGameActivity.context.getRefreshInfoSpeed() * (hero.getRandom().nextLong(5) + 1));
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                    if (!hero.isOnSkill()) {
+                        final long atk = hero.getRandom().nextLong(Math.round(hero.getAttackValue() + hero.getAttackValue() * (25f + skill.getProbability() * 5f) / 100f) + 1);
+                        hero.setSkillAdditionAtk(atk);
+                        String msg2 = skill.format(hero.getFormatName() + "触发了" + skill.getName() + "攻击力增加了" + atk);
+                        context.addMessage(msg2);
+                        monster.addBattleSkillDesc(msg2);
+                        hero.setOnSkill(true);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Thread.sleep(MainGameActivity.context.getRefreshInfoSpeed() * (hero.getRandom().nextLong(5) + 1));
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                hero.setOnSkill(false);
                             }
-                            hero.addAttackValue(-atk);
-                        }
-                    }).start();
+                        }).start();
+                    }
                     return false;
                 }
             });
@@ -529,22 +534,25 @@ public class BaseSkill extends SkillLayout {
                     String msg1 = skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害");
                     context.addMessage(msg1);
                     monster.addBattleSkillDesc(msg1);
-                    final long hp = hero.getRandom().nextLong(Math.round(hero.getAttackValue() + hero.getAttackValue() * (80f + skill.getProbability() * 5f) / 100f) + 1);
-                    hero.addUpperHp(hp);
-                    String msg2 = skill.format(hero.getFormatName() + "触发了" + skill.getName() + "生命值上限增加了" + hp);
-                    context.addMessage(msg2);
-                    monster.addBattleSkillDesc(msg2);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                Thread.sleep(MainGameActivity.context.getRefreshInfoSpeed() * (hero.getRandom().nextLong(10) + 1));
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                    if (hero.isOnSkill()) {
+                        final long hp = hero.getRandom().nextLong(Math.round(hero.getAttackValue() + hero.getAttackValue() * (80f + skill.getProbability() * 5f) / 100f) + 1);
+                        hero.setSkillAdditionHp(hp);
+                        hero.setOnSkill(true);
+                        String msg2 = skill.format(hero.getFormatName() + "触发了" + skill.getName() + "生命值上限增加了" + hp);
+                        context.addMessage(msg2);
+                        monster.addBattleSkillDesc(msg2);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Thread.sleep(MainGameActivity.context.getRefreshInfoSpeed() * (hero.getRandom().nextLong(10) + 1));
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                hero.setOnSkill(false);
                             }
-                            hero.addUpperHp(-hp);
-                        }
-                    }).start();
+                        }).start();
+                    }
                     return false;
                 }
             });
@@ -609,9 +617,9 @@ public class BaseSkill extends SkillLayout {
 
                 public void setOnUsed(boolean use) {
                     if (MainGameActivity.context != null) {
-                        if (use)
+                        if (use && !onUsed)
                             MazeContents.getMaze().setCsmgl(MazeContents.getMaze().getCsmgl() - Math.round(getProbability()));
-                        else
+                        else if(!use && onUsed)
                             MazeContents.getMaze().setCsmgl(MazeContents.getMaze().getCsmgl() + Math.round(getProbability()));
                     }
                 }
@@ -704,7 +712,7 @@ public class BaseSkill extends SkillLayout {
                         attackSkill.setBaseHarm(attackSkill.getBaseHarm() * 2);
                         return true;
                     }
-                    if(attackSkill.getAdditionHarm() < hero.getBaseAttackValue() * 10) {
+                    if (attackSkill.getAdditionHarm() < hero.getBaseAttackValue() * 10) {
                         attackSkill.setAdditionHarm(attackSkill.getAdditionHarm() * 2);
                     }
                     return false;
@@ -906,13 +914,8 @@ public class BaseSkill extends SkillLayout {
         } else if (name.equals("超防御")) {
             final PropertySkill iskll = new PropertySkill(0, 0, 0, 0, 0, 0, 0) {
                 public void setOnUsed(boolean used) {
-                    if (used && !isOnUsed() && MainGameActivity.context != null) {
-                        getHero().setDefenseValue(getHero().getBaseDefense() * 2);
-                        Toast.makeText(MainGameActivity.context, "激活" + getName(), Toast.LENGTH_SHORT).show();
-                    } else if (!used && isOnUsed()) {
-                        getHero().setDefenseValue(getHero().getBaseDefense() / 2);
-                    }
-                    this.onUsed = used;
+                    setDef(getHero().getBaseDefense());
+                    super.setOnUsed(used);
                 }
             };
             skill = iskll;

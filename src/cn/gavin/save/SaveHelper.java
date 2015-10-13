@@ -81,6 +81,7 @@ public class SaveHelper {
         editor.putLong("MAX_HP_RISE", heroN.MAX_HP_RISE);
         editor.putLong("ATR_RISE", heroN.ATR_RISE);
         editor.putLong("DEF_RISE", heroN.DEF_RISE);
+        editor.putLong("reincaCount", heroN.getReincaCount());
         editor.apply();
     }
 

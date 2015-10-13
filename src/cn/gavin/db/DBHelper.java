@@ -95,6 +95,14 @@ public class DBHelper {
                     ")";
             db.execSQL(createTable);
             db.execSQL("CREATE UNIQUE INDEX monster_index ON monster (name)");
+            db.execSQL("CREATE TABLE hero(" +
+                    "name TEXT NOT NULL PRIMARY KEY," +
+                    "lev TEXT NOT NULL, " +
+                    "hp TEXT NOT NULL, " +
+                    "skill TEXT NOT NULL, " +
+                    "skill_lev TEXT NOT NULL, " +
+                    "atk TEXT NOT NULL");
+            db.execSQL("CREATE UNIQUE INDEX maze_lev ON hero (name, lev)");
             ForgeDB forgeDB = new ForgeDB();
             forgeDB.createTable(db);
             Defender.createDB(db);
@@ -148,6 +156,22 @@ public class DBHelper {
 
             if (oldVersion == 10) {
                 new ForgeDB().upgradeTo1_3_2(db);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("MazeNeverEnd",e.getMessage());
+            LogHelper.writeLog();
+        }
+        try{
+            if(oldVersion==11){
+                db.execSQL("CREATE TABLE hero(" +
+                        "name TEXT NOT NULL PRIMARY KEY," +
+                        "lev TEXT NOT NULL, " +
+                        "hp TEXT NOT NULL, " +
+                        "skill TEXT NOT NULL, " +
+                        "skill_lev TEXT NOT NULL, " +
+                        "atk TEXT NOT NULL");
+                db.execSQL("CREATE UNIQUE INDEX maze_lev ON hero (name, lev)");
             }
         }catch (Exception e){
             e.printStackTrace();
