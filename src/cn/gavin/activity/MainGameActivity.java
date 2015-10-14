@@ -282,7 +282,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         break;
                     case 5:
                         clickCount.setText("点击\n" + heroN.getClick());
-                        heroPic.setBackgroundResource(R.drawable.h_2);
+                        heroPic.setBackgroundResource(R.drawable.h_4);
                         break;
                     case 10:
                         Bundle bundle = msg.peekData();
@@ -1087,9 +1087,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         upArmor.setOnClickListener(this);
         heroPic = (Button) findViewById(R.id.hero_pic);
         heroPic.setOnClickListener(this);
-        heroPic.setBackgroundResource(R.drawable.h_1);
-        heroPic.setTextColor(getResources().getColor(R.color.red));
-        heroPic.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
         pauseButton = (Button) findViewById(R.id.pause_button);
         pauseButton.setOnClickListener(this);
         clickCount = (TextView) findViewById(R.id.hero_pic_click_count);
@@ -1216,7 +1213,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         }
         itembarContri.setText(heroN.getName() + (heroN.getReincaCount() != 0 ? ("(" + heroN.getReincaCount() + ")") : "") +
                 "\n迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
-        heroPic.setText(heroN.getSword() + "\n\n\n " + heroN.getArmor());
         if (heroN.getFirstSkill() != null) {
             firstSkillButton.setText(heroN.getFirstSkill().getDisplayName());
             firstSkillButton.setEnabled(true);
