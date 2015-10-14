@@ -82,6 +82,8 @@ public class SaveHelper {
         editor.putLong("ATR_RISE", heroN.ATR_RISE);
         editor.putLong("DEF_RISE", heroN.DEF_RISE);
         editor.putLong("reincaCount", heroN.getReincaCount());
+        editor.putLong("hitRate", heroN.getHitRate());
+        editor.putFloat("parry", heroN.getParry());
         editor.apply();
     }
 

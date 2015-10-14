@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import cn.bmob.v3.BmobObject;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
@@ -25,60 +26,69 @@ import cn.gavin.skill.type.RestoreSkill;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
-public class Hero {
+public class Hero{
     private static final String TAG = "Hero";
 
-    public static long MAX_GOODS_COUNT = 50;
+    public static Long MAX_GOODS_COUNT = 50l;
 
     // 血上限成长(每点生命点数增加）
-    public long MAX_HP_RISE = 5;
+    public Long MAX_HP_RISE = 5l;
     // 攻击成长（每点力量点数增加）
-    public long ATR_RISE = 2;
+    public Long ATR_RISE = 2l;
     // 防御成长 （每点敏捷点数增加）
-    public long DEF_RISE = 1;
+    public Long DEF_RISE = 1l;
     private String formatName;
-    private long click;
+    private Long click = 0l;
     private String name;
-    private long hp;//当前
-    private long upperHp;//上限值
-    private long attackValue;
-    private long defenseValue;
-    public long level;
+    private Long hp = 0l;//当前
+    private Long upperHp = 0l;//上限值
+    private Long attackValue = 0l;
+    private Long defenseValue = 0l;
+    public Long level = 1l;
     private Queue<Skill> existSkill; // 已有的技能
     private Sword sword;
     private Armor armor;
-    private long swordLev;
-    private long armorLev;
-    private long material;
-    private long point;
-    private long strength;//力量，影响攻击数值上限
-    private long power;//体力，影响HP上限，生命恢复技能效果
-    private long agility;//敏捷，影响技能施放概率，防御数值上限
-    private long maxMazeLev = 0;
+    private Long swordLev = 0l;
+    private Long armorLev = 0l;
+    private Long material = 0l;
+    private Long point = 0l;
+    private Long strength = 0l;//力量，影响攻击数值上限
+    private Long power = 0l;//体力，影响HP上限，生命恢复技能效果
+    private Long agility = 0l;//敏捷，影响技能施放概率，防御数值上限
+    private Long maxMazeLev = 1l;
     private Random random;
-    private long clickAward = 1;
-    private long deathCount;
-    private long skillPoint = 1;
+    private Long clickAward = 1l;
+    private Long deathCount = 0l;
+    private Long skillPoint = 1l;
     private Skill firstSkill;
     private Skill secondSkill;
     private Skill thirdSkill;
-    private long awardCount;
-    private long lockBox;
-    private long keyCount;
+    private Long awardCount = 1l;
+    private Long lockBox = 0l;
+    private Long keyCount = 0l;
     private Accessory ring;
     private Accessory necklace;
     private Accessory hat;
-    private float parry;
-    private boolean onChange;
-    private long changAtk;
-    private long changeHp;
-    private long changeUhp;
+    private Float parry = 0.0f;
+    private boolean onChange = false;
+    private Long changAtk= 0l;
+    private Long changeHp= 0l;
+    private Long changeUhp = 0l;
     private String changeName;
-    private boolean onSkill;
-    private long skillAdditionAtk;
-    private long skillAdditionDef;
-    private long skillAdditionHp;
-    private long reincaCount;
+    private Boolean onSkill= false;
+    private Long skillAdditionAtk=0l;
+    private Long skillAdditionDef=0l;
+    private Long skillAdditionHp = 0l;
+    private Long reincaCount = 0l;
+    private Long hitRate = 1l;
+    private Long pay = 0l;
+
+    public Float getParry(){
+        return parry;
+    }
+    public void setParry(float parry){
+        this.parry = parry;
+    }
 
     private EnumMap<Effect, Long> getAccessoryEffectMap(Accessory accessory) {
         EnumMap<Effect, Long> effectLongEnumMap = new EnumMap<Effect, Long>(Effect.class);
@@ -116,7 +126,7 @@ public class Hero {
         }
     }
 
-    public long getDeathCount() {
+    public Long getDeathCount() {
         return deathCount;
     }
 
@@ -126,7 +136,7 @@ public class Hero {
 
     public void addClickAward(long num) {
         clickAward += num;
-        if (clickAward <= 0) clickAward = 1;
+        if (clickAward <= 0) clickAward = 1l;
     }
 
     public String getName() {
@@ -138,7 +148,7 @@ public class Hero {
         this.formatName = "";
     }
 
-    public long getHp() {
+    public Long getHp() {
         return (isOnChange() ? changeHp : hp) + getSkillAdditionHp();
     }
 
@@ -155,7 +165,7 @@ public class Hero {
                 this.hp += hp;
             }
             if (this.hp <= 0 && getSkillAdditionHp() <=0) {
-                this.hp = 0;
+                this.hp = 0l;
                 deathCount++;
                 if (deathCount == 10000) {
                     Achievement.maltreat.enable(this);
@@ -165,15 +175,15 @@ public class Hero {
         }
     }
 
-    public long getBaseAttackValue() {
+    public Long getBaseAttackValue() {
         return attackValue;
     }
 
-    public long getUpperAtk() {
+    public Long getUpperAtk() {
         return attackValue + sword.getBase() + swordLev * ATR_RISE + getSkillAdditionAtk();
     }
 
-    public long getUpperDef() {
+    public Long getUpperDef() {
         long def = defenseValue + armorLev * DEF_RISE + armor.getBase() + getSkillAdditionDef();
         if (def >= 10000) {
             Achievement.fearDeath.enable(this);
@@ -181,27 +191,35 @@ public class Hero {
         return def;
     }
 
-    public long getAttackValue() {
-        return isOnChange() ? changAtk : (attackValue + random.nextLong(sword.getBase()) + random.nextLong(swordLev + 1) * DEF_RISE + getSkillAdditionAtk());
+    private Boolean isHit = false;
+    public Long getAttackValue() {
+        long atk = isOnChange() ? changAtk : (attackValue + random.nextLong(sword.getBase()) + random.nextLong(swordLev + 1) * DEF_RISE + getSkillAdditionAtk());
+        if(random.nextInt(1000) < hitRate){
+            atk += atk/3;
+            isHit = true;
+        }else{
+            isHit = false;
+        }
+        return atk;
     }
 
     public void addAttackValue(long attackValue) {
         if ((this.attackValue + attackValue) > 10) {
             this.attackValue += attackValue;
         } else {
-            this.attackValue = 10;
+            this.attackValue = 10l;
         }
     }
 
-    public long getBaseDefense() {
+    public Long getBaseDefense() {
         return defenseValue;
     }
 
-    private boolean isParry = false;
+    private Boolean isParry = false;
 
-    public long getDefenseValue() {
+    public Long getDefenseValue() {
         long defend = defenseValue + random.nextLong(armor.getBase()) + random.nextLong(armorLev + 1) * ATR_RISE + getSkillAdditionDef();
-        if (parry > 100) parry = 100;
+        if (parry > 100) parry = 100f;
         if (random.nextLong(100) + parry + random.nextLong(agility + 1) / 5000 > 97 + random.nextInt(20) + random.nextLong(strength + 1) / 5000) {
             defend *= 3;
             isParry = true;
@@ -215,7 +233,7 @@ public class Hero {
         if ((this.defenseValue + defenseValue) > 10) {
             this.defenseValue += defenseValue;
         } else {
-            this.defenseValue = 10;
+            this.defenseValue = 10l;
         }
     }
 
@@ -259,7 +277,7 @@ public class Hero {
                 + ", defenseValue=" + defenseValue + ", level=" + level + "]";
     }
 
-    public boolean upgradeSword(long count) {
+    public Boolean upgradeSword(long count) {
         for (int i = 0; i < count; i++) {
             if (swordLev * ATR_RISE + sword.getBase() + attackValue >= Long.MAX_VALUE - 100) {
                 return false;
@@ -269,7 +287,7 @@ public class Hero {
                     swordLev++;
                     if (sword != sword.levelUp(swordLev, this)) {
                         sword = sword.levelUp(swordLev, this);
-                        swordLev = 0;
+                        swordLev = 0l;
                     }
                 } else {
                     return false;
@@ -279,7 +297,7 @@ public class Hero {
         return true;
     }
 
-    public boolean upgradeArmor(long count) {
+    public Boolean upgradeArmor(long count) {
         for (int i = 0; i < count; i++) {
             if (armorLev * DEF_RISE + armor.getBase() + defenseValue >= Long.MAX_VALUE - 1000) {
                 return false;
@@ -289,7 +307,7 @@ public class Hero {
                     armorLev++;
                     if (armor != armor.levelUp(armorLev, this)) {
                         armor = armor.levelUp(armorLev, this);
-                        armorLev = 0;
+                        armorLev = 0l;
                         if (armor == Armor.金甲) {
                             Achievement.goldColor.enable(this);
                         }
@@ -302,7 +320,7 @@ public class Hero {
         return true;
     }
 
-    public long getMaterial() {
+    public Long getMaterial() {
         return material;
     }
 
@@ -311,22 +329,22 @@ public class Hero {
             this.material += material;
         } else if (this.material < (Long.MAX_VALUE - material - 1000))
             this.material += material;
-        if (this.material < 0) this.material = 0;
+        if (this.material < 0) this.material = 0l;
         if (this.material >= 5000000) Achievement.rich.enable(this);
     }
 
-    public long getPoint() {
+    public Long getPoint() {
         return point;
     }
 
     public void addPoint(long point) {
         if (point < 0 || this.point < (Long.MAX_VALUE - point - 5000))
             this.point += point;
-        if (this.point < 0) this.point = 0;
+        if (this.point < 0) this.point = 0l;
         if (this.point >= 5000) Achievement.lazy.enable(this);
     }
 
-    public long getStrength() {
+    public Long getStrength() {
         return strength;
     }
 
@@ -353,11 +371,11 @@ public class Hero {
                 Achievement.extreme.enable(this);
             }
         }
-        if (strength < 0) strength = 0;
-        if (attackValue < 0) attackValue = 5;
+        if (strength < 0) strength = 0l;
+        if (attackValue < 0) attackValue = 5l;
     }
 
-    public long getPower() {
+    public Long getPower() {
         return power;
     }
 
@@ -380,12 +398,12 @@ public class Hero {
                 upperHp += MAX_HP_RISE * life;
             }
         }
-        if (power < 0) power = 0;
-        if (hp < 0) hp = 0;
-        if (upperHp < 0) upperHp = 0;
+        if (power < 0) power = 0l;
+        if (hp < 0) hp = 0l;
+        if (upperHp < 0) upperHp = 0l;
     }
 
-    public long getAgility() {
+    public Long getAgility() {
         return agility;
     }
 
@@ -415,8 +433,8 @@ public class Hero {
                 Achievement.master.enable(this);
             }
         }
-        if (agility < 0) agility = 0;
-        if (defenseValue < 0) defenseValue = 0;
+        if (agility < 0) agility = 0l;
+        if (defenseValue < 0) defenseValue = 0l;
         if (agility >= 10000) Achievement.skilldness.enable(this);
     }
 
@@ -424,7 +442,7 @@ public class Hero {
         this.hp = upperHp;
     }
 
-    public long getMaxMazeLev() {
+    public Long getMaxMazeLev() {
         return maxMazeLev;
     }
 
@@ -434,18 +452,18 @@ public class Hero {
         }
     }
 
-    public long getSwordLev() {
+    public Long getSwordLev() {
         return swordLev;
     }
 
-    public long getArmorLev() {
+    public Long getArmorLev() {
         return armorLev;
     }
 
-    public long getClick() {
+    public Long getClick() {
         return click;
     }
-private long latestClick = 0;
+private Long latestClick = 0l;
     public void click(boolean award) {
         if((System.currentTimeMillis() - latestClick) > 103) {
             if (click < Integer.MAX_VALUE - 10) {
@@ -456,7 +474,7 @@ private long latestClick = 0;
                     this.material += clickAward;
                 }
                 this.click++;
-                switch ((int) click) {
+                switch (click.intValue()) {
                     case 100:
                         Achievement.click100.enable(this);
                         break;
@@ -509,7 +527,7 @@ private long latestClick = 0;
         return null;
     }
 
-    public long getUpperHp() {
+    public Long getUpperHp() {
         return (isOnChange() ? changeUhp : upperHp) + getSkillAdditionHp();
     }
 
@@ -537,7 +555,7 @@ private long latestClick = 0;
         if ((this.upperHp + hp) > 9) {
             this.upperHp += hp;
         } else {
-            upperHp = 10;
+            upperHp = 10l;
         }
         //addHp(hp);
     }
@@ -601,11 +619,11 @@ private long latestClick = 0;
         this.clickAward = clickAward;
     }
 
-    public long getClickAward() {
+    public Long getClickAward() {
         return clickAward;
     }
 
-    public long getSkillPoint() {
+    public Long getSkillPoint() {
         return skillPoint;
     }
 
@@ -665,7 +683,7 @@ private long latestClick = 0;
         }
     }
 
-    public long getAwardCount() {
+    public Long getAwardCount() {
         return awardCount;
     }
 
@@ -673,7 +691,7 @@ private long latestClick = 0;
         this.awardCount = awardCount;
     }
 
-    public long getKeyCount() {
+    public Long getKeyCount() {
         return keyCount;
     }
 
@@ -681,7 +699,7 @@ private long latestClick = 0;
         this.keyCount = keyCount;
     }
 
-    public long getLockBox() {
+    public Long getLockBox() {
         return lockBox;
     }
 
@@ -710,6 +728,9 @@ private long latestClick = 0;
         EnumMap<Effect, Long> effectLongEnumMap = getAccessoryEffectMap(accessory);
         for (EnumMap.Entry<Effect, Long> effect : effectLongEnumMap.entrySet()) {
             switch (effect.getKey()) {
+                case ADD_HIT_RATE:
+                    setHitRate(hitRate + effect.getValue());
+                    break;
                 case ADD_STR:
                     addStrength(effect.getValue());
                     break;
@@ -742,6 +763,9 @@ private long latestClick = 0;
         EnumMap<Effect, Long> effectLongEnumMap = getAccessoryEffectMap(accessory);
         for (EnumMap.Entry<Effect, Long> effect : effectLongEnumMap.entrySet()) {
             switch (effect.getKey()) {
+                case ADD_HIT_RATE:
+                    setHitRate(hitRate - effect.getValue());
+                    break;
                 case ADD_STR:
                     addStrength(-effect.getValue());
                     break;
@@ -765,7 +789,7 @@ private long latestClick = 0;
                     break;
                 case ADD_PARRY:
                     parry -= effect.getValue();
-                    if (parry < 0) parry = 0;
+                    if (parry < 0) parry = 0f;
                     break;
             }
         }
@@ -804,7 +828,7 @@ private long latestClick = 0;
         return hat;
     }
 
-    public boolean isParry() {
+    public Boolean isParry() {
         return isParry;
     }
 
@@ -844,15 +868,15 @@ private long latestClick = 0;
             setUpperHp(upperHp);
             setAttackValue(attackValue);
             setDefenseValue(defenseValue);
-            point = 1;
-            parry = 0;
+            point = 1l;
+            parry = 0f;
             armor = Armor.破布;
             sword = Sword.木剑;
-            armorLev = 1;
-            swordLev = 1;
-            power = 5;
-            strength = 5;
-            agility = 5;
+            armorLev = 1l;
+            swordLev = 1l;
+            power = 5l;
+            strength = 5l;
+            agility = 5l;
 
             DBHelper dbHelper = DBHelper.getDbHelper();
             dbHelper.beginTransaction();
@@ -860,22 +884,17 @@ private long latestClick = 0;
             dbHelper.excuseSQLWithoutResult("DELETE FROM accessory");
             Accessory ring = getRing();
             if (ring != null) {
-                this.ring = null;
-                setRing(ring);
                 ring.save();
             }
             Accessory necklace = getNecklace();
             if (necklace != null) {
-                this.necklace = null;
-                setNecklace(necklace);
                 necklace.save();
             }
             Accessory hat = getHat();
             if (hat != null) {
-                this.hat = null;
-                setHat(hat);
                 hat.save();
             }
+            appendEffect();
             Achievement.reBird.enable(this);
             dbHelper.endTransaction();
             MainGameActivity.context.addMessage(getFormatName() + "成功转生！");
@@ -904,7 +923,7 @@ private long latestClick = 0;
         }
     }
 
-    public boolean isReinforce(Accessory accessory) {
+    public Boolean isReinforce(Accessory accessory) {
         switch (accessory.getType()) {
             case RingBuilder.type:
                 return ring != null && ring.getId().equals(accessory.getId()) &&
@@ -920,7 +939,7 @@ private long latestClick = 0;
         }
     }
 
-    public boolean isOnChange() {
+    public Boolean isOnChange() {
         return onChange;
     }
 
@@ -928,23 +947,23 @@ private long latestClick = 0;
         this.onChange = onChange;
     }
 
-    public long getChangeHp() {
+    public Long getChangeHp() {
         return changeHp;
     }
 
-    public void setChangeHp(long changeHp) {
+    public void setChangeHp(Long changeHp) {
         this.changeHp = changeHp;
     }
 
-    public long getChangAtk() {
+    public Long getChangAtk() {
         return changAtk;
     }
 
-    public void setChangAtk(long changAtk) {
+    public void setChangAtk(Long changAtk) {
         this.changAtk = changAtk;
     }
 
-    public void setChangeUhp(long changeUhp) {
+    public void setChangeUhp(Long changeUhp) {
         this.changeUhp = changeUhp;
     }
 
@@ -952,7 +971,7 @@ private long latestClick = 0;
         this.changeName = changeName;
     }
 
-    public boolean isOnSkill() {
+    public Boolean isOnSkill() {
         return onSkill;
     }
 
@@ -960,15 +979,15 @@ private long latestClick = 0;
         this.onSkill = onSkill;
     }
 
-    public long getSkillAdditionAtk() {
+    public Long getSkillAdditionAtk() {
         return onSkill ? skillAdditionAtk : 0;
     }
 
-    public void setSkillAdditionAtk(long skillAdditionAtk) {
+    public void setSkillAdditionAtk(Long skillAdditionAtk) {
         this.skillAdditionAtk = skillAdditionAtk;
     }
 
-    public long getSkillAdditionDef() {
+    public Long getSkillAdditionDef() {
         return onSkill ? skillAdditionDef : 0;
     }
 
@@ -976,7 +995,7 @@ private long latestClick = 0;
         this.skillAdditionDef = skillAdditionDef;
     }
 
-    public long getSkillAdditionHp() {
+    public Long getSkillAdditionHp() {
         return onSkill ? skillAdditionHp : 0;
     }
 
@@ -984,11 +1003,34 @@ private long latestClick = 0;
         this.skillAdditionHp = skillAdditionHp;
     }
 
-    public long getReincaCount() {
+    public Long getReincaCount() {
         return reincaCount;
     }
 
     public void setReincaCount(long reincaCount) {
         this.reincaCount = reincaCount;
+    }
+
+    public Long getHitRate() {
+        return hitRate;
+    }
+
+    public void setHitRate(long hitRate) {
+        if(hitRate>18){
+            hitRate = 15;
+        }
+        this.hitRate = hitRate;
+    }
+
+    public Boolean isHit() {
+        return isHit;
+    }
+
+    public void setPay(long pay) {
+        this.pay = pay;
+    }
+
+    public Long getPay() {
+        return pay;
     }
 }

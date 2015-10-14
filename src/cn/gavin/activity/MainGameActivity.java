@@ -3,11 +3,13 @@ package cn.gavin.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -64,13 +66,14 @@ import cn.gavin.maze.Maze;
 import cn.gavin.maze.MazeService;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.monster.PalaceAdapt;
+import cn.gavin.monster.PalaceMonster;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.upload.Upload;
 
-public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener {
+public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener, BaseContext {
     //Constants
     public static final String TAG = "MazeNeverEnd";
     public static final String APK_PATH = Environment.getExternalStorageDirectory() + "/maze";
@@ -158,11 +161,19 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private Button upgradeHSwordButton;
     private Button upgradeHArmorButton;
     private Button palaceButton;
+    private boolean isHidBattle;
+    private int palaceCount;
+    private boolean updatePalace;
 
 
     //Get Function
     public long getRefreshInfoSpeed() {
         return refreshInfoSpeed;
+    }
+
+    @Override
+    public boolean isHideBattle() {
+        return isHidBattle;
     }
 
     public boolean isGameThreadRunning() {
@@ -200,6 +211,19 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         public void handleMessage(Message msg) {
             try {
                 switch (msg.what) {
+                    case 203:
+                        palaceCount = msg.arg1;
+                        break;
+                    case 105:
+                        Toast.makeText(context, "--上传失败!" + msg.obj + "--", Toast.LENGTH_LONG)
+                                .show();
+                        uploading = false;
+                        break;
+                    case 104:
+                        MazeContents.lastUpload = heroN.getMaxMazeLev();
+                        Achievement.uploader.enable(heroN);
+                        uploading = false;
+                        break;
                     case 103:
                         saveButton.setEnabled(false);
                         saveButton.setText("正在存档");
@@ -216,16 +240,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         uploadButton.setEnabled(false);
                         uploadButton.setText("上传中");
                         uploading = true;
-                        new Thread(new Runnable() {
-                            public void run() {
-                                Upload upload = new Upload();
-                                if (upload.upload(heroN, alipay.getPayTime())) {
-                                    MazeContents.lastUpload = heroN.getMaxMazeLev();
-                                    Achievement.uploader.enable(heroN);
-                                }
-                                uploading = false;
-                            }
-                        }).start();
+                        Upload upload = new Upload(context);
+                        heroN.setPay(MazeContents.payTime);
+                        upload.upload(heroN);
                         break;
                     case 201:
                         updateButton.setEnabled(false);
@@ -638,7 +655,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                             heroN.setLockBox(heroN.getLockBox() + 1000);
                             heroN.setKeyCount(heroN.getKeyCount() + 1000);
                             heroN.setClick(49990);
-                            heroN.setMaxMazeLev(101);
+                            heroN.setMaxMazeLev(heroN.getMaxMazeLev() + 101);
                             maze.setLevel(99);
                             heroN.setAwardCount(heroN.getAwardCount() + 1);
                         } else if (tv.getText().toString().equals("sp1.1c")) {
@@ -724,8 +741,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         dialog.show();
     }
 
-    private void showDefenders() {
-        AlertDialog dialog = new Builder(this).create();
+    private void showPalace() {
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT count(*) FROM palace");
+        final AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("殿堂");
         ListView listView = new ListView(this);
         PalaceAdapt palaceAdapt = new PalaceAdapt();
@@ -751,8 +769,41 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     }
 
                 });
-        dialog.show();
-        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+
+        if (cursor.getLong(0) == palaceCount) {
+            dialog.show();
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+        } else {
+            updatePalace = true;
+            this.getHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    PalaceMonster.updatePalace(context);
+                }
+            });
+
+            final ProgressDialog progressDialog = new ProgressDialog(context);
+            progressDialog.setTitle("正在更新殿堂数据");
+            progressDialog.show();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    int count = 0;
+                    while (updatePalace || count == 1000) {
+                        try {
+                            Thread.sleep(refreshInfoSpeed);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                            e.printStackTrace();
+                        }
+                        count++;
+                    }
+                    progressDialog.dismiss();
+                    dialog.show();
+                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+                }
+            });
+        }
     }
 
     private void showLockBox() {
@@ -1245,6 +1296,18 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         save();
     }
 
+    public int getPalaceCount() {
+        return palaceCount;
+    }
+
+    public void setPalaceCount(int palaceCount) {
+        this.palaceCount = palaceCount;
+    }
+
+    public void setHidBattle(boolean isHidBattle) {
+        this.isHidBattle = isHidBattle;
+    }
+
     private class GameThread extends Thread {
 
         @Override
@@ -1314,6 +1377,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         handler.sendEmptyMessage(202);
                     }
                     br.close();
+                    PalaceMonster.getPalaceCount(context);
                 } catch (Exception e) {
                     e.printStackTrace();
                     handler.sendEmptyMessage(201);
@@ -1387,7 +1451,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
             case R.id.palace_button:
-                showDefenders();
+                showPalace();
                 break;
             case R.id.up_h_armor:
                 heroN.upgradeArmor(100);

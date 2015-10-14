@@ -353,9 +353,9 @@ public class EvilSkill extends SkillLayout {
 
                     if (MainGameActivity.context != null) {
                         if (!onUsed && used) {
-                            setAgi((int) getHero().getAgility());
-                            setStr((int) getHero().getStrength());
-                            setLife((int) getHero().getPower());
+                            setAgi(getHero().getAgility());
+                            setStr(getHero().getStrength());
+                            setLife(getHero().getPower());
                         }
                         super.setOnUsed(used);
                     }
@@ -524,6 +524,7 @@ public class EvilSkill extends SkillLayout {
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     double v = harm * (iskll.getProbability()*2 + 50d) / 100d;
+                    if(v > harm) v = harm -1;
                     harm = (long) (harm - v);
                     String msg1 = hero.getFormatName() + "使用了技能" + iskll.getName() + "，抵消了" +
                             (long)v + "的伤害";

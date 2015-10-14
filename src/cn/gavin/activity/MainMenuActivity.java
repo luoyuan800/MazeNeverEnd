@@ -14,6 +14,7 @@ import android.widget.Button;
 
 import com.bmob.pay.tool.BmobPay;
 
+import cn.bmob.v3.Bmob;
 import cn.gavin.R;
 import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;
@@ -57,6 +58,7 @@ public MainMenuActivity context;
         }
         context = this;
         setContentView(R.layout.activity_main_menu);
+        Bmob.initialize(this, "4de7673ec85955af7568cfa1494c6498");
         BmobPay.init(MainMenuActivity.this, "4de7673ec85955af7568cfa1494c6498");
         menuStart = (Button) findViewById(R.id.menu_start);
         menuStart.setOnClickListener(this);

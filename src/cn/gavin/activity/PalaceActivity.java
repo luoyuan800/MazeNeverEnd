@@ -34,7 +34,7 @@ import cn.gavin.maze.Palace;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.skill.SkillDialog;
 
-public class PalaceActivity extends Activity implements OnClickListener {
+public class PalaceActivity extends Activity implements OnClickListener, BaseContext {
     //Constants
     public static final String TAG = "MazeNeverEnd";
     public static final String APK_PATH = Environment.getExternalStorageDirectory() + "/maze";
@@ -81,6 +81,12 @@ public class PalaceActivity extends Activity implements OnClickListener {
     private TextView hatTextView;
     private MonsterBook monsterBook;
     private SkillDialog skillDialog;
+    private boolean isHidBattle;
+
+    @Override
+    public boolean isHideBattle() {
+        return isHidBattle;
+    }
     //Get Function
     public long getRefreshInfoSpeed() {
         return refreshInfoSpeed;

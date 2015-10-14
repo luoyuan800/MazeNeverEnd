@@ -8,6 +8,7 @@ import cn.gavin.activity.MainGameActivity;
 import cn.gavin.forge.ForgeDB;
 import cn.gavin.log.LogHelper;
 import cn.gavin.monster.Defender;
+import cn.gavin.monster.PalaceMonster;
 
 /**
  * Created by gluo on 9/14/2015.
@@ -105,7 +106,7 @@ public class DBHelper {
             db.execSQL("CREATE UNIQUE INDEX maze_lev ON hero (name, lev)");
             ForgeDB forgeDB = new ForgeDB();
             forgeDB.createTable(db);
-            Defender.createDB(db);
+            PalaceMonster.createDB(db);
             db.setTransactionSuccessful();
             db.endTransaction();
         } catch (Exception e) {
@@ -135,25 +136,14 @@ public class DBHelper {
                         "defeated TEXT" +
                         ")";
                 db.execSQL(createTable);
-                Defender.createDB(db);
             }
         }catch(Exception e){
             Log.e("MazeNeverEnd",e.getMessage());
             LogHelper.writeLog();
             e.printStackTrace();
         }
-        try {
 
-            if (oldVersion == 9) {
-                Defender.upgradeDB9To10(db);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            Log.e("MazeNeverEnd",e.getMessage());
-            LogHelper.writeLog();
-        }
         try {
-
             if (oldVersion == 10) {
                 new ForgeDB().upgradeTo1_3_2(db);
             }

@@ -20,3 +20,11 @@
 #}
 -ignorewarnings
 -libraryjars libs/BmobPay_V1.0.2.jar
+-libraryjars libs/BmobSDK_V3.4.4_0930.jar
+-libraryjars libs/Bmob_Push_V0.6beta_20150408.jar
+
+
+-keepattributes Signature
+-keep class cn.bmob.v3.** {*;}
+-keep class cn.bmob.push.** {*;}
+-keep class cn.gavin.upload.UploadObject{*;}

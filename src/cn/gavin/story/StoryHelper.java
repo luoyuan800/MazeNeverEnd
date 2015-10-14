@@ -17,10 +17,11 @@ public class StoryHelper {
             if (!Achievement.story.isEnable()) {
                 MainGameActivity.context.addMessage(String.format("%s找到了一扇上锁了的门，但是没有钥匙打开它。门后面是什么呢？", hero.getFormatName()));
                 Achievement.story.enable(hero);
-            } else if (hero.getRandom().nextBoolean() && hero.getRandom().nextLong(hero.getAgility() + 1) > 500 && 2 > (hero.getRandom().nextLong(hero.getLockBox() + 1) + 1) && hero.getRandom().nextInt(1003) > 995) {
+            } else if (hero.getRandom().nextBoolean() && hero.getRandom().nextLong(hero.getAgility() + 1) > 500
+                    && 2 > (hero.getRandom().nextLong(hero.getLockBox() + 1) + 1) && hero.getRandom().nextLong(913 + MainGameActivity.context.getMaze().getHunt()) > 995) {
                 MainGameActivity.context.addMessage(hero.getFormatName() + "找到一个带锁的宝箱");
                 hero.setLockBox(hero.getLockBox() + 1);
-            } else if (hero.getKeyCount() < 15 && hero.getRandom().nextLong(hero.getAgility() + 1) > 100 && hero.getRandom().nextInt(1000) > 597) {
+            } else if (hero.getKeyCount() < 15 && hero.getRandom().nextLong(hero.getAgility() + 1) > 100 && hero.getRandom().nextInt(9801) > 897) {
                 MainGameActivity.context.addMessage(hero.getFormatName() + "找到一把宝箱钥匙");
                 hero.setKeyCount(hero.getKeyCount() + 1);
             } else if (hero.getKeyCount() > 0 && hero.getLockBox() == 0) {

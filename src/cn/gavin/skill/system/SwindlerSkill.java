@@ -314,7 +314,7 @@ public class SwindlerSkill extends SkillLayout {
                     StringBuilder builder = new StringBuilder();
                     builder.append("无需技能点激活，每前进100层迷宫随机激活。<br>技能叠加的伤害数值在激活的时候随机生成。激活后每100层变换一次技能伤害值。<br>");
                     builder.append(skill.getProbability()).append("%的概率释放，造成").
-                            append(!skill.isActive() ? "????" : ((hero.getAttackValue() + iskll.getBaseHarm()) + " - " + (iskll.getBaseHarm() + iskll.getAdditionHarm()))).
+                            append(!skill.isActive() ? "????" : ((hero.getAttackValue() + iskll.getBaseHarm()) + " - " + (hero.getAttackValue() + iskll.getBaseHarm() + iskll.getAdditionHarm()))).
                             append("的伤害。");
                     return builder.toString();
                 }

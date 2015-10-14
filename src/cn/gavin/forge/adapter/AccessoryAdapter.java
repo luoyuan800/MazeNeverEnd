@@ -3,15 +3,16 @@ package cn.gavin.forge.adapter;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.text.Html;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MazeContents;
@@ -21,15 +22,23 @@ import cn.gavin.forge.Item;
 import cn.gavin.forge.NecklaceBuilder;
 import cn.gavin.forge.RingBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Copyright 2015 gluo.
  * ALL RIGHTS RESERVED.
  * Created by gluo on 10/5/2015.
  */
 public class AccessoryAdapter extends BaseAdapter {
+    private boolean dismantle;
+    private AlertDialog fartherDialog;
+
+    public AccessoryAdapter(boolean dismantle, AlertDialog context) {
+        this.dismantle = dismantle;
+        this.fartherDialog = context;
+    }
+
+    public AccessoryAdapter() {
+        dismantle = false;
+    }
 
     public static class AccessoryList {
         Accessory a1;
@@ -112,35 +121,35 @@ public class AccessoryAdapter extends BaseAdapter {
         }
         AccessoryList item = getItem(position);
         if (item.a1 != null) {
-            holder.name1.setText(Html.fromHtml(item.a1.getFormatName() + (checkOnUsed(item.a1)?"<font color=\"#006400\">u</font>" : "")));
+            holder.name1.setText(Html.fromHtml(item.a1.getFormatName() + (checkOnUsed(item.a1) ? "<font color=\"#006400\">u</font>" : "")));
             holder.name1.setEnabled(true);
-            holder.name1.setOnClickListener(buildOnClick(item.a1));
+            holder.name1.setOnClickListener(dismantle ? buildDOnClick(item.a1) : buildOnClick(item.a1));
         } else {
             holder.name1.setText("");
             holder.name1.setEnabled(false);
         }
 
         if (item.a2 != null) {
-            holder.name2.setText(Html.fromHtml(item.a2.getFormatName() + (checkOnUsed(item.a2)?"<font color=\"#006400\">u</font>" : "")));
+            holder.name2.setText(Html.fromHtml(item.a2.getFormatName() + (checkOnUsed(item.a2) ? "<font color=\"#006400\">u</font>" : "")));
             holder.name2.setEnabled(true);
-            holder.name2.setOnClickListener(buildOnClick(item.a2));
+            holder.name2.setOnClickListener(dismantle ? buildDOnClick(item.a2) : buildOnClick(item.a2));
         } else {
             holder.name2.setText("");
             holder.name2.setEnabled(false);
         }
 
         if (item.a3 != null) {
-            holder.name3.setText(Html.fromHtml(item.a3.getFormatName()+ (checkOnUsed(item.a3)?"<font color=\"#006400\">u</font>" : "")));
+            holder.name3.setText(Html.fromHtml(item.a3.getFormatName() + (checkOnUsed(item.a3) ? "<font color=\"#006400\">u</font>" : "")));
             holder.name3.setEnabled(true);
-            holder.name3.setOnClickListener(buildOnClick(item.a3));
+            holder.name3.setOnClickListener(dismantle ? buildDOnClick(item.a3) : buildOnClick(item.a3));
         } else {
             holder.name3.setText("");
             holder.name3.setEnabled(false);
         }
         if (item.a4 != null) {
-            holder.name4.setText(Html.fromHtml(item.a4.getFormatName()+ (checkOnUsed(item.a4)?"<font color=\"#006400\">u</font>" : "")));
+            holder.name4.setText(Html.fromHtml(item.a4.getFormatName() + (checkOnUsed(item.a4) ? "<font color=\"#006400\">u</font>" : "")));
             holder.name4.setEnabled(true);
-            holder.name4.setOnClickListener(buildOnClick(item.a4));
+            holder.name4.setOnClickListener(dismantle ? buildDOnClick(item.a4) : buildOnClick(item.a4));
         } else {
             holder.name4.setText("");
             holder.name4.setEnabled(false);
@@ -160,57 +169,9 @@ public class AccessoryAdapter extends BaseAdapter {
                 TextView tv = new TextView(alertDialog.getContext());
                 linearLayout.addView(tv);
                 ViewGroup.LayoutParams params = tv.getLayoutParams();
-                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                params.height = ViewGroup.LayoutParams.MATCH_PARENT;
                 tv.setLayoutParams(params);
                 tv.setText(Html.fromHtml(a.toString()));
-                Button button = new Button(alertDialog.getContext());
-                ViewGroup.LayoutParams params1 = tv.getLayoutParams();
-                params1.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                button.setLayoutParams(params1);
-                button.setText("拆解装备");
-                button.setEnabled(!isOnUsed);
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AlertDialog ad = new AlertDialog.Builder(alertDialog.getContext()).create();
-                        ad.setTitle("确认拆解装备吗？");
-                        final TextView textView = new TextView(ad.getContext());
-                        textView.setText(Html.fromHtml("拆解装备" + a.getFormatName() + "后你可以随机获得材料!"));
-                        ad.setView(textView);
-                        ad.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-                        ad.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                List<Item> items = a.dismantle();
-                                AlertDialog ad2 = new AlertDialog.Builder(alertDialog.getContext()).create();
-                                ad2.setTitle("拆解结果");
-                                TextView textView1 = new TextView(alertDialog.getContext());
-                                StringBuilder builder = new StringBuilder("您从" + a.getFormatName() + "拆解出了：");
-                                for(Item item : items){
-                                    builder.append("<br>").append(item.toString());
-                                }
-                                textView1.setText(Html.fromHtml(builder.toString()));
-                                ad2.setView(textView1);
-                                ad2.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                });
-                                alertDialog.dismiss();
-                                dialogInterface.dismiss();
-                                ad2.show();
-                            }
-                        });
-                        ad.show();
-                    }
-                });
-                linearLayout.addView(button);
                 alertDialog.setView(linearLayout);
                 if (isOnUsed) {
                     alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "卸下", new DialogInterface.OnClickListener() {
@@ -262,20 +223,66 @@ public class AccessoryAdapter extends BaseAdapter {
         };
     }
 
+    private View.OnClickListener buildDOnClick(final Accessory a) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isOnUsed = checkOnUsed(a);
+                final AlertDialog alertDialog = new AlertDialog.Builder(fartherDialog.getContext()).create();
+                alertDialog.setTitle("拆解装备");
+                final TextView textView = new TextView(fartherDialog.getContext());
+                textView.setText(Html.fromHtml("拆解装备后你可以随机获得材料!<br>"+a.toString()));
+                alertDialog.setView(textView);
+                alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        List<Item> items = a.dismantle();
+                        AlertDialog ad2 = new AlertDialog.Builder(alertDialog.getContext()).create();
+                        ad2.setTitle("拆解结果");
+                        TextView textView1 = new TextView(alertDialog.getContext());
+                        StringBuilder builder = new StringBuilder("您从" + a.getFormatName() + "拆解出了：");
+                        for (Item item : items) {
+                            builder.append("<br>").append(item.toString());
+                        }
+                        textView1.setText(Html.fromHtml(builder.toString()));
+                        ad2.setView(textView1);
+                        ad2.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        ad2.show();
+                        alertDialog.dismiss();
+                        fartherDialog.dismiss();
+                    }
+                });
+                alertDialog.show();
+                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(!isOnUsed);
+            }
+        };
+    }
+
     private boolean checkOnUsed(Accessory a) {
         boolean onUsed = false;
         switch (a.getType()) {
             case RingBuilder.type:
                 Accessory ring = MazeContents.hero.getRing();
-                onUsed = ring!=null && ring.getId().equalsIgnoreCase(a.getId());
+                onUsed = ring != null && ring.getId().equalsIgnoreCase(a.getId());
                 break;
             case NecklaceBuilder.type:
                 Accessory necklace = MazeContents.hero.getNecklace();
-                onUsed = necklace!=null && necklace.getId().equalsIgnoreCase(a.getId());
+                onUsed = necklace != null && necklace.getId().equalsIgnoreCase(a.getId());
                 break;
             case HatBuilder.type:
                 Accessory hat = MazeContents.hero.getHat();
-                onUsed = hat!=null && hat.getId().equalsIgnoreCase(a.getId());
+                onUsed = hat != null && hat.getId().equalsIgnoreCase(a.getId());
                 break;
         }
         return onUsed;

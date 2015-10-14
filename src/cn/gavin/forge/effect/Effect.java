@@ -43,7 +43,7 @@ public enum Effect {
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
             long agi = random.nextLong((hero.getBaseDefense() + monster.getMaxHP()) / 200000 + 1);
-            if (agi <= 500) agi = random.nextLong(hero.getMaxMazeLev() + 1) + 499;
+            if (agi <= 200) agi = random.nextLong(hero.getMaxMazeLev() + 1) + 199;
             return agi;
         }
     }, "增加敏捷"),
@@ -52,7 +52,7 @@ public enum Effect {
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
             long str = random.nextLong((hero.getAttackValue() + monster.getAtk()) / 200000 + 1);
-            if (str <= 500) str = random.nextLong(hero.getMaxMazeLev() + 1) + 399;
+            if (str <= 400) str = random.nextLong(hero.getMaxMazeLev() + 1) + 399;
             return str;
         }
     }, "增加力量"),
@@ -61,7 +61,7 @@ public enum Effect {
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
             long power = random.nextLong((hero.getHp() + monster.getHp()) / 200000 + 1) + 1;
-            if (power <= 500) power = random.nextLong(hero.getMaxMazeLev() + 1) + 699;
+            if (power <= 200) power = random.nextLong(hero.getMaxMazeLev() + 1) + 199;
             return power;
         }
     }, "增加体力"),
@@ -74,11 +74,20 @@ public enum Effect {
             return award;
         }
     }, "增加点击奖励"),
+    ADD_HIT_RATE(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            Random random = hero.getRandom();
+            long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 500 + 1) + 1;
+            if (award >= 20) award = random.nextLong(20) + 1;
+            return award;
+        }
+    }, "增加暴击率"),
     ADD_PARRY(new Calculate() {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
-            long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 10000 + 2) + 1;
+            long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 2000 + 2) + 1;
             if (award >= 20) award = random.nextLong(20) + 1;
             return award;
         }

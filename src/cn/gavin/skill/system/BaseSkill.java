@@ -619,7 +619,7 @@ public class BaseSkill extends SkillLayout {
                     if (MainGameActivity.context != null) {
                         if (use && !onUsed)
                             MazeContents.getMaze().setCsmgl(MazeContents.getMaze().getCsmgl() - Math.round(getProbability()));
-                        else if(!use && onUsed)
+                        else if (!use && onUsed)
                             MazeContents.getMaze().setCsmgl(MazeContents.getMaze().getCsmgl() + Math.round(getProbability()));
                     }
                 }
@@ -744,15 +744,18 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = monster.getAtk() - hero.getDefenseValue();
-                    if (harm >= hero.getHp()) {
-                        hero.addHp(-harm);
-                        String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了" + harm + "的伤害";
-                        skill.addMessage(msg);
-                        monster.addBattleSkillDesc(msg);
+                    if(harm < 0){
+                        harm = hero.getRandom().nextLong(hero.getMaxMazeLev()+1);
+                    }
+                    hero.addHp(-harm);
+                    if(hero.getHp() <= 0){
                         return false;
                     }
+                    String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了" + harm + "的伤害";
+                    skill.addMessage(msg);
+                    monster.addBattleSkillDesc(msg);
                     hero.restore();
-                    String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，HP全部恢复了";
+                    msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，HP全部恢复了";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;
@@ -822,7 +825,16 @@ public class BaseSkill extends SkillLayout {
                 }
             });
         } else if (name.equals("寻宝")) {
-            final PropertySkill iskll = new PropertySkill(29000, 0, 0, 0, 0, 0, 0);
+            final PropertySkill iskll = new PropertySkill(0, 0, 0, 0, 0, 0, 0){
+                public void setOnUsed(boolean use){
+                    if(MainGameActivity.context!=null && !onUsed && use){
+                        MainGameActivity.context.getMaze().setHunt(MainGameActivity.context.getMaze().getHunt() * 2);
+                    } else if(MainGameActivity.context!=null && onUsed && !use){
+                        MainGameActivity.context.getMaze().setHunt(MainGameActivity.context.getMaze().getHunt() / 2);
+                    }
+                    super.setOnUsed(use);
+                }
+            };
             skill = iskll;
             iskll.setName("寻宝");
             iskll.setHero(hero);
@@ -838,7 +850,7 @@ public class BaseSkill extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
                     builder.append("被动技能<br>");
-                    builder.append("永久增加获得宝箱的概率和防御上限");
+                    builder.append("永久增加获得宝箱的概率");
                     return builder.toString();
                 }
             });

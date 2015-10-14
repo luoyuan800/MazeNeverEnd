@@ -11,14 +11,24 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.gavin.R;
-import cn.gavin.forge.*;
-import cn.gavin.forge.dialog.ItemDialog;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.gavin.R;
+import cn.gavin.forge.Accessory;
+import cn.gavin.forge.Builder;
+import cn.gavin.forge.HatBuilder;
+import cn.gavin.forge.Item;
+import cn.gavin.forge.NecklaceBuilder;
+import cn.gavin.forge.RingBuilder;
+import cn.gavin.forge.adapter.AccessoryAdapter;
+import cn.gavin.forge.dialog.ItemDialog;
+import cn.gavin.forge.list.FuseItems;
+import cn.gavin.monster.MonsterBook;
 
 
 /**
@@ -40,6 +50,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
     private Button forgeButton;
     private Button conformButton;
     private Button cleanButton;
+    private Button fuseButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +63,14 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
         pre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                systemName.setText(getPrevSystemName());
+                setSystem(false);
             }
         });
         Button next = (Button) findViewById(R.id.next_forge_system_button);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                systemName.setText(getNextSystemName());
+                setSystem(true);
             }
         });
         detector = new GestureDetector(this, gestureListener);
@@ -86,6 +97,8 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
         forgeButton.setOnClickListener(this);
         cleanButton = (Button) findViewById(R.id.forge_clean_button);
         cleanButton.setOnClickListener(this);
+        fuseButton = (Button) findViewById(R.id.forge_dismantle_button);
+        fuseButton.setOnClickListener(this);
     }
 
     @Override
@@ -95,7 +108,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
     }
 
     int index = 0;
-    String[] systemNames = {"帽子", "戒指", "项链"};
+    String[] systemNames = {"打造帽子", "打造戒指", "打造项链", "融合材料"};
 
     private String getNextSystemName() {
         if (index >= systemNames.length - 1) {
@@ -120,14 +133,29 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
         return detector.onTouchEvent(event);
     }
 
+    private void setSystem(boolean next){
+        if(next){
+            systemName.setText(getNextSystemName());
+
+        }else{
+            systemName.setText(getPrevSystemName());
+        }
+        if(index == 3){
+            conformButton.setEnabled(false);
+            forgeButton.setText("融合");
+        }else{
+            conformButton.setEnabled(true);
+            forgeButton.setText("打造");
+        }
+    }
     public GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener() {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             if (e1.getX() - e2.getX() > 100) {
-                systemName.setText(getNextSystemName());
+                setSystem(true);
                 return true;
             } else if (e1.getX() - e2.getY() < -100) {
-                systemName.setText(getPrevSystemName());
+                setSystem(false);
                 return true;
             }
             return false;
@@ -137,6 +165,20 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.forge_dismantle_button:
+                AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                alertDialog.setTitle("点击装备进行拆解");
+                alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                ListView listView = new ListView(this);
+                listView.setAdapter(new AccessoryAdapter(true, alertDialog));
+                alertDialog.setView(listView);
+                alertDialog.show();
+                break;
             case R.id.forge_clean_button:
                 clean();
                 break;
@@ -189,40 +231,50 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                 }
                 break;
             case R.id.forge_do_button:
-                if (MazeContents.hero.getMaterial() >= 30250) {
-                    items.clear();
-                    if (item1 != null) items.add(item1);
-                    if (item2 != null) items.add(item2);
-                    if (item3 != null) items.add(item3);
-                    if (item4 != null) items.add(item4);
-                    if (item5 != null) items.add(item5);
-                    Builder builder = ringBuilder;
-                    if (items.size() > 2) {
-                        switch (index) {
-                            case RingBuilder.type:
-                                builder = ringBuilder;
-                                break;
-                            case NecklaceBuilder.type:
-                                builder = necklaceBuilder;
-                                break;
-                            case HatBuilder.type:
-                                builder = hatBuilder;
-                                break;
-                        }
-                        Accessory accessory = builder.build(items);
-                        if(accessory!=null){
-                        showResult(accessory);
+                if(index == 3){
+                    if(item1!=null && item2!=null&&item3!=null&&item4!=null&&item5!=null) {
+                        Item item = FuseItems.fuse(item1, item2, item3, item4, item5);
                         clean();
-                        }else{
-                            resultText.setText(Html.fromHtml(builder.notEnough()));
-                        }
+                        resultText.setText(Html.fromHtml("获得了<br>" + item.toString()));
                     }else{
-                        resultText.setText("选择的打造材料不足，请继续添加!");
+                        resultText.setText("需要五个材料才可以进行融合");
                     }
-                }else{
-                    Toast.makeText(this, "--锻造点数不足30250!--", Toast.LENGTH_SHORT)
-                            .show();
-                    resultText.setText("--锻造点数不足30250!--");
+                }else {
+                    if (MazeContents.hero.getMaterial() >= 30250) {
+                        items.clear();
+                        if (item1 != null) items.add(item1);
+                        if (item2 != null) items.add(item2);
+                        if (item3 != null) items.add(item3);
+                        if (item4 != null) items.add(item4);
+                        if (item5 != null) items.add(item5);
+                        Builder builder = ringBuilder;
+                        if (items.size() > 2) {
+                            switch (index) {
+                                case RingBuilder.type:
+                                    builder = ringBuilder;
+                                    break;
+                                case NecklaceBuilder.type:
+                                    builder = necklaceBuilder;
+                                    break;
+                                case HatBuilder.type:
+                                    builder = hatBuilder;
+                                    break;
+                            }
+                            Accessory accessory = builder.build(items);
+                            if (accessory != null) {
+                                showResult(accessory);
+                                clean();
+                            } else {
+                                resultText.setText(Html.fromHtml(builder.notEnough()));
+                            }
+                        } else {
+                            resultText.setText("选择的打造材料不足，请继续添加!");
+                        }
+                    } else {
+                        Toast.makeText(this, "--锻造点数不足30250!--", Toast.LENGTH_SHORT)
+                                .show();
+                        resultText.setText("--锻造点数不足30250!--");
+                    }
                 }
         }
 
@@ -234,13 +286,13 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
         item3 = null;
         item4 = null;
         item5 = null;
-        if(items!=null && !items.isEmpty())items.clear();
+        if (items != null && !items.isEmpty()) items.clear();
         item1Button.setText("");
         item2Button.setText("");
         item3Button.setText("");
         item4Button.setText("");
         item5Button.setText("");
-        itemDialog.dismiss();
+        if(itemDialog!=null)itemDialog.dismiss();
         itemDialog = null;
     }
 
@@ -306,4 +358,5 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
     public boolean contains(Item item) {
         return item1 == item || item2 == item || item3 == item || item4 == item || item5 == item;
     }
+
 }
