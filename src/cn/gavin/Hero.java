@@ -16,7 +16,6 @@ import cn.gavin.forge.HatBuilder;
 import cn.gavin.forge.NecklaceBuilder;
 import cn.gavin.forge.RingBuilder;
 import cn.gavin.forge.effect.Effect;
-import cn.gavin.monster.Defender;
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;

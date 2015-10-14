@@ -397,7 +397,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         @Override
         public void run() {
             try {
-                maze.move(context);
+                //maze.move(context);
             } catch (Exception e) {
                 Log.e(TAG, "MainGameActivity.GameThread", e);
                 LogHelper.writeLog();

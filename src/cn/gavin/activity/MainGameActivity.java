@@ -745,10 +745,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT count(*) FROM palace");
         final AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("殿堂");
-        ListView listView = new ListView(this);
-        PalaceAdapt palaceAdapt = new PalaceAdapt();
-        listView.setAdapter(palaceAdapt);
-        dialog.setView(listView);
+
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出",
                 new DialogInterface.OnClickListener() {
 
@@ -770,7 +767,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
                 });
 
-        if (cursor.getLong(0) == palaceCount) {
+        if (true) {
+            ListView listView = new ListView(this);
+            PalaceAdapt palaceAdapt = new PalaceAdapt();
+            listView.setAdapter(palaceAdapt);
+            dialog.setView(listView);
             dialog.show();
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
         } else {
@@ -799,6 +800,10 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         count++;
                     }
                     progressDialog.dismiss();
+                    ListView listView = new ListView(context);
+                    PalaceAdapt palaceAdapt = new PalaceAdapt();
+                    listView.setAdapter(palaceAdapt);
+                    dialog.setView(listView);
                     dialog.show();
                     dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
                 }

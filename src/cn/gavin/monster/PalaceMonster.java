@@ -85,8 +85,8 @@ public class PalaceMonster {
                 "hello TEXT" +
                 ")";
         db.execSQL(createTable);
-        db.execSQL("CREATE UNIQUE INDEX maze_lev ON defender (name, lev)");
-        String addDefender = "INSERT INTO palace(id, name, lev, hp, atk, def,skill, skill1,skill2,parry,hit_rate,pay,hello) values('1234567890fs','我是神，有本事上来！','10000','1931377600','1082065000','10000000','重击_5','多重攻击_5','铁拳_5','10','50','1000','你是不可能超越我的！')";
+        db.execSQL("CREATE UNIQUE INDEX maze_lev ON palace (name, lev)");
+        String addDefender = "INSERT INTO palace(id, name, lev, hp, atk, def,skill, skill1,skill2,parry,hit_rate,pay,hello) values('1234567890fs','我是神','10000','1931377600','1082065000','10000000','重击_5','多重攻击_5','铁拳_5','10','50','1000','你是不可能超越我的！')";
         db.execSQL(addDefender);
     }
 
@@ -104,7 +104,7 @@ public class PalaceMonster {
         Stack<String> palaces = new Stack<String>();
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT name, lev, hello FROM palace ORDER BY lev DESC");
         while (!cursor.isAfterLast()) {
-            palaces.push("<font color=\"red\">" + cursor.getString(cursor.getColumnIndex("name")) + "</font> - " + cursor.getString(cursor.getColumnIndex("lev")) + "---" + cursor.getString(cursor.getColumnIndex("hello")));
+            palaces.push(cursor.getString(cursor.getColumnIndex("lev")) + " - <font color=\"red\">" + cursor.getString(cursor.getColumnIndex("name")) + "</font> " + "---" + cursor.getString(cursor.getColumnIndex("hello")));
             cursor.moveToNext();
         }
         return palaces;

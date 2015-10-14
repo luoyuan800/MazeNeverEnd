@@ -7,7 +7,6 @@ import android.util.Log;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.forge.ForgeDB;
 import cn.gavin.log.LogHelper;
-import cn.gavin.monster.Defender;
 import cn.gavin.monster.PalaceMonster;
 
 /**
@@ -96,14 +95,7 @@ public class DBHelper {
                     ")";
             db.execSQL(createTable);
             db.execSQL("CREATE UNIQUE INDEX monster_index ON monster (name)");
-            db.execSQL("CREATE TABLE hero(" +
-                    "name TEXT NOT NULL PRIMARY KEY," +
-                    "lev TEXT NOT NULL, " +
-                    "hp TEXT NOT NULL, " +
-                    "skill TEXT NOT NULL, " +
-                    "skill_lev TEXT NOT NULL, " +
-                    "atk TEXT NOT NULL");
-            db.execSQL("CREATE UNIQUE INDEX maze_lev ON hero (name, lev)");
+
             ForgeDB forgeDB = new ForgeDB();
             forgeDB.createTable(db);
             PalaceMonster.createDB(db);
@@ -152,22 +144,7 @@ public class DBHelper {
             Log.e("MazeNeverEnd",e.getMessage());
             LogHelper.writeLog();
         }
-        try{
-            if(oldVersion==11){
-                db.execSQL("CREATE TABLE hero(" +
-                        "name TEXT NOT NULL PRIMARY KEY," +
-                        "lev TEXT NOT NULL, " +
-                        "hp TEXT NOT NULL, " +
-                        "skill TEXT NOT NULL, " +
-                        "skill_lev TEXT NOT NULL, " +
-                        "atk TEXT NOT NULL");
-                db.execSQL("CREATE UNIQUE INDEX maze_lev ON hero (name, lev)");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            Log.e("MazeNeverEnd",e.getMessage());
-            LogHelper.writeLog();
-        }
+
     }
 
     private static DBHelper dbHelper;
