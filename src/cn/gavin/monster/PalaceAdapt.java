@@ -24,7 +24,7 @@ public class PalaceAdapt extends BaseAdapter{
         TextView name1;
     }
 
-    private final Stack<Defender> adapterData = Defender.loadAllDefenderWithYou(null);
+    private final Stack<String> adapterData = PalaceMonster.getPalaceListString();
 
     @Override
     public int getCount() {
@@ -32,7 +32,7 @@ public class PalaceAdapt extends BaseAdapter{
     }
 
     @Override
-    public Defender getItem(int position) {
+    public String getItem(int position) {
         if (position >= getCount()) position = 0;
         return adapterData.get(position);
     }
@@ -53,9 +53,9 @@ public class PalaceAdapt extends BaseAdapter{
         } else {
             holder = (PalaceViewHolder) convertView.getTag();
         }
-        Defender item = getItem(position);
+        String item = getItem(position);
         if (item != null) {
-            holder.name1.setText(Html.fromHtml(item.toString()));
+            holder.name1.setText(Html.fromHtml(item));
         } else {
             holder.name1.setText("");
         }

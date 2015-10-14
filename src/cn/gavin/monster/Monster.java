@@ -78,7 +78,7 @@ public class Monster {
 
     public static Monster getBoss(Maze maze, Hero hero) {
         Random random = new Random();
-        Monster monster = Defender.buildDefender(maze.getLev());
+        Monster monster = PalaceMonster.getDefender(maze.getLev());
         if (monster == null) {
             if (random.nextInt(100) < 25) {
                 return null;

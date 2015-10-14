@@ -11,23 +11,19 @@ import java.util.Stack;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.CountListener;
 import cn.bmob.v3.listener.FindListener;
-import cn.gavin.Hero;
 import cn.gavin.activity.BaseContext;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
-import cn.gavin.maze.Palace;
 import cn.gavin.upload.PalaceObject;
-import cn.gavin.utils.Random;
-import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 gluo.
  * ALL RIGHTS RESERVED.
  * Created by gluo on 10/9/2015.
  */
-public class PalaceMonster{
+public class PalaceMonster {
 
-    public static void updatePalace(final MainGameActivity context){
+    public static void updatePalace(final MainGameActivity context) {
         BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
         query.setLimit(context.getPalaceCount());
         query.findObjects(context, new FindListener<PalaceObject>() {
@@ -36,7 +32,7 @@ public class PalaceMonster{
                 context.getHandler().post(new Runnable() {
                     @Override
                     public void run() {
-                        for(PalaceObject object : palaceObjects){
+                        for (PalaceObject object : palaceObjects) {
                             object.save();
                         }
                     }
@@ -51,9 +47,9 @@ public class PalaceMonster{
         });
     }
 
-    public static void getPalaceCount(final BaseContext context){
+    public static void getPalaceCount(final BaseContext context) {
         BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
-        query.count((Context) context , PalaceObject.class, new CountListener() {
+        query.count((Context) context, PalaceObject.class, new CountListener() {
             @Override
             public void onSuccess(int i) {
                 Message message = new Message();
@@ -94,7 +90,23 @@ public class PalaceMonster{
         db.execSQL(addDefender);
     }
 
-    public static Monster getDefender(long lev){
+    public static Monster getDefender(long lev) {
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM palace WHERE lev = '" + lev + "'");
+        if (!cursor.isAfterLast()) {
+            long atk = Long.parseLong(cursor.getString(cursor.getColumnIndex("atk")));
+            long hp = Long.parseLong(cursor.getString(cursor.getColumnIndex("hp"))) + Long.parseLong(cursor.getString(cursor.getColumnIndex("def")));
+            return new Monster("", "【守护者】", cursor.getString(cursor.getColumnIndex("name")), atk, hp);
+        }
+        return null;
+    }
+
+    public static Stack<String> getPalaceListString() {
+        Stack<String> palaces = new Stack<String>();
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT name, lev, hello FROM palace ORDER BY lev DESC");
+        while (!cursor.isAfterLast()) {
+            palaces.push("<font color=\"red\">" + cursor.getString(cursor.getColumnIndex("name")) + "</font> - " + cursor.getString(cursor.getColumnIndex("lev")) + "---" + cursor.getString(cursor.getColumnIndex("hello")));
+            cursor.moveToNext();
+        }
+        return palaces;
     }
 }
