@@ -1,6 +1,7 @@
 package cn.gavin.upload;
 
 import cn.bmob.v3.BmobObject;
+import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
 
 /**
@@ -21,10 +22,6 @@ public class PalaceObject extends BmobObject {
     private String pay;
     private Long lev;
     private String hello;
-
-    public PalaceObject() {
-        setTableName("uploader");
-    }
 
     public String getName() {
         return name;
@@ -116,8 +113,8 @@ public class PalaceObject extends BmobObject {
 
     public void save(){
         DBHelper.getDbHelper().excuseSQLWithoutResult(String.format(
-                "INSERT INTO palace ( name, atk, hp, lev, def, parry, hit_rate,skill, skill1, skill2, hello, pay) " +
-                        "values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",name, atk,hp,lev,def,parry,hitRate,skill,skill1,skill2, hello, pay));
+                "REPLACE INTO palace ( id,name, atk, hp, lev, def, parry, hit_rate,skill, skill1, skill2, hello, pay) " +
+                        "values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",getObjectId(),name, atk,hp,lev,def,parry,hitRate,skill,skill1,skill2, hello, pay));
     }
 
     public void setHello(String hello) {

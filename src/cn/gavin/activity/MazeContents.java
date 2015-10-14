@@ -19,4 +19,7 @@ public class MazeContents {
         return maze;
     }
 
+    public static final String PALACE_TABLE_NAME = "uploader";
+
+
 }

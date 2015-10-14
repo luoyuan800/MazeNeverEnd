@@ -105,6 +105,8 @@ public class LoadHelper {
         heroN.setReincaCount(preferences.getLong("reincaCount",0));
         heroN.setHitRate(preferences.getLong("hitRate", 0));
         heroN.setParry(preferences.getFloat("parry", 0));
+        heroN.setDodgeRate(preferences.getFloat("dodgeRate", 0));
+        heroN.setClickPointAward(preferences.getLong("clickPointAward", 0));
         MazeContents.hero = heroN;
         MazeContents.maze = maze;
     }

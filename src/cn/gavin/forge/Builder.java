@@ -2,13 +2,20 @@ package cn.gavin.forge;
 
 import android.database.Cursor;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MazeContents;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
-
-import java.util.*;
 
 /**
  * Copyright 2015 gluo.
@@ -27,21 +34,21 @@ public abstract class Builder {
         if (this.items != items || !items.containsAll(this.items)) {
             detect(items);
         }
-        if(isEnough()){
-        int p = random.nextInt(100);
-        if (a1 != null && p < a1.getPro()) {
-            build(a1, false);
-            return a1;
-        } else if (a2 != null && p < a2.getPro()) {
-            build(a2, false);
-            return a2;
+        if (isEnough()) {
+            int p = random.nextInt(100);
+            if (a1 != null && p < a1.getPro()) {
+                build(a1, false);
+                return a1;
+            } else if (a2 != null && p < a2.getPro()) {
+                build(a2, false);
+                return a2;
+            } else {
+                Accessory accessory = new Accessory();
+                buildName(accessory);
+                build(accessory, true);
+                return accessory;
+            }
         } else {
-            Accessory accessory = new Accessory();
-            buildName(accessory);
-            build(accessory, true);
-            return accessory;
-        }
-        }else{
             return null;
         }
     }
@@ -63,7 +70,7 @@ public abstract class Builder {
         } else if (names.containsAll(Arrays.asList("黑", "硝"))) {
             names.clear();
             names.add("火神");
-        } else if(names.containsAll(Arrays.asList("龙", "凤","虎","牛"))){
+        } else if (names.containsAll(Arrays.asList("龙", "凤", "虎", "牛"))) {
             names.clear();
             names.add("小田螺の");
         }
@@ -126,10 +133,10 @@ public abstract class Builder {
         }
         EnumMap<Effect, Number> affectEffects = new EnumMap<Effect, Number>(Effect.class);
 
-        for(EnumMap.Entry<Effect, Number> entry : effectNumberMap.entrySet()){
-            if(affectEffects.size() > 0){
-                if(random.nextBoolean()) affectEffects.put(entry.getKey(), entry.getValue());
-            }else{
+        for (EnumMap.Entry<Effect, Number> entry : effectNumberMap.entrySet()) {
+            if (affectEffects.size() > 0) {
+                if (random.nextBoolean()) affectEffects.put(entry.getKey(), entry.getValue());
+            } else {
                 affectEffects.put(entry.getKey(), entry.getValue());
             }
         }
@@ -258,100 +265,115 @@ public abstract class Builder {
         a2 = null;
         this.items = items;
         StringBuilder builder = new StringBuilder();
-        try{
-        Cursor cursor = queryRecipe();
-        while (!cursor.isAfterLast()) {
-            float pro = 0.0f;
-            Set<String> recipeItemSet = new HashSet<String>(5);
-            for (String name : StringUtils.split(cursor.getString(cursor.getColumnIndex("items")), "-")) {
-                recipeItemSet.add(name.trim());
+        try {
+            Cursor cursor = queryRecipe();
+            while (!cursor.isAfterLast()) {
+                float pro = 0.0f;
+                ArrayList<String> recipeItemList = new ArrayList<String>(5);
+                for (String name : StringUtils.split(cursor.getString(cursor.getColumnIndex("items")), "-")) {
+                    recipeItemList.add(name.trim());
+                }
+                int p = 80 / recipeItemList.size()*2;
+                ArrayList<String> itemNames = new ArrayList<String>(items.size());
+                for (Item item : items) {
+                    itemNames.add(item.getName().name());
+                }
+                Boolean isUser = Boolean.getBoolean(cursor.getString(cursor.getColumnIndex("user")));
+                String color = cursor.getString(cursor.getColumnIndex("color"));
+                if(itemNames.size() == recipeItemList.size()) {
+                    for (String name : itemNames) {
+                        if (recipeItemList.indexOf(name) == itemNames.indexOf(name)) {
+                            pro += p;
+                        }
+                    }
+                }
+                for (String name : itemNames) {
+                    if (recipeItemList.contains(name)) {
+                        pro += p;
+                        recipeItemList.remove(name);
+                    }
+                }
+                Map<Effect, Number> baseEffectsMap = new EnumMap<Effect, Number>(Effect.class);
+                for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
+                    String[] keyValue = StringUtils.split(str, ":");
+                    if (keyValue.length > 1) {
+                        baseEffectsMap.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                    }
+                }
+                Map<Effect, Number> additionEffectsMap = new EnumMap<Effect, Number>(Effect.class);
+                for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")) {
+                    String[] keyValue = StringUtils.split(str, ":");
+                    if (keyValue.length > 1) {
+                        additionEffectsMap.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                    }
+                }
+                if (a1 == null || a1.getPro() < pro) {
+                    a1 = new Accessory();
+                    a1.setPro(pro);
+                    a1.setName(cursor.getString(cursor.getColumnIndex("name")));
+                    a1.setColor(color);
+                    a1.setAdditionEffects(additionEffectsMap);
+                    a1.setEffects(baseEffectsMap);
+                } else if (a2 == null || a2.getPro() < pro) {
+                    a2 = new Accessory();
+                    a2.setPro(pro);
+                    a2.setName(cursor.getString(cursor.getColumnIndex("name")));
+                    a2.setColor(color);
+                    a2.setAdditionEffects(additionEffectsMap);
+                    a2.setEffects(baseEffectsMap);
+                }
+                cursor.moveToNext();
             }
-            int p = 85 / recipeItemSet.size();
-            Set<String> itemNames = new HashSet<String>(items.size());
-            for (Item item : items) {
-                itemNames.add(item.getName().name());
-            }
-            for (String name : itemNames) {
-                if (recipeItemSet.contains(name)) {
-                    pro += p;
+            if (a1 != null && a2 != null) {
+                if ("#FF8C00".equals(a1.getColor())) {
+                    a1.setPro(a1.getPro() / 2);
+                }
+                if ("#FF8C00".equals(a2.getColor())) {
+                    a1.setPro(a1.getPro() / 2);
+                }
+                if ((a1.getPro() + a2.getPro()) >= 100) {
+                    if (a1.getPro() >= a2.getPro()) {
+                        a2.setPro((100 - a1.getPro()) / 2);
+                    } else {
+                        a1.setPro((100 - a2.getPro()) / 2);
+                    }
+                }
+                if (a1.getPro() > 100) {
+                    a1.setPro(100);
+                    a2 = null;
+                } else if (a2.getPro() > 100) {
+                    a2.setPro(100);
+                    a1 = null;
                 }
             }
-            Map<Effect, Number> baseEffectsMap = new EnumMap<Effect, Number>(Effect.class);
-            for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
-                String[] keyValue = StringUtils.split(str, ":");
-                if (keyValue.length > 1) {
-                    baseEffectsMap.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
-                }
+            if (a1 != null && a1.getPro() > 0) {
+                builder.append("<font color=\"").append(a1.getColor()).append("\">");
+                builder.append(a1.getName()).append(" : ").append(a1.getPro()).append("%</font>");
             }
-            Map<Effect, Number> additionEffectsMap = new EnumMap<Effect, Number>(Effect.class);
-            for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")) {
-                String[] keyValue = StringUtils.split(str, ":");
-                if (keyValue.length > 1) {
-                    additionEffectsMap.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
-                }
+            if (a2 != null && a2.getPro() > 0) {
+                builder.append("<br>").append("<font color=\"").append(a2.getColor()).append("\">");
+                builder.append(a2.getName()).append(" : ").append(a2.getPro()).append("%</font>");
             }
-            if (a1 == null || a1.getPro() < pro) {
-                a1 = new Accessory();
-                a1.setPro(pro);
-                a1.setName(cursor.getString(cursor.getColumnIndex("name")));
-                a1.setColor(cursor.getString(cursor.getColumnIndex("color")));
-                a1.setAdditionEffects(additionEffectsMap);
-                a1.setEffects(baseEffectsMap);
-            } else if (a2 == null || a2.getPro() < pro) {
-                a2 = new Accessory();
-                a2.setPro(pro);
-                a2.setName(cursor.getString(cursor.getColumnIndex("name")));
-                a2.setColor(cursor.getString(cursor.getColumnIndex("color")));
-                a2.setAdditionEffects(additionEffectsMap);
-                a2.setEffects(baseEffectsMap);
+            float normalP = 100.0f;
+            if (a1 != null && a2 != null && (a1.getPro() + a2.getPro()) < 100) {
+                normalP = 100 - a1.getPro() - a2.getPro();
+            } else if (a2 == null && a1 != null) {
+                normalP = 100 - a1.getPro();
+            } else if (a1 == null && a2 != null) {
+                normalP = 100 - a2.getPro();
             }
-            cursor.moveToNext();
-        }
-        if (a1 != null && a2 != null) {
-            if("#FF8C00".equals(a1.getColor())){
-                a1.setPro(a1.getPro()/2);
+            if (normalP > 0) {
+                builder.append("<br>").append("??? : ").append(normalP);
             }
-            if("#FF8C00".equals(a2.getColor())){
-                a1.setPro(a1.getPro()/2);
-            }
-            if ((a1.getPro() + a2.getPro()) >= 100) {
-                if (a1.getPro() >= a2.getPro()) {
-                    a2.setPro((100 - a1.getPro()) / 2);
-                } else {
-                    a1.setPro((100 - a2.getPro()) / 2);
-                }
-            }
-            if (a1.getPro() > 100) {
-                a1.setPro(100);
-                a2 = null;
-            } else if (a2.getPro() > 100) {
-                a2.setPro(100);
-                a1 = null;
-            }
-        }
-        if (a1 != null && a1.getPro() > 0) {
-            builder.append("<font color=\"").append(a1.getColor()).append("\">");
-            builder.append(a1.getName()).append(" : ").append(a1.getPro()).append("%</font>");
-        }
-        if (a2 != null && a2.getPro() > 0) {
-            builder.append("<br>").append("<font color=\"").append(a2.getColor()).append("\">");
-            builder.append(a2.getName()).append(" : ").append(a2.getPro()).append("%</font>");
-        }
-        float normalP = 100.0f;
-        if (a1 != null && a2 != null && (a1.getPro() + a2.getPro()) < 100) {
-            normalP = 100 - a1.getPro() - a2.getPro();
-        } else if (a2 == null && a1 != null) {
-            normalP = 100 - a1.getPro();
-        } else if (a1 == null && a2 != null) {
-            normalP = 100 - a2.getPro();
-        }
-        if (normalP > 0) {
-            builder.append("<br>").append("??? : ").append(normalP);
-        }
-        }catch (Exception e){
+        } catch (
+                Exception e
+                )
+
+        {
             e.printStackTrace();
-            Log.e(MainGameActivity.TAG, "build_detect",e);
+            Log.e(MainGameActivity.TAG, "build_detect", e);
         }
+
         return builder.toString();
     }
 
@@ -363,5 +385,6 @@ public abstract class Builder {
     public List<Item> getItems() {
         return items;
     }
+
     public abstract String notEnough();
 }

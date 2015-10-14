@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import cn.bmob.v3.BmobObject;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
@@ -25,7 +24,7 @@ import cn.gavin.skill.type.RestoreSkill;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
-public class Hero{
+public class Hero {
     private static final String TAG = "Hero";
 
     public static Long MAX_GOODS_COUNT = 50l;
@@ -70,22 +69,26 @@ public class Hero{
     private Accessory hat;
     private Float parry = 0.0f;
     private boolean onChange = false;
-    private Long changAtk= 0l;
-    private Long changeHp= 0l;
+    private Long changAtk = 0l;
+    private Long changeHp = 0l;
     private Long changeUhp = 0l;
     private String changeName;
-    private Boolean onSkill= false;
-    private Long skillAdditionAtk=0l;
-    private Long skillAdditionDef=0l;
+    private Boolean onSkill = false;
+    private Long skillAdditionAtk = 0l;
+    private Long skillAdditionDef = 0l;
     private Long skillAdditionHp = 0l;
     private Long reincaCount = 0l;
-    private Long hitRate = 1l;
+    private Long hitRate = 0l;
     private Long pay = 0l;
+    private String hello =  "你是不可能超越我的！";
+    private Float dodgeRate = 0f;
+    private Long clickPointAward = 0l;
 
-    public Float getParry(){
+    public Float getParry() {
         return parry;
     }
-    public void setParry(float parry){
+
+    public void setParry(float parry) {
         this.parry = parry;
     }
 
@@ -163,7 +166,7 @@ public class Hero{
             } else if (this.hp < (Integer.MAX_VALUE - hp - 100)) {
                 this.hp += hp;
             }
-            if (this.hp <= 0 && getSkillAdditionHp() <=0) {
+            if (this.hp <= 0 && getSkillAdditionHp() <= 0) {
                 this.hp = 0l;
                 deathCount++;
                 if (deathCount == 10000) {
@@ -191,12 +194,13 @@ public class Hero{
     }
 
     private Boolean isHit = false;
+
     public Long getAttackValue() {
         long atk = isOnChange() ? changAtk : (attackValue + random.nextLong(sword.getBase()) + random.nextLong(swordLev + 1) * DEF_RISE + getSkillAdditionAtk());
-        if(random.nextInt(1000) < hitRate){
-            atk += atk/3;
+        if ((100 + random.nextLong(1000 + getStrength())) < random.nextLong(getDodgeRate().longValue() + getStrength()/10000)) {
+            atk += atk / 3;
             isHit = true;
-        }else{
+        } else {
             isHit = false;
         }
         return atk;
@@ -462,15 +466,18 @@ public class Hero{
     public Long getClick() {
         return click;
     }
-private Long latestClick = 0l;
+
+    private Long latestClick = 0l;
+
     public void click(boolean award) {
-        if((System.currentTimeMillis() - latestClick) > 103) {
+        if ((System.currentTimeMillis() - latestClick) > 103) {
             if (click < Integer.MAX_VALUE - 10) {
                 if (this.click % 1000 == 0) {
                     point += random.nextLong(15);
                 }
                 if (award) {
                     this.material += clickAward;
+                    this.point += clickPointAward;
                 }
                 this.click++;
                 switch (click.intValue()) {
@@ -551,12 +558,14 @@ private Long latestClick = 0l;
     }
 
     public void addUpperHp(long hp) {
-        if ((this.upperHp + hp) > 9) {
-            this.upperHp += hp;
-        } else {
-            upperHp = 10l;
+        if(this.upperHp + hp < Long.MAX_VALUE - 1000) {
+            if ((this.upperHp + hp) > 9) {
+                this.upperHp += hp;
+            } else {
+                upperHp = 10l;
+            }
+            //addHp(hp);
         }
-        //addHp(hp);
     }
 
     public void setAttackValue(long attackValue) {
@@ -727,6 +736,12 @@ private Long latestClick = 0l;
         EnumMap<Effect, Long> effectLongEnumMap = getAccessoryEffectMap(accessory);
         for (EnumMap.Entry<Effect, Long> effect : effectLongEnumMap.entrySet()) {
             switch (effect.getKey()) {
+                case ADD_DODGE_RATE:
+                    setDodgeRate(dodgeRate + effect.getValue());
+                    break;
+                case ADD_CLICK_POINT_AWARD:
+                    setClickPointAward(clickPointAward + effect.getValue());
+                    break;
                 case ADD_HIT_RATE:
                     setHitRate(hitRate + effect.getValue());
                     break;
@@ -762,7 +777,12 @@ private Long latestClick = 0l;
         EnumMap<Effect, Long> effectLongEnumMap = getAccessoryEffectMap(accessory);
         for (EnumMap.Entry<Effect, Long> effect : effectLongEnumMap.entrySet()) {
             switch (effect.getKey()) {
-                case ADD_HIT_RATE:
+                case ADD_DODGE_RATE:
+                    setDodgeRate(dodgeRate - effect.getValue());
+                    break;
+                case ADD_CLICK_POINT_AWARD:
+                    setClickPointAward(clickPointAward - effect.getValue());
+                    break;case ADD_HIT_RATE:
                     setHitRate(hitRate - effect.getValue());
                     break;
                 case ADD_STR:
@@ -845,7 +865,7 @@ private Long latestClick = 0l;
     }
 
     public void reincarnation() {
-        long mate = (reincaCount+1) * 300101;
+        long mate = (reincaCount + 1) * 300101;
         if (material < mate) {
             Toast.makeText(MainGameActivity.context, "锻造点数不足" + mate + "！" + getName(), Toast.LENGTH_SHORT).show();
         } else {
@@ -897,14 +917,14 @@ private Long latestClick = 0l;
             Achievement.reBird.enable(this);
             dbHelper.endTransaction();
             MainGameActivity.context.addMessage(getFormatName() + "成功转生！");
-            reincaCount ++;
+            reincaCount++;
         }
     }
 
-    private void addReincarnation(String name, long hp, long atk, long lev, Skill skill){
+    private void addReincarnation(String name, long hp, long atk, long lev, Skill skill) {
         String sql = String.format("REPLACE INTO hero(name, lev, hp, skill, skill_lev,  atk) " +
-                "values('%s','%s','%s','%s','%s','%s')",
-                name, lev,hp,(skill==null?"重击":skill.getName()),(skill==null? 10: ((skill.getCount()/1000)+ 1)), atk);
+                        "values('%s','%s','%s','%s','%s','%s')",
+                name, lev, hp, (skill == null ? "重击" : skill.getName()), (skill == null ? 10 : ((skill.getCount() / 1000) + 1)), atk);
         DBHelper.getDbHelper().excuseSQLWithoutResult(sql);
     }
 
@@ -1015,7 +1035,7 @@ private Long latestClick = 0l;
     }
 
     public void setHitRate(long hitRate) {
-        if(hitRate>18){
+        if (hitRate > 18) {
             hitRate = 15;
         }
         this.hitRate = hitRate;
@@ -1031,5 +1051,35 @@ private Long latestClick = 0l;
 
     public Long getPay() {
         return pay;
+    }
+
+    public String getHello() {
+        return hello;
+    }
+
+    public void setHello(String hello) {
+        this.hello = hello;
+    }
+
+    public Float getDodgeRate() {
+        return dodgeRate;
+    }
+
+    public void setDodgeRate(Float dodgeRate) {
+        if(dodgeRate > 100){
+            dodgeRate = 100f;
+        }
+        if(dodgeRate < 0) {
+        dodgeRate = 0f;
+        }
+        this.dodgeRate = dodgeRate;
+    }
+
+    public Long getClickPointAward() {
+        return clickPointAward;
+    }
+
+    public void setClickPointAward(Long clickPointAward) {
+        this.clickPointAward = clickPointAward;
     }
 }

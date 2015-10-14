@@ -73,7 +73,17 @@ public enum Effect {
             if (award <= 10) award = random.nextLong(hero.getMaxMazeLev() + 1) + 10;
             return award;
         }
-    }, "增加点击奖励"),
+    }, "增加点击锻造点数奖励"),
+    ADD_CLICK_POINT_AWARD(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            Random random = hero.getRandom();
+            long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 500 + 1) + 1;
+            if (award <= 2) award = 1;
+            if (award >= 10) award = random.nextLong(10) + 1;
+            return award;
+        }
+    }, "增加点击能力点数奖励"),
     ADD_HIT_RATE(new Calculate() {
         @Override
         public Number calculate(Hero hero, Monster monster) {
@@ -83,6 +93,15 @@ public enum Effect {
             return award;
         }
     }, "增加暴击率"),
+    ADD_DODGE_RATE(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            Random random = hero.getRandom();
+            long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 500 + 1) + 1;
+            if (award >= 10) award = random.nextLong(10) + 1;
+            return award;
+        }
+    }, "增加闪避率"),
     ADD_PARRY(new Calculate() {
         @Override
         public Number calculate(Hero hero, Monster monster) {

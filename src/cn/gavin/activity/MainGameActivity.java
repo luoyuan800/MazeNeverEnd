@@ -211,6 +211,12 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         public void handleMessage(Message msg) {
             try {
                 switch (msg.what) {
+                    case 107:
+                        showPalaceDetail();
+                        break;
+                    case 106:
+                        updatePalace = false;
+                        break;
                     case 203:
                         palaceCount = msg.arg1;
                         break;
@@ -741,8 +747,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         dialog.show();
     }
 
-    private void showPalace() {
-        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT count(*) FROM palace");
+    private void showPalaceDetail() {
         final AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("殿堂");
 
@@ -767,47 +772,69 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
                 });
 
-        if (true) {
-            ListView listView = new ListView(this);
-            PalaceAdapt palaceAdapt = new PalaceAdapt();
-            listView.setAdapter(palaceAdapt);
-            dialog.setView(listView);
-            dialog.show();
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
-        } else {
-            updatePalace = true;
-            this.getHandler().post(new Runnable() {
-                @Override
-                public void run() {
-                    PalaceMonster.updatePalace(context);
-                }
-            });
+        ListView listView = new ListView(this);
+        PalaceAdapt palaceAdapt = new PalaceAdapt();
+        listView.setAdapter(palaceAdapt);
+        dialog.setView(listView);
+        dialog.show();
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+    }
 
-            final ProgressDialog progressDialog = new ProgressDialog(context);
-            progressDialog.setTitle("正在更新殿堂数据");
-            progressDialog.show();
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    int count = 0;
-                    while (updatePalace || count == 1000) {
-                        try {
-                            Thread.sleep(refreshInfoSpeed);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                            e.printStackTrace();
+    private void showPalace() {
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT count(*) FROM palace");
+
+        if (palaceCount == 0 || cursor.getLong(0) == palaceCount) {
+            handler.sendEmptyMessage(107);
+        } else {
+            AlertDialog updateAlert = new Builder(this).create();
+            updateAlert.setTitle("殿堂更新了，是否下载数据？");
+            updateAlert.setButton(DialogInterface.BUTTON_NEGATIVE, "不更新",
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            handler.sendEmptyMessage(107);
                         }
-                        count++;
-                    }
-                    progressDialog.dismiss();
-                    ListView listView = new ListView(context);
-                    PalaceAdapt palaceAdapt = new PalaceAdapt();
-                    listView.setAdapter(palaceAdapt);
-                    dialog.setView(listView);
-                    dialog.show();
-                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
-                }
-            });
+
+                    });
+            updateAlert.setButton(DialogInterface.BUTTON_POSITIVE, "更新殿堂",
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            updatePalace = true;
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    PalaceMonster.updatePalace(context);
+                                }
+                            }.start();
+
+                            final ProgressDialog progressDialog = new ProgressDialog(context);
+                            progressDialog.setTitle("正在更新殿堂数据");
+                            progressDialog.show();
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    int count = 0;
+                                    while (updatePalace && count < 10000) {
+                                        try {
+                                            Thread.sleep(refreshInfoSpeed);
+                                        } catch (InterruptedException e) {
+                                            Thread.currentThread().interrupt();
+                                            e.printStackTrace();
+                                        }
+                                        count++;
+                                    }
+                                    progressDialog.dismiss();
+                                    handler.sendEmptyMessage(107);
+                                }
+                            }.start();
+                        }
+                    });
+            updateAlert.show();
         }
     }
 
@@ -992,18 +1019,20 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private void showUpload() {
         final AlertDialog dialog = new Builder(this).create();
         LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
         TextView info = new TextView(this);
         info.setText("上传勇者角色信息到服务器，下个版本您的角色将会作为迷宫的守护者拦截各个挑战的勇者。\n" +
-                "上传成功后，下一次上传必须是再前进100层迷宫之后。");
+                "上传成功后，下一次上传必须是再前进100层迷宫之后。\n输入您的口号：\n");
         linearLayout.addView(info);
-        /*EditText textView = new EditText(this);
+        final EditText textView = new EditText(this);
         textView.setText("遇見了吾，你將止步於此！");
-        linearLayout.addView(textView);*/
+        linearLayout.addView(textView);
         dialog.setView(linearLayout);
         dialog.setTitle("上传角色信息");
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                heroN.setHello(textView.getText().toString());
                 handler.sendEmptyMessage(101);
                 dialog.dismiss();
             }
@@ -1382,11 +1411,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         handler.sendEmptyMessage(202);
                     }
                     br.close();
-                    PalaceMonster.getPalaceCount(context);
                 } catch (Exception e) {
                     e.printStackTrace();
                     handler.sendEmptyMessage(201);
                 }
+                PalaceMonster.getPalaceCount(context);
             }
         }).start();
 

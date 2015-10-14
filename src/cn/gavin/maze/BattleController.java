@@ -45,15 +45,23 @@ public class BattleController {
                     }
                 }
             }
-                hero.addHp(-harm);
+            String defmsg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了<font color=\"red\">" + harm + "</font>点伤害。";
+            addMessage(context, defmsg);
+            monster.addBattleDesc(defmsg);
+            if((100 + random.nextLong(100 + hero.getAgility())) < random.nextLong(hero.getDodgeRate().longValue() + hero.getAgility()/10000)){
+                String dodgeMsg = hero.getFormatName() + "身手敏捷的闪开了" + monster.getFormatName() + "的攻击";
+                addMessage(context, dodgeMsg);
+                monster.addBattleDesc(dodgeMsg);
+            }else {
                 if (hero.isParry()) {
                     String parrymsg = hero.getFormatName() + "成功格挡一次攻击，减少了当前受到的伤害！";
                     addMessage(context, parrymsg);
                     monster.addBattleDesc(parrymsg);
                 }
-                String defmsg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了<font color=\"red\">" + harm + "</font>点伤害。";
-                addMessage(context, defmsg);
-                monster.addBattleDesc(defmsg);
+            }
+            hero.addHp(-harm);
+
+
         }
         return isJump;
     }

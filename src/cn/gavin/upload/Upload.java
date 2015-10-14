@@ -30,6 +30,7 @@ public class Upload {
         new Thread(){
             public void run(){
                 PalaceObject object = new PalaceObject();
+                object.setHello(hero.getHello());
                 object.setAtk(hero.getUpperAtk().toString());
                 object.setDef(hero.getUpperDef().toString());
                 object.setHitRate(hero.getHitRate().toString());

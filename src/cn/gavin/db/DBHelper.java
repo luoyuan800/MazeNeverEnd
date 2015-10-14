@@ -95,7 +95,14 @@ public class DBHelper {
                     ")";
             db.execSQL(createTable);
             db.execSQL("CREATE UNIQUE INDEX monster_index ON monster (name)");
-
+            createTable = "CREATE TABLE npc(" +
+                    "name TEXT NOT NULL PRIMARY KEY," +
+                    "atk TEXT," +
+                    "hp TEXT," +
+                    "lev TEXT" +
+                    ")";
+            db.execSQL(createTable);
+            db.execSQL("CREATE UNIQUE INDEX npc_index ON npc (name,lev)");
             ForgeDB forgeDB = new ForgeDB();
             forgeDB.createTable(db);
             PalaceMonster.createDB(db);
@@ -144,7 +151,24 @@ public class DBHelper {
             Log.e("MazeNeverEnd",e.getMessage());
             LogHelper.writeLog();
         }
-
+        try {
+            if (oldVersion == 11) {
+                PalaceMonster.createDB(db);
+                String createTable = "CREATE TABLE npc(" +
+                        "name TEXT NOT NULL PRIMARY KEY," +
+                        "atk TEXT," +
+                        "hp TEXT," +
+                        "lev TEXT" +
+                        ")";
+                db.execSQL(createTable);
+                db.execSQL("CREATE UNIQUE INDEX npc_index ON npc (name,lev)");
+                new ForgeDB().upgradeTo1_4(database);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("MazeNeverEnd",e.getMessage());
+            LogHelper.writeLog();
+        }
     }
 
     private static DBHelper dbHelper;

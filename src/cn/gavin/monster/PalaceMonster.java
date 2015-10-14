@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Message;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Stack;
@@ -23,26 +24,26 @@ import cn.gavin.upload.PalaceObject;
  */
 public class PalaceMonster {
 
+
     public static void updatePalace(final MainGameActivity context) {
         BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
         query.setLimit(context.getPalaceCount());
         query.findObjects(context, new FindListener<PalaceObject>() {
             @Override
             public void onSuccess(final List<PalaceObject> palaceObjects) {
-                context.getHandler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (PalaceObject object : palaceObjects) {
-                            object.save();
-                        }
-                    }
-                });
-                context.getHandler().sendEmptyMessage(105);
+                DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM palace");
+                for (PalaceObject object : palaceObjects) {
+                    object.save();
+                }
+                context.getHandler().sendEmptyMessage(106);
             }
 
             @Override
             public void onError(int i, String s) {
-
+                Message message = new Message();
+                message.what = 106;
+                message.obj = s;
+                context.getHandler().sendEmptyMessage(106);
             }
         });
     }
@@ -61,8 +62,9 @@ public class PalaceMonster {
             @Override
             public void onFailure(int i, String s) {
                 Message message = new Message();
+                message.obj = s;
                 message.what = 203;
-                message.arg1 = 10;
+                message.arg1 = DBHelper.getDbHelper().excuseSOL("SELECT count(*) FROM palace").getInt(0);
                 context.getHandler().sendMessage(message);
             }
         });
@@ -86,8 +88,6 @@ public class PalaceMonster {
                 ")";
         db.execSQL(createTable);
         db.execSQL("CREATE UNIQUE INDEX maze_lev ON palace (name, lev)");
-        String addDefender = "INSERT INTO palace(id, name, lev, hp, atk, def,skill, skill1,skill2,parry,hit_rate,pay,hello) values('1234567890fs','我是神','10000','1931377600','1082065000','10000000','重击_5','多重攻击_5','铁拳_5','10','50','1000','你是不可能超越我的！')";
-        db.execSQL(addDefender);
     }
 
     public static Monster getDefender(long lev) {

@@ -84,6 +84,8 @@ public class SaveHelper {
         editor.putLong("reincaCount", heroN.getReincaCount());
         editor.putLong("hitRate", heroN.getHitRate());
         editor.putFloat("parry", heroN.getParry());
+        editor.putFloat("dodgeRate", heroN.getDodgeRate());
+        editor.putFloat("clickPointAward", heroN.getClickPointAward());
         editor.apply();
     }
 

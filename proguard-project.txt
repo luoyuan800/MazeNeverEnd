@@ -27,4 +27,4 @@
 -keepattributes Signature
 -keep class cn.bmob.v3.** {*;}
 -keep class cn.bmob.push.** {*;}
--keep class cn.gavin.upload.UploadObject{*;}
+-keep class cn.gavin.upload.PalaceObject{*;}
