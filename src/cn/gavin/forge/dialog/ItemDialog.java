@@ -4,11 +4,16 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Message;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -51,6 +56,24 @@ public class ItemDialog {
         itemDialog = new AlertDialog.Builder(activity).create();
         LinearLayout linearLayout = new LinearLayout(activity);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
+        EditText editText = new EditText(activity);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        linearLayout.addView(editText);
         itemDesc = new TextView(activity);
         linearLayout.addView(itemDesc);
         ListView listView = new ListView(activity);
@@ -115,8 +138,10 @@ public class ItemDialog {
         Button name4;
     }
 
-    class ItemAdapter extends BaseAdapter {
-        private final List<ItemList> adapterData = getItemListAdp();
+    class ItemAdapter extends BaseAdapter implements Filterable {
+        ArrayList<Item> list = Item.loadItems();
+
+        private List<ItemList> adapterData = getItemListAdp(list);
 
         @Override
         public int getCount() {
@@ -224,11 +249,40 @@ public class ItemDialog {
             return convertView;
         }
 
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+                    FilterResults results = new FilterResults();
+                    List<Item> newList = new ArrayList<Item>(list.size());
+                    for(Item item : list){
+                        String prefix = constraint.toString();
+                        if(item.getName().name().startsWith(prefix)){
+                            newList.add(item);
+                        }
+                    }
+                    List<ItemList> listAdp = getItemListAdp(newList);
+                    results.values = listAdp;
+                    results.count = listAdp.size();
+                    return results;
+                }
+
+                @Override
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+                        adapterData = (List<ItemList>) results.values;
+                    if (results.count > 0) {
+                        notifyDataSetChanged();
+                    } else {
+                        notifyDataSetInvalidated();
+                    }
+                }
+            };
+        }
     }
 
-    private List<ItemList> getItemListAdp() {
+    private List<ItemList> getItemListAdp(List<Item> list) {
         ItemList itemList = new ItemList();
-        ArrayList<Item> list = Item.loadItems();
         ArrayList<ItemList> rs = new ArrayList<ItemList>(list.size() / 3);
         rs.add(itemList);
         for (Item item : list) {

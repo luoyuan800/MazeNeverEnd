@@ -81,7 +81,6 @@ public class ForgeDB {
         database.execSQL(sql);
     }
     public void upgradeTo1_4(SQLiteDatabase database){
-        database.execSQL("CREATE UNIQUE INDEX recipe_index ON recipe (name)");
         String base = "INSERT INTO recipe (name, items, base, addition, found, user, type, color) values ('%s', '%s','%s','%s','false','false','%s','%s')";
         String sql = String.format(base,"沁玟之永恒", "龙筋-冷杉木-冷杉木-冷杉木-冷杉木",
                 "ADD_POWER:1000000-ADD_AGI:1000000-ADD_STR:1000000","ADD_CLICK_AWARD:2000", NecklaceBuilder.type,"#FF8C00");
