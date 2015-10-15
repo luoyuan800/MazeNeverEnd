@@ -39,7 +39,7 @@ public class Hero {
     private Long click = 0l;
     private String name;
     private Long hp = 0l;//当前
-    private Long upperHp = 0l;//上限值
+    private Long upperHp = 10l;//上限值
     private Long attackValue = 0l;
     private Long defenseValue = 0l;
     public Long level = 1l;
@@ -403,7 +403,7 @@ public class Hero {
         }
         if (power < 0) power = 0l;
         if (hp < 0) hp = 0l;
-        if (upperHp < 0) upperHp = 0l;
+        if (upperHp < 0) upperHp = 20l;
     }
 
     public Long getAgility() {
@@ -722,10 +722,9 @@ public class Hero {
     public synchronized void setRing(Accessory ring) {
         cleanEffect();
         if (ring != null) {
-            if (this.ring != null && ring.getId().equalsIgnoreCase(this.ring.getId())) {
-                return;
+            if (this.ring == null ||!(ring.getId().equalsIgnoreCase(this.ring.getId()))) {
+                this.ring = ring;
             }
-            this.ring = ring;
         } else {
             this.ring = null;
         }
@@ -821,10 +820,9 @@ public class Hero {
     public synchronized void setNecklace(Accessory necklace) {
         cleanEffect();
         if (necklace != null) {
-            if (this.necklace != null && necklace.getId().equalsIgnoreCase(this.necklace.getId())) {
-                return;
+            if (this.necklace == null ||!(necklace.getId().equalsIgnoreCase(this.necklace.getId()))) {
+                this.necklace = necklace;
             }
-            this.necklace = necklace;
         } else {
             this.necklace = null;
         }
@@ -854,10 +852,9 @@ public class Hero {
     public synchronized void setHat(Accessory hat) {
         cleanEffect();
         if (hat != null) {
-            if (this.hat != null && hat.getId().equalsIgnoreCase(this.hat.getId())) {
-                return;
+            if (this.hat == null ||!(hat.getId().equalsIgnoreCase(this.hat.getId()))) {
+                this.hat = hat;
             }
-            this.hat = hat;
         } else {
             this.hat = null;
         }
