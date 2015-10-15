@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Message;
-import android.widget.Toast;
 
 import java.util.List;
 import java.util.Stack;
@@ -12,9 +11,11 @@ import java.util.Stack;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.CountListener;
 import cn.bmob.v3.listener.FindListener;
+import cn.gavin.BaseObject;
 import cn.gavin.activity.BaseContext;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
+import cn.gavin.skill.Skill;
 import cn.gavin.upload.PalaceObject;
 
 /**
@@ -22,7 +23,7 @@ import cn.gavin.upload.PalaceObject;
  * ALL RIGHTS RESERVED.
  * Created by gluo on 10/9/2015.
  */
-public class PalaceMonster {
+public class PalaceMonster implements BaseObject {
 
 
     public static void updatePalace(final MainGameActivity context) {
@@ -108,5 +109,35 @@ public class PalaceMonster {
             cursor.moveToNext();
         }
         return palaces;
+    }
+
+    public static Stack<PalaceMonster> getPalaceMonster() {
+        Stack<PalaceMonster> stack = new Stack<PalaceMonster>();
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM palace ORDER BY lev DESC");
+        while (!cursor.isAfterLast()) {
+            PalaceMonster monster = new PalaceMonster();
+            monster.name = cursor.getString(cursor.getColumnIndex("name"));
+            monster.hp = Long.parseLong(cursor.getString(cursor.getColumnIndex("hp")));
+            monster.atk = Long.parseLong(cursor.getString(cursor.getColumnIndex("atk")));
+            monster.def = Long.parseLong(cursor.getString(cursor.getColumnIndex("def")));
+            cursor.moveToNext();
+        }
+        return stack;
+    }
+
+    private String name;
+    private long hp, atk, def;
+    private Skill skill1, skill2, skill3;
+
+    public Long getAttackValue() {
+        return atk;
+    }
+
+    public void addHp(long hp) {
+        this.hp += hp;
+    }
+
+    public String getFormatName() {
+        return "<font color=\"#800080\">" + name + "</font>";
     }
 }

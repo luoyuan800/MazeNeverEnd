@@ -24,7 +24,7 @@ import cn.gavin.skill.type.RestoreSkill;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
-public class Hero {
+public class Hero implements BaseObject{
     private static final String TAG = "Hero";
 
     public static Long MAX_GOODS_COUNT = 50l;
@@ -83,6 +83,7 @@ public class Hero {
     private String hello =  "你是不可能超越我的！";
     private Float dodgeRate = 0f;
     private Long clickPointAward = 0l;
+    private Element element = Element.无;
 
     public Float getParry() {
         return parry;
@@ -1078,5 +1079,13 @@ public class Hero {
 
     public void setClickPointAward(Long clickPointAward) {
         this.clickPointAward = clickPointAward;
+    }
+
+    public Element getElement() {
+        return element;
+    }
+
+    public void setElement(Element element) {
+        this.element = element;
     }
 }

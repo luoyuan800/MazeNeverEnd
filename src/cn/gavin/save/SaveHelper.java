@@ -86,6 +86,7 @@ public class SaveHelper {
         editor.putFloat("parry", heroN.getParry());
         editor.putFloat("dodgeRate", heroN.getDodgeRate());
         editor.putLong("clickPointAward", heroN.getClickPointAward());
+        editor.putString("element", heroN.getElement().name());
         editor.apply();
     }
 

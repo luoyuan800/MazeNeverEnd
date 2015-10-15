@@ -260,7 +260,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
     private void initGameData() {
         // 英雄
         heroN = MazeContents.hero;
-        maze = new Palace();
+        maze = new Palace(heroN);
         monsterBook = MainGameActivity.context.getMonsterBook();
         skillDialog = MainGameActivity.context.getSkillDialog();
         // 左侧战斗信息

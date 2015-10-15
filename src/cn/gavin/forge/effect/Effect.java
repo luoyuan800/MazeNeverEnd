@@ -16,7 +16,7 @@ public enum Effect {
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
             long atk = random.nextLong((hero.getStrength() + monster.getMaxHP()) / 500 + 1);
-            if (atk <= 1000) atk = random.nextLong(hero.getMaxMazeLev() + 1) + 1000;
+            if (atk <= 500) atk = random.nextLong(hero.getMaxMazeLev() + 1) + 500;
             return atk;
         }
     }, "增加攻击上限"),
@@ -34,7 +34,7 @@ public enum Effect {
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
             long def = random.nextLong((hero.getPower() + monster.getMaterial()) / 1500 + 1);
-            if (def <= 1000) def = random.nextLong(hero.getMaxMazeLev() + 1) + 1000;
+            if (def <= 800) def = random.nextLong(hero.getMaxMazeLev() + 1) + 800;
             return def;
         }
     }, "增加防御上限"),
@@ -52,7 +52,7 @@ public enum Effect {
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
             long str = random.nextLong((hero.getAttackValue() + monster.getAtk()) / 200000 + 1);
-            if (str <= 400) str = random.nextLong(hero.getMaxMazeLev() + 1) + 399;
+            if (str <= 300) str = random.nextLong(hero.getMaxMazeLev() + 1) + 299;
             return str;
         }
     }, "增加力量"),
@@ -61,7 +61,7 @@ public enum Effect {
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
             long power = random.nextLong((hero.getHp() + monster.getHp()) / 200000 + 1) + 1;
-            if (power <= 200) power = random.nextLong(hero.getMaxMazeLev() + 1) + 199;
+            if (power <= 500) power = random.nextLong(hero.getMaxMazeLev() + 1) + 499;
             return power;
         }
     }, "增加体力"),
@@ -131,8 +131,8 @@ public enum Effect {
         Maze maze = new Maze();
         maze.setLevel(hero.getMaxMazeLev());
         Monster monster = new Monster(hero, maze);
-        if(hero.getRandom().nextInt(100) > 95){
-            monster.setMazeLev(maze.getLev()*2);
+        if (hero.getRandom().nextInt(100) > 95) {
+            monster.setMazeLev(maze.getLev() * 2);
         }
         return calculate(hero, monster).longValue();
     }

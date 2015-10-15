@@ -29,33 +29,37 @@ public class Upload {
     public boolean upload(final Hero hero){
         new Thread(){
             public void run(){
-                PalaceObject object = new PalaceObject();
-                object.setHello(hero.getHello());
-                object.setAtk(hero.getUpperAtk().toString());
-                object.setDef(hero.getUpperDef().toString());
-                object.setHitRate(hero.getHitRate().toString());
-                object.setHp(hero.getUpperHp().toString());
-                object.setName(hero.getName());
-                object.setParry(hero.getParry().toString());
-                object.setSkill(hero.getFirstSkill()!=null ? hero.getFirstSkill().getName() + "_" + hero.getFirstSkill().getCount():"");
-                object.setSkill1(hero.getSecondSkill() != null ? hero.getSecondSkill().getName() + "_" + hero.getSecondSkill().getCount() : "");
-                object.setSkill2(hero.getThirdSkill() != null ? hero.getThirdSkill().getName() + "_" + hero.getThirdSkill().getCount() : "");
-                object.setPay(hero.getPay().toString());
-                object.setLev(hero.getMaxMazeLev());
-                object.save(context, new SaveListener() {
-                    @Override
-                    public void onSuccess() {
-                        context.getHandler().sendEmptyMessage(104);
-                    }
+                if((hero.getUpperHp() + hero.getUpperDef() + hero.getUpperAtk()) < (hero.getMaxMazeLev()*590000*(hero.getPay()+ 2))) {
+                    PalaceObject object = new PalaceObject();
+                    object.setHello(hero.getHello());
+                    object.setAtk(hero.getUpperAtk().toString());
+                    object.setDef(hero.getUpperDef().toString());
+                    object.setHitRate(hero.getHitRate().toString());
+                    object.setHp(hero.getUpperHp().toString());
+                    object.setName(hero.getName());
+                    object.setParry(hero.getParry().toString());
+                    object.setSkill(hero.getFirstSkill() != null ? hero.getFirstSkill().getName() + "_" + hero.getFirstSkill().getCount() : "");
+                    object.setSkill1(hero.getSecondSkill() != null ? hero.getSecondSkill().getName() + "_" + hero.getSecondSkill().getCount() : "");
+                    object.setSkill2(hero.getThirdSkill() != null ? hero.getThirdSkill().getName() + "_" + hero.getThirdSkill().getCount() : "");
+                    object.setPay(hero.getPay().toString());
+                    object.setLev(hero.getMaxMazeLev());
+                    object.save(context, new SaveListener() {
+                        @Override
+                        public void onSuccess() {
+                            context.getHandler().sendEmptyMessage(104);
+                        }
 
-                    @Override
-                    public void onFailure(int i, String s) {
-                        Message message = new Message();
-                        message.what = 105;
-                        message.obj = s;
-                        context.getHandler().sendMessage(message);
-                    }
-                });
+                        @Override
+                        public void onFailure(int i, String s) {
+                            Message message = new Message();
+                            message.what = 105;
+                            message.obj = s;
+                            context.getHandler().sendMessage(message);
+                        }
+                    });
+                }else{
+                    context.getHandler().sendEmptyMessage(108);
+                }
             }
         }.start();
 

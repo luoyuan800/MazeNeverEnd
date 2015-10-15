@@ -3,6 +3,7 @@ package cn.gavin.monster;
 
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.Element;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.maze.Maze;
 import cn.gavin.utils.Random;
@@ -66,6 +67,7 @@ public class Monster {
     private String name;
     private float hitRate = 100.0f;
     private List<ItemName> items;
+    private Element element;
 
     public static int getIndex(String name) {
         for (int i = 0; i < lastNames.length; i++) {
@@ -94,6 +96,7 @@ public class Monster {
         monster.formatName(hero);
         monster.builder = new StringBuilder("第");
         monster.builder.append(maze.getLev()).append("层").append("<br>-------");
+        monster.element = Element.values()[random.nextInt(Element.values().length)];
         return monster;
     }
 
@@ -162,7 +165,7 @@ public class Monster {
         if (hp > hero.getAttackValue() * 19) {
             hp = hero.getAttackValue() * 20;
         }
-        if (hero.getMaterial() > 5000000) {
+        if (hero.getMaterial() > 90000000) {
             atk += random.nextLong(hero.getAttackValue()/(hero.getMaxMazeLev()+1));
             hp += random.nextLong(hero.getMaterial() / (MainGameActivity.context != null ? MainGameActivity.context.getAlipay().getPayTime() + 1 : 1) + 1);
         }
@@ -178,6 +181,7 @@ public class Monster {
         formatName(hero);
         builder = new StringBuilder("第");
         builder.append(maze.getLev()).append("层").append("<br>------------");
+        element = Element.values()[random.nextInt(Element.values().length)];
     }
 
     private void formatName(Hero hero) {
@@ -269,5 +273,13 @@ public class Monster {
 
     public String getBattleMsg() {
         return builder.toString();
+    }
+
+    public Element getElement() {
+        return element;
+    }
+
+    public void setElement(Element element) {
+        this.element = element;
     }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cn.gavin.Element;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MazeContents;
 import cn.gavin.forge.effect.Effect;
@@ -273,17 +274,18 @@ public abstract class Builder {
                 for (String name : StringUtils.split(cursor.getString(cursor.getColumnIndex("items")), "-")) {
                     recipeItemList.add(name.trim());
                 }
-                int p = 80 / (recipeItemList.size()*2);
+                float p = 85f / (recipeItemList.size()*3f);
                 ArrayList<String> itemNames = new ArrayList<String>(items.size());
                 for (Item item : items) {
                     itemNames.add(item.getName().name());
                 }
-                Boolean isUser = Boolean.getBoolean(cursor.getString(cursor.getColumnIndex("user")));
                 String color = cursor.getString(cursor.getColumnIndex("color"));
                 if(itemNames.size() == recipeItemList.size()) {
-                    for (String name : itemNames) {
-                        if (recipeItemList.indexOf(name) == itemNames.indexOf(name)) {
-                            pro += p;
+                    for (int i = 0; i< itemNames.size(); i++) {
+                        if (recipeItemList.get(i).equalsIgnoreCase(itemNames.get(i))){
+                            pro += p*2f;
+                        }else{
+                            pro -= p;
                         }
                     }
                 }

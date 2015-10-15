@@ -26,6 +26,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -73,7 +74,7 @@ import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.upload.Upload;
 
-public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener, BaseContext {
+public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener,OnItemClickListener, BaseContext {
     //Constants
     public static final String TAG = "MazeNeverEnd";
     public static final String APK_PATH = Environment.getExternalStorageDirectory() + "/maze";
@@ -211,6 +212,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         public void handleMessage(Message msg) {
             try {
                 switch (msg.what) {
+                    case 108:
+                        Toast.makeText(context, "--数据异常，上传失败!--", Toast.LENGTH_LONG)
+                                .show();
+                        Achievement.cribber.enable(heroN);
+                        break;
                     case 107:
                         showPalaceDetail();
                         break;
@@ -580,11 +586,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private void getLockBox() {
         if (getLockBoxDialog == null) {
             getLockBoxDialog = new Builder(this).create();
-            getLockBoxDialog.setTitle("32250换取一个带锁的宝箱");
+            getLockBoxDialog.setTitle("62250换取一个带锁的宝箱");
             getLockBoxDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    heroN.addMaterial(-32250);
+                    heroN.addMaterial(-62250);
                     heroN.setLockBox(heroN.getLockBox() + 1);
                     handler.sendEmptyMessage(103);
                     getLockBoxDialog.hide();
@@ -599,7 +605,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             });
         }
         getLockBoxDialog.show();
-        if (heroN.getMaterial() >= 32250) {
+        if (heroN.getMaterial() >= 62250) {
             getLockBoxDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         } else {
             getLockBoxDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -609,13 +615,13 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private void showResetSkillPointDialog() {
         AlertDialog resetSkillPointDialog;
         resetSkillPointDialog = new Builder(this).create();
-        resetSkillPointDialog.setTitle("消耗199988材料重置技能");
+        resetSkillPointDialog.setTitle("消耗399988材料重置技能");
         resetSkillPointDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        heroN.addMaterial(-199988);
+                        heroN.addMaterial(-399988);
                         heroN.setSkillPoint(heroN.getSkillPoint() + SkillFactory.reset());
                         handler.sendEmptyMessage(103);
                         dialog.dismiss();
@@ -632,7 +638,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
                 });
         resetSkillPointDialog.show();
-        if (heroN.getMaterial() > 199988) {
+        if (heroN.getMaterial() > 399988) {
             resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         } else {
             resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -1064,6 +1070,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         // 左侧战斗信息
         mainInfoSv = (ScrollView) findViewById(R.id.main_info_sv);
         mainInfoPlatform = (LinearLayout) findViewById(R.id.main_info_ll);
+        mainInfoPlatform.setOnLongClickListener(this);
         // ---- ---- 标题（人物名称 | 最深迷宫数)
         itembarContri = (TextView) findViewById(R.id.character_itembar_contribute);
         itembarContri.setOnClickListener(this);
@@ -1477,9 +1484,33 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()){
+            case R.id.main_info_ll:
+                if(isHidBattle){
+                    isHidBattle = false;
+                    mainInfoPlatform.removeAllViews();
+                }else {
+                    isHidBattle = true;
+                    mainInfoPlatform.removeAllViews();
+                    TextView textView = new TextView(this);
+                    ViewGroup.LayoutParams params = textView.getLayoutParams();
+                    params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                    textView.setLayoutParams(params);
+                    textView.setText("欢迎进群：332406332 \n举报bug和提供您的意见！");
+                    mainInfoPlatform.addView(textView);
+                }
+                break;
+        }
+        return false;
+    }
+
+
+    @Override
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+
             case R.id.palace_button:
                 showPalace();
                 break;

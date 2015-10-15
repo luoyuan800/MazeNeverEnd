@@ -181,12 +181,26 @@ public class Maze {
                     Achievement.maze1000.enable(hero);
                     break;
                 case 10000:
-                    Achievement.maze10000.enable(hero);
+                    if (Achievement.maze100.isEnable()) {
+                        Achievement.maze10000.enable(hero);
+                    } else {
+                        Achievement.cribber.enable(hero);
+                    }
                     break;
                 case 50000:
-                    Achievement.maze50000.enable(hero);
+                    if (Achievement.maze10000.isEnable()) {
+                        Achievement.maze50000.enable(hero);
+                    } else {
+                        Achievement.cribber.enable(hero);
+                    }
                     break;
 
+            }
+        }
+        if(level > 500000){
+            if(!Achievement.richer.isEnable()) {
+                addMessage(MainGameActivity.context, "您不能再前进了，前面是付费玩家的地盘！");
+                level --;
             }
         }
         if (level != 0 && level % 100 == 0) {

@@ -158,11 +158,11 @@ public class BaseSkill extends SkillLayout {
                     AttackSkill as = (AttackSkill) skill;
                     if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 1.3f);
-                        as.setAdditionHarm(as.getAdditionHarm() * 4);
                         return true;
                     }
                     if (as.getBaseHarm() < hero.getBaseAttackValue() * 100) {
                         as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 30 + 1));
+                        as.setAdditionHarm(as.getAdditionHarm() * 4);
                     }
                     return false;
                 }
@@ -353,7 +353,9 @@ public class BaseSkill extends SkillLayout {
                     context.addMessage(msg2);
                     monster.addBattleSkillDesc(msg2);
                     monster.addHp(-rHarm);
-                    hero.addHp(-(harm - rHarm));
+                    if(rHarm < harm) {
+                        hero.addHp(-(harm - rHarm));
+                    }
                     return false;
                 }
             });

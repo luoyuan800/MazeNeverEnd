@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import cn.gavin.R;
@@ -46,7 +47,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
     private Builder ringBuilder = new RingBuilder();
     private Builder hatBuilder = new HatBuilder();
     private Builder necklaceBuilder = new NecklaceBuilder();
-    List<Item> items = new ArrayList<Item>(5);
+    List<Item> items = new ArrayList<Item>();
     private Button forgeButton;
     private Button conformButton;
     private Button cleanButton;
@@ -240,7 +241,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                         resultText.setText("需要五个材料才可以进行融合");
                     }
                 }else {
-                    if (MazeContents.hero.getMaterial() >= 30250) {
+                    if (MazeContents.hero.getMaterial() >= 80250) {
                         items.clear();
                         if (item1 != null) items.add(item1);
                         if (item2 != null) items.add(item2);
@@ -271,9 +272,9 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                             resultText.setText("选择的打造材料不足，请继续添加!");
                         }
                     } else {
-                        Toast.makeText(this, "--锻造点数不足30250!--", Toast.LENGTH_SHORT)
+                        Toast.makeText(this, "--锻造点数不足80250!--", Toast.LENGTH_SHORT)
                                 .show();
-                        resultText.setText("--锻造点数不足30250!--");
+                        resultText.setText("--锻造点数不足80250!--");
                     }
                 }
         }
@@ -302,7 +303,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
         final TextView tv = new TextView(this);
         tv.setText(Html.fromHtml(accessory.toString()));
         dialog.setView(tv);
-        MazeContents.hero.addMaterial(-30250);
+        MazeContents.hero.addMaterial(-80250);
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定",
                 new DialogInterface.OnClickListener() {
 

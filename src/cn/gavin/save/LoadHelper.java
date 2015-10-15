@@ -18,6 +18,7 @@ import cn.gavin.activity.MainMenuActivity;
 import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
+import cn.gavin.Element;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.skill.SkillDialog;
@@ -107,6 +108,7 @@ public class LoadHelper {
         heroN.setParry(preferences.getFloat("parry", 0));
         heroN.setDodgeRate(preferences.getFloat("dodgeRate", 0));
         heroN.setClickPointAward(preferences.getLong("clickPointAward", 0));
+        heroN.setElement(Element.valueOf(preferences.getString("element", "无")));
         MazeContents.hero = heroN;
         MazeContents.maze = maze;
     }
