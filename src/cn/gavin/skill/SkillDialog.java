@@ -5,19 +5,11 @@ import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.*;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
-
-import java.util.List;
-
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
@@ -26,6 +18,8 @@ import cn.gavin.skill.system.EvilSkill;
 import cn.gavin.skill.system.LongSkill;
 import cn.gavin.skill.system.SwindlerSkill;
 import cn.gavin.skill.type.PropertySkill;
+
+import java.util.List;
 
 /**
  * Created by luoyuan on 9/12/15.
@@ -45,7 +39,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         this.context = context;
     }
 
-    public SkillDialog(){
+    public SkillDialog() {
 
     }
 
@@ -95,9 +89,13 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         SwindlerSkill swindlerSkill = new SwindlerSkill(context);
         swindlerSkill.init(this);
 
+        LongSkill longSkill = new LongSkill(context);
+        longSkill.init(this);
+
         viewFlipper.addView(baseSkill);
         viewFlipper.addView(evilSkill);
         viewFlipper.addView(swindlerSkill);
+        viewFlipper.addView(longSkill);
         linearLayout.addView(viewFlipper);
         detector = new GestureDetector(context, this);
         alertDialog.setView(view);
@@ -131,7 +129,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
     }
 
     int index = 0;
-    String[] systemNames = {"勇者技能", "魔王技能", "欺诈师技能"};
+    String[] systemNames = {"勇者技能", "魔王技能", "欺诈师技能", "龙裔技能"};
 
     private String getNextSystemName() {
         if (index >= systemNames.length - 1) {
@@ -140,6 +138,28 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
             index++;
         }
         return systemNames[index];
+    }
+
+    private void setBak() {
+        switch (index) {
+            case 3:
+                final View view = viewFlipper.getCurrentView();
+                if (view != null) {
+                    view.setBackgroundResource(R.drawable.long_bak);
+                    new Thread(){
+                        public void run(){
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            view.setBackground(null);
+
+                        }
+                    }.start();
+                }
+                break;
+        }
     }
 
     private String getPrevSystemName() {
