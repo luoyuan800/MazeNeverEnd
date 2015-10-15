@@ -153,7 +153,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            view.setBackground(null);
+                            view.setBackgroundResource(android.R.color.background_light);
 
                         }
                     }.start();
