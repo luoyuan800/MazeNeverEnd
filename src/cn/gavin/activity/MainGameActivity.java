@@ -1505,6 +1505,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 if (heroN.getKeyCount() > 0 && heroN.getLockBox() > 0) {
                     heroN.setKeyCount(heroN.getKeyCount() - 1);
                     showLockBox();
+                    heroN.click(false);
                 }
                 break;
             case R.id.transfer_button:

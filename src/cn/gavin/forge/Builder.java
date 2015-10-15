@@ -117,14 +117,14 @@ public abstract class Builder {
                 Number number = effectNumberMap.get(effect);
                 if (number != null) {
                     effectNumberMap.put(effect, number.longValue() + random.nextLong((number.longValue() + item.getEffectValue().longValue()) / 3 + 1));
-                } else {
+                } else{
                     effectNumberMap.put(effect, item.getEffectValue().longValue());
                 }
             }
             Effect effect1 = item.getEffect1();
             if (effect1 != null) {
                 Number number = effectNumberMap.get(effect1);
-                if (number != null) {
+                if (number != null&& number.longValue()!=0) {
                     effectNumberMap.put(effect1, number.longValue() + random.nextLong((number.longValue() + item.getEffect1Value().longValue()) / 2 + 1));
                 } else {
                     effectNumberMap.put(effect1, item.getEffect1Value().longValue());
@@ -273,7 +273,7 @@ public abstract class Builder {
                 for (String name : StringUtils.split(cursor.getString(cursor.getColumnIndex("items")), "-")) {
                     recipeItemList.add(name.trim());
                 }
-                int p = 80 / recipeItemList.size()*2;
+                int p = 80 / (recipeItemList.size()*2);
                 ArrayList<String> itemNames = new ArrayList<String>(items.size());
                 for (Item item : items) {
                     itemNames.add(item.getName().name());
@@ -290,7 +290,7 @@ public abstract class Builder {
                 for (String name : itemNames) {
                     if (recipeItemList.contains(name)) {
                         pro += p;
-                        recipeItemList.remove(name);
+                        recipeItemList.remove(recipeItemList.indexOf(name));
                     }
                 }
                 Map<Effect, Number> baseEffectsMap = new EnumMap<Effect, Number>(Effect.class);
