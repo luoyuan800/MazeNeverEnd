@@ -90,5 +90,7 @@ public class ForgeDB {
         database.execSQL(sql);
         sql = String.format(base,"沁玟之护守", "玄石-玄石-玄石-玄石-冷杉木", "ADD_CLICK_AWARD:3000-ADD_CLICK_POINT_AWARD:50","ADD_PARRY:12", RingBuilder.type,"#FF8C00");
         database.execSQL(sql);
+        sql = String.format(base,"要你命3000<br><font color=\"#FF4500\">要你命3000，要么生，要么死</font>", "硝石-黑石-玄石-萤石-冷杉木", "ADD_ATK:50000-ADD_DEF:-50000-ADD_UPPER_HP:23333","ADD_AGI:5000", NecklaceBuilder.type,"#800080");
+        database.execSQL(sql);
     }
 }

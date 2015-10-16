@@ -17,6 +17,7 @@ import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.skill.Skill;
 import cn.gavin.upload.PalaceObject;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 gluo.
@@ -105,7 +106,11 @@ public class PalaceMonster implements BaseObject {
         Stack<String> palaces = new Stack<String>();
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT name, lev, hello FROM palace ORDER BY lev DESC");
         while (!cursor.isAfterLast()) {
-            palaces.push(cursor.getString(cursor.getColumnIndex("lev")) + " - <font color=\"red\">" + cursor.getString(cursor.getColumnIndex("name")) + "</font> " + "---" + cursor.getString(cursor.getColumnIndex("hello")));
+            String name1 = cursor.getString(cursor.getColumnIndex("name"));
+            if(name1.startsWith("0x")){
+                name1 = StringUtils.toStringHex(name1);
+            }
+            palaces.push(cursor.getString(cursor.getColumnIndex("lev")) + " - <font color=\"red\">" + name1 + "</font> " + "---" + cursor.getString(cursor.getColumnIndex("hello")));
             cursor.moveToNext();
         }
         return palaces;

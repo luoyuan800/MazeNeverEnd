@@ -35,6 +35,7 @@ public class Accessory extends Equipment {
     private Map<Effect, Number> additionEffects;
     private int type;
     private boolean active;
+    private String tag;
 
     public int getType() {
         return type;
@@ -53,7 +54,11 @@ public class Accessory extends Equipment {
     }
 
     public void setName(String name) {
-        this.name = name;
+        String[] nameTag = StringUtils.split(name, "<br>");
+        if(nameTag.length > 1){
+            tag = nameTag[1];
+        }
+        this.name = nameTag[0];
     }
 
     public String getColor() {
@@ -163,6 +168,7 @@ public class Accessory extends Equipment {
         StringBuilder builder = new StringBuilder();
         builder.append("<font color=\"").append(color).append("\">");
         builder.append(name).append("</font><br>");
+        builder.append(tag).append("<br>");
         builder.append("属性: ").append(element.name()).append("<br>");
         for (Effect effect : effects.keySet()) {
             builder.append("<br>").append(effect.getName()).append(":").append(effects.get(effect));
@@ -322,5 +328,13 @@ public class Accessory extends Equipment {
         }
         delete();
         return items;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

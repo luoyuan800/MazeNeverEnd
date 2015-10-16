@@ -11,7 +11,7 @@
             android:layout_height="wrap_content"
             android:text="龙裔"
             android:gravity="center"
-            android:id="@+id/base_skill_r_button" android:layout_gravity="center"
+            android:id="@+id/long_skill_ly_button" android:layout_gravity="center"
             android:typeface="serif"
             android:textStyle="bold|italic"
             android:textColor="@color/disable"/>
@@ -32,7 +32,7 @@
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/base_skill_s_button" android:layout_gravity="center|top" android:textColor="@color/un_active"/>
+                android:id="@+id/long_skill_px_button" android:layout_gravity="center|top" android:textColor="@color/un_active"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/skill_base_t_button" android:layout_gravity="center|top"
+                android:id="@+id/long_base_lz_button" android:layout_gravity="center|top"
                 android:textColor="@color/active"/>
     </LinearLayout>
     <LinearLayout
@@ -75,7 +75,7 @@
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button8" android:layout_gravity="center|top"/>
+                android:id="@+id/long_skill_lk_button" android:layout_gravity="center|top"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button10" android:layout_gravity="center|top"/>
+                android:id="@+id/long_skill_tx_button" android:layout_gravity="center|top"/>
     </LinearLayout>
     <LinearLayout
             android:layout_width="fill_parent"
@@ -112,7 +112,7 @@
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button11" android:layout_gravity="center|top"/>
+                android:id="@+id/long_skill_jx_button" android:layout_gravity="center|top"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -121,7 +121,7 @@
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button13" android:layout_gravity="center|top"/>
+                android:id="@+id/long_skill_sc_button" android:layout_gravity="center|top"/>
     </LinearLayout>
     <LinearLayout
             android:layout_width="fill_parent"
@@ -149,7 +149,7 @@
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button14" android:layout_gravity="center|top" android:singleLine="true"/>
+                android:id="@+id/long_skill_lw_button" android:layout_gravity="center|top" android:singleLine="true"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -158,6 +158,6 @@
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button16" android:layout_gravity="center|top"/>
+                android:id="@+id/long_skill_nl_button" android:layout_gravity="center|top"/>
     </LinearLayout>
 </LinearLayout>

@@ -1,16 +1,16 @@
 package cn.gavin.monster;
 
 
+import java.util.Arrays;
+import java.util.List;
+
+import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.Element;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.maze.Maze;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * gluo on 8/26/2015.
@@ -68,6 +68,8 @@ public class Monster {
     private float hitRate = 100.0f;
     private List<ItemName> items;
     private Element element;
+    private boolean isHold = false;
+    private long holdTurn = 0;
 
     public static int getIndex(String name) {
         for (int i = 0; i < lastNames.length; i++) {
@@ -155,7 +157,7 @@ public class Monster {
             atk += maze.getLev() * random.nextLong((hero.getStrength() + hero.getAgility() + hero.getPower()) / 800 + 1);
             atk += baseAtk[last] * random.nextLong(maze.getLev() + hero.getMaxMazeLev() / 100 + 1);
             if (atk < hero.getDefenseValue()) atk = random.nextLong(hero.getAttackValue() + atk);
-            atk += random.nextLong((hero.getUpperAtk() + hero.getUpperHp() + hero.getUpperDef())/(6*hero.getMaxMazeLev()) + hero.getMaxMazeLev());
+            atk += random.nextLong((hero.getUpperAtk() + hero.getUpperHp() + hero.getUpperDef()) / (6 * hero.getMaxMazeLev()) + hero.getMaxMazeLev());
         }
         hp += baseHP[last] * random.nextLong(maze.getLev() + 1);
         hp += baseAtk[last] * hero.getReincaCount();
@@ -166,7 +168,7 @@ public class Monster {
             hp = hero.getAttackValue() * 20;
         }
         if (hero.getMaterial() > 90000000) {
-            atk += random.nextLong(hero.getAttackValue()/(hero.getMaxMazeLev()+1));
+            atk += random.nextLong(hero.getAttackValue() / (hero.getMaxMazeLev() + 1));
             hp += random.nextLong(hero.getMaterial() / (MainGameActivity.context != null ? MainGameActivity.context.getAlipay().getPayTime() + 1 : 1) + 1);
         }
         if (hp <= 0) hp = Integer.MAX_VALUE - 10;
@@ -281,5 +283,24 @@ public class Monster {
 
     public void setElement(Element element) {
         this.element = element;
+    }
+
+    public boolean isHold() {
+        if (holdTurn-- <= 0) {
+            isHold = false;
+        }
+        return isHold;
+    }
+
+    public void setHold(boolean isHold) {
+        this.isHold = isHold;
+    }
+
+    public long getHoldTurn() {
+        return holdTurn;
+    }
+
+    public void setHoldTurn(long holdTurn) {
+        this.holdTurn = holdTurn;
     }
 }

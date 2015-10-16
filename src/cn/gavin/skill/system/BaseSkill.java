@@ -353,7 +353,7 @@ public class BaseSkill extends SkillLayout {
                     context.addMessage(msg2);
                     monster.addBattleSkillDesc(msg2);
                     monster.addHp(-rHarm);
-                    if(rHarm < harm) {
+                    if (rHarm < harm) {
                         hero.addHp(-(harm - rHarm));
                     }
                     return false;
@@ -453,7 +453,7 @@ public class BaseSkill extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
                     builder.append("防御技能<br>");
-                    builder.append(skill.getProbability()).append("%概率在受到伤害后持续一段时间使得对方不可动弹");
+                    builder.append(skill.getProbability()).append("%概率在受到攻击后持续一段时间使得对方不可动弹。");
                     return builder.toString();
                 }
             });
@@ -468,23 +468,13 @@ public class BaseSkill extends SkillLayout {
                     hero.addHp(-harm);
                     String msg1 = skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害");
                     context.addMessage(msg1);
+                    monster.addBattleSkillDesc(msg1);
                     long turn = hero.getRandom().nextLong(Math.round(skill.getCount() / 200f) + 1) + 1;
+                    monster.setHold(true);
+                    monster.setHoldTurn(turn);
                     String msg2 = skill.format(hero.getFormatName() + "触发了" + skill.getName() + "定住对方" + turn + "个回合");
                     context.addMessage(msg2);
-                    monster.addBattleSkillDesc(msg1);
                     monster.addBattleSkillDesc(msg2);
-                    while (turn-- > 0) {
-                        harm = hero.getAttackValue();
-                        monster.addHp(-harm);
-                        String msg3 = skill.format(hero.getFormatName() + "攻击了" + monster.getFormatName() + "造成了" + harm + "点伤害");
-                        context.addMessage(msg3);
-                        monster.addBattleSkillDesc(msg3);
-                        try {
-                            Thread.sleep(MainGameActivity.context.getRefreshInfoSpeed());
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
                     return false;
                 }
             });
@@ -746,11 +736,11 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = monster.getAtk() - hero.getDefenseValue();
-                    if(harm < 0){
-                        harm = hero.getRandom().nextLong(hero.getMaxMazeLev()+1);
+                    if (harm < 0) {
+                        harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1);
                     }
                     hero.addHp(-harm);
-                    if(hero.getHp() <= 0){
+                    if (hero.getHp() <= 0) {
                         return false;
                     }
                     String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了" + harm + "的伤害";
@@ -827,11 +817,11 @@ public class BaseSkill extends SkillLayout {
                 }
             });
         } else if (name.equals("寻宝")) {
-            final PropertySkill iskll = new PropertySkill(0, 0, 0, 0, 0, 0, 0){
-                public void setOnUsed(boolean use){
-                    if(MainGameActivity.context!=null && !onUsed && use){
+            final PropertySkill iskll = new PropertySkill(0, 0, 0, 0, 0, 0, 0) {
+                public void setOnUsed(boolean use) {
+                    if (MainGameActivity.context != null && !onUsed && use) {
                         MainGameActivity.context.getMaze().setHunt(MainGameActivity.context.getMaze().getHunt() * 2);
-                    } else if(MainGameActivity.context!=null && onUsed && !use){
+                    } else if (MainGameActivity.context != null && onUsed && !use) {
                         MainGameActivity.context.getMaze().setHunt(MainGameActivity.context.getMaze().getHunt() / 2);
                     }
                     super.setOnUsed(use);

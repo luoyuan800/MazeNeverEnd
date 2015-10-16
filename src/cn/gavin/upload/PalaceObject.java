@@ -125,7 +125,7 @@ public class PalaceObject extends BmobObject {
     public void save(){
         DBHelper.getDbHelper().excuseSQLWithoutResult(String.format(
                 "REPLACE INTO palace ( id,name, atk, hp, lev, def, parry, hit_rate,skill, skill1, skill2, hello, pay) " +
-                        "values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",getObjectId(),name, atk,hp,lev,def,parry,hitRate,skill,skill1,skill2, hello, pay));
+                        "values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",getObjectId(),getName(), atk,hp,lev,def,parry,hitRate,skill,skill1,skill2, hello, pay));
     }
 
     public void setHello(String hello) {
