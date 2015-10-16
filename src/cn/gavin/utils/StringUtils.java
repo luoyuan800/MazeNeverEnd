@@ -38,7 +38,7 @@ public class StringUtils {
     }
 
     public static boolean isNotEmpty(String countStr) {
-        return countStr !=null && !countStr.trim().isEmpty();
+        return countStr !=null && !countStr.trim().isEmpty() && !"null".equalsIgnoreCase(countStr);
     }
 
     public static String[] split(String str,String regularExpression){

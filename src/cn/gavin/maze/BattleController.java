@@ -29,7 +29,7 @@ public class BattleController {
                 if (monster.getElement().restriction(hero.getElement())) {
                     harm *= 1.5;
                 } else if (hero.getElement().restriction(monster.getElement())) {
-                    //相克，伤害减低一半
+                    //被克，伤害减低一半
                     harm /= 2;
                 }
                 if (harm <= 0 || hero.getRandom().nextInt(100) > monster.getHitRate()) {
@@ -42,7 +42,7 @@ public class BattleController {
                     monster.addBattleDesc(s);
                 }
                 if (monster.getName().endsWith("龙") && SkillFactory.getSkill("龙裔", hero, context.getSkillDialog()).isActive()) {
-                    addMessage(context, hero.getFormatName() + "是龙裔，免疫龙系怪物的伤害！");
+                    addMessage(context, hero.getFormatName() + "激发龙裔效果，免疫龙系怪物的伤害！");
                     harm = 0;
                 }
                 if (harm >= hero.getHp()) {
@@ -93,7 +93,7 @@ public class BattleController {
                 isJump = skill.release(monster);
             } else {
                 Long attackValue = hero.getAttackValue();
-                //相克，伤害1.5倍
+                //被克，伤害1.5倍
                 if (hero.getElement().restriction(monster.getElement())) {
                     attackValue += attackValue / 2;
                 } else if (monster.getElement().restriction(hero.getElement())) {
@@ -192,7 +192,6 @@ public class BattleController {
                 isJump = false;
             }
         }
-        monsterBook.addMonster(monster);
         return isJump;
     }
 }

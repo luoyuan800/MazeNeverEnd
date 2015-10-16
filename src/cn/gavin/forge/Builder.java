@@ -167,7 +167,7 @@ public abstract class Builder {
                 case ADD_UPPER_HP:
                     long l = effectNumberMap.get(effect).longValue();
                     if (l > 10000) {
-                        color = "#0000FF";
+                        color = "#556B2F";
                     }
                     if (l > 100000) {
                         color = "#9932CC";
@@ -179,7 +179,7 @@ public abstract class Builder {
                         save = true;
                     }
                     if (l > MazeContents.hero.getBaseDefense()) {
-                        color = "#8B008B";
+                        color = "#9932CC";
                     }
 
                     break;
@@ -188,14 +188,14 @@ public abstract class Builder {
                 case ADD_POWER:
                     long sml = effectNumberMap.get(effect).longValue();
                     if (sml > 1000) {
-                        color = "#0000FF";
+                        color = "#556B2F";
                     }
                     if (sml > 5000) {
-                        color = "#9932CC";
+                        color = "#0000FF";
                         save = true;
                     }
                     if (sml > 8000) {
-                        color = "#B8860B";
+                        color = "#9932CC";
                         save = true;
                     }
 
@@ -203,14 +203,14 @@ public abstract class Builder {
                 case ADD_CLICK_AWARD:
                     long cw = effectNumberMap.get(effect).longValue();
                     if (cw > 100) {
-                        color = "#0000FF";
+                        color = "#556B2F";
                     }
                     if (cw > 1000) {
-                        color = "#9932CC";
+                        color = "#0000FF";
                         save = true;
                     }
                     if (cw > 5000) {
-                        color = "#9400D3";
+                        color = "#9932CC";
                         save = true;
                     }
 
@@ -310,6 +310,7 @@ public abstract class Builder {
                         additionEffectsMap.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
                     }
                 }
+                if(pro < 0) pro = 0;
                 if (a1 == null || a1.getPro() < pro) {
                     a1 = new Accessory();
                     if (isUser) {

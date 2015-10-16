@@ -41,7 +41,7 @@
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/long_base_lz_button" android:layout_gravity="center|top"
+                android:id="@+id/long_skill_lz_button" android:layout_gravity="center|top"
                 android:textColor="@color/active"/>
     </LinearLayout>
     <LinearLayout
@@ -123,41 +123,5 @@
                 android:textStyle="bold|italic"
                 android:id="@+id/long_skill_sc_button" android:layout_gravity="center|top"/>
     </LinearLayout>
-    <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:layout_gravity="center">
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/line_1_center"
-                android:id="@+id/imageView7" android:layout_gravity="left|top"
-                android:layout_weight="1" android:adjustViewBounds="false"/>
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageView9" android:layout_gravity="center|top"
-                android:src="@drawable/line_1_center" android:layout_weight="1"/>
-    </LinearLayout>
-    <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:layout_gravity="center">
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="龙舞"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:typeface="serif"
-                android:textStyle="bold|italic"
-                android:id="@+id/long_skill_lw_button" android:layout_gravity="center|top" android:singleLine="true"/>
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="逆鳞"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:typeface="serif"
-                android:textStyle="bold|italic"
-                android:id="@+id/long_skill_nl_button" android:layout_gravity="center|top"/>
-    </LinearLayout>
+
 </LinearLayout>

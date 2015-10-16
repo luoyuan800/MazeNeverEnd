@@ -681,10 +681,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             heroN.addPoint(100000);
                             heroN.setLockBox(heroN.getLockBox() + 1000);
                             heroN.setKeyCount(heroN.getKeyCount() + 1000);
-                            heroN.setClick(49990);
+                            Achievement.click50000.enable(heroN);
                             heroN.setMaxMazeLev(heroN.getMaxMazeLev() + 101);
                             maze.setLevel(99);
-                            heroN.setAwardCount(heroN.getAwardCount() + 1);
+                            Achievement.dragon.enable(heroN);
                         } else if (tv.getText().toString().equals("sp1.1c")) {
                             if (heroN.getAwardCount() < 1) {
                                 heroN.setSkillPoint(heroN.getSkillPoint() + 3);

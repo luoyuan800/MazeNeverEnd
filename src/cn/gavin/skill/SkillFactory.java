@@ -10,6 +10,7 @@ import cn.gavin.maze.Maze;
 import cn.gavin.skill.expression.EnableExpression;
 import cn.gavin.skill.system.BaseSkill;
 import cn.gavin.skill.system.EvilSkill;
+import cn.gavin.skill.system.LongSkill;
 import cn.gavin.skill.system.SwindlerSkill;
 import cn.gavin.utils.Random;
 
@@ -33,6 +34,9 @@ public class SkillFactory {
                 }
                 if(skill == null){
                     skill = SwindlerSkill.getSkill(name, hero, dialog);
+                }
+                if(skill == null){
+                    skill = LongSkill.getSkill(name,hero,dialog);
                 }
                 if (skill != null) {
                     skill.setSkillDialog(dialog);

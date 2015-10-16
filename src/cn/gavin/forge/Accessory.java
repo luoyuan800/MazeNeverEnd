@@ -168,7 +168,7 @@ public class Accessory extends Equipment {
         StringBuilder builder = new StringBuilder();
         builder.append("<font color=\"").append(color).append("\">");
         builder.append(name).append("</font><br>");
-        builder.append(tag).append("<br>");
+        if(StringUtils.isNotEmpty(tag))builder.append(tag).append("<br>");
         builder.append("属性: ").append(element.name()).append("<br>");
         for (Effect effect : effects.keySet()) {
             builder.append("<br>").append(effect.getName()).append(":").append(effects.get(effect));

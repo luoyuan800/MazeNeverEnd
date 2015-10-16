@@ -142,6 +142,7 @@ public class Maze {
                     hero.restore();
                     lastSave = level;
                 }
+                monsterBook.addMonster(monster);
                 addMessage(context, "-----------------------------");
             }
             try {
@@ -173,7 +174,7 @@ public class Maze {
                     break;
                 case 500:
                     if (hero.getArmorLev() == 0 && hero.getSwordLev() == 0) {
-
+                        Achievement.speculator.enable(hero);
                     }
                     Achievement.maze500.enable(hero);
                     break;

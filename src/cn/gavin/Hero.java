@@ -685,10 +685,8 @@ public class Hero implements BaseObject{
         if (onChange) {
             return "<font color=\"#800080\">" + changeName + "</font>";
         } else {
-            if (!StringUtils.isNotEmpty(formatName)) {
-                formatName = "<font color=\"#800080\">" + getName() + "</font>";
-            }
-            return formatName;
+               return "<font color=\"#800080\">" + getName() + "</font>(" + element + ")";
+
         }
     }
 
@@ -721,6 +719,9 @@ public class Hero implements BaseObject{
     }
 
     public synchronized void setRing(Accessory ring) {
+        if(ring!=null && this.ring!=null && this.ring.getId().equals(ring.getId())){
+            return;
+        }
         cleanEffect();
         if (ring != null) {
             if (this.ring == null ||!(ring.getId().equalsIgnoreCase(this.ring.getId()))) {
@@ -819,6 +820,9 @@ public class Hero implements BaseObject{
     }
 
     public synchronized void setNecklace(Accessory necklace) {
+        if(necklace!=null && this.necklace!=null && this.necklace.getId().equals(necklace.getId())){
+            return;
+        }
         cleanEffect();
         if (necklace != null) {
             if (this.necklace == null ||!(necklace.getId().equalsIgnoreCase(this.necklace.getId()))) {
@@ -851,6 +855,9 @@ public class Hero implements BaseObject{
     }
 
     public synchronized void setHat(Accessory hat) {
+        if(hat!=null && this.hat!=null && this.hat.getId().equals(hat.getId())){
+            return;
+        }
         cleanEffect();
         if (hat != null) {
             if (this.hat == null ||!(hat.getId().equalsIgnoreCase(this.hat.getId()))) {
@@ -1040,6 +1047,9 @@ public class Hero implements BaseObject{
     }
 
     public Boolean isHit() {
+        if(isHit){
+            Achievement.hitter.enable(this);
+        }
         return isHit;
     }
 

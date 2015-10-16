@@ -115,6 +115,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
             public void onClick(View view) {
                 viewFlipper.showPrevious();
                 sillNameText.setText(getPrevSystemName());
+                skillDesc.setText("");
             }
         });
         Button next = (Button) view.findViewById(R.id.next_skill_system_button);
@@ -123,6 +124,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
             public void onClick(View view) {
                 viewFlipper.showNext();
                 sillNameText.setText(getNextSystemName());
+                skillDesc.setText("");
             }
         });
         isInit = true;

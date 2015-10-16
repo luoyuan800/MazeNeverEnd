@@ -10,6 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import cn.gavin.Achievement;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.utils.StringUtils;
@@ -70,6 +72,9 @@ public class MonsterBook {
             }
             if (monster.isDefeat()) {
                 item.setDefeat(item.getDefeat() + 1);
+                if(item.getDefeat() > 5000){
+                    Achievement.dragon.enable(null);
+                }
             } else {
                 item.setDefeated(item.getDefeated() + 1);
             }

@@ -89,16 +89,16 @@ public class Monster {
             }
             monster = buildDefaultDefender(maze, hero, random);
         }
-        monster.material = random.nextLong(maze.getLev() * monster.atk + 1) / 110 + 25;
-        if (monster.material > 30000) {
-            monster.material = random.nextLong(30000);
+        monster.material = random.nextLong(maze.getLev() * monster.atk + 1) / 115 + 25;
+        if (monster.material > 15000) {
+            monster.material = 3000 + random.nextLong(15000);
         }
         monster.items = Arrays.asList(ItemName.原石, ItemName.铁矿石, ItemName.冷杉木,
                 ItemName.萤石, ItemName.白云石);
-        monster.formatName(hero);
         monster.builder = new StringBuilder("第");
         monster.builder.append(maze.getLev()).append("层").append("<br>-------");
         monster.element = Element.values()[random.nextInt(Element.values().length)];
+        monster.formatName(hero);
         return monster;
     }
 
@@ -178,19 +178,19 @@ public class Monster {
         }
         long m1 = random.nextLong(hp + 1) / 180 + 5;
         long m2 = random.nextLong(atk + 1) / 409 + 10;
-        material = random.nextLong((m1 + m2) / 22 + 2) + 10 + random.nextLong(maze.getLev() * 9 + 1);
+        material = random.nextLong((m1 + m2) / 29 + 2) + 10 + random.nextLong(maze.getLev() * 9 + 1);
         maxHP = hp;
-        formatName(hero);
         builder = new StringBuilder("第");
         builder.append(maze.getLev()).append("层").append("<br>------------");
         element = Element.values()[random.nextInt(Element.values().length)];
+        formatName(hero);
     }
 
     private void formatName(Hero hero) {
         if (getAtk() > (hero.getUpperHp() + hero.getDefenseValue()) / 2) {
-            setFormatName("<B><font color=\"red\">" + getName() + "</font></B>");
+            setFormatName("<B><font color=\"red\">" + getName() + "</font></B>" + "(" + element + ")");
         } else {
-            setFormatName(getName());
+            setFormatName(getName() + "(" + element + ")");
         }
     }
 
