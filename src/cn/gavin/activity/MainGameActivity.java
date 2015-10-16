@@ -212,6 +212,18 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         public void handleMessage(Message msg) {
             try {
                 switch (msg.what) {
+                    case 109:
+                        if(isHidBattle){
+                            isHidBattle = false;
+                            mainInfoPlatform.removeAllViews();
+                        }else {
+                            isHidBattle = true;
+                            mainInfoPlatform.removeAllViews();
+                            TextView textView = new TextView(context);
+                            textView.setText("\n\n长按显示战斗信息\n\n欢迎进群：332406332 \n举报bug和提供您的建议！");
+                            mainInfoPlatform.addView(textView);
+                        }
+                        break;
                     case 108:
                         Toast.makeText(context, "--数据异常，上传失败!--", Toast.LENGTH_LONG)
                                 .show();
@@ -222,6 +234,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         break;
                     case 106:
                         updatePalace = false;
+                        palaceCount = 0;
                         break;
                     case 203:
                         palaceCount = msg.arg1;
@@ -291,26 +304,28 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         heroPic.setBackgroundResource(R.drawable.h_4);
                         break;
                     case 10:
-                        Bundle bundle = msg.peekData();
-                        if (bundle != null && !bundle.isEmpty()) {
-                            String[] messages = bundle.getStringArray("msg");
-                            for (String str : messages) {
-                                if (str.matches(".*遇到了.*")) {
-                                    heroPic.setBackgroundResource(R.drawable.h_3);
-                                } else if (str.matches(".*击败了.*")) {
-                                    heroPic.setBackgroundResource(R.drawable.h_2);
-                                } else if (str.matches(".*被.*打败了.*")) {
-                                    heroPic.setBackgroundResource(R.drawable.h_1);
+                        if(!isHidBattle) {
+                            Bundle bundle = msg.peekData();
+                            if (bundle != null && !bundle.isEmpty()) {
+                                String[] messages = bundle.getStringArray("msg");
+                                for (String str : messages) {
+                                    if (str.matches(".*遇到了.*")) {
+                                        heroPic.setBackgroundResource(R.drawable.h_3);
+                                    } else if (str.matches(".*击败了.*")) {
+                                        heroPic.setBackgroundResource(R.drawable.h_2);
+                                    } else if (str.matches(".*被.*打败了.*")) {
+                                        heroPic.setBackgroundResource(R.drawable.h_1);
+                                    }
+                                    TextView oneKickInfo = new TextView(MainGameActivity.this);
+                                    // 将一次信息数据显示到页面中
+                                    oneKickInfo.setText(Html.fromHtml(str));
+                                    mainInfoPlatform.addView(oneKickInfo);
+                                    scrollToBottom(mainInfoSv, mainInfoPlatform);
                                 }
-                                TextView oneKickInfo = new TextView(MainGameActivity.this);
-                                // 将一次信息数据显示到页面中
-                                oneKickInfo.setText(Html.fromHtml(str));
-                                mainInfoPlatform.addView(oneKickInfo);
-                                scrollToBottom(mainInfoSv, mainInfoPlatform);
                             }
-                        }
-                        if (mainInfoPlatform.getChildCount() > fightInfoTotalCount) {
-                            mainInfoPlatform.removeViewAt(0);
+                            if (mainInfoPlatform.getChildCount() > fightInfoTotalCount) {
+                                mainInfoPlatform.removeViewAt(0);
+                            }
                         }
                         // mainInfoSv.fullScroll(ScrollView.FOCUS_DOWN);
                         break;
@@ -825,7 +840,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                                 @Override
                                 public void run() {
                                     int count = 0;
-                                    while (updatePalace && count < 10000) {
+                                    while (updatePalace && count < 100000) {
                                         try {
                                             Thread.sleep(refreshInfoSpeed);
                                         } catch (InterruptedException e) {
@@ -1487,19 +1502,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     public boolean onLongClick(View v) {
         switch (v.getId()){
             case R.id.main_info_ll:
-                if(isHidBattle){
-                    isHidBattle = false;
-                    mainInfoPlatform.removeAllViews();
-                }else {
-                    isHidBattle = true;
-                    mainInfoPlatform.removeAllViews();
-                    TextView textView = new TextView(this);
-                    ViewGroup.LayoutParams params = textView.getLayoutParams();
-                    params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                    textView.setLayoutParams(params);
-                    textView.setText("欢迎进群：332406332 \n举报bug和提供您的意见！");
-                    mainInfoPlatform.addView(textView);
-                }
+                handler.sendEmptyMessage(109);
                 break;
         }
         return false;

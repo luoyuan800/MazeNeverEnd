@@ -118,14 +118,14 @@ public abstract class Builder {
                 Number number = effectNumberMap.get(effect);
                 if (number != null) {
                     effectNumberMap.put(effect, number.longValue() + random.nextLong((number.longValue() + item.getEffectValue().longValue()) / 3 + 1));
-                } else{
+                } else {
                     effectNumberMap.put(effect, item.getEffectValue().longValue());
                 }
             }
             Effect effect1 = item.getEffect1();
             if (effect1 != null) {
                 Number number = effectNumberMap.get(effect1);
-                if (number != null&& number.longValue()!=0) {
+                if (number != null && number.longValue() != 0) {
                     effectNumberMap.put(effect1, number.longValue() + random.nextLong((number.longValue() + item.getEffect1Value().longValue()) / 2 + 1));
                 } else {
                     effectNumberMap.put(effect1, item.getEffect1Value().longValue());
@@ -274,17 +274,18 @@ public abstract class Builder {
                 for (String name : StringUtils.split(cursor.getString(cursor.getColumnIndex("items")), "-")) {
                     recipeItemList.add(name.trim());
                 }
-                float p = 85f / (recipeItemList.size()*3f);
+                float p = 100 / (recipeItemList.size() * 3);
                 ArrayList<String> itemNames = new ArrayList<String>(items.size());
                 for (Item item : items) {
                     itemNames.add(item.getName().name());
                 }
+                boolean isUser = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("user")));
                 String color = cursor.getString(cursor.getColumnIndex("color"));
-                if(itemNames.size() == recipeItemList.size()) {
-                    for (int i = 0; i< itemNames.size(); i++) {
-                        if (recipeItemList.get(i).equalsIgnoreCase(itemNames.get(i))){
-                            pro += p*2f;
-                        }else{
+                if (itemNames.size() == recipeItemList.size()) {
+                    for (int i = 0; i < itemNames.size(); i++) {
+                        if (recipeItemList.get(i).equalsIgnoreCase(itemNames.get(i))) {
+                            pro += p * 2;
+                        } else {
                             pro -= p;
                         }
                     }
@@ -311,6 +312,9 @@ public abstract class Builder {
                 }
                 if (a1 == null || a1.getPro() < pro) {
                     a1 = new Accessory();
+                    if (isUser) {
+                        pro /= 2;
+                    }
                     a1.setPro(pro);
                     a1.setName(cursor.getString(cursor.getColumnIndex("name")));
                     a1.setColor(color);
@@ -318,6 +322,9 @@ public abstract class Builder {
                     a1.setEffects(baseEffectsMap);
                 } else if (a2 == null || a2.getPro() < pro) {
                     a2 = new Accessory();
+                    if (isUser) {
+                        pro /= 2;
+                    }
                     a2.setPro(pro);
                     a2.setName(cursor.getString(cursor.getColumnIndex("name")));
                     a2.setColor(color);
@@ -327,11 +334,11 @@ public abstract class Builder {
                 cursor.moveToNext();
             }
             if (a1 != null && a2 != null) {
-                if ("#FF8C00".equals(a1.getColor())) {
-                    a1.setPro(a1.getPro() / 2);
+                if ("#FF8C00".equalsIgnoreCase(a1.getColor())) {
+                    a1.setPro(a1.getPro()/2);
                 }
-                if ("#FF8C00".equals(a2.getColor())) {
-                    a1.setPro(a1.getPro() / 2);
+                if ("#FF8C00".equalsIgnoreCase(a2.getColor())) {
+                    a2.setPro(a2.getPro()/2);
                 }
                 if ((a1.getPro() + a2.getPro()) >= 100) {
                     if (a1.getPro() >= a2.getPro()) {

@@ -9,7 +9,7 @@
     <string name="def_name">防御</string>
     <string name="upload_label">上传角色</string>
     <string name="reset_skill_label">重置技能</string>
-    <string name="buy_label">支持作者\n10W锻造点数/1￥</string>
+    <string name="buy_label">踩作者一下\n10W锻造点数/1￥</string>
     <string name="pause_label">暂停</string>
     <string name="achievement_label">成就</string>
     <string name="restore_desc">恢复技能和体力值相关</string>

@@ -114,7 +114,7 @@ public class BattleController {
     }
 
     public static void addMessage(BaseContext context, String msg) {
-        if (context != null && !context.isHideBattle()) {
+        if (context != null) {
             context.addMessage(msg);
         }
     }

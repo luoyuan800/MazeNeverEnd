@@ -3,6 +3,7 @@ package cn.gavin.upload;
 import cn.bmob.v3.BmobObject;
 import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 gluo.
@@ -23,11 +24,21 @@ public class PalaceObject extends BmobObject {
     private Long lev;
     private String hello;
 
+    public PalaceObject(){
+        setTableName("uploader");
+    }
+
     public String getName() {
+        if(name.startsWith("0x")){
+            name = StringUtils.toStringHex(name);
+        }
         return name;
     }
 
     public void setName(String name) {
+        if(name.startsWith("0x")){
+            name = StringUtils.toStringHex(name);
+        }
         this.name = name;
     }
 
