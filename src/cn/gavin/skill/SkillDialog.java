@@ -114,8 +114,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
             @Override
             public void onClick(View view) {
                 viewFlipper.showPrevious();
-                sillNameText.setText(getPrevSystemName());
-                skillDesc.setText("");
+                changeSkillSystem();
             }
         });
         Button next = (Button) view.findViewById(R.id.next_skill_system_button);
@@ -123,11 +122,26 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
             @Override
             public void onClick(View view) {
                 viewFlipper.showNext();
-                sillNameText.setText(getNextSystemName());
-                skillDesc.setText("");
+                changeSkillSystem();
             }
         });
         isInit = true;
+    }
+
+    private void changeSkillSystem() {
+        if(viewFlipper.getCurrentView() instanceof LongSkill){
+            sillNameText.setText("龙裔技能");
+        }
+        if(viewFlipper.getCurrentView() instanceof BaseSkill){
+            sillNameText.setText("勇者技能");
+        }
+        if(viewFlipper.getCurrentView() instanceof EvilSkill){
+            sillNameText.setText("魔王技能");
+        }
+        if(viewFlipper.getCurrentView() instanceof SwindlerSkill){
+            sillNameText.setText("欺诈师技能");
+        }
+        skillDesc.setText("");
     }
 
     int index = 0;

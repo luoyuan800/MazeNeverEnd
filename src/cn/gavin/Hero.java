@@ -874,13 +874,8 @@ public class Hero implements BaseObject{
         if (material < mate) {
             Toast.makeText(MainGameActivity.context, "锻造点数不足" + mate + "！" + getName(), Toast.LENGTH_SHORT).show();
         } else {
-            Skill skill;
-            if (getFirstSkill() != null) {
-                skill = getFirstSkill();
-            } else {
-                skill = getThirdSkill();
-            }
-            addReincarnation(name + "(" + reincaCount + ")", getUpperHp() + getUpperDef(), getUpperAtk(), getMaxMazeLev(), skill);
+
+            addReincarnation(name + "(" + reincaCount + ")", getUpperHp() + getUpperDef(), getUpperAtk(), getMaxMazeLev());
             MAX_HP_RISE = random.nextLong(power / 5000 + 4) + 6;
             DEF_RISE = random.nextLong(agility / 5000 + 2) + 2;
             ATR_RISE = random.nextLong(strength / 5000 + 3) + 3;
@@ -926,10 +921,10 @@ public class Hero implements BaseObject{
         }
     }
 
-    private void addReincarnation(String name, long hp, long atk, long lev, Skill skill) {
-        String sql = String.format("REPLACE INTO hero(name, lev, hp, skill, skill_lev,  atk) " +
-                        "values('%s','%s','%s','%s','%s','%s')",
-                name, lev, hp, (skill == null ? "重击" : skill.getName()), (skill == null ? 10 : ((skill.getCount() / 1000) + 1)), atk);
+    private void addReincarnation(String name, long hp, long atk, long lev) {
+        String sql = String.format("REPLACE INTO npc(name, lev, hp, atk) " +
+                        "values('%s','%s','%s','%s')",
+                name, lev, hp, atk);
         DBHelper.getDbHelper().excuseSQLWithoutResult(sql);
     }
 

@@ -43,6 +43,7 @@ public class Upload {
                     object.setSkill2(hero.getThirdSkill() != null ? hero.getThirdSkill().getName() + "_" + hero.getThirdSkill().getCount() : "");
                     object.setPay(hero.getPay().toString());
                     object.setLev(hero.getMaxMazeLev());
+                    object.setElement(hero.getElement().name());
                     object.save(context, new SaveListener() {
                         @Override
                         public void onSuccess() {

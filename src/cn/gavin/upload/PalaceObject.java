@@ -23,6 +23,7 @@ public class PalaceObject extends BmobObject {
     private String pay;
     private Long lev;
     private String hello;
+    private String element;
 
     public PalaceObject(){
         setTableName("uploader");
@@ -130,5 +131,13 @@ public class PalaceObject extends BmobObject {
 
     public void setHello(String hello) {
         this.hello = hello;
+    }
+
+    public String getElement() {
+        return element;
+    }
+
+    public void setElement(String element) {
+        this.element = element;
     }
 }

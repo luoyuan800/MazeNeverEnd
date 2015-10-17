@@ -41,7 +41,7 @@ public abstract class Skill {
     }
 
     public boolean isEnable() {
-        return isActive() || enableExpression.isEnable(hero, maze, MainGameActivity.context, this);
+        return isActive() || (hero.getSkillPoint() > 0&&enableExpression.isEnable(hero, maze, MainGameActivity.context, this));
     }
 
     public void setEnableExpression(EnableExpression exp) {

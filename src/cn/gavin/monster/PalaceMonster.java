@@ -12,6 +12,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.CountListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.gavin.BaseObject;
+import cn.gavin.Element;
 import cn.gavin.activity.BaseContext;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
@@ -80,6 +81,7 @@ public class PalaceMonster implements BaseObject {
                 "hp TEXT," +
                 "atk TEXT," +
                 "def TEXT," +
+                "element TEXT," +
                 "skill TEXT," +
                 "skill1 TEXT," +
                 "skill2 TEXT," +
@@ -97,7 +99,9 @@ public class PalaceMonster implements BaseObject {
         if (!cursor.isAfterLast()) {
             long atk = Long.parseLong(cursor.getString(cursor.getColumnIndex("atk")));
             long hp = Long.parseLong(cursor.getString(cursor.getColumnIndex("hp"))) + Long.parseLong(cursor.getString(cursor.getColumnIndex("def")));
-            return new Monster("", "【守护者】", cursor.getString(cursor.getColumnIndex("name")), atk, hp);
+            Monster monster = new Monster("", "【守护者】", cursor.getString(cursor.getColumnIndex("name")), atk, hp);
+            monster.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
+            return monster;
         }
         return null;
     }
@@ -110,7 +114,7 @@ public class PalaceMonster implements BaseObject {
             if(name1.startsWith("0x")){
                 name1 = StringUtils.toStringHex(name1);
             }
-            palaces.push(cursor.getString(cursor.getColumnIndex("lev")) + " - <font color=\"red\">" + name1 + "</font> " + "---" + cursor.getString(cursor.getColumnIndex("hello")));
+            palaces.push(cursor.getString(cursor.getColumnIndex("lev")) + " - <font color=\"red\">" + name1 + "</font> (" + cursor.getString(cursor.getColumnIndex("element")) + ")---" + cursor.getString(cursor.getColumnIndex("hello")));
             cursor.moveToNext();
         }
         return palaces;

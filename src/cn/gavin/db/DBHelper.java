@@ -163,6 +163,7 @@ public class DBHelper {
                 db.execSQL(createTable);
                 db.execSQL("CREATE UNIQUE INDEX npc_index ON npc (name,lev)");
                 new ForgeDB().upgradeTo1_4(database);
+                db.execSQL("DROP TABLE defender");
             }
         }catch (Exception e){
             e.printStackTrace();

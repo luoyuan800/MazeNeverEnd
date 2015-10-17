@@ -111,7 +111,7 @@ public class Monster {
             atk = atk / 2;
         }
 
-        if (hero.getMaterial() > 8000000) {
+        if (hero.getMaterial() > 10000000) {
             atk += random.nextLong(hero.getMaterial() / (MainGameActivity.context != null ? MainGameActivity.context.getAlipay().getPayTime() + 1 : 1) + 1);
 
         }
