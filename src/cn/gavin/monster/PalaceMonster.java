@@ -109,7 +109,7 @@ public class PalaceMonster implements BaseObject {
 
     public static Stack<String> getPalaceListString() {
         Stack<String> palaces = new Stack<String>();
-        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT name, lev, hello FROM palace ORDER BY lev DESC");
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT name, lev, hello, element FROM palace ORDER BY lev DESC");
         while (!cursor.isAfterLast()) {
             String name1 = cursor.getString(cursor.getColumnIndex("name"));
             if(name1.startsWith("0x")){
