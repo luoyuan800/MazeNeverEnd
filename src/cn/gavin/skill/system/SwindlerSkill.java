@@ -187,7 +187,7 @@ public class SwindlerSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("玩的就是心跳。<br>攻击时抛一次硬币，如果为正面，对敌人造成N倍的攻击伤害。否则自己受到敌人攻击的N倍伤害。<br>其中N根据点击数计算。");
+                    builder.append("玩的就是心跳。<br>攻击时抛一次硬币，如果为正面，对敌人造成N倍的攻击伤害。否则自己受到敌人攻击的N倍伤害。<br>其中N根据点击数计算，最低为0，最高，谁也不知道……");
                     builder.append(skill.getProbability()).append("%的概率释放。");
                     return builder.toString();
                 }
@@ -195,7 +195,7 @@ public class SwindlerSkill extends SkillLayout {
             skill.setRelease(new UseExpression() {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                    long n = hero.getRandom().nextLong(hero.getClick() / 70000 + 10);
+                    long n = hero.getRandom().nextLong(hero.getClick() / 70000 + 15);
                     if(n > 10000){
                         n = hero.getRandom().nextInt(10000);
                     }

@@ -44,6 +44,7 @@ public class Upload {
                     object.setPay(hero.getPay().toString());
                     object.setLev(hero.getMaxMazeLev());
                     object.setElement(hero.getElement().name());
+                    object.setReCount(hero.getReincaCount());
                     object.save(context, new SaveListener() {
                         @Override
                         public void onSuccess() {

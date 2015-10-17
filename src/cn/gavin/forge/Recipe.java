@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.util.Log;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
+import cn.gavin.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public class Recipe {
     public String toString() {
         StringBuilder builder = new StringBuilder("<font color=\"");
         builder.append(color).append("\">");
-        builder.append(name);
+        builder.append(StringUtils.split(name,"<br>")[0]);
         builder.append("=").append(getItems());
         builder.append("</font>");
         return builder.toString();

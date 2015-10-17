@@ -15,7 +15,7 @@ public enum Effect {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
-            long atk = random.nextLong((hero.getStrength() + monster.getMaxHP()) / 500 + 1);
+            long atk = random.nextLong((hero.getStrength() + monster.getMaxHP()) / 505 + 1);
             if (atk <= 500) atk = random.nextLong(hero.getMaxMazeLev() + 1) + 500;
             return atk;
         }
@@ -24,7 +24,7 @@ public enum Effect {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
-            long hp = random.nextLong((hero.getAgility() + monster.getAtk()) / 500 + 1);
+            long hp = random.nextLong((hero.getAgility() + monster.getAtk()) / 505 + 1);
             if (hp <= 1000) hp = random.nextLong(hero.getMaxMazeLev() + 1) + 1000;
             return hp;
         }
@@ -69,8 +69,8 @@ public enum Effect {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
-            long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 500 + 1) + 1;
-            if (award <= 10) award = random.nextLong(hero.getMaxMazeLev() + 1) + 10;
+            long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 1000 + 1) + 5;
+            if (award > 500) award = random.nextLong(500) + 100;
             return award;
         }
     }, "增加点击锻造点数奖励"),
@@ -78,9 +78,9 @@ public enum Effect {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
-            long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 500 + 1) + 1;
+            long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 5000 + 1) + 1;
             if (award <= 2) award = 1;
-            if (award >= 10) award = random.nextLong(10) + 1;
+            if (award >= 5) award = random.nextLong(5) + 1;
             return award;
         }
     }, "增加点击能力点数奖励"),

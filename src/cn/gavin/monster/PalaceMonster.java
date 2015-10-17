@@ -82,6 +82,7 @@ public class PalaceMonster implements BaseObject {
                 "atk TEXT," +
                 "def TEXT," +
                 "element TEXT," +
+                "re_count TEXT," +
                 "skill TEXT," +
                 "skill1 TEXT," +
                 "skill2 TEXT," +

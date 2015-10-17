@@ -62,8 +62,8 @@
 
             <TextView
                 android:id="@+id/key_count"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:drawableLeft="@drawable/ys"
                 android:gravity="center"
                 android:textSize="6sp" />

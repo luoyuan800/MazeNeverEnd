@@ -743,7 +743,7 @@ public class EvilSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("速度也是一种极致。<br>").append(skill.getProbability()).
+                    builder.append("速度也是一种极致。你们这些杂碎完全看不清我的动作了吧，啊哈哈哈哈哈哈哈哈…（回声）<br>").append(skill.getProbability()).
                             append("的概率释放。使用").append(iskll.getBaseHarm()).append("%的攻击力进行多次攻击。");
                     return builder.toString();
                 }

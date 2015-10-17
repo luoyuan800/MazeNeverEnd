@@ -117,7 +117,7 @@ public abstract class Builder {
             if (effect != null) {
                 Number number = effectNumberMap.get(effect);
                 if (number != null) {
-                    effectNumberMap.put(effect, number.longValue() + random.nextLong((number.longValue() + item.getEffectValue().longValue()) / 3 + 1));
+                    effectNumberMap.put(effect, number.longValue() + random.nextLong((number.longValue() + item.getEffectValue().longValue()) / 2 + 1));
                 } else {
                     effectNumberMap.put(effect, item.getEffectValue().longValue());
                 }

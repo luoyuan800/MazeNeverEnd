@@ -471,7 +471,7 @@ public class Hero implements BaseObject{
     private Long latestClick = 0l;
 
     public void click(boolean award) {
-        if ((System.currentTimeMillis() - latestClick) > 103) {
+        if ((System.currentTimeMillis() - latestClick) > 150) {
             if (click < Integer.MAX_VALUE - 10) {
                 if (this.click % 1000 == 0) {
                     point += random.nextLong(15);
@@ -870,7 +870,7 @@ public class Hero implements BaseObject{
     }
 
     public void reincarnation() {
-        long mate = (reincaCount + 1) * 300101;
+        long mate = (reincaCount + 1) * 600101;
         if (material < mate) {
             Toast.makeText(MainGameActivity.context, "锻造点数不足" + mate + "！" + getName(), Toast.LENGTH_SHORT).show();
         } else {
@@ -885,6 +885,7 @@ public class Hero implements BaseObject{
             long upperHp = random.nextLong(20) + 25;
             SkillFactory.clean();
             setUpperHp(upperHp);
+            hp = upperHp;
             setAttackValue(attackValue);
             setDefenseValue(defenseValue);
             point = 1l;
@@ -896,6 +897,7 @@ public class Hero implements BaseObject{
             power = 5l;
             strength = 5l;
             agility = 5l;
+            hitRate = 0l;
 
             DBHelper dbHelper = DBHelper.getDbHelper();
             dbHelper.beginTransaction();

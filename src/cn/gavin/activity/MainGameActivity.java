@@ -409,12 +409,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         buttonGroup.addView(view, 0);
         view = inflater.inflate(R.layout.upgrade_buttons, (ViewGroup) this.findViewById(R.id.upgrade_buttons));
         buttonGroup.addView(view, 1);
-        view = inflater.inflate(R.layout.info_buttons, (ViewGroup) this.findViewById(R.id.info_buttons));
-        buttonGroup.addView(view, 2);
         view = inflater.inflate(R.layout.item_buttons, (ViewGroup) this.findViewById(R.id.item_buttons));
-        buttonGroup.addView(view, 3);
-        view = inflater.inflate(R.layout.buy_buttons, (ViewGroup) this.findViewById(R.id.buy_buttons));
-        buttonGroup.addView(view, 4);
+        buttonGroup.addView(view, 2);
         Button pre = (Button) findViewById(R.id.prev_button_system_button);
         pre.setOnClickListener(new OnClickListener() {
             @Override
@@ -601,7 +597,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private void getLockBox() {
         if (getLockBoxDialog == null) {
             getLockBoxDialog = new Builder(this).create();
-            getLockBoxDialog.setTitle("62250换取一个带锁的宝箱");
+            getLockBoxDialog.setTitle("72250换取一个带锁的宝箱");
             getLockBoxDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -630,7 +626,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private void showResetSkillPointDialog() {
         AlertDialog resetSkillPointDialog;
         resetSkillPointDialog = new Builder(this).create();
-        resetSkillPointDialog.setTitle("消耗399988材料重置技能");
+        resetSkillPointDialog.setTitle("消耗699988材料重置技能");
         resetSkillPointDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
 
@@ -684,6 +680,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             Achievement.click50000.enable(heroN);
                             heroN.setMaxMazeLev(heroN.getMaxMazeLev() + 101);
                             maze.setLevel(99);
+                            DBHelper.getDbHelper().excuseSQLWithoutResult("UPDATE recipe set found = 'true'");
                             Achievement.dragon.enable(heroN);
                         } else if (tv.getText().toString().equals("sp1.1c")) {
                             if (heroN.getAwardCount() < 1) {

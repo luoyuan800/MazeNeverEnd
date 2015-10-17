@@ -77,7 +77,7 @@ public class LongSkill extends  SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("我们才是真正的龙的传人，干掉那些丑陋的西方爬虫！击败5000只龙怪后可以激活。<br>");
+                    builder.append("我们才是真正的龙的传人，干掉那些丑陋的西方爬虫！击败1000只龙怪后可以激活。<br>");
                     builder.append("被动技能，激活后免疫龙系怪物对你的伤害。");
                     return builder.toString();
                 }

@@ -90,8 +90,8 @@ public class Monster {
             monster = buildDefaultDefender(maze, hero, random);
         }
         monster.material = random.nextLong(maze.getLev() * monster.atk + 1) / 115 + 25;
-        if (monster.material > 15000) {
-            monster.material = 3000 + random.nextLong(15000);
+        if (monster.material > 10000) {
+            monster.material = 3000 + random.nextLong(10000);
         }
         monster.items = Arrays.asList(ItemName.原石, ItemName.铁矿石, ItemName.冷杉木,
                 ItemName.萤石, ItemName.白云石);

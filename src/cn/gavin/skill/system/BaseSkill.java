@@ -138,7 +138,7 @@ public class BaseSkill extends SkillLayout {
             skill.setRelease(new UseExpression() {
                 @Override
                 public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                    long harm = hero.getAttackValue() + ((AttackSkill) skill).getBaseHarm() + hero.getRandom().nextLong((((AttackSkill) skill).getAdditionHarm()) + 1);
+                    long harm = hero.getAttackValue() + ((AttackSkill) skill).getBaseHarm() + hero.getRandom().nextLong((((AttackSkill) skill).getAdditionHarm()) + ((AttackSkill)skill).getBaseHarm() + 1);
                     String skillmsg = skill.format(hero.getFormatName() + "使用了技能" + skill.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点伤害");
                     context.addMessage(skillmsg);
                     monster.addBattleSkillDesc(skillmsg);
@@ -297,7 +297,7 @@ public class BaseSkill extends SkillLayout {
                             e.printStackTrace();
                         }
                         harm = hero.getAttackValue() + hero.getRandom().nextLong(hero.getStrength() / 100 + 1);
-                        String msg3 = skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "攻击" + monster.getFormatName() + "造成了" + harm + "点伤害");
+                        String msg3 = skill.format(hero.getFormatName() + "攻击眩晕中的" + monster.getFormatName() + "造成了" + harm + "点伤害");
                         context.addMessage(msg3);
                         monster.addBattleSkillDesc(msg3);
                         monster.addHp(-harm);
@@ -333,7 +333,7 @@ public class BaseSkill extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
                     builder.append("防御技能<br>");
-                    builder.append(skill.getProbability()).append("%概率反弹").append(50 + skill.getProbability() * 10).append("%的攻击伤害");
+                    builder.append(skill.getProbability()).append("%概率反弹").append(20 + skill.getProbability() * 10).append("%的攻击伤害");
                     return builder.toString();
                 }
             });
@@ -629,7 +629,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("被动技能<br>");
+                    builder.append("我的目的地是星辰大海！<br>");
                     builder.append("增加踩到传送门的几率");
                     return builder.toString();
                 }
@@ -841,7 +841,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("被动技能<br>");
+                    builder.append("看，那里有一个箱子，悄悄爬过去抱走！<br>");
                     builder.append("永久增加获得宝箱的概率");
                     return builder.toString();
                 }
@@ -878,6 +878,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
+                    builder.append("不知道为什么就是想把别人的东西拿过来……当然我这是等价交换而已。<br>");
                     builder.append("当敌方生命值比自己HP高的时候，有").append(skill.getProbability()).append("%的概率交换双方的HP");
                     return builder.toString();
                 }
@@ -936,7 +937,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("防御至上<br>").append("被动技能，激活即生效<br>").append("当激活该技能时，当前的基础防御力翻倍。当取消激活该技能时，当前的基础防御力减半");
+                    builder.append("防御至上，这次绝对不会有bug了。<br>").append("当激活该技能时，当前的基础防御力翻倍。当取消激活该技能时，当前的基础防御力减半");
                     return builder.toString();
                 }
             });

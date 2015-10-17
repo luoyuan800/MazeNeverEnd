@@ -52,6 +52,8 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
     private Button conformButton;
     private Button cleanButton;
     private Button fuseButton;
+    private final int mate = 100250;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,7 +243,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                         resultText.setText("需要五个材料才可以进行融合");
                     }
                 }else {
-                    if (MazeContents.hero.getMaterial() >= 80250) {
+                    if (MazeContents.hero.getMaterial() >= mate) {
                         items.clear();
                         if (item1 != null) items.add(item1);
                         if (item2 != null) items.add(item2);
@@ -272,9 +274,9 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                             resultText.setText("选择的打造材料不足，请继续添加!");
                         }
                     } else {
-                        Toast.makeText(this, "--锻造点数不足80250!--", Toast.LENGTH_SHORT)
+                        Toast.makeText(this, "--锻造点数不足" + mate + "--", Toast.LENGTH_SHORT)
                                 .show();
-                        resultText.setText("--锻造点数不足80250!--");
+                        resultText.setText("--锻造点数不足" + mate + "!--");
                     }
                 }
         }
@@ -303,7 +305,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
         final TextView tv = new TextView(this);
         tv.setText(Html.fromHtml(accessory.toString()));
         dialog.setView(tv);
-        MazeContents.hero.addMaterial(-80250);
+        MazeContents.hero.addMaterial(-mate);
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定",
                 new DialogInterface.OnClickListener() {
 

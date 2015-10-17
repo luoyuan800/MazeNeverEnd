@@ -72,7 +72,7 @@ public class MonsterBook {
             }
             if (monster.isDefeat()) {
                 item.setDefeat(item.getDefeat() + 1);
-                if(item.getDefeat() > 5000){
+                if(item.getDefeat() > 1000 && monster.getName().endsWith("龙")){
                     Achievement.dragon.enable(null);
                 }
             } else {

@@ -160,8 +160,8 @@ public abstract class Skill {
         for (int i = 0; i < str.length(); i++) {
             result += Integer.parseInt(str.charAt(i) + "");
         }
-        if (result > 50) {
-            result = hero.getRandom().nextInt(50);
+        if (result > 30) {
+            result = hero.getRandom().nextInt(30);
         }
         return result;
     }

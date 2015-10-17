@@ -45,7 +45,7 @@ public class StringUtils {
         if(isNotEmpty(str)){
             return str.split(regularExpression);
         }else{
-            return new String[]{};
+            return new String[]{""};
         }
     }
 

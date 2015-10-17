@@ -76,7 +76,7 @@ public class Maze {
                 mazeLevelDetect();
                 long point = 1 + level / 10 + random.nextLong(level + 1) / 300;
                 if (point > 100) {
-                    point = 100;
+                    point = 50 + random.nextInt(60);
                 }
                 String msg = hero.getFormatName() + "进入了" + level + "层迷宫， 获得了<font color=\"#FF8C00\">" + point + "</font>点数奖励";
                 addMessage(context, msg);
