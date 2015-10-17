@@ -111,6 +111,7 @@ public abstract class Builder {
 
     private void build(Accessory accessory, boolean detectSave) {
         Map<Effect, Number> effectNumberMap = accessory.getEffects();
+        Map<Effect, Number> constantEffectMap =  new EnumMap<Effect, Number>(effectNumberMap);
         if (effectNumberMap == null) effectNumberMap = new EnumMap<Effect, Number>(Effect.class);
         for (Item item : items) {
             Effect effect = item.getEffect();
@@ -135,7 +136,7 @@ public abstract class Builder {
         EnumMap<Effect, Number> affectEffects = new EnumMap<Effect, Number>(Effect.class);
 
         for (EnumMap.Entry<Effect, Number> entry : effectNumberMap.entrySet()) {
-            if (affectEffects.size() > 0) {
+            if (affectEffects.size() > 0 && !constantEffectMap.containsKey(entry.getKey())) {
                 if (random.nextBoolean()) affectEffects.put(entry.getKey(), entry.getValue());
             } else {
                 affectEffects.put(entry.getKey(), entry.getValue());
