@@ -21,9 +21,7 @@ public enum Sword {
         if (lev >= this.lev) {
             int index = ordinal();
             if (index < values().length - 1) {
-                Sword sword = values()[index + 1];
-                sword.base = hero.getRandom().nextLong(hero.getStrength()/1000) + sword.base + hero.getSwordLev() * hero.ATR_RISE;
-                return sword;
+                return values()[index + 1];
             }else{
                 Achievement.artifact.enable(null);
             }

@@ -47,7 +47,7 @@ public class DBHelper {
         database = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
         if (database.getVersion() == 0) {
             onCreate(database);
-        }
+        }else
         if (database.getVersion() < DB_VERSION) {
             onUpgrade(database, database.getVersion(), DB_VERSION);
         }

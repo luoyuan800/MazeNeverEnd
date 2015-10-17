@@ -152,15 +152,16 @@ public class Hero implements BaseObject{
     }
 
     public Long getHp() {
-        return (isOnChange() ? changeHp : hp) + getSkillAdditionHp();
+        long rs = (isOnChange() ? changeHp : hp) + getSkillAdditionHp();
+        if(rs == 0){
+            onChange = false;
+        }
+        return rs;
     }
 
     public void addHp(long hp) {
         if (onChange) {
             this.changeHp += hp;
-            if (changeHp <= 0) {
-                onChange = false;
-            }
         } else {
             if (hp < 0) {
                 this.hp += hp;
@@ -290,6 +291,7 @@ public class Hero implements BaseObject{
                     material -= (100 + armorLev);
                     swordLev++;
                     if (sword != sword.levelUp(swordLev, this)) {
+                       addAttackValue(getRandom().nextLong(getStrength()/1000)+ getSwordLev() * ATR_RISE);
                         sword = sword.levelUp(swordLev, this);
                         swordLev = 0l;
                     }
@@ -310,6 +312,7 @@ public class Hero implements BaseObject{
                     material -= (80 + armorLev);
                     armorLev++;
                     if (armor != armor.levelUp(armorLev, this)) {
+                        addDefenseValue(random.nextLong(getPower()/3000) + getArmorLev() * DEF_RISE);
                         armor = armor.levelUp(armorLev, this);
                         armorLev = 0l;
                         if (armor == Armor.金甲) {
@@ -443,6 +446,8 @@ public class Hero implements BaseObject{
     }
 
     public void restore() {
+        onChange = false;
+        onSkill = false;
         this.hp = upperHp;
     }
 

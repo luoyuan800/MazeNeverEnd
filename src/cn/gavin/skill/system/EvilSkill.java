@@ -169,6 +169,7 @@ public class EvilSkill extends SkillLayout {
                     String msg2 = hero.getFormatName() + "使用了技能" + skill.getName() + "将" + harm + "点伤害转化为生命";
                     skill.addMessage(msg2);
                     monster.addBattleSkillDesc(msg2);
+                    Achievement.devils.enable(hero);
                     return false;
                 }
 

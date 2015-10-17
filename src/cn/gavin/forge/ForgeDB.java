@@ -32,7 +32,6 @@ public class ForgeDB {
                 "properties TEXT" +
                 ")";
         dbHelper.execSQL(recipeTable);
-        dbHelper.execSQL("CREATE UNIQUE INDEX recipe_index ON recipe (name)");
         dbHelper.execSQL(accessoryTable);
         dbHelper.execSQL(itemTable);
         insertRecipe(dbHelper);

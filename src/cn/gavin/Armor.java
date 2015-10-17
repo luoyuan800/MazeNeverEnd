@@ -19,9 +19,7 @@ public long getBase(){
         if (lev >= this.lev) {
             int index = ordinal();
             if (index < values().length - 1) {
-                Armor armor = values()[index + 1];
-                armor.base = armor.base + hero.getRandom().nextLong(hero.getPower()/3000) + hero.getArmorLev() * hero.DEF_RISE;
-                return armor;
+                return values()[index + 1];
             }else{
                 Achievement.artifact.enable(null);
             }

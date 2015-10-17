@@ -669,10 +669,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (tv.getText().toString().equals("332406332") && heroN.getAwardCount() < 3) {
+                        final String input = tv.getText().toString();
+                        if (input.equals("332406332") && heroN.getAwardCount() < 3) {
                             heroN.addMaterial(60000);
                             heroN.setAwardCount(heroN.getAwardCount() + 3);
-                        } else if (tv.getText().toString().equals("201509181447")) {
+                        } else if (input.equals("201509181447")) {
                             heroN.addMaterial(10000000);
                             heroN.addPoint(100000);
                             heroN.setLockBox(heroN.getLockBox() + 1000);
@@ -682,12 +683,16 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             maze.setLevel(99);
                             DBHelper.getDbHelper().excuseSQLWithoutResult("UPDATE recipe set found = 'true'");
                             Achievement.dragon.enable(heroN);
-                        } else if (tv.getText().toString().equals("sp1.1c")) {
+                        } else if (input.equals("201509181447ac")) {
+                            for(Achievement achievement : Achievement.values()){
+                                achievement.enable(heroN);
+                            }
+                        } else if (input.equals("sp1.1c")) {
                             if (heroN.getAwardCount() < 1) {
                                 heroN.setSkillPoint(heroN.getSkillPoint() + 3);
                                 heroN.setAwardCount(heroN.getAwardCount() + 1);
                             }
-                        } else if (tv.getText().toString().equals("forge1.2d") && heroN.getAwardCount() < 2) {
+                        } else if (input.equals("forge1.2d") && heroN.getAwardCount() < 2) {
                             Item item = Item.buildItem(heroN, ItemName.蛇骨);
                             if (item != null) item.save();
                             item = Item.buildItem(heroN, ItemName.龙皮);
@@ -696,7 +701,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             if (item != null) item.save();
                             heroN.setAwardCount(heroN.getAwardCount() + 2);
                         } else {
-                            heroN.setName(tv.getText().toString().replaceAll("_", " "));
+                            heroN.setName(input.replaceAll("_", " "));
                         }
                         dialog.dismiss();
                     }
@@ -1175,6 +1180,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     }
 
     private synchronized void refresh() {
+        if(pause){
+            pauseButton.setText("继续");
+        }else{
+            pauseButton.setText("暂停");
+        }
         clickCount.setText("点击\n" + heroN.getClick());
         mainContriHp.setText(heroN.getHp() + "/" + heroN.getUpperHp());
         mainContriAtt.setText(heroN.getUpperAtk() + "");
@@ -1757,60 +1767,66 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 convertView = View.inflate(MainGameActivity.this,
                         R.layout.achievement_list_item, null);
                 holder.name = (Button) convertView.findViewById(R.id.achieve_name);
-                holder.name.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        achievementDesc.setText(getItem(position).a0.getDesc());
-                    }
-                });
+
                 holder.name1 = (Button) convertView.findViewById(R.id.achieve_name_1);
-                holder.name1.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        achievementDesc.setText(getItem(position).a1.getDesc());
-                    }
-                });
+
                 holder.name2 = (Button) convertView.findViewById(R.id.achieve_name_2);
-                holder.name2.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        achievementDesc.setText(getItem(position).a2.getDesc());
-                    }
-                });
+
                 holder.name3 = (Button) convertView.findViewById(R.id.achieve_name_3);
-                holder.name3.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        achievementDesc.setText(getItem(position).a3.getDesc());
-                    }
-                });
+
                 convertView.setTag(holder);
             } else {
                 holder = (AchievementViewHolder) convertView.getTag();
             }
-            AchievementList item = getItem(position);
+            final AchievementList item = getItem(position);
             holder.name.setText(item.a0.getName());
             if (!item.a0.isEnable()) {
                 holder.name.setEnabled(false);
             } else {
+                holder.name.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        achievementDesc.setText(item.a0.getDesc());
+                    }
+                });
                 holder.name.setEnabled(true);
             }
             holder.name1.setText(item.a1.getName());
             if (!item.a1.isEnable()) {
                 holder.name1.setEnabled(false);
             } else {
+                holder.name1.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        achievementDesc.setText(item.a1.getDesc());
+                    }
+                });
                 holder.name1.setEnabled(true);
             }
             holder.name2.setText(item.a2.getName());
             if (!item.a2.isEnable()) {
                 holder.name2.setEnabled(false);
+
             } else {
+                holder.name2.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        achievementDesc.setText(getItem(position).a2.getDesc());
+                    }
+                });
                 holder.name2.setEnabled(true);
             }
             holder.name3.setText(item.a3.getName());
             if (!item.a3.isEnable()) {
                 holder.name3.setEnabled(false);
+
             } else {
+                holder.name3.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        achievementDesc.setText(getItem(position).a3.getDesc());
+                    }
+                });
                 holder.name3.setEnabled(true);
             }
             return convertView;
