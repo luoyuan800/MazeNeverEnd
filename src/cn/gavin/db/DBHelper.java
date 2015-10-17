@@ -17,7 +17,8 @@ public class DBHelper {
     public final static String DB_NAME = "mazeNeverEnd";
     private static int DB_VERSION_1_2_1 = 9;
     private static int DB_VERSION_1_3_1 = 10;
-    private static int DB_VERSION = 11;
+    private static int DB_VERSION_1_3_2 = 11;
+    private static int DB_VERSION = 12;
 
     private Context context;
     private SQLiteDatabase database;
