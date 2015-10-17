@@ -91,7 +91,7 @@ public class PalaceMonster implements BaseObject {
                 "hello TEXT" +
                 ")";
         db.execSQL(createTable);
-        db.execSQL("CREATE UNIQUE INDEX maze_lev ON palace (name, lev)");
+        db.execSQL("CREATE UNIQUE INDEX palace_lev ON palace (name, lev)");
     }
 
     public static Monster getDefender(long lev) {
