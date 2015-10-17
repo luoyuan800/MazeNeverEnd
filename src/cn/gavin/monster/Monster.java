@@ -17,11 +17,11 @@ import cn.gavin.utils.StringUtils;
  */
 public class Monster {
     private final static String[] firstNames = {"普通", "怪异", "飞翔", "稀有", "发狂", "神奇", "神经", "传奇"};
-    private final static long[] firstAdditionHP = {15, 25, 400, 1000, 500, 2000, 10000, 50000};
-    private final static long[] firstAdditionAtk = {3, 25, 100, 500, 2000, 2800, 4000, 30000};
+    private final static long[] firstAdditionHP = {15, 25, 400, 1000, 500, 2000, 10000, 70000};
+    private final static long[] firstAdditionAtk = {3, 25, 100, 500, 2000, 2800, 4000, 10000};
     private final static String[] secondNames = {"小", "中", "大", "大大", "红色", "绿色", "人面"};
     private final static long[] secondAdditionHP = {15, 25, 100, 500, 1003, 2000, 6000};
-    private final static long[] secondAdditionAtk = {5, 10, 30, 100, 150, 50, 550};
+    private final static long[] secondAdditionAtk = {5, 10, 30, 100, 150, 500, 5500};
     public final static String[] lastNames = {"蟑螂", "大蚯蚓", "异壳虫", "巨型飞蛾", "猪", "老鼠", "嗜血蚁",
             "老虎", "蛟", "变异蝎", "食人鸟", "丑蝙蝠", "蛇", "野牛", "龟", "三头蛇", "刺猬", "狼", "精灵",
             "僵尸", "骷髅", "凤凰", "龙", "作者"};
@@ -156,11 +156,13 @@ public class Monster {
             hp += random.nextLong((maze.getLev() + hero.getMaxMazeLev()) / 200) * random.nextLong((hero.getStrength() + hero.getAgility() + hero.getStrength()) / 100 + 1);
             atk += maze.getLev() * random.nextLong((hero.getStrength() + hero.getAgility() + hero.getPower()) / 800 + 1);
             atk += baseAtk[last] * random.nextLong(maze.getLev() + hero.getMaxMazeLev() / 100 + 1);
+            atk += secondAdditionAtk[second] * random.nextLong(maze.getLev()/500);
+            hp += firstAdditionHP[first]*random.nextLong(maze.getLev()/600);
             if (atk < hero.getDefenseValue()) atk = random.nextLong(hero.getAttackValue() + atk);
             atk += random.nextLong((hero.getUpperAtk() + hero.getUpperHp() + hero.getUpperDef()) / (6 * hero.getMaxMazeLev()) + hero.getMaxMazeLev());
         }
         hp += baseHP[last] * random.nextLong(maze.getLev() + 1);
-        hp += baseAtk[last] * hero.getReincaCount();
+        atk += baseAtk[last] * hero.getReincaCount();
         if (hp < hero.getAttackValue()) {
             hp += random.nextLong(hero.getAttackValue() * 2);
         }
