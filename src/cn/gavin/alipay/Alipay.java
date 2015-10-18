@@ -3,6 +3,7 @@ package cn.gavin.alipay;
 import android.app.ProgressDialog;
 import android.widget.Toast;
 
+import cn.gavin.activity.MazeContents;
 import com.bmob.pay.tool.BmobPay;
 import com.bmob.pay.tool.PayListener;
 
@@ -38,16 +39,18 @@ public class Alipay {
     public void pay() {
 
         showDialog("正在获取订单...");
+        String orderName = "";
+        if(MazeContents.hero!=null) orderName = MazeContents.hero.getName();
         final String name = "勇者进贡";
 
-        bmobPay.pay(1, name, "", new PayListener() {
+        bmobPay.pay(1, name, orderName, new PayListener() {
 
             // 因为网络等原因,支付结果未知(小概率事件),出于保险起见稍后手动查询
             @Override
             public void unknow() {
-                Toast.makeText(context, "--进贡结果未知,请稍后手动查询--",
+                /*Toast.makeText(context, "--进贡结果未知,请稍后手动查询--",
                         Toast.LENGTH_SHORT).show();
-                context.addMessage(name + "--进贡结果未知--");
+                context.addMessage(name + "--进贡结果未知--");*/
                 hideDialog();
             }
 
