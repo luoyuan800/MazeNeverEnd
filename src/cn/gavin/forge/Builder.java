@@ -111,8 +111,10 @@ public abstract class Builder {
 
     private void build(Accessory accessory, boolean detectSave) {
         Map<Effect, Number> effectNumberMap = accessory.getEffects();
+        if(effectNumberMap == null){
+            effectNumberMap = new EnumMap<Effect, Number>(Effect.class);
+        }
         Map<Effect, Number> constantEffectMap =  new EnumMap<Effect, Number>(effectNumberMap);
-        if (effectNumberMap == null) effectNumberMap = new EnumMap<Effect, Number>(Effect.class);
         for (Item item : items) {
             Effect effect = item.getEffect();
             if (effect != null) {

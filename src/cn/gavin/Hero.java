@@ -477,11 +477,17 @@ public class Hero implements BaseObject{
 
     public void click(boolean award) {
         if ((System.currentTimeMillis() - latestClick) > 92) {
-            if (click < Integer.MAX_VALUE - 10) {
-                if (this.click % 1000 == 0) {
-                    point += random.nextLong(15);
-                }
+            if (click < Long.MAX_VALUE - 1000) {
+
                 if (award) {
+                    if (this.click % 1000 == 0) {
+                        point += random.nextLong(15);
+                    }
+                    if(this.click % 3000 == 0){
+                        if(random.nextBoolean()){
+                            keyCount += 1;
+                        }
+                    }
                     this.material += clickAward;
                     this.point += clickPointAward;
                 }

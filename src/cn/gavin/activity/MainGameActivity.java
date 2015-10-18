@@ -379,7 +379,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         initGameData();
         checkUpdate();
         gameThreadRunning = true;
-        service.setPackage(getPackageName());
         startService(service);
         bindService(service, connection, BIND_AUTO_CREATE);
     }
@@ -429,7 +428,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
     @Override
     protected void onDestroy() {
-        MainGameActivity.this.stopService(service);
         gameThreadRunning = false;
         dbHelper.close();
         super.onDestroy();
@@ -518,6 +516,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             skillPointGetDialog.dismiss();
                         }
                         MainGameActivity.this.finish();
+                        MainGameActivity.this.stopService(service);
                         System.exit(0);
                     }
 
@@ -1525,10 +1524,12 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             case R.id.up_h_armor:
                 heroN.upgradeArmor(100);
                 handler.sendEmptyMessage(0);
+                heroN.click(false);
                 break;
             case R.id.up_h_sword:
                 heroN.upgradeSword(100);
                 handler.sendEmptyMessage(0);
+                heroN.click(false);
                 break;
             case R.id.rebirth_button:
                 showReincarnationDialog();
@@ -1539,6 +1540,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 break;
             case R.id.lock_box_get_button:
                 getLockBox();
+                heroN.click(false);
                 break;
             case R.id.local_box:
                 if (heroN.getKeyCount() > 0 && heroN.getLockBox() > 0) {
@@ -1623,21 +1625,18 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     heroN.getFirstSkill().addCount();
                 }
                 handler.sendEmptyMessage(0);
-                heroN.click(false);
                 break;
             case R.id.secondary_skill:
                 if (heroN.getSecondSkill() != null) {
                     heroN.getSecondSkill().addCount();
                 }
                 handler.sendEmptyMessage(0);
-                heroN.click(false);
                 break;
             case R.id.third_skill:
                 if (heroN.getThirdSkill() != null) {
                     heroN.getThirdSkill().addCount();
                 }
                 handler.sendEmptyMessage(0);
-                heroN.click(false);
                 break;
             case R.id.buy_button:
                 alipay.pay();

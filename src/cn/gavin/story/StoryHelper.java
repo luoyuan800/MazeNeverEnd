@@ -32,7 +32,7 @@ public class StoryHelper {
         }
         final Random random = hero.getRandom();
         boolean b = hero.getAgility() / 2000 > random.nextLong();
-        boolean a = Achievement.guider1.isEnable() ? random.nextInt(1000) > 97 : random.nextInt(100) < 53;
+        boolean a = Achievement.guider1.isEnable() ? random.nextInt(10000) > 9977 : random.nextInt(10000) < 3;
         if (Achievement.story.isEnable() && hero.getKeyCount() > 0 && !Achievement.restriction.isEnable() && a) {
             context.addMessage(String.format("%s找到了一扇上锁了的门，使用一把钥匙打开这扇门", hero.getFormatName()));
             hero.setKeyCount(hero.getKeyCount() - 1);
@@ -99,8 +99,8 @@ public class StoryHelper {
                 hero.setKeyCount(hero.getKeyCount() + 3);
                 return true;
             }else if(b && random.nextLong(hero.getKeyCount() + 1500) < random.nextInt(5)){
-                context.addMessage(hero.getFormatName() + "遇见了<font color=\"#FF0000\">小梅</font>，她红着脸递出了一把钥匙。");
-                hero.setKeyCount(hero.getKeyCount() + 1);
+                context.addMessage(hero.getFormatName() + "遇见了<font color=\"#FF0000\">小梅</font>，她红着脸递出了五把钥匙。");
+                hero.setKeyCount(hero.getKeyCount() + 5);
                 return false;
             }else if(b && random.nextLong(hero.getKeyCount() + 1000) < random.nextInt(10)){
                 context.addMessage(hero.getFormatName() + "遇见了<font color=\"#FF0000\">雷二蛋</font>，他红着脸掏走了一把钥匙。");
@@ -116,13 +116,13 @@ public class StoryHelper {
                 return false;
             }
         }
-        if (context.getMaze().getLev() % 6 == 0 && b && random.nextInt(1000) < 23) {
+        if (context.getMaze().getLev() % 3 == 0 && b && random.nextInt(1000) < 33) {
             final long properties = random.nextLong(hero.getAgility() + hero.getStrength() + hero.getPower() + 1);
-            if (random.nextBoolean() && properties > 2030
-                    && 2 > (random.nextLong(hero.getLockBox() + 1) + 1) && random.nextLong(910 + context.getMaze().getHunt()) > 995) {
+            if (random.nextBoolean() && properties > 5030
+                    && 2 > (random.nextLong(hero.getLockBox() + 1) + 1) && random.nextLong(915 + context.getMaze().getHunt()) > 1065) {
                 context.addMessage(hero.getFormatName() + "找到一个带锁的宝箱");
                 hero.setLockBox(hero.getLockBox() + 1);
-            } else if (hero.getKeyCount() < 15 && properties > 1030 && random.nextInt(1001) > 887) {
+            } else if (hero.getKeyCount() < 15 && properties > 1130 && random.nextInt(1001) > 787) {
                 context.addMessage(hero.getFormatName() + "找到一把宝箱钥匙");
                 hero.setKeyCount(hero.getKeyCount() + 1);
             }
