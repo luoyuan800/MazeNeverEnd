@@ -47,7 +47,7 @@ public class MonsterBook {
             if(monster.getName().endsWith("守护者")){
                 name = "守护者";
             }else{
-                name = monster.getName();
+                name = monster.getName().replaceAll("【守护者】","");
             }
         }
             item.setName(name);
