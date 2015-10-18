@@ -474,10 +474,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("是否确认转生？");
         TextView tv = new TextView(context);
-        tv.setText("注意：\n1.  你会失去迷宫记录，技能等级，材料和能力点数\n" +
-                "2.  装备着的饰品会继承下来\n" +
+        tv.setText("注意：\n1.  你会失去技能等级，材料和能力点数。\n" +
+                "2.  装备着的饰品会继承下来，其他装备会被丢弃。\n" +
                 "3.  转生后的基础属性会根据转生前的属性得到加强（基础属性影响人物的成长）\n" +
-                "4. 转生后，之前的角色会成为迷宫守护者。");
+                "4.  转生消耗的锻造点数会随着转生次数递增。");
         dialog.setView(tv);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
@@ -601,7 +601,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             getLockBoxDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    heroN.addMaterial(-62250);
+                    heroN.addMaterial(-72250);
                     heroN.setLockBox(heroN.getLockBox() + 1);
                     handler.sendEmptyMessage(103);
                     getLockBoxDialog.hide();
@@ -616,7 +616,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             });
         }
         getLockBoxDialog.show();
-        if (heroN.getMaterial() >= 62250) {
+        if (heroN.getMaterial() >= 72250) {
             getLockBoxDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         } else {
             getLockBoxDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -632,7 +632,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        heroN.addMaterial(-399988);
+                        heroN.addMaterial(-699988);
                         heroN.setSkillPoint(heroN.getSkillPoint() + SkillFactory.reset());
                         handler.sendEmptyMessage(103);
                         dialog.dismiss();
@@ -649,7 +649,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
                 });
         resetSkillPointDialog.show();
-        if (heroN.getMaterial() > 399988) {
+        if (heroN.getMaterial() > 699988) {
             resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         } else {
             resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -678,11 +678,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             heroN.addPoint(100000);
                             heroN.setLockBox(heroN.getLockBox() + 1000);
                             heroN.setKeyCount(heroN.getKeyCount() + 1000);
-                            Achievement.click50000.enable(heroN);
                             heroN.setMaxMazeLev(heroN.getMaxMazeLev() + 101);
                             maze.setLevel(99);
                             DBHelper.getDbHelper().excuseSQLWithoutResult("UPDATE recipe set found = 'true'");
-                            Achievement.dragon.enable(heroN);
                         } else if (input.equals("201509181447ac")) {
                             for(Achievement achievement : Achievement.values()){
                                 achievement.enable(heroN);
