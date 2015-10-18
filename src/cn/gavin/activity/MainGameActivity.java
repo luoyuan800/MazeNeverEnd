@@ -82,7 +82,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private static final String PACKAGE_DOWNLOAD_URL = "http://7xk7ce.com1.z0.glb.clouddn.com/MazeNeverEnd.png";
 
     // 战斗刷新速度
-    private long refreshInfoSpeed = 480;
+    private long refreshInfoSpeed = 520;
     private Button uploadButton;
     private Button updateButton;
     private StringBuilder versionUpdateInfo;

@@ -476,7 +476,7 @@ public class Hero implements BaseObject{
     private Long latestClick = 0l;
 
     public void click(boolean award) {
-        if ((System.currentTimeMillis() - latestClick) > 150) {
+        if ((System.currentTimeMillis() - latestClick) > 92) {
             if (click < Integer.MAX_VALUE - 10) {
                 if (this.click % 1000 == 0) {
                     point += random.nextLong(15);

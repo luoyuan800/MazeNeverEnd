@@ -2,7 +2,6 @@ package cn.gavin.skill.system;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
@@ -27,7 +26,7 @@ import cn.gavin.skill.type.PropertySkill;
 /**
  * Created by luoyuan on 9/13/15.
  */
-public class LongSkill extends  SkillLayout {
+public class LongSkill extends SkillLayout {
     public LongSkill(Context context) {
         super(context);
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -36,7 +35,7 @@ public class LongSkill extends  SkillLayout {
         this.context = context;
     }
 
-    public void init(SkillDialog dialog){
+    public void init(SkillDialog dialog) {
         Skill skill = SkillFactory.getSkill("龙裔", hero, dialog);
         Button button = (Button) view.findViewById(R.id.long_skill_ly_button);
         skill.setSkillButton(button);
@@ -70,7 +69,7 @@ public class LongSkill extends  SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return  Achievement.dragon.isEnable();
+                    return Achievement.dragon.isEnable();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -108,7 +107,7 @@ public class LongSkill extends  SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("龙裔",hero, dialog).isActive();
+                    return SkillFactory.getSkill("龙裔", hero, dialog).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -123,7 +122,7 @@ public class LongSkill extends  SkillLayout {
             skill.setRelease(new UseExpression() {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                    String msg= hero.getFormatName() + "释放了" + iskll.getName() + "吓退了" + monster.getFormatName();
+                    String msg = hero.getFormatName() + "释放了" + iskll.getName() + "吓退了" + monster.getFormatName();
                     iskll.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return true;
@@ -133,7 +132,7 @@ public class LongSkill extends  SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if(skill.getProbability() < 15){
+                    if (skill.getProbability() < 15) {
                         skill.setProbability(skill.getProbability() + 1);
                     }
                     return true;
@@ -142,7 +141,7 @@ public class LongSkill extends  SkillLayout {
             if (!skill.load()) {
                 skill.setProbability(1f);
             }
-        }else if ("龙铠".equalsIgnoreCase(name)) {
+        } else if ("龙铠".equalsIgnoreCase(name)) {
             final DefendSkill iskll = new DefendSkill();
             skill = iskll;
             skill.setName("龙铠");
@@ -150,7 +149,7 @@ public class LongSkill extends  SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("咆哮",hero, dialog).isActive();
+                    return SkillFactory.getSkill("咆哮", hero, dialog).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -165,13 +164,13 @@ public class LongSkill extends  SkillLayout {
             skill.setRelease(new UseExpression() {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                    if(hero.getElement() == monster.getElement()){
-                        String msg = hero.getFormatName() + "免疫了" + monster.getElement() + "的攻击";
+                    if (hero.getElement() == monster.getElement()) {
+                        String msg = hero.getFormatName() + "免疫了" + monster.getFormatName() + "的攻击";
                         iskll.addMessage(msg);
                         monster.addBattleSkillDesc(msg);
                         return false;
-                    }else {
-                        return BattleController.heroDef(context,hero,monster, hero.getRandom());
+                    } else {
+                        return BattleController.heroDef(context, hero, monster, hero.getRandom());
                     }
                 }
 
@@ -179,39 +178,30 @@ public class LongSkill extends  SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if(skill.getProbability() < 35){
-                        skill.setProbability(skill.getProbability() + 3);
+                    if (skill.getProbability() < 65) {
+                        skill.setProbability(skill.getProbability() +5);
                     }
                     return true;
                 }
             });
             if (!skill.load()) {
-                skill.setProbability(10f);
+                skill.setProbability(20f);
             }
-        }else if ("觉醒".equalsIgnoreCase(name)) {
-            final PropertySkill iskll = new PropertySkill(){
-                public void setOnUsed(boolean use){
-                    if(!onUsed && use && MainGameActivity.context!=null){
-                        long elementValue = (hero.getAgility() + hero.getStrength() + hero.getPower() + hero.getBaseDefense() + hero.getBaseAttackValue())/5;
-                        if(hero.getRandom().nextLong(hero.getAttackValue() + 1) < hero.getRandom().nextLong(elementValue + 1)){
+        } else if ("觉醒".equalsIgnoreCase(name)) {
+            final PropertySkill iskll = new PropertySkill() {
+                public void setOnUsed(boolean use) {
+                    if (!onUsed && use && MainGameActivity.context != null) {
+                        long elementValue = (hero.getAgility() + hero.getStrength() + hero.getPower() + hero.getBaseDefense() + hero.getBaseAttackValue()) / 5;
+                        if (hero.getRandom().nextLong(hero.getAttackValue() + 1) < hero.getRandom().nextLong(elementValue + 1)) {
                             hero.setElement(Element.金);
-                            return;
-                        }
-                        if(hero.getRandom().nextLong(hero.getDefenseValue() + 1) < hero.getRandom().nextLong(elementValue + 1)){
+                        } else if (hero.getRandom().nextLong(hero.getDefenseValue() + 1) < hero.getRandom().nextLong(elementValue + 1)) {
                             hero.setElement(Element.土);
-                            return;
-                        }
-                        if(hero.getRandom().nextLong(hero.getUpperHp() + 1) < hero.getRandom().nextLong(elementValue + 1)){
+                        } else if (hero.getRandom().nextLong(hero.getUpperHp() + 1) < hero.getRandom().nextLong(elementValue + 1)) {
                             hero.setElement(Element.水);
-                            return;
-                        }
-                        if(hero.getRandom().nextLong(hero.getStrength() + 1) < hero.getRandom().nextLong(elementValue + 1)){
+                        } else if (hero.getRandom().nextLong(hero.getStrength() + 1) < hero.getRandom().nextLong(elementValue + 1)) {
                             hero.setElement(Element.火);
-                            return;
-                        }
-                        if(hero.getRandom().nextLong(hero.getAgility() + 1) < hero.getRandom().nextLong(elementValue + 1)){
+                        } else if (hero.getRandom().nextLong(hero.getAgility() + 1) < hero.getRandom().nextLong(elementValue + 1)) {
                             hero.setElement(Element.木);
-                            return;
                         }
                         hero.addPoint(-6000);
                     }
@@ -224,7 +214,7 @@ public class LongSkill extends  SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getPoint() > 6001 && SkillFactory.getSkill("龙铠",hero, dialog).isActive();
+                    return hero.getPoint() > 6001 && SkillFactory.getSkill("龙铠", hero, dialog).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -254,7 +244,7 @@ public class LongSkill extends  SkillLayout {
             if (!skill.load()) {
                 skill.setProbability(10f);
             }
-        }else if ("龙爪".equalsIgnoreCase(name)) {
+        } else if ("龙爪".equalsIgnoreCase(name)) {
             final AttackSkill iskll = new AttackSkill();
             skill = iskll;
             skill.setName("龙爪");
@@ -262,7 +252,7 @@ public class LongSkill extends  SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("龙裔",hero, dialog).isActive();
+                    return SkillFactory.getSkill("龙裔", hero, dialog).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -278,23 +268,23 @@ public class LongSkill extends  SkillLayout {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = hero.getAttackValue();
-                    if(hero.getElement() == Element.土){
+                    if (hero.getElement() == Element.土) {
                         harm *= 2;
-                    }else if(hero.getElement() == Element.火){
+                    } else if (hero.getElement() == Element.火) {
                         harm /= 2;
                     }
-                    if(Element.金.restriction(monster.getElement())){
+                    if (Element.金.restriction(monster.getElement())) {
                         harm *= 1.5;
-                    }else if(monster.getElement().restriction(Element.金)){
+                    } else if (monster.getElement().restriction(Element.金)) {
                         harm /= 2;
                     }
-                    if(hero.isHit()){
+                    if (hero.isHit()) {
                         String msg = hero.getFormatName() + "使出了暴击";
                         iskll.addMessage(msg);
                         monster.addBattleSkillDesc(msg);
                     }
                     monster.addHp(-harm);
-                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" +  monster.getFormatName() + "造成了" + harm + "点金属性伤害。";
+                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点金属性伤害。";
                     iskll.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;
@@ -304,7 +294,7 @@ public class LongSkill extends  SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if(skill.getProbability() < 25){
+                    if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 3);
                     }
                     return true;
@@ -313,7 +303,7 @@ public class LongSkill extends  SkillLayout {
             if (!skill.load()) {
                 skill.setProbability(6f);
             }
-        }else if ("吐息".equalsIgnoreCase(name)) {
+        } else if ("吐息".equalsIgnoreCase(name)) {
             final AttackSkill iskll = new AttackSkill();
             skill = iskll;
             skill.setName("吐息");
@@ -321,7 +311,7 @@ public class LongSkill extends  SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("龙爪",hero, dialog).isActive();
+                    return SkillFactory.getSkill("龙爪", hero, dialog).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -337,23 +327,23 @@ public class LongSkill extends  SkillLayout {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = hero.getAttackValue();
-                    if(hero.getElement() == Element.木){
+                    if (hero.getElement() == Element.木) {
                         harm *= 2;
-                    }else if(hero.getElement() == Element.水){
+                    } else if (hero.getElement() == Element.水) {
                         harm /= 2;
                     }
-                    if(Element.火.restriction(monster.getElement())){
+                    if (Element.火.restriction(monster.getElement())) {
                         harm *= 1.5;
-                    }else if(monster.getElement().restriction(Element.火)){
+                    } else if (monster.getElement().restriction(Element.火)) {
                         harm /= 2;
                     }
-                    if(hero.isHit()){
+                    if (hero.isHit()) {
                         String msg = hero.getFormatName() + "使出了暴击";
                         iskll.addMessage(msg);
                         monster.addBattleSkillDesc(msg);
                     }
                     monster.addHp(-harm);
-                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" +  monster.getFormatName() + "造成了" + harm + "点火属性伤害。";
+                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点火属性伤害。";
                     iskll.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;
@@ -363,7 +353,7 @@ public class LongSkill extends  SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if(skill.getProbability() < 25){
+                    if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 3);
                     }
                     return true;
@@ -372,7 +362,7 @@ public class LongSkill extends  SkillLayout {
             if (!skill.load()) {
                 skill.setProbability(7f);
             }
-        }else if ("沙尘".equalsIgnoreCase(name)) {
+        } else if ("沙尘".equalsIgnoreCase(name)) {
             final AttackSkill iskll = new AttackSkill();
             skill = iskll;
             skill.setName("沙尘");
@@ -380,7 +370,7 @@ public class LongSkill extends  SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("吐息",hero, dialog).isActive();
+                    return SkillFactory.getSkill("吐息", hero, dialog).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -396,23 +386,23 @@ public class LongSkill extends  SkillLayout {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = hero.getAttackValue();
-                    if(hero.getElement() == Element.火){
+                    if (hero.getElement() == Element.火) {
                         harm *= 2;
-                    }else if(hero.getElement() == Element.木){
+                    } else if (hero.getElement() == Element.木) {
                         harm /= 2;
                     }
-                    if(Element.土.restriction(monster.getElement())){
+                    if (Element.土.restriction(monster.getElement())) {
                         harm *= 1.5;
-                    }else if(monster.getElement().restriction(Element.土)){
+                    } else if (monster.getElement().restriction(Element.土)) {
                         harm /= 2;
                     }
-                    if(hero.isHit()){
+                    if (hero.isHit()) {
                         String msg = hero.getFormatName() + "使出了暴击";
                         iskll.addMessage(msg);
                         monster.addBattleSkillDesc(msg);
                     }
                     monster.addHp(-harm);
-                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" +  monster.getFormatName() + "造成了" + harm + "点土属性伤害。";
+                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点土属性伤害。";
                     iskll.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;
@@ -422,7 +412,7 @@ public class LongSkill extends  SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if(skill.getProbability() < 25){
+                    if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 3);
                     }
                     return true;

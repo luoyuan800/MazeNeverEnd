@@ -14,7 +14,7 @@ import cn.gavin.utils.Random;
  * Created by gluo on 8/26/2015.
  */
 public class Maze {
-    private int csmgl = 8997;
+    private int csmgl = 9987;
     private Hero hero;
     protected long level;
     private boolean moving;
@@ -81,11 +81,11 @@ public class Maze {
                 String msg = hero.getFormatName() + "进入了" + level + "层迷宫， 获得了<font color=\"#FF8C00\">" + point + "</font>点数奖励";
                 addMessage(context, msg);
                 if (level > hero.getMaxMazeLev()) {
-                    hero.addMaxMazeLev();
+                    hero.setMaxMazeLev(level);
                 }
 
                 hero.addPoint(point);
-                hero.addHp(random.nextLong(hero.getUpperHp() / 20 + 1) + random.nextLong(hero.getPower() / 100));
+                hero.addHp(random.nextLong(hero.getUpperHp() / 10 + 1) + random.nextLong(hero.getPower() / 500));
                 addMessage(context, "-------------------");
             } else if (random.nextLong(850 + hunt) > 993 && random.nextLong(hero.getAgility()) > random.nextLong(6971)) {
                 long mate = random.nextLong(level * 300 + 1) + random.nextLong(hero.getAgility() / 1000 + 100) + 100;
@@ -93,7 +93,7 @@ public class Maze {
                 hero.addMaterial(mate);
                 addMessage(context, "-------------------");
             } else if (hero.getHp() < hero.getUpperHp() && random.nextLong(1000) > 989) {
-                long hel = random.nextLong(hero.getUpperHp() / 10 + 1) + random.nextLong(hero.getPower() / 100);
+                long hel = random.nextLong(hero.getUpperHp() / 5 + 1) + random.nextLong(hero.getPower() / 300);
                 if (hel > hero.getUpperHp() / 2) {
                     hel = random.nextLong(hero.getUpperHp() / 2 + 1) + 1;
                 }
@@ -102,7 +102,7 @@ public class Maze {
                 addMessage(context, "-------------------");
             } else if (random.nextLong(9000) > csmgl) {
                 step = 0;
-                long levJ = random.nextLong(hero.getMaxMazeLev() + 5) + 1;
+                long levJ = random.nextLong(hero.getMaxMazeLev() + 15) + 1;
                 addMessage(context, hero.getFormatName() + "踩到了传送门，被传送到了迷宫第" + levJ + "层");
                 level = levJ;
                 if (level > hero.getMaxMazeLev()) {
