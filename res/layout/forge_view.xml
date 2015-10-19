@@ -146,7 +146,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="长按上面的五个材料框选择材料。校验按钮可以检查已经选择的材料可能打造出来的装备。"
+        android:text="单击上面的五个材料框选择材料。长按材料可以在这里显示材料属性。校验按钮可以检查已经选择的材料可能打造出来的装备。"
         android:ems="10" />
 
 </LinearLayout>

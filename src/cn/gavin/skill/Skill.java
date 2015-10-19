@@ -181,7 +181,7 @@ public abstract class Skill {
     private long latestClick = 0;
 
     public void addCount() {
-        if((System.currentTimeMillis() - latestClick) > 98) {
+        if((System.currentTimeMillis() - latestClick) > 108) {
             if (this.count < Long.MAX_VALUE - 1000) {
                 this.count++;
                 hero.click(false);

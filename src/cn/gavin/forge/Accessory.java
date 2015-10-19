@@ -283,7 +283,7 @@ public class Accessory extends Equipment {
             for (EnumMap.Entry<Effect, Number> entry : effects.entrySet()) {
                 if (item.getEffect() == null && random.nextBoolean()) {
                     item.setEffect(entry.getKey());
-                    item.setEffectValue(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue() + 1));
+                    item.setEffectValue(entry.getValue().longValue() / 3 + random.nextLong(entry.getValue().longValue() + 1));
                 } else if (item.getEffect1() == null && random.nextBoolean()) {
                     item.setEffect1(entry.getKey());
                     item.setEffect1Value(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue() + 1));
@@ -291,6 +291,11 @@ public class Accessory extends Equipment {
                 if (item.getEffect() != null && item.getEffect1() != null) {
                     break;
                 }
+            }
+            if(item.getEffect() == null){
+                EnumMap.Entry<Effect, Number> entry = effects.entrySet().iterator().next();
+                item.setEffect(entry.getKey());
+                item.setEffectValue(entry.getValue());
             }
             item.save();
             items.add(item);
@@ -308,6 +313,11 @@ public class Accessory extends Equipment {
                     if (item.getEffect() != null && item.getEffect1() != null) {
                         break;
                     }
+                }
+                if(item.getEffect() == null){
+                    EnumMap.Entry<Effect, Number> entry = effects.entrySet().iterator().next();
+                    item.setEffect(entry.getKey());
+                    item.setEffectValue(entry.getValue());
                 }
                 item.save();
                 items.add(item);

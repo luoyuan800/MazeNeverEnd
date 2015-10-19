@@ -476,10 +476,12 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("是否确认转生？");
         TextView tv = new TextView(context);
-        tv.setText("注意：\n1.  你会失去技能等级，材料和能力点数。\n" +
-                "2.  装备着的饰品会继承下来，其他装备会被丢弃。\n" +
-                "3.  转生后的基础属性会根据转生前的属性得到加强（基础属性影响人物的成长）\n" +
-                "4.  转生消耗的锻造点数会随着转生次数递增。");
+        tv.setText("注意：\n1.  你会失去所有技能等级。\n" +
+                "2.  所有材料会被清空。\n" +
+                "3.  装备着的饰品会继承下来，其他装备会被丢弃。\n" +
+                "4.  未分配的能力点数会被清空.\n" +
+                "5.  转生后的基础属性会根据转生前的属性得到加强（基础属性影响人物的成长）。\n" +
+                "6.  转生消耗的锻造点数会随着转生次数递增。");
         dialog.setView(tv);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {

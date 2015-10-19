@@ -168,6 +168,16 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.forge_item_1:
+            case R.id.forge_item_2:
+            case R.id.forge_item_3:
+            case R.id.forge_item_4:
+            case R.id.forge_item_5:
+                if (itemDialog == null) {
+                    itemDialog = new ItemDialog(this);
+                }
+                itemDialog.show(view.getId());
+                break;
             case R.id.forge_dismantle_button:
                 AlertDialog alertDialog = new AlertDialog.Builder(this).create();
                 alertDialog.setTitle("点击装备进行拆解");
@@ -185,31 +195,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
             case R.id.forge_clean_button:
                 clean();
                 break;
-            case R.id.forge_item_1:
-                if (item1 != null) {
-                    resultText.setText(Html.fromHtml(item1.toString()));
-                }
-                break;
-            case R.id.forge_item_2:
-                if (item2 != null) {
-                    resultText.setText(Html.fromHtml(item2.toString()));
-                }
-                break;
-            case R.id.forge_item_3:
-                if (item3 != null) {
-                    resultText.setText(Html.fromHtml(item3.toString()));
-                }
-                break;
-            case R.id.forge_item_4:
-                if (item4 != null) {
-                    resultText.setText(Html.fromHtml(item4.toString()));
-                }
-                break;
-            case R.id.forge_item_5:
-                if (item5 != null) {
-                    resultText.setText(Html.fromHtml(item5.toString()));
-                }
-                break;
+
             case R.id.forge_conform_button:
                 items.clear();
                 if (item1 != null) items.add(item1);
@@ -351,11 +337,35 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
 
     @Override
     public boolean onLongClick(View view) {
-        if (itemDialog == null) {
-            itemDialog = new ItemDialog(this);
+        switch(view.getId()) {
+            case R.id.forge_item_1:
+                if (item1 != null) {
+                    resultText.setText(Html.fromHtml(item1.toString()));
+                }
+                break;
+            case R.id.forge_item_2:
+                if (item2 != null) {
+                    resultText.setText(Html.fromHtml(item2.toString()));
+                }
+                break;
+            case R.id.forge_item_3:
+                if (item3 != null) {
+                    resultText.setText(Html.fromHtml(item3.toString()));
+                }
+                break;
+
+            case R.id.forge_item_4:
+                if (item4 != null) {
+                    resultText.setText(Html.fromHtml(item4.toString()));
+                }
+                break;
+            case R.id.forge_item_5:
+                if (item5 != null) {
+                    resultText.setText(Html.fromHtml(item5.toString()));
+                }
+                break;
         }
-        itemDialog.show(view.getId());
-        return false;
+        return true;
     }
 
     public boolean contains(Item item) {

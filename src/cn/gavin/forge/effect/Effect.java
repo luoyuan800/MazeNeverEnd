@@ -15,7 +15,7 @@ public enum Effect {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
-            long atk = random.nextLong((hero.getStrength() + monster.getMaxHP()) / 1505 + 1);
+            long atk = random.nextLong((hero.getStrength() + monster.getMaxHP()) / 1705 + 1);
             if (atk <= 500) atk = random.nextLong(hero.getMaxMazeLev() + 1) + 500;
             return atk;
         }
@@ -52,7 +52,7 @@ public enum Effect {
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
             long str = random.nextLong((hero.getAttackValue() + monster.getAtk()) / 200000 + 1);
-            if (str <= 300) str = random.nextLong(hero.getMaxMazeLev() + 1) + 299;
+            if (str <= 100) str = random.nextLong(hero.getMaxMazeLev() + 1) + 199;
             return str;
         }
     }, "增加力量"),
@@ -61,7 +61,7 @@ public enum Effect {
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
             long power = random.nextLong((hero.getHp() + monster.getHp()) / 200000 + 1) + 1;
-            if (power <= 500) power = random.nextLong(hero.getMaxMazeLev() + 1) + 499;
+            if (power <= 300) power = random.nextLong(hero.getMaxMazeLev() + 1) + 399;
             return power;
         }
     }, "增加体力"),
@@ -70,7 +70,7 @@ public enum Effect {
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
             long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 1000 + 1) + 5;
-            if (award > 500) award = random.nextLong(500) + 100;
+            if (award > 300) award = random.nextLong(300) + 100;
             return award;
         }
     }, "增加点击锻造点数奖励"),

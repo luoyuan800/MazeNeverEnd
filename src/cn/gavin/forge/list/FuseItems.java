@@ -23,7 +23,7 @@ public class FuseItems {
         for(Item item : items){
             Number number = effectNumberEnumMap.get(item.getEffect());
             if(number!=null){
-                effectNumberEnumMap.put(item.getEffect(), number.longValue() + random.nextLong(item.getEffectValue().longValue()));
+                effectNumberEnumMap.put(item.getEffect(), number.longValue() + random.nextLong(item.getEffectValue().longValue() + 1000));
             }
             if(item.getEffect1()!=null){
                 number = effectNumberEnumMap.get(item.getEffect1());

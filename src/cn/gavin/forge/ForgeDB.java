@@ -102,5 +102,7 @@ public class ForgeDB {
         database.execSQL(sql);
         sql = String.format(base,"旭日盔<br><font color=\"#FF4500\">日出东方，唯我不败</font>", "食人鸟毛-鼠骨-鼠筋-龟壳-青檀木", "ADD_ATK:10000-ADD_UPPER_HP:10000","ADD_AGI:7000", HatBuilder.type,"#FF8C00");
         database.execSQL(sql);
+        sql = String.format(base,"您捡到一只六娃", "鼠皮-鼠筋-白云石-白杏木-牛骨", "ADD_STR:10000-ADD_POWER:20000-ADD_CLICK_AWARD:300","ADD_AGI:30000-ADD_UPPER_HP:-30000", HatBuilder.type,"#FF8C00");
+        database.execSQL(sql);
     }
 }
