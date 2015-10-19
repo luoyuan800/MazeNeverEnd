@@ -287,8 +287,8 @@ public class Hero implements BaseObject{
             if (swordLev * ATR_RISE + sword.getBase() + attackValue >= Long.MAX_VALUE - 100) {
                 return false;
             } else {
-                if (material >= 100 + swordLev) {
-                    material -= (100 + armorLev);
+                if (material > 100 + swordLev) {
+                    material -= (100 + swordLev);
                     swordLev++;
                     if (sword != sword.levelUp(swordLev, this)) {
                        addAttackValue(getRandom().nextLong(getStrength()/1000)+ getSwordLev() * ATR_RISE);
@@ -308,7 +308,7 @@ public class Hero implements BaseObject{
             if (armorLev * DEF_RISE + armor.getBase() + defenseValue >= Long.MAX_VALUE - 1000) {
                 return false;
             } else {
-                if (material >= 80 + armorLev) {
+                if (material > 80 + armorLev) {
                     material -= (80 + armorLev);
                     armorLev++;
                     if (armor != armor.levelUp(armorLev, this)) {

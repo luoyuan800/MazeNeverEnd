@@ -32,11 +32,11 @@ public class StoryHelper {
         }
         final Random random = hero.getRandom();
         boolean b = hero.getAgility() / 2000 > random.nextLong();
-        boolean a = Achievement.guider1.isEnable() ? random.nextInt(10000) > 9977 : random.nextInt(10000) < 3;
-        if (Achievement.story.isEnable() && hero.getKeyCount() > 0 && !Achievement.restriction.isEnable() && a) {
+        boolean a = Achievement.guider1.isEnable() ? random.nextInt(10000) > 9977 : random.nextInt(10000) < 5;
+        if (Achievement.story.isEnable() && hero.getKeyCount() > 10 && !Achievement.restriction.isEnable() && a) {
             context.addMessage(String.format("%s找到了一扇上锁了的门，使用一把钥匙打开这扇门", hero.getFormatName()));
             hero.setKeyCount(hero.getKeyCount() - 1);
-            if (Achievement.guider1.isEnable() && !Achievement.guider2.isEnable() && b && hero.getKeyCount() >= 4 && random.nextInt(100) > 95 && context.getMaze().getLev()%21 == 0) {
+            if (Achievement.guider1.isEnable() && !Achievement.guider2.isEnable() && b && hero.getKeyCount() >= 14 && random.nextInt(100) > 95 && context.getMaze().getLev()%21 == 0) {
                 context.addMessage(hero.getFormatName() + "在门后面遇见了<font color=\"#FF0000\">袁酥兄</font><br>" +
                         "<font color=\"#FF0000\">袁酥兄</font>：孩子我们又见面了~<br>" +
                         "<font color=\"#FF0000\">袁酥兄</font>：这次就我就告诉你一些高等级的秘密<br>" +
@@ -50,10 +50,10 @@ public class StoryHelper {
                 context.addMessage(hero.getFormatName() + "在门后面遇见了<font color=\"#FF0000\">袁酥兄</font><br>" +
                         "<font color=\"#FF0000\">袁酥兄</font>：老朋友，你好~<br>" +
                         "<font color=\"#FF0000\">袁酥兄</font>：这次见面我没有什么话好说，我只是想从你身上拿走钥匙而已。<br>" +
-                        hero.getFormatName() + "身上的钥匙全都被抢走了！<br>" +
+                        hero.getFormatName() + "身上的钥匙被抢走了一半！<br>" +
                         hero.getFormatName() + "捡到了一个带锁的宝箱。");
                 Achievement.guider3.enable(hero);
-                hero.setKeyCount(0);
+                hero.setKeyCount(hero.getKeyCount() - hero.getKeyCount()/2);
                 hero.setLockBox(hero.getLockBox() + 1);
                 return true;
             } else if (context.getMaze().getLev()%95 == 0 && !Achievement.five.isEnable() && hero.getKeyCount() >= random.nextInt(5000)) {
@@ -111,7 +111,7 @@ public class StoryHelper {
             }
         } else {
             if (b && !Achievement.story.isEnable()) {
-                context.addMessage(String.format("%s找到了一扇上锁了的门，但是没有钥匙打开它。门后面是什么呢？", hero.getFormatName()));
+                context.addMessage(String.format("%s找到了一扇上锁了的门，但是没有打开它。门后面是什么呢？", hero.getFormatName()));
                 Achievement.story.enable(hero);
                 return false;
             }

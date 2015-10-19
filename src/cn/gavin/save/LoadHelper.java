@@ -74,7 +74,7 @@ public class LoadHelper {
                 Achievement.values()[i].enable();
             }
         }
-        MazeContents.payTime = preferences.getLong("swordLev", 0);
+        MazeContents.payTime = preferences.getLong("payTime", 0);
         heroN.setAwardCount(preferences.getLong("awardCount", 0));
         heroN.setLockBox(preferences.getLong("lockBox", 1));
         heroN.setKeyCount(preferences.getLong("keyCount", 1));

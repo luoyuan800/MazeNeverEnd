@@ -158,11 +158,10 @@ public class BaseSkill extends SkillLayout {
                     AttackSkill as = (AttackSkill) skill;
                     if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 1.3f);
-                        return true;
                     }
-                    if (as.getBaseHarm() < hero.getBaseAttackValue() * 100) {
-                        as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 30 + 1));
-                        as.setAdditionHarm(as.getAdditionHarm() * 4);
+                    if (as.getBaseHarm() < hero.getBaseAttackValue() * 60) {
+                        as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 50 + 1));
+                        as.setAdditionHarm(as.getAdditionHarm() * 5);
                     }
                     return false;
                 }
@@ -702,7 +701,6 @@ public class BaseSkill extends SkillLayout {
                     if (skill.getProbability() < 20) {
                         skill.setProbability(skill.getProbability() + 2f);
                         attackSkill.setBaseHarm(attackSkill.getBaseHarm() * 2);
-                        return true;
                     }
                     if (attackSkill.getAdditionHarm() < hero.getBaseAttackValue() * 10) {
                         attackSkill.setAdditionHarm(attackSkill.getAdditionHarm() * 2);

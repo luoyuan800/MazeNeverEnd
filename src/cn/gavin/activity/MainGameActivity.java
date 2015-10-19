@@ -212,6 +212,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         public void handleMessage(Message msg) {
             try {
                 switch (msg.what) {
+                    case 110:
+                        Toast.makeText(context, "--内购次数达到上限!--", Toast.LENGTH_LONG)
+                                .show();
+                        break;
                     case 109:
                         if(isHidBattle){
                             isHidBattle = false;
