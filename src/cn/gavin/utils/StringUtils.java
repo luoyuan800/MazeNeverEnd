@@ -61,6 +61,18 @@ public class StringUtils {
         }
     }
 
+    public static Float toFloat(String number){
+        try {
+            return Float.parseFloat(number);
+        }catch (Exception e){
+            try {
+                return Double.valueOf(number).floatValue();
+            }catch (Exception e1){
+                return 0.1f;
+            }
+        }
+    }
+
     public static void main(String...args){
         System.out.print(toStringHex("0x6c81739f"));
     }

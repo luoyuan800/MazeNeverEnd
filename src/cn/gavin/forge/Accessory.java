@@ -316,7 +316,7 @@ public class Accessory extends Equipment {
                         break;
                     }
                 }
-                if(item.getEffect() == null){
+                if(item.getEffect() == null||item.getEffectValue() == null){
                     EnumMap.Entry<Effect, Number> entry = effects.entrySet().iterator().next();
                     item.setEffect(entry.getKey());
                     item.setEffectValue(entry.getValue());
@@ -329,10 +329,15 @@ public class Accessory extends Equipment {
                     item = new Item();
                     item.setName(ItemName.values()[random.nextInt(ItemName.values().length)]);
                     item.setEffect(entry.getKey());
-                    item.setEffect1Value(entry.getValue().longValue() / 3 + random.nextLong(entry.getValue().longValue() + 1));
+                    item.setEffectValue(entry.getValue().longValue() / 3 + random.nextLong(entry.getValue().longValue() + 1));
                     item.save();
                     items.add(item);
                 }
+            }
+            if(item.getEffect() == null){
+                EnumMap.Entry<Effect, Number> entry = effects.entrySet().iterator().next();
+                item.setEffect(entry.getKey());
+                item.setEffectValue(entry.getValue());
             }
         }catch (Exception e){
             e.printStackTrace();

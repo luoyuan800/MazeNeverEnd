@@ -161,7 +161,7 @@ public class PropertySkill extends Skill {
             if (!cursor.isAfterLast()) {
                 onUsed = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_on_use")));
                 active = (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_active"))));
-                setProbability(Float.parseFloat(cursor.getString(cursor.getColumnIndex("probability"))));
+                setProbability(StringUtils.toFloat(cursor.getString(cursor.getColumnIndex("probability"))));
                 count = (StringUtils.toLong(cursor.getString(cursor.getColumnIndex("count"))));
                 return true;
             }

@@ -80,7 +80,7 @@ public enum Effect {
             Random random = hero.getRandom();
             long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 5000 + 1) + 1;
             if (award <= 2) award = 1;
-            if (award >= 5) award = random.nextLong(5) + 1;
+            if (award >= 4) award = random.nextLong(4) + 1;
             return award;
         }
     }, "增加点击能力点数奖励"),
@@ -90,6 +90,7 @@ public enum Effect {
             Random random = hero.getRandom();
             long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 500 + 1) + 1;
             if (award >= 20) award = random.nextLong(20) + 1;
+            if(award == 0) award = 1;
             return award;
         }
     }, "增加暴击率"),

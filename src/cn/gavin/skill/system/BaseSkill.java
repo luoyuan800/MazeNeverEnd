@@ -138,7 +138,9 @@ public class BaseSkill extends SkillLayout {
             skill.setRelease(new UseExpression() {
                 @Override
                 public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                    long harm = hero.getAttackValue() + ((AttackSkill) skill).getBaseHarm() + hero.getRandom().nextLong((((AttackSkill) skill).getAdditionHarm()) + ((AttackSkill)skill).getBaseHarm() + 1);
+                    long addition = (((AttackSkill) skill).getAdditionHarm()) + ((AttackSkill) skill).getBaseHarm();
+                    if (addition < 0) addition = ((AttackSkill) skill).getAdditionHarm();
+                    long harm = hero.getAttackValue() + ((AttackSkill) skill).getBaseHarm() + hero.getRandom().nextLong(addition + 1);
                     String skillmsg = skill.format(hero.getFormatName() + "使用了技能" + skill.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点伤害");
                     context.addMessage(skillmsg);
                     monster.addBattleSkillDesc(skillmsg);
@@ -159,11 +161,12 @@ public class BaseSkill extends SkillLayout {
                     if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 1.3f);
                     }
-                    if (as.getBaseHarm() < hero.getBaseAttackValue() * 50) {
+                    if (as.getBaseHarm() < hero.getBaseAttackValue() * 50 && as.getBaseHarm() < as.getAdditionHarm() -20) {
                         as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 50 + 1));
-                        if(as.getAdditionHarm() < Integer.MAX_VALUE - 1000) {
-                            as.setAdditionHarm(as.getAdditionHarm() * 5);
-                        }
+                        as.setAdditionHarm(as.getAdditionHarm() * 5);
+                    }
+                    if(as.getBaseHarm() > as.getAdditionHarm() -20){
+                        as.setBaseHarm(as.getAdditionHarm() -20);
                     }
                     return false;
                 }
@@ -809,7 +812,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     if (skill.getProbability() < 20) {
-                        skill.setProbability(skill.getProbability() + 0.7f);
+                        skill.setProbability(skill.getProbability() + 1f);
                         ((AttackSkill) skill).setBaseHarm(((AttackSkill) skill).getBaseHarm() + 2);
                         return true;
                     }

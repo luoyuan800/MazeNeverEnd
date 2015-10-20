@@ -18,7 +18,7 @@ public class DBHelper {
     private static int DB_VERSION_1_2_1 = 9;
     private static int DB_VERSION_1_3_1 = 10;
     private static int DB_VERSION_1_3_2 = 11;
-    private static int DB_VERSION = 12;
+    private static int DB_VERSION = 13;
 
     private Context context;
     private SQLiteDatabase database;
@@ -165,6 +165,15 @@ public class DBHelper {
                 db.execSQL("CREATE UNIQUE INDEX npc_index ON npc (name,lev)");
                 new ForgeDB().upgradeTo1_4(database);
                 db.execSQL("DROP TABLE defender");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("MazeNeverEnd",e.getMessage());
+            LogHelper.writeLog();
+        }
+        try {
+            if (oldVersion == 12) {
+                new ForgeDB().upgradeTo1_4_7(database);
             }
         }catch (Exception e){
             e.printStackTrace();
