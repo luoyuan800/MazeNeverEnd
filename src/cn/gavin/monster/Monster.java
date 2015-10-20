@@ -159,7 +159,7 @@ public class Monster {
             atk += secondAdditionAtk[second] * random.nextLong(maze.getLev()/500);
             hp += firstAdditionHP[first]*random.nextLong(maze.getLev()/600);
             if (atk < hero.getDefenseValue()) atk = random.nextLong(hero.getAttackValue() + atk);
-            atk += random.nextLong((hero.getUpperAtk() + hero.getUpperHp() + hero.getUpperDef()) / (50 * hero.getMaxMazeLev()) + 1);
+            atk += random.nextLong((hero.getUpperAtk() + hero.getUpperHp() + hero.getUpperDef()) / (6 * hero.getMaxMazeLev()) + hero.getMaxMazeLev());
         }
         hp += baseHP[last] * random.nextLong(maze.getLev() + 1);
         atk += baseAtk[last] * hero.getReincaCount();
@@ -180,7 +180,7 @@ public class Monster {
         }
         long m1 = random.nextLong(hp + 1) / 180 + 5;
         long m2 = random.nextLong(atk + 1) / 409 + 10;
-        material = random.nextLong((m1 + m2) / 29 + 2) + 9 + random.nextLong(maze.getLev() * 9 + 5);
+        material = random.nextLong((m1 + m2) / 29 + 2) + 10 + random.nextLong(maze.getLev() * 9 + 1);
         maxHP = hp;
         builder = new StringBuilder("第");
         builder.append(maze.getLev()).append("层").append("<br>------------");

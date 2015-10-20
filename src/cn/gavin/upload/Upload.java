@@ -29,7 +29,7 @@ public class Upload {
     public boolean upload(final Hero hero){
         new Thread(){
             public void run(){
-                if((hero.getUpperHp() + hero.getUpperDef() + hero.getUpperAtk()) < (hero.getMaxMazeLev()*590000*(hero.getPay()+ 1))) {
+                if((hero.getUpperHp() + hero.getUpperDef() + hero.getUpperAtk()) < (hero.getMaxMazeLev()*590000*(hero.getPay()+ 2))) {
                     PalaceObject object = new PalaceObject();
                     object.setHello(hero.getHello());
                     object.setAtk(hero.getUpperAtk().toString());

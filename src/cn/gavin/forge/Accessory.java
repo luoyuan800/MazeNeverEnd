@@ -15,6 +15,7 @@ import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.forge.list.ItemName;
+import cn.gavin.log.LogHelper;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
@@ -198,14 +199,14 @@ public class Accessory extends Equipment {
                     for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
                         String[] keyValue = StringUtils.split(str, ":");
                         if (keyValue.length > 1) {
-                            base.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                            base.put(Effect.valueOf(keyValue[0].trim()), StringUtils.toLong(keyValue[1]));
                         }
                     }
                     EnumMap<Effect, Number> addition = new EnumMap<Effect, Number>(Effect.class);
                     for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")) {
                         String[] keyValue = StringUtils.split(str, ":");
                         if (keyValue.length > 1) {
-                            addition.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                            addition.put(Effect.valueOf(keyValue[0].trim()), StringUtils.toLong(keyValue[1]));
                         }
                     }
                     accessory.setEffects(base);
@@ -245,14 +246,14 @@ public class Accessory extends Equipment {
                     for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
                         String[] keyValue = StringUtils.split(str, ":");
                         if (keyValue.length > 1) {
-                            base.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                            base.put(Effect.valueOf(keyValue[0].trim()), StringUtils.toLong(keyValue[1]));
                         }
                     }
                     EnumMap<Effect, Number> addition = new EnumMap<Effect, Number>(Effect.class);
                     for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")) {
                         String[] keyValue = StringUtils.split(str, ":");
                         if (keyValue.length > 1) {
-                            addition.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                            addition.put(Effect.valueOf(keyValue[0].trim()), StringUtils.toLong(keyValue[1]));
                         }
                     }
                     setEffects(base);
@@ -263,6 +264,7 @@ public class Accessory extends Equipment {
                 cursor.close();
             }
         } catch (Exception e) {
+            LogHelper.logException(new Exception("Access error", e));
             DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM accessory WHERE id = '" + id + "'");
             return false;
         }

@@ -383,6 +383,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         initGameData();
         checkUpdate();
         gameThreadRunning = true;
+        service.setPackage(getPackageName());
         startService(service);
         bindService(service, connection, BIND_AUTO_CREATE);
     }
@@ -434,7 +435,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     protected void onDestroy() {
         gameThreadRunning = false;
         dbHelper.close();
-        stopService(service);
         super.onDestroy();
     }
 
@@ -523,6 +523,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             skillPointGetDialog.dismiss();
                         }
                         MainGameActivity.this.finish();
+                        MainGameActivity.this.stopService(service);
                         System.exit(0);
                     }
 
@@ -703,7 +704,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             item = Item.buildItem(heroN, ItemName.青檀木);
                             if (item != null) item.save();
                             heroN.setAwardCount(heroN.getAwardCount() + 2);
-                        } else {
+                        } else if(input.equals("palace1.4.6") && heroN.getAwardCount() < 5){
+                            heroN.setLockBox(heroN.getLockBox() + 10);
+                            heroN.setKeyCount(heroN.getKeyCount() + 10);
+                            heroN.setAwardCount(heroN.getAwardCount() + 6);
+                        }else {
                             heroN.setName(input.replaceAll("_", " "));
                         }
                         dialog.dismiss();
@@ -1390,7 +1395,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 }
             } catch (Exception exp) {
                 Log.e(TAG, "MainGameActivity.GameThread", exp);
-                LogHelper.writeLog();
+                LogHelper.logException(exp);
             }
         }
     }
@@ -1401,7 +1406,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 maze.move(context);
             } catch (Exception e) {
                 Log.e(TAG, "MainGameActivity.GameThread", e);
-                LogHelper.writeLog();
+                LogHelper.logException(e);
                 throw new RuntimeException(e);
             }
         }

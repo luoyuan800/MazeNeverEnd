@@ -49,6 +49,18 @@ public class StringUtils {
         }
     }
 
+    public static Long toLong(String number){
+        try {
+            return Long.parseLong(number);
+        }catch (Exception e){
+            try {
+                return Double.valueOf(number).longValue();
+            }catch (Exception e1){
+                return 1l;
+            }
+        }
+    }
+
     public static void main(String...args){
         System.out.print(toStringHex("0x6c81739f"));
     }

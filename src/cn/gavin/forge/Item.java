@@ -158,7 +158,7 @@ public class Item {
                             String[] proVal = pro.split(":");
                             if (proVal.length > 1) {
                                 Effect e = Effect.valueOf(proVal[0]);
-                                Long value = Long.parseLong(proVal[1]);
+                                Long value = StringUtils.toLong(proVal[1]);
                                 if (item.getEffect() == null) {
                                     item.setEffect(e);
                                     item.setEffectValue(value);

@@ -57,7 +57,7 @@ public class BattleController {
                     }
                 }
 
-                if ((100 + random.nextLong(100 + hero.getAgility())) < random.nextLong(hero.getDodgeRate().longValue() + hero.getAgility() / 10000)) {
+                if ((100 + random.nextLong(100 + hero.getAgility())) < random.nextLong(hero.getDodgeRate().longValue() + hero.getAgility() / 1000)) {
                     String dodgeMsg = hero.getFormatName() + "身手敏捷的闪开了" + monster.getFormatName() + "的攻击";
                     addMessage(context, dodgeMsg);
                     monster.addBattleDesc(dodgeMsg);

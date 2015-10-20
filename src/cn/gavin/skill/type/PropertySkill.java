@@ -8,6 +8,7 @@ import android.widget.Toast;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.skill.Skill;
+import cn.gavin.utils.StringUtils;
 
 /**
  * gluo on 9/15/2015.
@@ -161,7 +162,7 @@ public class PropertySkill extends Skill {
                 onUsed = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_on_use")));
                 active = (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_active"))));
                 setProbability(Float.parseFloat(cursor.getString(cursor.getColumnIndex("probability"))));
-                count = (Long.parseLong(cursor.getString(cursor.getColumnIndex("count"))));
+                count = (StringUtils.toLong(cursor.getString(cursor.getColumnIndex("count"))));
                 return true;
             }
             cursor.close();

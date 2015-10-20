@@ -365,7 +365,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                 }
                 break;
         }
-        return true;
+        return false;
     }
 
     public boolean contains(Item item) {

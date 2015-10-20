@@ -303,14 +303,14 @@ public abstract class Builder {
                 for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
                     String[] keyValue = StringUtils.split(str, ":");
                     if (keyValue.length > 1) {
-                        baseEffectsMap.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                        baseEffectsMap.put(Effect.valueOf(keyValue[0].trim()), StringUtils.toLong(keyValue[1]));
                     }
                 }
                 Map<Effect, Number> additionEffectsMap = new EnumMap<Effect, Number>(Effect.class);
                 for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")) {
                     String[] keyValue = StringUtils.split(str, ":");
                     if (keyValue.length > 1) {
-                        additionEffectsMap.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
+                        additionEffectsMap.put(Effect.valueOf(keyValue[0].trim()), StringUtils.toLong(keyValue[1]));
                     }
                 }
                 if(pro < 0) pro = 0;

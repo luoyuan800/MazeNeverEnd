@@ -159,9 +159,11 @@ public class BaseSkill extends SkillLayout {
                     if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 1.3f);
                     }
-                    if (as.getBaseHarm() < hero.getBaseAttackValue() * 60) {
+                    if (as.getBaseHarm() < hero.getBaseAttackValue() * 50) {
                         as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 50 + 1));
-                        as.setAdditionHarm(as.getAdditionHarm() * 5);
+                        if(as.getAdditionHarm() < Integer.MAX_VALUE - 1000) {
+                            as.setAdditionHarm(as.getAdditionHarm() * 5);
+                        }
                     }
                     return false;
                 }

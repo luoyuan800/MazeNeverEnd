@@ -98,8 +98,8 @@ public class PalaceMonster implements BaseObject {
     public static Monster getDefender(long lev) {
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM palace WHERE lev = '" + lev + "'");
         if (!cursor.isAfterLast()) {
-            long atk = Long.parseLong(cursor.getString(cursor.getColumnIndex("atk")));
-            long hp = Long.parseLong(cursor.getString(cursor.getColumnIndex("hp"))) + Long.parseLong(cursor.getString(cursor.getColumnIndex("def")));
+            long atk = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk")));
+            long hp = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))) + StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def")));
             Monster monster = new Monster("", "【守护者】", cursor.getString(cursor.getColumnIndex("name")), atk, hp);
             monster.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
             return monster;
@@ -127,9 +127,9 @@ public class PalaceMonster implements BaseObject {
         while (!cursor.isAfterLast()) {
             PalaceMonster monster = new PalaceMonster();
             monster.name = cursor.getString(cursor.getColumnIndex("name"));
-            monster.hp = Long.parseLong(cursor.getString(cursor.getColumnIndex("hp")));
-            monster.atk = Long.parseLong(cursor.getString(cursor.getColumnIndex("atk")));
-            monster.def = Long.parseLong(cursor.getString(cursor.getColumnIndex("def")));
+            monster.hp = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp")));
+            monster.atk = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk")));
+            monster.def = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def")));
             cursor.moveToNext();
         }
         return stack;

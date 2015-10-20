@@ -5,6 +5,7 @@ import android.util.Log;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.skill.Skill;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Created by luoyuan on 9/13/15.
@@ -42,9 +43,9 @@ public class AttackSkill extends Skill {
                 setOnUsed(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_on_use"))));
                 active = (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_active"))));
                 setProbability(Float.parseFloat(cursor.getString(cursor.getColumnIndex("probability"))));
-                count = (Long.parseLong(cursor.getString(cursor.getColumnIndex("count"))));
-                baseHarm = Long.parseLong(cursor.getString(cursor.getColumnIndex("base_harm")));
-                additionHarm = Long.parseLong(cursor.getString(cursor.getColumnIndex("addition_harm")));
+                count = (StringUtils.toLong(cursor.getString(cursor.getColumnIndex("count"))));
+                baseHarm = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("base_harm")));
+                additionHarm = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("addition_harm")));
                 return true;
             }
             cursor.close();

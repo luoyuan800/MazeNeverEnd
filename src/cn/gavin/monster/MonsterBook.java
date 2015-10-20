@@ -47,38 +47,38 @@ public class MonsterBook {
             if (monster.getName().endsWith("守护者")) {
                 name = "守护者";
             } else {
-                name = monster.getName().replaceAll("【守护者】", "");
+                name = monster.getName();
             }
         }
-        item.setName(name);
-        item.load();
-        long atk = StringUtils.isNotEmpty(item.getMaxATKATK()) ? Long.parseLong(item.getMaxATKATK()) : 0;
-        long hp = StringUtils.isNotEmpty(item.getMaxHPHP()) ? Long.parseLong(item.getMaxHPHP()) : 0;
-        if (monster.getAtk() > atk) {
-            item.setMaxATKName(monster.getFormatName());
-            item.setMaxATKATK(monster.getAtk() + "");
-            item.setMaxATKHP(monster.getMaxHP() + "");
-            item.setMaxATKLev(monster.getMazeLev() + "");
-            item.setMaxATKDefeat(monster.isDefeat());
-            item.setMaxATKDesc(monster.getBattleMsg());
-        }
-        if (monster.getMaxHP() > hp) {
-            item.setMaxHPName(monster.getFormatName());
-            item.setMaxHPATK(monster.getAtk() + "");
-            item.setMaxHPHP(monster.getMaxHP() + "");
-            item.setMaxHPLev(monster.getMazeLev() + "");
-            item.setMaxHPDefeat(monster.isDefeat());
-            item.setMaxHPDesc(monster.getBattleMsg());
-        }
-        if (monster.isDefeat()) {
-            item.setDefeat(item.getDefeat() + 1);
-            if (item.getDefeat() > 1000 && monster.getName().endsWith("龙")) {
-                Achievement.dragon.enable(null);
+            item.setName(name);
+            item.load();
+            long atk = StringUtils.isNotEmpty(item.getMaxATKATK()) ? StringUtils.toLong(item.getMaxATKATK()) : 0;
+            long hp = StringUtils.isNotEmpty(item.getMaxHPHP()) ? StringUtils.toLong(item.getMaxHPHP()) : 0;
+            if (monster.getAtk() > atk) {
+                item.setMaxATKName(monster.getFormatName());
+                item.setMaxATKATK(monster.getAtk() + "");
+                item.setMaxATKHP(monster.getMaxHP() + "");
+                item.setMaxATKLev(monster.getMazeLev() + "");
+                item.setMaxATKDefeat(monster.isDefeat());
+                item.setMaxATKDesc(monster.getBattleMsg());
             }
-        } else {
-            item.setDefeated(item.getDefeated() + 1);
-        }
-        item.save();
+            if (monster.getMaxHP() > hp) {
+                item.setMaxHPName(monster.getFormatName());
+                item.setMaxHPATK(monster.getAtk() + "");
+                item.setMaxHPHP(monster.getMaxHP() + "");
+                item.setMaxHPLev(monster.getMazeLev() + "");
+                item.setMaxHPDefeat(monster.isDefeat());
+                item.setMaxHPDesc(monster.getBattleMsg());
+            }
+            if (monster.isDefeat()) {
+                item.setDefeat(item.getDefeat() + 1);
+                if(item.getDefeat() > 1000 && monster.getName().endsWith("龙")){
+                    Achievement.dragon.enable(null);
+                }
+            } else {
+                item.setDefeated(item.getDefeated() + 1);
+            }
+            item.save();
     }
 
     public void initView(MainGameActivity context) {

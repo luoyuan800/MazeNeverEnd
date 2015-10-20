@@ -12,6 +12,7 @@ import cn.gavin.monster.Monster;
 import cn.gavin.skill.expression.DescExpression;
 import cn.gavin.skill.expression.EnableExpression;
 import cn.gavin.skill.expression.UseExpression;
+import cn.gavin.utils.StringUtils;
 
 /**
  * luoyuan on 9/12/15.
@@ -181,7 +182,6 @@ public abstract class Skill {
     private long latestClick = 0;
 
     public void addCount() {
-        if((System.currentTimeMillis() - latestClick) > 108) {
             if (this.count < Long.MAX_VALUE - 1000) {
                 this.count++;
                 hero.click(false);
@@ -192,8 +192,6 @@ public abstract class Skill {
                     hero.setSkillPoint(hero.getSkillPoint() + 1);
                 }
             }
-        }
-        latestClick = System.currentTimeMillis();
     }
 
     protected void levelUp() {
@@ -242,7 +240,7 @@ public abstract class Skill {
                 setOnUsed(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_on_use"))));
                 active = (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_active"))));
                 setProbability(Float.parseFloat(cursor.getString(cursor.getColumnIndex("probability"))));
-                count = (Long.parseLong(cursor.getString(cursor.getColumnIndex("count"))));
+                count = (StringUtils.toLong(cursor.getString(cursor.getColumnIndex("count"))));
                 return true;
             }
             cursor.close();

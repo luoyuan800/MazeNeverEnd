@@ -199,7 +199,7 @@ public class Hero implements BaseObject{
 
     public Long getAttackValue() {
         long atk = isOnChange() ? changAtk : (attackValue + random.nextLong(sword.getBase()) + random.nextLong(swordLev + 1) * DEF_RISE + getSkillAdditionAtk());
-        if ((100 + random.nextLong(1000 + getStrength())) < random.nextLong(getDodgeRate().longValue() + getStrength()/10000)) {
+        if ((100 + random.nextLong(1000 + getStrength())) < random.nextLong(getHitRate() + getStrength()/5000)) {
             atk += atk / 3;
             isHit = true;
         } else {
@@ -476,7 +476,6 @@ public class Hero implements BaseObject{
     private Long latestClick = 0l;
 
     public void click(boolean award) {
-        if ((System.currentTimeMillis() - latestClick) > 98) {
             if (click < Long.MAX_VALUE - 1000) {
 
                 if (award) {
@@ -488,8 +487,8 @@ public class Hero implements BaseObject{
                             keyCount += 1;
                         }
                     }
-                    this.material += clickAward;
-                    this.point += clickPointAward;
+                    addMaterial(clickAward);
+                    addPoint(clickPointAward);
                 }
                 this.click++;
                 switch (click.intValue()) {
@@ -507,8 +506,6 @@ public class Hero implements BaseObject{
                         break;
                 }
             }
-        }
-        latestClick = System.currentTimeMillis();
     }
 
     public Skill useAttackSkill(Monster monster) {
