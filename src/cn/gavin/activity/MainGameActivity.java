@@ -434,6 +434,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     protected void onDestroy() {
         gameThreadRunning = false;
         dbHelper.close();
+        stopService(service);
         super.onDestroy();
     }
 
@@ -522,7 +523,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             skillPointGetDialog.dismiss();
                         }
                         MainGameActivity.this.finish();
-                        MainGameActivity.this.stopService(service);
                         System.exit(0);
                     }
 

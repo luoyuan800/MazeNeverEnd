@@ -475,7 +475,7 @@ public class Hero implements BaseObject{
 
     private Long latestClick = 0l;
 
-    public synchronized void click(boolean award) {
+    public void click(boolean award) {
         if ((System.currentTimeMillis() - latestClick) > 98) {
             if (click < Long.MAX_VALUE - 1000) {
 

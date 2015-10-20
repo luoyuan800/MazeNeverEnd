@@ -62,9 +62,9 @@ public enum ItemName {
         Random random = hero.getRandom();
         if (random.nextInt(1000) < 15) {
             if (monster.getMaterial() < 1000) {
-               return random.nextLong(hero.getAgility() + monster.getAtk() + 1) - 50000 > random.nextLong(monster.getMaxHP() + hero.getAttackValue() + 1) + 9999;
+               return random.nextLong(hero.getAgility() + monster.getAtk() + 1) - 49997 > random.nextLong(monster.getMaxHP() + hero.getAttackValue() + 1) + 9999;
             } else {
-                return random.nextLong(Math.abs(monster.getAtk() - hero.getAttackValue()) + 1) - 10000 > random.nextLong(Math.abs(hero.getHp() - monster.getMaxHP()) + 1) + 1999;
+                return random.nextLong(Math.abs(monster.getAtk() - hero.getAttackValue()) + 1) - 10000 > random.nextLong(Math.abs(hero.getHp() - monster.getMaxHP()) + 1) + 1991;
             }
         } else {
             return false;

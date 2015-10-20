@@ -34,6 +34,10 @@ public class MazeService extends Service {
         LogHelper.writeLog();
     }
 
+    public int onStartCommand(Intent intent, int flags, int startId){
+        return START_STICKY;
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
             MainGameActivity.context.startMaze();

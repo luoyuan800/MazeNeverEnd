@@ -649,7 +649,7 @@ public class BaseSkill extends SkillLayout {
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     if (skill.getProbability() < 400) {
                         skill.setProbability(skill.getProbability() + 30f);
-                        MazeContents.getMaze().setCsmgl(MazeContents.getMaze().getCsmgl() - 30);
+                        MazeContents.getMaze().setCsmgl(MazeContents.getMaze().getCsmgl() - 50);
                         return true;
                     }
                     return false;
