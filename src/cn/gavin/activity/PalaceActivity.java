@@ -54,8 +54,6 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
     private TextView mainContriDef;
     private TextView swordLev;
     private TextView armorLev;
-    private TextView heroPointValue;
-    private TextView mainContriCurMaterial;
     private TextView clickCount;
     //按钮
     private Button heroPic;
@@ -71,7 +69,6 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
     //Data
     private TextView lockBoxCount;
     private TextView keyCount;
-    private ViewFlipper buttonGroup;
     private TextView ringTextView;
     private TextView necklaceTextView;
     private TextView hatTextView;
@@ -275,8 +272,6 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         mainContriDef = (TextView) findViewById(R.id.main_contri_def);
         swordLev = (TextView) findViewById(R.id.main_contri_level);
         armorLev = (TextView) findViewById(R.id.main_armor_level);
-        heroPointValue = (TextView) findViewById(R.id.hero_point);
-        mainContriCurMaterial = (TextView) findViewById(R.id.hero_material);
         heroPic = (Button) findViewById(R.id.hero_pic);
         heroPic.setOnClickListener(this);
         heroPic.setBackgroundResource(R.drawable.h_1);
@@ -310,8 +305,6 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         mainContriDef.setText(heroN.getUpperDef() + "");
         swordLev.setText(heroN.getSword() + "+" + heroN.getSwordLev());
         armorLev.setText(heroN.getArmor() + "+" + heroN.getArmorLev());
-        mainContriCurMaterial.setText(heroN.getMaterial() + "");
-        heroPointValue.setText(heroN.getPoint() + "");
 
         itembarContri.setText(heroN.getName() + "\n迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
         heroPic.setText(heroN.getSword() + "\n\n\n " + heroN.getArmor());
