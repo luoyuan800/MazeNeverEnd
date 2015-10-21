@@ -9,7 +9,7 @@ import cn.gavin.utils.Random;
  * ALL RIGHTS RESERVED.
  * Created by gluo on 10/15/2015.
  */
-public class HitSkill {
+public class HitSkill extends AtkSkill {
     private BaseObject me;
     private int count;
     private Random random;
@@ -18,6 +18,11 @@ public class HitSkill {
         this.me = me;
         this.count = count;
         random = new Random();
+    }
+
+    @Override
+    public boolean perform() {
+        return random.nextInt(100) < 25;
     }
 
     public boolean release(final BaseObject target, BaseContext

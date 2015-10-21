@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Message;
 
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import cn.bmob.v3.BmobQuery;
@@ -15,8 +16,10 @@ import cn.gavin.BaseObject;
 import cn.gavin.Element;
 import cn.gavin.activity.BaseContext;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.activity.PalaceActivity;
 import cn.gavin.db.DBHelper;
-import cn.gavin.skill.Skill;
+import cn.gavin.nskill.AtkSkill;
+import cn.gavin.nskill.NSkill;
 import cn.gavin.upload.PalaceObject;
 import cn.gavin.utils.StringUtils;
 
@@ -112,7 +115,7 @@ public class PalaceMonster implements BaseObject {
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT name, lev, hello, element FROM palace ORDER BY lev DESC");
         while (!cursor.isAfterLast()) {
             String name1 = cursor.getString(cursor.getColumnIndex("name"));
-            if(name1.startsWith("0x")){
+            if (name1.startsWith("0x")) {
                 name1 = StringUtils.toStringHex(name1);
             }
             palaces.push(cursor.getString(cursor.getColumnIndex("lev")) + " - <font color=\"red\">" + name1 + "</font> (" + cursor.getString(cursor.getColumnIndex("element")) + ")---" + cursor.getString(cursor.getColumnIndex("hello")));
@@ -137,7 +140,11 @@ public class PalaceMonster implements BaseObject {
 
     private String name;
     private long hp, atk, def;
-    private Skill skill1, skill2, skill3;
+    private Set<NSkill> skills;
+
+    public void addSkill(NSkill skill) {
+        skills.add(skill);
+    }
 
     public Long getAttackValue() {
         return atk;
@@ -149,5 +156,23 @@ public class PalaceMonster implements BaseObject {
 
     public String getFormatName() {
         return "<font color=\"#800080\">" + name + "</font>";
+    }
+
+    public void atk(BaseObject hero, PalaceActivity context) {
+        for(NSkill skill : skills){
+            if(skill instanceof AtkSkill && skill.perform()){
+                skill.release(hero,context);
+                return;
+            }
+        }
+        normalAtk(this, hero);
+    }
+
+    public void normalAtk(BaseObject me, BaseObject target){
+
+    }
+
+    public void def(BaseObject hero) {
+
     }
 }

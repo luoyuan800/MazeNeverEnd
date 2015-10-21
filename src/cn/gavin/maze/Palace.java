@@ -71,19 +71,18 @@ public class Palace extends Maze {
                 }
                 step = 0;
                 level++;
-                mazeLevelDetect();
                 long point = 1 + level / 10 + random.nextLong(level + 1) / 300;
                 if (point > 100) {
-                    point = 100;
+                    point = 50 + random.nextInt(60);
                 }
                 String msg = hero.getFormatName() + "进入了" + level + "层迷宫， 获得了<font color=\"#FF8C00\">" + point + "</font>点数奖励";
                 addMessage(context, msg);
                 if (level > hero.getMaxMazeLev()) {
-                    hero.addMaxMazeLev();
+                    hero.setMaxMazeLev(level);
                 }
 
                 hero.addPoint(point);
-                hero.addHp(random.nextLong(hero.getUpperHp() / 20 + 1) + random.nextLong(hero.getPower() / 100));
+                hero.addHp(random.nextLong(hero.getUpperHp() / 10 + 1) + random.nextLong(hero.getPower() / 500));
                 addMessage(context, "-------------------");
             } else if (random.nextLong(850 + hunt) > 993 && random.nextLong(hero.getAgility()) > random.nextLong(6971)) {
                 long mate = random.nextLong(level * 300 + 1) + random.nextLong(hero.getAgility() / 1000 + 100) + 100;
@@ -91,7 +90,7 @@ public class Palace extends Maze {
                 hero.addMaterial(mate);
                 addMessage(context, "-------------------");
             } else if (hero.getHp() < hero.getUpperHp() && random.nextLong(1000) > 989) {
-                long hel = random.nextLong(hero.getUpperHp() / 10 + 1) + random.nextLong(hero.getPower() / 100);
+                long hel = random.nextLong(hero.getUpperHp() / 5 + 1) + random.nextLong(hero.getPower() / 300);
                 if (hel > hero.getUpperHp() / 2) {
                     hel = random.nextLong(hero.getUpperHp() / 2 + 1) + 1;
                 }
@@ -100,13 +99,12 @@ public class Palace extends Maze {
                 addMessage(context, "-------------------");
             } else if (random.nextLong(9000) > csmgl) {
                 step = 0;
-                long levJ = random.nextLong(hero.getMaxMazeLev() + 5) + 1;
+                long levJ = random.nextLong(hero.getMaxMazeLev() + 15) + 1;
                 addMessage(context, hero.getFormatName() + "踩到了传送门，被传送到了迷宫第" + levJ + "层");
                 level = levJ;
                 if (level > hero.getMaxMazeLev()) {
                     hero.setMaxMazeLev(level);
                 }
-                mazeLevelDetect();
                 addMessage(context, "-------------------");
             } else if (random.nextBoolean()) {
                 Skill skill1 = SkillFactory.getSkill("隐身", hero, context.getSkillDialog());
@@ -156,70 +154,11 @@ public class Palace extends Maze {
         BattleController.addMessage(context, msg);
     }
 
-    private void mazeLevelDetect() {
-        if (level > Integer.MAX_VALUE) {
-            if (level > Long.MAX_VALUE - 100) {
-                level--;
-            }
-        } else {
-            switch ((int) level) {
-                case 50:
-                    Achievement.maze50.enable(hero);
-                    break;
-                case 100:
-                    Achievement.maze100.enable(hero);
-                    break;
-                case 500:
-                    if (hero.getArmorLev() == 0 && hero.getSwordLev() == 0) {
-
-                    }
-                    Achievement.maze500.enable(hero);
-                    break;
-                case 1000:
-                    Achievement.maze1000.enable(hero);
-                    break;
-                case 10000:
-                    if (Achievement.maze100.isEnable()) {
-                        Achievement.maze10000.enable(hero);
-                    } else {
-                        Achievement.cribber.enable(hero);
-                    }
-                    break;
-                case 50000:
-                    if (Achievement.maze10000.isEnable()) {
-                        Achievement.maze50000.enable(hero);
-                    } else {
-                        Achievement.cribber.enable(hero);
-                    }
-                    break;
-
-            }
-        }
-        if(level > 500000){
-            if(!Achievement.richer.isEnable()) {
-                addMessage(MainGameActivity.context, "您不能再前进了，前面是付费玩家的地盘！");
-                level --;
-            }
-        }
-        if (level != 0 && level % 100 == 0) {
-            Skill fSkill = SkillFactory.getSkill("浮生百刃", hero, MainGameActivity.context.getSkillDialog());
-            Skill xSkill = SkillFactory.getSkill("虚无吞噬", hero, MainGameActivity.context.getSkillDialog());
-            boolean qzs = SkillFactory.getSkill("欺诈师", hero, MainGameActivity.context.getSkillDialog()).isActive();
-            if (qzs && (random.nextLong(hero.getMaxMazeLev() + 1000) > 1100)) {
-                fSkill.setActive(true);
-            }
-            if (qzs && (random.nextLong(hero.getMaxMazeLev() + 1000) > 1150)) {
-                xSkill.setActive(true);
-            }
-        }
-    }
-
     public long getLev() {
         return level;
     }
 
     public void setLevel(long level) {
-        mazeLevelDetect();
         this.level = level;
     }
 

@@ -18,7 +18,9 @@ public class DBHelper {
     private static int DB_VERSION_1_2_1 = 9;
     private static int DB_VERSION_1_3_1 = 10;
     private static int DB_VERSION_1_3_2 = 11;
-    private static int DB_VERSION = 13;
+    private static int DB_VERSION_1_4_7 = 13;
+    private static int DB_VERSION_1_4 = 12;
+    private static int DB_VERSION = 14;
 
     private Context context;
     private SQLiteDatabase database;
