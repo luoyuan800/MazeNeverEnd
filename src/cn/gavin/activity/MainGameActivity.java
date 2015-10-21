@@ -18,7 +18,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -26,7 +25,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -67,7 +65,7 @@ import cn.gavin.maze.Maze;
 import cn.gavin.maze.MazeService;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.monster.PalaceAdapt;
-import cn.gavin.monster.PalaceMonster;
+import cn.gavin.palace.PalaceMonster;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
@@ -808,7 +806,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         listView.setAdapter(palaceAdapt);
         dialog.setView(listView);
         dialog.show();
-        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+//        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
     }
 
     private void showPalace() {

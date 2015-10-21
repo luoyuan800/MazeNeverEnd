@@ -12,10 +12,8 @@ import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -26,11 +24,9 @@ import java.util.List;
 
 import cn.gavin.Hero;
 import cn.gavin.R;
-import cn.gavin.alipay.Alipay;
-import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
-import cn.gavin.maze.Palace;
+import cn.gavin.palace.Palace;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.skill.SkillDialog;
 
@@ -40,7 +36,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
     public static final String APK_PATH = Environment.getExternalStorageDirectory() + "/maze";
 
     // 战斗刷新速度
-    private long refreshInfoSpeed = 480;
+    private long refreshInfoSpeed = 580;
 
     // 战斗信息
     private ScrollView mainInfoSv;
@@ -203,11 +199,15 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         context = this;
         Log.i(TAG, "start palace~");
         initGameData();
+        pause = true;
+        start();
+    }
+
+    public void start(){
         gameThreadRunning = true;
         gameThread = new GameThread();
         gameThread.start();
     }
-
 
     @Override
     protected void onDestroy() {
@@ -305,7 +305,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
 
     private synchronized void refresh() {
         clickCount.setText("点击\n" + heroN.getClick());
-        mainContriHp.setText(heroN.getHp() + "/" + heroN.getUpperHp());
+        mainContriHp.setText(maze.getHero().getHp() + "/" + heroN.getUpperHp());
         mainContriAtt.setText(heroN.getUpperAtk() + "");
         mainContriDef.setText(heroN.getUpperDef() + "");
         swordLev.setText(heroN.getSword() + "+" + heroN.getSwordLev());
@@ -378,6 +378,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
 
     public void setPause(boolean pause) {
         this.pause = pause;
+        handler.sendEmptyMessage(1);
     }
 
     public MonsterBook getMonsterBook() {
@@ -397,10 +398,10 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         @Override
         public void run() {
             try {
-                //maze.move(context);
+                maze.move(context);
             } catch (Exception e) {
                 Log.e(TAG, "MainGameActivity.GameThread", e);
-                LogHelper.writeLog();
+                LogHelper.logException(e);
                 throw new RuntimeException(e);
             }
 
@@ -450,11 +451,6 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
             default:
                 break;
         }
-    }
-
-
-    public synchronized void save() {
-
     }
 
 }

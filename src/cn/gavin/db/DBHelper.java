@@ -7,7 +7,7 @@ import android.util.Log;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.forge.ForgeDB;
 import cn.gavin.log.LogHelper;
-import cn.gavin.monster.PalaceMonster;
+import cn.gavin.palace.PalaceMonster;
 
 /**
  * Created by gluo on 9/14/2015.

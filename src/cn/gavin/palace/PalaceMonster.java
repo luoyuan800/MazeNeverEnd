@@ -1,4 +1,4 @@
-package cn.gavin.monster;
+package cn.gavin.palace;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -18,8 +18,9 @@ import cn.gavin.activity.BaseContext;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.PalaceActivity;
 import cn.gavin.db.DBHelper;
-import cn.gavin.nskill.AtkSkill;
-import cn.gavin.nskill.NSkill;
+import cn.gavin.monster.Monster;
+import cn.gavin.palace.nskill.AtkSkill;
+import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.upload.PalaceObject;
 import cn.gavin.utils.StringUtils;
 
@@ -28,9 +29,7 @@ import cn.gavin.utils.StringUtils;
  * ALL RIGHTS RESERVED.
  * Created by gluo on 10/9/2015.
  */
-public class PalaceMonster implements BaseObject {
-
-
+public class PalaceMonster extends Base {
     public static void updatePalace(final MainGameActivity context) {
         BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
         query.setLimit(context.getPalaceCount());
@@ -129,50 +128,55 @@ public class PalaceMonster implements BaseObject {
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM palace ORDER BY lev DESC");
         while (!cursor.isAfterLast()) {
             PalaceMonster monster = new PalaceMonster();
-            monster.name = cursor.getString(cursor.getColumnIndex("name"));
-            monster.hp = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp")));
-            monster.atk = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk")));
-            monster.def = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def")));
+            monster.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
+            monster.setName(cursor.getString(cursor.getColumnIndex("name")));
+            monster.setHello(cursor.getString(cursor.getColumnIndex("hello")));
+            monster.setLev(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hello"))));
+            monster.setHp(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))));
+            monster.setDef(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def"))));
+            monster.setAtk(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk"))));
+            monster.setHit(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hit_rate"))).intValue());
+            monster.setParry(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("parry"))).intValue());
+            String skill1 = cursor.getString(cursor.getColumnIndex("skill"));
+            String skill11 = cursor.getString(cursor.getColumnIndex("skill1"));
+            String skill12 = cursor.getString(cursor.getColumnIndex("skill2"));
+            String[] strings = StringUtils.split(skill1, "_");
+            if(strings.length > 1) {
+                monster.addSkill(NSkill.createSkillByName(strings[0],
+                        monster, StringUtils.toLong(strings[1])));
+            }
+            strings = StringUtils.split(skill11, "_");
+            if(strings.length > 1) {
+                monster.addSkill(NSkill.createSkillByName(strings[0],
+                        monster, StringUtils.toLong(strings[1])));
+            }
+            strings = StringUtils.split(skill12, "_");
+            if(strings.length > 1) {
+                monster.addSkill(NSkill.createSkillByName(strings[0],
+                        monster, StringUtils.toLong(strings[1])));
+            }
+            stack.push(monster);
             cursor.moveToNext();
         }
         return stack;
     }
 
-    private String name;
-    private long hp, atk, def;
-    private Set<NSkill> skills;
+    private long lev;
+    private String hello;
 
-    public void addSkill(NSkill skill) {
-        skills.add(skill);
+    public void setLev(long lev) {
+        this.lev = lev;
     }
 
-    public Long getAttackValue() {
-        return atk;
+    public String getHello() {
+        return hello;
     }
 
-    public void addHp(long hp) {
-        this.hp += hp;
+    public void setHello(String hello) {
+        this.hello = hello;
     }
 
-    public String getFormatName() {
-        return "<font color=\"#800080\">" + name + "</font>";
-    }
-
-    public void atk(BaseObject hero, PalaceActivity context) {
-        for(NSkill skill : skills){
-            if(skill instanceof AtkSkill && skill.perform()){
-                skill.release(hero,context);
-                return;
-            }
-        }
-        normalAtk(this, hero);
-    }
-
-    public void normalAtk(BaseObject me, BaseObject target){
-
-    }
-
-    public void def(BaseObject hero) {
-
+    public long getLev() {
+        return lev;
     }
 }

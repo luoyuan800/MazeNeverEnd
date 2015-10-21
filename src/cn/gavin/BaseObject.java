@@ -11,4 +11,6 @@ public interface BaseObject {
     void addHp(long l);
 
     String getFormatName();
+
+    Long getDefenseValue();
 }

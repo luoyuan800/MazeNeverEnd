@@ -215,7 +215,6 @@ public class Hero implements BaseObject{
             this.attackValue = 10l;
         }
     }
-
     public Long getBaseDefense() {
         return defenseValue;
     }
@@ -1079,8 +1078,8 @@ public class Hero implements BaseObject{
     }
 
     public void setDodgeRate(Float dodgeRate) {
-        if(dodgeRate > 100){
-            dodgeRate = 100f;
+        if(dodgeRate > 15){
+            dodgeRate = 15f;
         }
         if(dodgeRate < 0) {
         dodgeRate = 0f;
@@ -1094,6 +1093,9 @@ public class Hero implements BaseObject{
 
     public void setClickPointAward(Long clickPointAward) {
         this.clickPointAward = clickPointAward;
+        if(this.clickPointAward > 10){
+            this.clickPointAward = 10l;
+        }
     }
 
     public Element getElement() {
