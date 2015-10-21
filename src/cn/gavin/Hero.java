@@ -199,7 +199,7 @@ public class Hero implements BaseObject{
 
     public Long getAttackValue() {
         long atk = isOnChange() ? changAtk : (attackValue + random.nextLong(sword.getBase()) + random.nextLong(swordLev + 1) * DEF_RISE + getSkillAdditionAtk());
-        if ((100 + random.nextLong(1000 + getStrength())) < random.nextLong(getHitRate() + getStrength()/5000)) {
+        if (random.nextLong(100) + hitRate + random.nextLong(agility + 1) / 5000 > 97 + random.nextInt(20) + random.nextLong(power + 1) / 5000) {
             atk += atk / 3;
             isHit = true;
         } else {
@@ -224,7 +224,7 @@ public class Hero implements BaseObject{
 
     public Long getDefenseValue() {
         long defend = defenseValue + random.nextLong(armor.getBase()) + random.nextLong(armorLev + 1) * ATR_RISE + getSkillAdditionDef();
-        if (parry > 100) parry = 100f;
+        if (parry > 100) parry = 90f;
         if (random.nextLong(100) + parry + random.nextLong(agility + 1) / 5000 > 97 + random.nextInt(20) + random.nextLong(strength + 1) / 5000) {
             defend *= 3;
             isParry = true;

@@ -28,7 +28,7 @@ public class FuseItems {
             if(item.getEffect1()!=null){
                 number = effectNumberEnumMap.get(item.getEffect1());
                 if(number!=null){
-                    effectNumberEnumMap.put(item.getEffect1(), number.longValue() + random.nextLong(item.getEffect1Value().longValue() + 1));
+                    effectNumberEnumMap.put(item.getEffect1(), number.longValue() + random.nextLong(item.getEffect1Value().longValue()*2 + 1));
                 }
             }
             item.delete();

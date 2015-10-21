@@ -71,27 +71,12 @@ public class ForgeDB {
     }
 
     public void upgradeTo1_3_2(SQLiteDatabase database){
-        String base = "INSERT INTO recipe (name, items, base, addition, found, user, type, color) values ('%s', '%s','%s','%s','false','false','%s','%s')";
-        String sql = String.format(base,"天使眼淚", "龙骨-凤凰毛-蛇筋-龙须木-红檀木",
-                "ADD_UPPER_HP:30000-ADD_DEF:10000","ADD_POWER:3000-ADD_CLICK_AWARD:200",
-                NecklaceBuilder.type,"#FF8C00");
-        database.execSQL(sql);
-        sql = String.format(base,"天神戒", "蛇皮-牛骨-白杏木-银矿石-紫熏木",
-                "ADD_ATK:30000-ADD_DEF:10000","ADD_ATK:50000-ADD_CLICK_AWARD:500", RingBuilder.type,"#FF8C00");
-        database.execSQL(sql);
+
     }
     public void upgradeTo1_4(SQLiteDatabase database){
         database.execSQL("CREATE UNIQUE INDEX recipe_index ON recipe (name)");
         String base = "INSERT INTO recipe (name, items, base, addition, found, user, type, color) values ('%s', '%s','%s','%s','false','false','%s','%s')";
-        String sql = String.format(base,"沁玟之永恒", "龙筋-冷杉木-冷杉木-冷杉木-冷杉木",
-                "ADD_POWER:3000-ADD_AGI:2000-ADD_STR:1000","ADD_CLICK_AWARD:300", NecklaceBuilder.type,"#FF8C00");
-        database.execSQL(sql);
-        sql = String.format(base,"沁玟之思念", "龙筋-龙筋-玄石-龙筋-龙筋",
-                "ADD_DODGE_RATE:20","ADD_CLICK_POINT_AWARD:100", HatBuilder.type,"#FF8C00");
-        database.execSQL(sql);
-        sql = String.format(base,"沁玟之护守", "玄石-玄石-玄石-玄石-冷杉木", "ADD_CLICK_AWARD:300-ADD_CLICK_POINT_AWARD:1","ADD_PARRY:12", RingBuilder.type,"#FF8C00");
-        database.execSQL(sql);
-        sql = String.format(base,"要你命3000<br><font color=\"#FF4500\">要你命3000，要么生，要么死</font>", "硝石-黑石-虎骨-萤石-蚁须", "ADD_ATK:50000-ADD_DEF:-50000-ADD_UPPER_HP:23333","ADD_AGI:5000", NecklaceBuilder.type,"#800080");
+        String sql = String.format(base,"要你命3000<br><font color=\"#FF4500\">要你命3000，要么生，要么死</font>", "硝石-黑石-虎骨-萤石-蚁须", "ADD_ATK:50000-ADD_DEF:-50000-ADD_UPPER_HP:23333","ADD_AGI:5000", NecklaceBuilder.type,"#800080");
         database.execSQL(sql);
         base = "REPLACE INTO recipe (name, items, base, addition, found, user, type, color) values ('%s', '%s','%s','%s','false','false','%s','%s')";
         sql = String.format(base,"天使眼淚", "龙骨-凤凰毛-蛇筋-龙须木-红檀木",
@@ -103,8 +88,7 @@ public class ForgeDB {
         database.execSQL(sql);
         sql = String.format(base,"旭日盔<br><font color=\"#FF4500\">日出东方，唯我不败</font>", "食人鸟毛-鼠骨-鼠筋-龟壳-青檀木", "ADD_ATK:10000-ADD_UPPER_HP:10000","ADD_AGI:7000", HatBuilder.type,"#FF8C00");
         database.execSQL(sql);
-        sql = String.format(base,"您捡到一只六娃", "鼠皮-鼠筋-白云石-白杏木-牛骨", "ADD_STR:1000-ADD_POWER:2000-ADD_CLICK_AWARD:300","ADD_AGI:30000-ADD_UPPER_HP:-30000", HatBuilder.type,"#FF8C00");
-        database.execSQL(sql);
+
     }
     public void upgradeTo1_4_7(SQLiteDatabase database){
         String base = "REPLACE INTO recipe (name, items, base, addition, found, user, type, color) values ('%s', '%s','%s','%s','false','false','%s','%s')";
@@ -115,6 +99,13 @@ public class ForgeDB {
         database.execSQL(sql);
         sql = String.format(base,"沁玟之永恒", "龙筋-冷杉木-冷杉木-冷杉木-冷杉木",
                 "ADD_POWER:3000-ADD_AGI:2000-ADD_STR:1000","ADD_CLICK_AWARD:300", NecklaceBuilder.type,"#FF8C00");
+        database.execSQL(sql);
+
+    }
+
+    public void upgradeTp1_5(SQLiteDatabase database){
+        String base = "REPLACE INTO recipe (name, items, base, addition, found, user, type, color) values ('%s', '%s','%s','%s','false','false','%s','%s')";
+        String sql = String.format(base,"您捡到一只六娃", "鼠皮-鼠筋-白云石-白杏木-牛骨", "ADD_STR:1000-ADD_POWER:2000-ADD_CLICK_AWARD:300","ADD_AGI:30000-ADD_UPPER_HP:-30000", HatBuilder.type,"#FF8C00");
         database.execSQL(sql);
     }
 }
