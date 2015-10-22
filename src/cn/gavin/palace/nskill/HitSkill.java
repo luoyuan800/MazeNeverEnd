@@ -33,7 +33,9 @@ public class HitSkill extends AtkSkill {
 
     @Override
     public long getHarm(Base target) {
-        return me.getAtk() * me.getRandom().nextLong((count / 1000) * 2 + 1) - target.getDef();
+        long l = me.getAtk() * me.getRandom().nextLong((count / 1000) * 2 + 1) - target.getDef();
+        if(l <= 0) l = me.getLev();
+        return l;
     }
 
 

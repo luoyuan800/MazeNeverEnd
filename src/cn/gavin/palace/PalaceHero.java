@@ -18,6 +18,7 @@ public class PalaceHero extends Base {
         setAtk(hero.getUpperAtk());
         setDef(hero.getUpperDef());
         setName(hero.getName());
+        setLev(hero.getMaxMazeLev());
         setRandom(hero.getRandom());
         if(hero.getFirstSkill()!=null){
             addSkill(NSkill.createSkillBySkill(hero.getFirstSkill(),this));

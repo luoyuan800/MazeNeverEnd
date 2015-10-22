@@ -127,7 +127,7 @@ public class PalaceMonster extends Base {
             monster.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
             monster.setName(cursor.getString(cursor.getColumnIndex("name")));
             monster.setHello(cursor.getString(cursor.getColumnIndex("hello")));
-            monster.setLev(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hello"))));
+            monster.setLev(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("lev"))));
             monster.setHp(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))));
             monster.setDef(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def"))));
             monster.setAtk(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk"))));

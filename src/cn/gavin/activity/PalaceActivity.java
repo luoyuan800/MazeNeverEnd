@@ -39,7 +39,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
     public static final String APK_PATH = Environment.getExternalStorageDirectory() + "/maze";
 
     // 战斗刷新速度
-    private long refreshInfoSpeed = 580;
+    private long refreshInfoSpeed =600;
 
     // 战斗信息
     private ScrollView mainInfoSv;
@@ -134,15 +134,12 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
                     case 11:
                         Animation shake = AnimationUtils.loadAnimation(context, R.anim.shake);
                         findViewById(R.id.hero_pic).startAnimation(shake);
-                        findViewById(R.id.main_info_ll).startAnimation(shake);
                         break;
                     case 1:
                         if (pause) {
-                            pause = false;
-                            pauseButton.setText("暂停");
+                            pauseButton.setText("点击继续挑战");
                         } else {
-                            pause = true;
-                            pauseButton.setText("继续");
+                            pauseButton.setText("暂停");
                         }
                     case 4:
                         clickCount.setText("点击\n" + heroN.getClick());
@@ -438,6 +435,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
                 break;
 
             case R.id.palace_pause_button:
+                pause = !pause;
                 handler.sendEmptyMessage(1);
                 heroN.click(false);
                 break;

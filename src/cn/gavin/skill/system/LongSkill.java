@@ -319,7 +319,7 @@ public class LongSkill extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
                     builder.append("火焰吐息，将攻击转换为火属性。<br>");
-                    builder.append("如果自身属性为相生属性则攻击翻倍。如果自身属性为相克属性则攻击减半。");
+                    builder.append("如果自身属性为相生属性则攻击翻倍。如果自身属性为相克属性则攻击减为80%。");
                     return builder.toString();
                 }
             });
@@ -378,7 +378,7 @@ public class LongSkill extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
                     builder.append("飞沙走石，将攻击转换为土属性。<br>");
-                    builder.append("如果自身属性为相生属性则攻击翻倍。如果自身属性为相克属性则攻击减半。");
+                    builder.append("如果自身属性为相生属性则攻击翻倍。如果自身属性为相克属性则攻击减为80%。");
                     return builder.toString();
                 }
             });

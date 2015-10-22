@@ -787,7 +787,7 @@ public class BaseSkill extends SkillLayout {
                     AttackSkill aSkill = (AttackSkill) skill;
                     StringBuilder builder = new StringBuilder();
                     builder.append("返璞归真<br>");
-                    builder.append(skill.getProbability()).append("的概率释放，造成").append(aSkill.getBaseHarm()).append("倍伤害");
+                    builder.append(skill.getProbability()).append("的概率释放，造成1-").append(aSkill.getBaseHarm()).append("倍伤害");
                     return builder.toString();
                 }
             });

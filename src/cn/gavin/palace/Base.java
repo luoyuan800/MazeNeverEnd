@@ -16,9 +16,10 @@ import cn.gavin.utils.Random;
  * Created by gluo on 10/21/2015.
  */
 public abstract class Base {
+    private long uHp;
     private long hp;
     private long def;
-    private Random random;
+    private Random random = new Random();
     private long atk;
     private int hit;
     private int parry;
@@ -27,6 +28,7 @@ public abstract class Base {
     private Element element;
     private Set<NSkill> skillSet = new LinkedHashSet<NSkill>(3);
     private PalaceActivity context;
+    private long lev;
 
     void addSkill(NSkill skill) {
         if (skill != null)
@@ -34,7 +36,6 @@ public abstract class Base {
     }
 
     void atk(Base target) {
-        addMessage(getFormatName() + "攻击了" + target.getFormatName());
         NSkill skill = getAtkSkill();
         Element element = this.element;
         long harm = 0;
@@ -47,11 +48,12 @@ public abstract class Base {
                 return;
             }
         } else {
+            addMessage(getFormatName() + "攻击了" + target.getFormatName());
             harm = getAtk() - target.getDef();
             if(harm < 0){
                 if(random.nextLong(100) < 5){
                     addMessage(getFormatName() + "击穿了" + target.getFormatName() + "的防御");
-                    harm = harm + target.def;
+                    harm = atk + target.def;
                 }else{
                     harm = 0;
                 }
@@ -99,6 +101,7 @@ public abstract class Base {
             NSkill skill = target.getDefSkill();
             boolean skip = false;
             if (skill != null) {
+                addMessage(target.getFormatName() + "使用了技能" + skill.getName());
                 element = skill.getElement();
                 skip = skill.release(this, harm);
             }
@@ -110,7 +113,6 @@ public abstract class Base {
             }
         }
     }
-l
     private long judgeElement(Base target, long harm, Element meElement) {
         if (meElement.restriction(target.getElement())) {
             harm *= 1.5;
@@ -132,6 +134,7 @@ l
 
     public void addHp(long l) {
         hp += l;
+        if(hp > uHp) hp = uHp;
     }
 
     NSkill getAtkSkill() {
@@ -167,6 +170,7 @@ l
 
     public void setHp(long hp) {
         this.hp = hp;
+        this.uHp = hp;
     }
 
     public void setRandom(Random random) {
@@ -206,7 +210,7 @@ l
     }
 
     public long getLev() {
-        return 0;
+        return lev;
     }
 
     public String getHello() {
@@ -223,5 +227,9 @@ l
 
     public Set<NSkill> getSkills() {
         return skillSet;
+    }
+
+    public void setLev(long lev) {
+        this.lev = lev;
     }
 }

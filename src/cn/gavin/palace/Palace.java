@@ -50,6 +50,8 @@ public class Palace extends Maze {
             context.addMessage(hero.getFormatName() + "进入了第 <b>" + lev + "</b> 层殿堂");
             context.addMessage(hero.getFormatName() + "遇见了殿堂守护者 <b>" + monster.getFormatName() + "</b> ");
             context.addMessage(monster.getFormatName() + "对" + hero.getFormatName() + "说：<i>" + monster.getHello() + "</i> ");
+            context.setPause(true);
+            context.addMessage("<font color=\"blue\">点击右边按钮开始挑战-->></font>");
             boolean atk = random.nextLong(hero.getHp() / 2 + 1) > random.nextLong(monster.getHp() / 2 + 1);
             while (monster.getHp() > 0 && hero.getHp() > 0) {
                 if (context.isPause()) continue;
@@ -67,11 +69,12 @@ public class Palace extends Maze {
             }
             if (monster.getHp() <= 0) {
                 context.addMessage(hero.getFormatName() + "战胜了" + monster.getFormatName());
-                if (random.nextBoolean()) {
+                if (random.nextLong(heroN.getLockBox()) < 5 && random.nextBoolean()) {
                     long count = random.nextLong(lev / 2100 + 1) + 1;
                     context.addMessage(hero.getFormatName() + "获得了" + count + "个宝箱");
                     heroN.setLockBox(heroN.getLockBox() + count);
                 }
+                context.addMessage("------------------------------");
                 if (monster instanceof PalaceHero) {
                     context.addMessage("恭喜你挑战成功！<br>你击败了所有的殿堂守护者。");
                     long count = random.nextLong(lev / 2000 + 1) + 5;

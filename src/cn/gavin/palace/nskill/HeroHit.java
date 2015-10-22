@@ -12,7 +12,9 @@ public class HeroHit extends AtkSkill {
     private long addition;
     public HeroHit(Base me, long count) {
         super(me, count);
-        Double a  = Math.pow(2, count/1000) * 85;
+        long l = count / 1000;
+        if(l > 15)l = 15;
+        Double a  = Math.pow(2, l) * 85;
         addition = a.longValue();
     }
 
@@ -25,7 +27,9 @@ public class HeroHit extends AtkSkill {
     public long getHarm(Base target) {
         long l = random.nextLong(base + addition);
         if(l<=0) l = random.nextLong(addition);
-        return me.getAtk() + base + l;
+        long l1 = me.getAtk() + base + l - target.getDef();
+        if(l <= 0) l1 = me.getLev();
+        return l1;
     }
 
     public long getBase() {

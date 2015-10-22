@@ -26,7 +26,9 @@ public class DragonBreath extends AtkSkill {
         }else if(me.getElement().restriction(Element.火)){
             harm *= 0.8;
         }
-        return harm - target.getDef();
+        long l = harm - target.getDef();
+        if(l <= 0) l = me.getLev();
+        return l;
     }
 
     @Override

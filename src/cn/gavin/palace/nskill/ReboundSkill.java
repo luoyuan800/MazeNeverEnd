@@ -16,7 +16,11 @@ public class ReboundSkill extends DefSkill {
     public boolean release(Base target, long harm) {
         long re = (long)(harm * (20 + getRate() * 10)/100);
         target.addHp(-re);
-        me.addMessage("反弹了" + re + "点伤害");
+        harm = harm - re;
+        if(harm < 0) harm = 0;
+        me.addMessage(me.getFormatName() + "反弹了" + re + "点伤害");
+        me.addMessage(me.getFormatName() + "受到了" + harm + "点伤害");
+        me.addHp(-harm);
         return true;
     }
 

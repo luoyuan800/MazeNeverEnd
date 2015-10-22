@@ -24,8 +24,10 @@ public class MultiSkill extends AtkSkill {
 
     @Override
     public long getHarm(Base target) {
-        long c = random.nextLong(i);
-        long harm = (me.getAtk() * (j/100)) * c;
+        long c = random.nextLong(i) +1;
+        long l = me.getAtk() - target.getDef();
+        if(l <= 0) l = me.getLev();
+        long harm = (l * (j/100)) * c;
         me.addMessage(me.getFormatName() + "攻击了" + c + "次");
         return harm;
     }

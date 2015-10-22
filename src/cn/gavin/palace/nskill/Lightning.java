@@ -12,8 +12,10 @@ public class Lightning extends AtkSkill {
     long addition;
     public Lightning(Base me, long count) {
         super(me, count);
-        base = 2000 * (count/1000) + 10000;
-        Double pow = Math.pow(2, count / 1000);
+        long l = count / 1000;
+        if(l > 15) l = 15;
+        base = 2000 * l + 10000;
+        Double pow = Math.pow(2, l);
         addition = 70000 + pow.longValue();
     }
 
@@ -24,7 +26,9 @@ public class Lightning extends AtkSkill {
 
     @Override
     public long getHarm(Base target) {
-        return me.getAtk() + base + random.nextLong(base + addition) - target.getDef();
+        long l = me.getAtk() + base + random.nextLong(base + addition) - target.getDef();
+        if(l <= 0) l = me.getLev();
+        return l;
     }
 
     public void setBase(long base) {
