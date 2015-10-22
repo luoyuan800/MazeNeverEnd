@@ -11,14 +11,10 @@ import cn.gavin.utils.Random;
  * Created by gluo on 10/15/2015.
  */
 public class HitSkill extends AtkSkill {
-    private long count;
-    private Random random;
-    private Base me;
 
     public HitSkill(Base me, long count) {
-        this.me = me;
-        this.count = count;
-        random = new Random();
+        super(me, count);
+        setRate(20f);
     }
 
     public boolean perform() {
@@ -37,7 +33,7 @@ public class HitSkill extends AtkSkill {
 
     @Override
     public long getHarm(Base target) {
-        return me.getAtk() * me.getRandom().nextLong((count / 1000) * 2 + 1);
+        return me.getAtk() * me.getRandom().nextLong((count / 1000) * 2 + 1) - target.getDef();
     }
 
 

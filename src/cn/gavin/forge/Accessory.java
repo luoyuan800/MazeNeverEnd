@@ -285,10 +285,10 @@ public class Accessory extends Equipment {
             for (EnumMap.Entry<Effect, Number> entry : effects.entrySet()) {
                 if (item.getEffect() == null && random.nextBoolean()) {
                     item.setEffect(entry.getKey());
-                    item.setEffectValue(entry.getValue().longValue() / 3 + random.nextLong(entry.getValue().longValue() + 1));
+                    item.setEffectValue(entry.getValue().longValue() / 3 + random.nextLong(entry.getValue().longValue() + 1) + 1);
                 } else if (item.getEffect1() == null && random.nextBoolean()) {
                     item.setEffect1(entry.getKey());
-                    item.setEffect1Value(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue() + 1));
+                    item.setEffect1Value(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue() + 1) +1);
                 }
                 if (item.getEffect() != null && item.getEffect1() != null) {
                     break;
@@ -299,6 +299,13 @@ public class Accessory extends Equipment {
                 item.setEffect(entry.getKey());
                 item.setEffectValue(entry.getValue());
             }
+            if(item.getEffect() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000)!=99){
+                item.setEffect(Effect.ADD_PARRY);
+            }
+
+            if(item.getEffect1() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000)!=99){
+                item.setEffect1(Effect.ADD_PARRY);
+            }
             item.save();
             items.add(item);
             if (random.nextBoolean()) {
@@ -307,10 +314,10 @@ public class Accessory extends Equipment {
                 for (EnumMap.Entry<Effect, Number> entry : effects.entrySet()) {
                     if (item.getEffect() == null && random.nextBoolean()) {
                         item.setEffect(entry.getKey());
-                        item.setEffectValue(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue()/2 + 1));
+                        item.setEffectValue(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue()/2 + 1) + 1);
                     } else if (item.getEffect1() == null && random.nextBoolean()) {
                         item.setEffect1(entry.getKey());
-                        item.setEffect1Value(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue()/2 + 1));
+                        item.setEffect1Value(entry.getValue().longValue() / 2 + random.nextLong(entry.getValue().longValue()/2 + 1) + 1);
                     }
                     if (item.getEffect() != null && item.getEffect1() != null) {
                         break;
@@ -323,13 +330,20 @@ public class Accessory extends Equipment {
                 }
                 item.save();
                 items.add(item);
+                if(item.getEffect() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000)!=99){
+                    item.setEffect(Effect.ADD_PARRY);
+                }
+
+                if(item.getEffect1() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000)!=99){
+                    item.setEffect1(Effect.ADD_PARRY);
+                }
             }
             if(getAdditionEffects()!=null && !additionEffects.isEmpty()){
                 for (EnumMap.Entry<Effect, Number> entry : additionEffects.entrySet()) {
                     item = new Item();
                     item.setName(ItemName.values()[random.nextInt(ItemName.values().length)]);
                     item.setEffect(entry.getKey());
-                    item.setEffectValue(entry.getValue().longValue() / 3 + random.nextLong(entry.getValue().longValue() + 1));
+                    item.setEffectValue(entry.getValue().longValue() / 3 + random.nextLong(entry.getValue().longValue() + 1) + 1);
                     item.save();
                     items.add(item);
                 }
@@ -338,6 +352,12 @@ public class Accessory extends Equipment {
                 EnumMap.Entry<Effect, Number> entry = effects.entrySet().iterator().next();
                 item.setEffect(entry.getKey());
                 item.setEffectValue(entry.getValue());
+            }
+            if(item.getEffect() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000)!=99){
+                item.setEffect(Effect.ADD_PARRY);
+            }
+            if(item.getEffect1() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000)!=99){
+                item.setEffect1(Effect.ADD_PARRY);
             }
         }catch (Exception e){
             e.printStackTrace();

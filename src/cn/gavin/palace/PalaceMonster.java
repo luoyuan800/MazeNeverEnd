@@ -6,20 +6,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Message;
 
 import java.util.List;
-import java.util.Set;
 import java.util.Stack;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.CountListener;
 import cn.bmob.v3.listener.FindListener;
-import cn.gavin.BaseObject;
 import cn.gavin.Element;
 import cn.gavin.activity.BaseContext;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.activity.PalaceActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.monster.Monster;
-import cn.gavin.palace.nskill.AtkSkill;
 import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.upload.PalaceObject;
 import cn.gavin.utils.StringUtils;
@@ -143,17 +139,17 @@ public class PalaceMonster extends Base {
             String[] strings = StringUtils.split(skill1, "_");
             if(strings.length > 1) {
                 monster.addSkill(NSkill.createSkillByName(strings[0],
-                        monster, StringUtils.toLong(strings[1])));
+                        monster, StringUtils.toLong(strings[1]), null));
             }
             strings = StringUtils.split(skill11, "_");
             if(strings.length > 1) {
                 monster.addSkill(NSkill.createSkillByName(strings[0],
-                        monster, StringUtils.toLong(strings[1])));
+                        monster, StringUtils.toLong(strings[1]), null));
             }
             strings = StringUtils.split(skill12, "_");
             if(strings.length > 1) {
                 monster.addSkill(NSkill.createSkillByName(strings[0],
-                        monster, StringUtils.toLong(strings[1])));
+                        monster, StringUtils.toLong(strings[1]), null));
             }
             stack.push(monster);
             cursor.moveToNext();
@@ -178,5 +174,13 @@ public class PalaceMonster extends Base {
 
     public long getLev() {
         return lev;
+    }
+
+    public NSkill getAtkSkill(){
+        NSkill skill = super.getAtkSkill();
+        if(skill!=null){
+            getContext().getHandler().sendEmptyMessage(11);
+        }
+        return skill;
     }
 }

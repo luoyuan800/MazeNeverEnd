@@ -41,7 +41,7 @@ public class Palace extends Maze {
             Base monster;
             if (palaceMonsters.isEmpty()) {
                 monster = new PalaceHero(heroN);
-                monster.setName(heroN.getName() + "-镜像");
+                monster.setName("镜像");
             } else {
                 monster = palaceMonsters.pop();
             }
@@ -68,26 +68,29 @@ public class Palace extends Maze {
             if (monster.getHp() <= 0) {
                 context.addMessage(hero.getFormatName() + "战胜了" + monster.getFormatName());
                 if (random.nextBoolean()) {
-                    long count = random.nextLong(lev / 100 + 1) + 1;
-                    context.addMessage(hero.getFormatName() + "获得了" + context + "个宝箱");
+                    long count = random.nextLong(lev / 2100 + 1) + 1;
+                    context.addMessage(hero.getFormatName() + "获得了" + count + "个宝箱");
                     heroN.setLockBox(heroN.getLockBox() + count);
                 }
-                if(monster instanceof PalaceHero){
+                if (monster instanceof PalaceHero) {
                     context.addMessage("恭喜你挑战成功！<br>你击败了所有的殿堂守护者。");
                     long count = random.nextLong(lev / 2000 + 1) + 5;
                     context.addMessage(hero.getFormatName() + "获得了" + count + "个宝箱");
                     heroN.setLockBox(heroN.getLockBox() + count);
                     context.setPause(true);
+                    context.setFinished(true);
                     break;
                 }
             } else if (hero.getHp() <= 0) {
                 context.addMessage(hero.getFormatName() + "被" + monster.getFormatName() + "打败了！");
                 context.addMessage(hero.getFormatName() + "的殿堂挑战失败！");
                 context.setPause(true);
+                context.setFinished(false);
                 break;
             }
         }
-        context.addMessage("挑战结束，你现在可以退出殿堂了。");
+        if (context != null)
+            context.addMessage("挑战结束，你现在可以退出殿堂了。");
     }
 
     public long getLev() {

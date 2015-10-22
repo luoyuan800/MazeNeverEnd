@@ -20,13 +20,13 @@ public class PalaceHero extends Base {
         setName(hero.getName());
         setRandom(hero.getRandom());
         if(hero.getFirstSkill()!=null){
-            addSkill(NSkill.createSkillByName(hero.getFirstSkill().getName(),this,hero.getFirstSkill().getCount()));
+            addSkill(NSkill.createSkillBySkill(hero.getFirstSkill(),this));
         }
         if(hero.getSecondSkill()!=null){
-            addSkill(NSkill.createSkillByName(hero.getSecondSkill().getName(),this,hero.getSecondSkill().getCount()));
+            addSkill(NSkill.createSkillBySkill(hero.getSecondSkill(),this));
         }
         if(hero.getThirdSkill()!=null){
-            addSkill(NSkill.createSkillByName(hero.getThirdSkill().getName(),this,hero.getThirdSkill().getCount()));
+            addSkill(NSkill.createSkillBySkill(hero.getThirdSkill(),this));
         }
     }
 }

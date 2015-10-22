@@ -5,6 +5,8 @@ import java.util.Set;
 
 import cn.gavin.Element;
 import cn.gavin.activity.PalaceActivity;
+import cn.gavin.palace.nskill.AtkSkill;
+import cn.gavin.palace.nskill.DefSkill;
 import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.utils.Random;
 
@@ -34,10 +36,16 @@ public abstract class Base {
     void atk(Base target) {
         addMessage(getFormatName() + "攻击了" + target.getFormatName());
         NSkill skill = getAtkSkill();
+        Element element = this.element;
         long harm = 0;
         if (skill != null) {
             addMessage(getFormatName() + "使用技能" + skill.getName() + "攻击" + target.getFormatName());
             harm = skill.getHarm(target);
+            element = skill.getElement();
+            if(harm < 0){
+                target.normalAtk(this, -harm, element);
+                return;
+            }
         } else {
             harm = getAtk() - target.getDef();
             if(harm < 0){
@@ -49,7 +57,7 @@ public abstract class Base {
                 }
             }
         }
-        normalAtk(target, harm);
+        normalAtk(target, harm, element);
     }
 
     public long getAtk() {
@@ -68,7 +76,7 @@ public abstract class Base {
         return hit;
     }
 
-    private long getDef() {
+    public long getDef() {
         if (isParry()) {
             return def *= 1.5;
         } else {
@@ -84,45 +92,64 @@ public abstract class Base {
         return b;
     }
 
-    private void normalAtk(Base target, long harm) {
+    public void normalAtk(Base target, long harm, Element element) {
         if (target.isDodge()) {
             addMessage(target.getFormatName() + "闪开了" + getFormatName() + "的攻击。");
         } else {
             NSkill skill = target.getDefSkill();
+            boolean skip = false;
             if (skill != null) {
-                skill.release(this, harm);
-            } else {
-                if (element.restriction(target.getElement())) {
-                    harm *= 1.5;
-                }
-                if (target.getElement().restriction(element)) {
-                    harm *= 0.8;
-                }
-                addMessage(target.getFormatName() + "受到了" + harm + "点伤害");
+                element = skill.getElement();
+                skip = skill.release(this, harm);
+            }
+            if(!skip){
+                harm = judgeElement(target, harm, element);
+                if(harm < 0) harm = 0;
+                addMessage(target.getFormatName() + "受到了<font color=\"red\">" + harm + "</font>点伤害");
                 target.addHp(-harm);
             }
         }
     }
+l
+    private long judgeElement(Base target, long harm, Element meElement) {
+        if (meElement.restriction(target.getElement())) {
+            harm *= 1.5;
+        }
+        if (target.getElement().restriction(meElement)) {
+            harm *= 0.8;
+        }
+        return harm;
+    }
 
     private NSkill getDefSkill() {
+        for(NSkill skill : skillSet){
+            if(skill instanceof DefSkill && skill.perform()){
+                return skill;
+            }
+        }
         return null;
     }
 
-    private void addHp(long l) {
+    public void addHp(long l) {
         hp += l;
     }
 
     NSkill getAtkSkill() {
+        for(NSkill skill : skillSet){
+            if(skill instanceof AtkSkill && skill.perform()){
+                return skill;
+            }
+        }
         return null;
     }
 
-    void addMessage(String str) {
+    public void addMessage(String str) {
         if (context != null) {
             context.addMessage(str);
         }
     }
 
-    String getFormatName() {
+    public String getFormatName() {
         return "<font color=\"#800080\">" + name + "</font>(" + element + ")";
     }
 
@@ -192,5 +219,9 @@ public abstract class Base {
 
     public void setContext(PalaceActivity context) {
         this.context = context;
+    }
+
+    public Set<NSkill> getSkills() {
+        return skillSet;
     }
 }

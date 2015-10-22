@@ -96,15 +96,15 @@ public class Item {
         item.setName(name);
         Random random = hero.getRandom();
         Effect e = Effect.values()[random.nextInt(Effect.values().length)];
-        if(e == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(1000)< 999){
+        if(e == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(100000000)!= 999){
                 e = Effect.values()[e.ordinal()-1];
         }
         item.setEffect(e);
         item.setEffectValue(e.calculate(hero));
         if (random.nextBoolean()) {
             Effect e1 = Effect.values()[random.nextInt(Effect.values().length)];
-            if(e1 == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(1000)< 999){
-                e1 = Effect.values()[e1.ordinal()-1];
+            if(e1 == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(10000000)!= 999){
+                e1 = Effect.values()[e1.ordinal()+1];
             }
             if (e1 != e) {
                 item.setEffect1(e1);
@@ -127,15 +127,15 @@ public class Item {
         item.setName(name);
         Random random = hero.getRandom();
         Effect e = Effect.values()[random.nextInt(Effect.values().length)];
-        if(e == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(1000)< 999){
+        if(e == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(100000000)!=999){
             e = Effect.values()[e.ordinal()-1];
         }
         item.setEffect(e);
         item.setEffectValue(e.calculate(hero, monster));
         if (maze.getLev() > 15 && random.nextBoolean()) {
             Effect e1 = Effect.values()[random.nextInt(Effect.values().length)];
-            if(e == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(1000)< 999){
-                e = Effect.values()[e.ordinal()-1];
+            if(e == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(10000000)!= 999){
+                e = Effect.values()[e.ordinal()+1];
             }
             if (e1 != e) {
                 item.setEffect1(e1);

@@ -14,6 +14,8 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -28,6 +30,7 @@ import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.palace.Palace;
 import cn.gavin.monster.MonsterBook;
+import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.skill.SkillDialog;
 
 public class PalaceActivity extends Activity implements OnClickListener, BaseContext {
@@ -48,7 +51,6 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
     private Palace maze;
 
     // 人物信息栏
-    private TextView itembarContri; // 按钮-属性
     private TextView mainContriHp;
     private TextView mainContriAtt;
     private TextView mainContriDef;
@@ -67,14 +69,13 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
     public static PalaceActivity context;
     private GameThread gameThread;
     //Data
-    private TextView lockBoxCount;
-    private TextView keyCount;
     private TextView ringTextView;
     private TextView necklaceTextView;
     private TextView hatTextView;
     private MonsterBook monsterBook;
     private SkillDialog skillDialog;
     private boolean isHidBattle;
+    private Button exitButton;
 
     @Override
     public boolean isHideBattle() {
@@ -120,7 +121,21 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         public void handleMessage(Message msg) {
             try {
                 switch (msg.what) {
-
+                    case 12:
+                        Boolean b = (Boolean)msg.obj;
+                        if(b){
+                            findViewById(R.id.palace_bak).setBackgroundResource(R.drawable.long_1);
+                            exitButton.setText("骄傲的离开殿堂");
+                        }else{
+                            findViewById(R.id.palace_bak).setBackgroundResource(R.drawable.long_bak);
+                            exitButton.setText("灰溜溜的爬出殿堂");
+                        }
+                        break;
+                    case 11:
+                        Animation shake = AnimationUtils.loadAnimation(context, R.anim.shake);
+                        findViewById(R.id.hero_pic).startAnimation(shake);
+                        findViewById(R.id.main_info_ll).startAnimation(shake);
+                        break;
                     case 1:
                         if (pause) {
                             pause = false;
@@ -263,9 +278,6 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         // 左侧战斗信息
         mainInfoSv = (ScrollView) findViewById(R.id.main_info_sv);
         mainInfoPlatform = (LinearLayout) findViewById(R.id.main_info_ll);
-        // ---- ---- 标题（人物名称 | 最深迷宫数)
-        itembarContri = (TextView) findViewById(R.id.character_itembar_contribute);
-        itembarContri.setOnClickListener(this);
         // ---- ---- 属性
         mainContriHp = (TextView) findViewById(R.id.main_contri_hp);
         mainContriAtt = (TextView) findViewById(R.id.main_contri_att);
@@ -286,15 +298,14 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         secondSkillButton.setOnClickListener(this);
         thirdSkillButton = (Button) findViewById(R.id.third_skill);
         thirdSkillButton.setOnClickListener(this);
-        lockBoxCount = (TextView) findViewById(R.id.local_box);
-        lockBoxCount.setOnClickListener(this);
-        keyCount = (TextView) findViewById(R.id.key_count);
         ringTextView = (TextView) findViewById(R.id.ring_view);
         ringTextView.setOnClickListener(this);
         necklaceTextView = (TextView) findViewById(R.id.necklace_view);
         necklaceTextView.setOnClickListener(this);
         hatTextView = (TextView) findViewById(R.id.hat_view);
         hatTextView.setOnClickListener(this);
+        exitButton = (Button) findViewById(R.id.exist_palace_button);
+        exitButton.setOnClickListener(this);
         refresh();
     }
 
@@ -305,33 +316,22 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         mainContriDef.setText(heroN.getUpperDef() + "");
         swordLev.setText(heroN.getSword() + "+" + heroN.getSwordLev());
         armorLev.setText(heroN.getArmor() + "+" + heroN.getArmorLev());
-
-        itembarContri.setText(heroN.getName() + "\n迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
-        heroPic.setText(heroN.getSword() + "\n\n\n " + heroN.getArmor());
-        if (heroN.getFirstSkill() != null) {
-            firstSkillButton.setText(heroN.getFirstSkill().getDisplayName());
-            firstSkillButton.setEnabled(true);
-        } else {
-            firstSkillButton.setText("");
-            firstSkillButton.setEnabled(false);
-        }
-        if (heroN.getSecondSkill() != null) {
-            secondSkillButton.setText(heroN.getSecondSkill().getDisplayName());
-            secondSkillButton.setEnabled(true);
-        } else {
-            secondSkillButton.setText("");
-            secondSkillButton.setEnabled(false);
-        }
-        if (heroN.getThirdSkill() != null) {
-            thirdSkillButton.setText(heroN.getThirdSkill().getDisplayName());
-            thirdSkillButton.setEnabled(true);
-        } else {
-            thirdSkillButton.setText("");
-            thirdSkillButton.setEnabled(false);
+        int i =0;
+        for(NSkill skill : maze.getHero().getSkills()){
+            switch (i){
+                case 0:
+                    firstSkillButton.setText(skill.getName());
+                    break;
+                case 1:
+                    secondSkillButton.setText(skill.getName());
+                    break;
+                case 2:
+                    thirdSkillButton.setText(skill.getName());
+                    break;
+            }
+            i++;
         }
 
-        lockBoxCount.setText("X " + heroN.getLockBox());
-        keyCount.setText("X " + heroN.getKeyCount());
         if (heroN.getRing() != null) {
             ringTextView.setText(Html.fromHtml(heroN.getRing().getFormatName()));
         } else {
@@ -386,6 +386,13 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         this.skillDialog = skillDialog;
     }
 
+    public void setFinished(boolean b) {
+        Message message = new Message();
+        message.what = 12;
+        message.obj = b;
+        handler.sendMessage(message);
+    }
+
     private class GameThread extends Thread {
 
         @Override
@@ -405,7 +412,9 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
-
+            case R.id.exist_palace_button:
+                showExitDialog();
+                break;
             case R.id.first_skill:
                 if (heroN.getFirstSkill() != null) {
                     heroN.getFirstSkill().addCount();

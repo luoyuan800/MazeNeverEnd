@@ -1,8 +1,9 @@
 package cn.gavin.palace.nskill;
 
-import cn.gavin.BaseObject;
-import cn.gavin.activity.BaseContext;
+import cn.gavin.Element;
 import cn.gavin.palace.Base;
+import cn.gavin.skill.Skill;
+import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.utils.Random;
 
 /**
@@ -11,8 +12,10 @@ import cn.gavin.utils.Random;
  * Created by gluo on 10/21/2015.
  */
 public abstract class NSkill {
+    long count;
+    Base me;
     private float rate = 25;
-    private Random random = new Random();
+    Random random = new Random();
     public boolean perform(){
         return random.nextInt(100) + random.nextFloat() < rate;
     }
@@ -22,11 +25,52 @@ public abstract class NSkill {
 
     public abstract long getHarm(Base target);
 
-    public static NSkill createSkillByName(String name, Base me, long count){
+    public static NSkill createSkillByName(String name, Base me, long count, Skill oSkill){
+        NSkill skill = null;
         if(name.equals("重击")){
-            return new HitSkill(me,count);
+            skill =  new HitSkill(me,count);
+        }else if(name.equals("多重攻击")){
+            skill = new MultiSkill(me, count);
+        }else if(name.equals("闪避")){
+            skill = new DodgeSkill(me, count);
+        }else if(name.equals("勇者之击")){
+            skill = new HeroHit(me, count);
+            if(oSkill!=null){
+                ((HeroHit)skill).setBase(((AttackSkill)oSkill).getBaseHarm());
+                ((HeroHit)skill).setAddition(((AttackSkill) oSkill).getAdditionHarm());
+            }
+        }else if(name.equals("魔王天赋")){
+            skill = new EvilTalent(me, count);
+        }else if(name.equals("龙爪")){
+            skill = new DragonClaw(me, count);
+        }else if(name.equals("吐息")){
+            skill = new DragonBreath(me, count);
+        }else if(name.equals("沙尘")){
+            skill = new SandStorm(me, count);
+        }else if(name.equals("欺诈游戏")){
+            skill = new SwindleGame(me, count);
+        }else if(name.equals("闪电")){
+            skill = new Lightning(me, count);
+            if(oSkill!=null){
+                ((Lightning)skill).setBase(((AttackSkill)oSkill).getBaseHarm());
+                ((Lightning)skill).setAddition(((AttackSkill)oSkill).getAdditionHarm());
+            }
+        }else if(name.equals("反弹")){
+            skill = new ReboundSkill(me, count);
+        }else if(name.equals("水波")){
+            skill = new WaterWave(me, count);
+        }else if(name.equals("虚无吞噬")){
+            skill = new SwallowSkill(me, count);
         }
-        return null;
+        return skill;
+    }
+
+    public static NSkill createSkillBySkill(Skill skill, Base hero){
+        NSkill nSkill = createSkillByName(skill.getName(),hero, skill.getCount(), null);
+        if(nSkill!=null){
+            nSkill.setRate(skill.getProbability());
+        }
+        return nSkill;
     }
 
     public float getRate() {
@@ -39,5 +83,9 @@ public abstract class NSkill {
 
     public void setRandom(Random random) {
         this.random = random;
+    }
+
+    public Element getElement() {
+        return me.getElement();
     }
 }

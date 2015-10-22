@@ -91,21 +91,23 @@ public class ForgeDB {
 
     }
     public void upgradeTo1_4_7(SQLiteDatabase database){
-        String base = "REPLACE INTO recipe (name, items, base, addition, found, user, type, color) values ('%s', '%s','%s','%s','false','false','%s','%s')";
-        String sql = String.format(base,"沁玟之思念", "龙筋-龙筋-玄石-龙筋-龙筋",
-                "ADD_DODGE_RATE:20","ADD_CLICK_POINT_AWARD:100", HatBuilder.type,"#FF8C00");
-        database.execSQL(sql);
-        sql = String.format(base,"沁玟之护守", "玄石-玄石-玄石-玄石-冷杉木", "ADD_CLICK_AWARD:300-ADD_CLICK_POINT_AWARD:1","ADD_PARRY:12", RingBuilder.type,"#FF8C00");
-        database.execSQL(sql);
-        sql = String.format(base,"沁玟之永恒", "龙筋-冷杉木-冷杉木-冷杉木-冷杉木",
-                "ADD_POWER:3000-ADD_AGI:2000-ADD_STR:1000","ADD_CLICK_AWARD:300", NecklaceBuilder.type,"#FF8C00");
-        database.execSQL(sql);
 
     }
 
     public void upgradeTp1_5(SQLiteDatabase database){
         String base = "REPLACE INTO recipe (name, items, base, addition, found, user, type, color) values ('%s', '%s','%s','%s','false','false','%s','%s')";
         String sql = String.format(base,"您捡到一只六娃", "鼠皮-鼠筋-白云石-白杏木-牛骨", "ADD_STR:1000-ADD_POWER:2000-ADD_CLICK_AWARD:300","ADD_AGI:30000-ADD_UPPER_HP:-30000", HatBuilder.type,"#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base,"沁玟之思念", "龙筋-龙筋-玄石-龙筋-龙筋",
+                "ADD_DODGE_RATE:-20","ADD_CLICK_POINT_AWARD:1", HatBuilder.type,"#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base,"沁玟之护守", "玄石-玄石-玄石-玄石-冷杉木", "ADD_CLICK_AWARD:-300","ADD_PARRY:20", RingBuilder.type,"#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base,"沁玟之永恒", "龙筋-冷杉木-冷杉木-冷杉木-冷杉木",
+                "ADD_POWER:-3000-ADD_AGI:-2000-ADD_STR:-1000","ADD_CLICK_AWARD:300", NecklaceBuilder.type,"#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base,"余辉", "龙筋-白云-龙皮-冷杉木",
+                "ADD_UPPER_HP:400000-ADD_ATK:250000-ADD_DEF:-3000000","ADD_POWER:1000", NecklaceBuilder.type,"#FF8C00");
         database.execSQL(sql);
     }
 }

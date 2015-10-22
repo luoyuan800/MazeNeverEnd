@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/palace_bak"
     tools:context=".activity.MainGameActivity" android:background="@drawable/palace_bak_1">
 
         <ScrollView
@@ -18,7 +19,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:background="#ff11f8ff"
                 android:orientation="vertical"></LinearLayout>
         </ScrollView>
 

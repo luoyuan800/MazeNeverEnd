@@ -187,7 +187,7 @@ public class SwindlerSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("玩的就是心跳。<br>攻击时抛一次硬币，如果为正面，对敌人造成N倍的攻击伤害。否则自己受到敌人攻击的N倍伤害。<br>其中N根据点击数计算，最低为0，最高，谁也不知道……");
+                    builder.append("玩的就是心跳。<br>攻击时抛一次硬币，如果为正面，对敌人造成N倍的攻击伤害。否则自己受到敌人攻击的N倍伤害。<br>其中N根据点击数计算（在殿堂中使用该技能时会修正为根据当前技能的使用+点击次数），取值范围[0,?]");
                     builder.append(skill.getProbability()).append("%的概率释放。");
                     return builder.toString();
                 }

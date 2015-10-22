@@ -260,7 +260,7 @@ public class LongSkill extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
                     builder.append("将当前的攻击转换为金属性。<br>");
-                    builder.append("如果自身属性为相生属性则攻击翻倍。如果自身属性为相克属性则攻击减半。");
+                    builder.append("如果自身属性为相生属性则攻击翻倍。如果自身属性为相克属性则攻击减为80%。");
                     return builder.toString();
                 }
             });
@@ -271,12 +271,12 @@ public class LongSkill extends SkillLayout {
                     if (hero.getElement() == Element.土) {
                         harm *= 2;
                     } else if (hero.getElement() == Element.火) {
-                        harm /= 2;
+                        harm *= 0.8;
                     }
                     if (Element.金.restriction(monster.getElement())) {
                         harm *= 1.5;
                     } else if (monster.getElement().restriction(Element.金)) {
-                        harm /= 2;
+                        harm *= 0.8;
                     }
                     if (hero.isHit()) {
                         String msg = hero.getFormatName() + "使出了暴击";
@@ -330,12 +330,12 @@ public class LongSkill extends SkillLayout {
                     if (hero.getElement() == Element.木) {
                         harm *= 2;
                     } else if (hero.getElement() == Element.水) {
-                        harm /= 2;
+                        harm *= 0.8;
                     }
                     if (Element.火.restriction(monster.getElement())) {
                         harm *= 1.5;
                     } else if (monster.getElement().restriction(Element.火)) {
-                        harm /= 2;
+                        harm *= 0.82;
                     }
                     if (hero.isHit()) {
                         String msg = hero.getFormatName() + "使出了暴击";
@@ -389,12 +389,12 @@ public class LongSkill extends SkillLayout {
                     if (hero.getElement() == Element.火) {
                         harm *= 2;
                     } else if (hero.getElement() == Element.木) {
-                        harm /= 2;
+                        harm *= 0.8;
                     }
                     if (Element.土.restriction(monster.getElement())) {
                         harm *= 1.5;
                     } else if (monster.getElement().restriction(Element.土)) {
-                        harm /= 2;
+                        harm *= 0.8;
                     }
                     if (hero.isHit()) {
                         String msg = hero.getFormatName() + "使出了暴击";

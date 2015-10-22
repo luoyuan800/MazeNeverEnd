@@ -1093,8 +1093,8 @@ public class Hero implements BaseObject{
 
     public void setClickPointAward(Long clickPointAward) {
         this.clickPointAward = clickPointAward;
-        if(this.clickPointAward > 10){
-            this.clickPointAward = 10l;
+        if(this.clickPointAward > 2){
+            this.clickPointAward = 2l;
         }
     }
 
