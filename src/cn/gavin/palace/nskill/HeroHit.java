@@ -28,7 +28,7 @@ public class HeroHit extends AtkSkill {
         long l = random.nextLong(base + addition);
         if(l<=0) l = random.nextLong(addition);
         long l1 = me.getAtk() + base + l - target.getDef();
-        if(l <= 0) l1 = me.getLev();
+        if(l1 <= 0) l1 = me.getLev();
         return l1;
     }
 

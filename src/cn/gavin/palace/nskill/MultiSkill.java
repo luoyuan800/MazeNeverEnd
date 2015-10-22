@@ -27,7 +27,8 @@ public class MultiSkill extends AtkSkill {
         long c = random.nextLong(i) +1;
         long l = me.getAtk() - target.getDef();
         if(l <= 0) l = me.getLev();
-        long harm = (l * (j/100)) * c;
+        Double l1 = l * (j / 100d) * c;
+        long harm = l1.longValue();
         me.addMessage(me.getFormatName() + "攻击了" + c + "次");
         return harm;
     }
