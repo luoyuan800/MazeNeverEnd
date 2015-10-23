@@ -22,9 +22,8 @@ import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.RestoreSkill;
 import cn.gavin.utils.Random;
-import cn.gavin.utils.StringUtils;
 
-public class Hero implements BaseObject{
+public class Hero implements BaseObject {
     private static final String TAG = "Hero";
 
     public static Long MAX_GOODS_COUNT = 50l;
@@ -80,7 +79,7 @@ public class Hero implements BaseObject{
     private Long reincaCount = 0l;
     private Long hitRate = 0l;
     private Long pay = 0l;
-    private String hello =  "你是不可能超越我的！";
+    private String hello = "你是不可能超越我的！";
     private Float dodgeRate = 0f;
     private Long clickPointAward = 0l;
     private Element element = Element.无;
@@ -153,7 +152,7 @@ public class Hero implements BaseObject{
 
     public Long getHp() {
         long rs = (isOnChange() ? changeHp : hp) + getSkillAdditionHp();
-        if(rs == 0){
+        if (rs == 0) {
             onChange = false;
         }
         return rs;
@@ -215,6 +214,7 @@ public class Hero implements BaseObject{
             this.attackValue = 10l;
         }
     }
+
     public Long getBaseDefense() {
         return defenseValue;
     }
@@ -290,7 +290,7 @@ public class Hero implements BaseObject{
                     material -= (100 + swordLev);
                     swordLev++;
                     if (sword != sword.levelUp(swordLev, this)) {
-                       addAttackValue(getRandom().nextLong(getStrength()/1000)+ getSwordLev() * ATR_RISE);
+                        addAttackValue(getRandom().nextLong(getStrength() / 1000) + getSwordLev() * ATR_RISE);
                         sword = sword.levelUp(swordLev, this);
                         swordLev = 0l;
                     }
@@ -311,7 +311,7 @@ public class Hero implements BaseObject{
                     material -= (80 + armorLev);
                     armorLev++;
                     if (armor != armor.levelUp(armorLev, this)) {
-                        addDefenseValue(random.nextLong(getPower()/3000) + getArmorLev() * DEF_RISE);
+                        addDefenseValue(random.nextLong(getPower() / 3000) + getArmorLev() * DEF_RISE);
                         armor = armor.levelUp(armorLev, this);
                         armorLev = 0l;
                         if (armor == Armor.金甲) {
@@ -475,14 +475,18 @@ public class Hero implements BaseObject{
     private Long latestClick = 0l;
 
     public void click(boolean award) {
+        long interval = 95;
+        if (this.getClickAward() > 500) interval = 300;
+        if (this.getClickPointAward() > 5) interval += 100;
+        if (System.currentTimeMillis() - latestClick > interval) {
             if (click < Long.MAX_VALUE - 1000) {
 
                 if (award) {
                     if (this.click % 1000 == 0) {
                         point += random.nextLong(15);
                     }
-                    if(this.click % 3000 == 0){
-                        if(random.nextBoolean()){
+                    if (this.click % 3000 == 0) {
+                        if (random.nextBoolean()) {
                             keyCount += 1;
                         }
                     }
@@ -505,6 +509,8 @@ public class Hero implements BaseObject{
                         break;
                 }
             }
+        }
+        latestClick = System.currentTimeMillis();
     }
 
     public Skill useAttackSkill(Monster monster) {
@@ -566,7 +572,7 @@ public class Hero implements BaseObject{
     }
 
     public void addUpperHp(long hp) {
-        if(this.upperHp + hp < Long.MAX_VALUE - 1000) {
+        if (this.upperHp + hp < Long.MAX_VALUE - 1000) {
             if ((this.upperHp + hp) > 9) {
                 this.upperHp += hp;
             } else {
@@ -652,14 +658,14 @@ public class Hero implements BaseObject{
     }
 
     public void removeSkill(Skill skill) {
-        if (firstSkill == skill) {
+        if (skill.equal(firstSkill)) {
             firstSkill = secondSkill;
             secondSkill = thirdSkill;
             thirdSkill = null;
-        } else if (secondSkill == skill) {
+        } else if (skill.equal(secondSkill)) {
             secondSkill = thirdSkill;
             thirdSkill = null;
-        } else if (thirdSkill == skill) {
+        } else if (skill.equal(thirdSkill)) {
             thirdSkill = null;
         }
     }
@@ -692,7 +698,7 @@ public class Hero implements BaseObject{
         if (onChange) {
             return "<font color=\"#800080\">" + changeName + "</font>";
         } else {
-               return "<font color=\"#800080\">" + getName() + "</font>(" + element + ")";
+            return "<font color=\"#800080\">" + getName() + "</font>(" + element + ")";
 
         }
     }
@@ -726,12 +732,12 @@ public class Hero implements BaseObject{
     }
 
     public synchronized void setRing(Accessory ring) {
-        if(ring!=null && this.ring!=null && this.ring.getId().equals(ring.getId())){
+        if (ring != null && this.ring != null && this.ring.getId().equals(ring.getId())) {
             return;
         }
         cleanEffect();
         if (ring != null) {
-            if (this.ring == null ||!(ring.getId().equalsIgnoreCase(this.ring.getId()))) {
+            if (this.ring == null || !(ring.getId().equalsIgnoreCase(this.ring.getId()))) {
                 this.ring = ring;
             }
         } else {
@@ -790,7 +796,8 @@ public class Hero implements BaseObject{
                     break;
                 case ADD_CLICK_POINT_AWARD:
                     setClickPointAward(clickPointAward - effect.getValue());
-                    break;case ADD_HIT_RATE:
+                    break;
+                case ADD_HIT_RATE:
                     setHitRate(hitRate - effect.getValue());
                     break;
                 case ADD_STR:
@@ -827,12 +834,12 @@ public class Hero implements BaseObject{
     }
 
     public synchronized void setNecklace(Accessory necklace) {
-        if(necklace!=null && this.necklace!=null && this.necklace.getId().equals(necklace.getId())){
+        if (necklace != null && this.necklace != null && this.necklace.getId().equals(necklace.getId())) {
             return;
         }
         cleanEffect();
         if (necklace != null) {
-            if (this.necklace == null ||!(necklace.getId().equalsIgnoreCase(this.necklace.getId()))) {
+            if (this.necklace == null || !(necklace.getId().equalsIgnoreCase(this.necklace.getId()))) {
                 this.necklace = necklace;
             }
         } else {
@@ -862,12 +869,12 @@ public class Hero implements BaseObject{
     }
 
     public synchronized void setHat(Accessory hat) {
-        if(hat!=null && this.hat!=null && this.hat.getId().equals(hat.getId())){
+        if (hat != null && this.hat != null && this.hat.getId().equals(hat.getId())) {
             return;
         }
         cleanEffect();
         if (hat != null) {
-            if (this.hat == null ||!(hat.getId().equalsIgnoreCase(this.hat.getId()))) {
+            if (this.hat == null || !(hat.getId().equalsIgnoreCase(this.hat.getId()))) {
                 this.hat = hat;
             }
         } else {
@@ -1047,11 +1054,12 @@ public class Hero implements BaseObject{
         if (hitRate > 18) {
             hitRate = 15;
         }
+        if (hitRate < 0) hitRate = 0;
         this.hitRate = hitRate;
     }
 
     public Boolean isHit() {
-        if(isHit){
+        if (isHit) {
             Achievement.hitter.enable(this);
         }
         return isHit;
@@ -1078,11 +1086,11 @@ public class Hero implements BaseObject{
     }
 
     public void setDodgeRate(Float dodgeRate) {
-        if(dodgeRate > 15){
+        if (dodgeRate > 15) {
             dodgeRate = 15f;
         }
-        if(dodgeRate < 0) {
-        dodgeRate = 0f;
+        if (dodgeRate < 0) {
+            dodgeRate = 0f;
         }
         this.dodgeRate = dodgeRate;
     }
@@ -1093,7 +1101,7 @@ public class Hero implements BaseObject{
 
     public void setClickPointAward(Long clickPointAward) {
         this.clickPointAward = clickPointAward;
-        if(this.clickPointAward > 2){
+        if (this.clickPointAward > 2) {
             this.clickPointAward = 2l;
         }
     }

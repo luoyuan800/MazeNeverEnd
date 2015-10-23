@@ -133,6 +133,7 @@ public class PalaceMonster extends Base {
             monster.setAtk(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk"))));
             monster.setHit(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hit_rate"))).intValue());
             monster.setParry(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("parry"))).intValue());
+            monster.setDodge(5);
             String skill1 = cursor.getString(cursor.getColumnIndex("skill"));
             String skill11 = cursor.getString(cursor.getColumnIndex("skill1"));
             String skill12 = cursor.getString(cursor.getColumnIndex("skill2"));
@@ -183,4 +184,9 @@ public class PalaceMonster extends Base {
         }
         return skill;
     }
+
+    public String getFormatName() {
+        return "<font color=\"red\">" + getName() + "</font>(" + getElement() + ")";
+    }
+
 }

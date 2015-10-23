@@ -19,6 +19,7 @@ import android.os.Message;
 import android.text.Html;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -776,6 +777,48 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         dialog.show();
     }
 
+    private void showPalaceWarn(){
+        final AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("注意事项");
+        TextView textView = new TextView(this);
+        textView.setText(Html.fromHtml("0. 开启殿堂的大门需要3把钥匙+50W的锻造点数.<br>" +
+                "1. 只有以下技能可以在殿堂挑战中使用：<br>" +
+                "    <B>勇者之击、闪避、反弹、原能力、重击、魔王天赋、闪电、水波、多重攻击、欺诈游戏、虚无吞噬、龙爪、吐息、沙尘</B><br>" +
+                "2. 挑战过程中不能放入后台，否则会因为手机系统关闭后台线程导致挑战中止。<br>" +
+                "3. 因为很重要所以再说一遍，<font color=\"red\">不是所有的技能都可以在殿堂挑战中使用！</font><br>" +
+                "4. <font color=\"red\">作弊者</font>不允许进入殿堂！<br>" +
+                "5. 点击接受按钮表示你接受这些限制并且进入殿堂挑战.。"));
+        dialog.setView(textView);
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "不接受",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "接受",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.sendEmptyMessage(103);
+                        heroN.addMaterial(-500000);
+                        heroN.setKeyCount(heroN.getKeyCount() - 3);
+                        Intent intent = new Intent(context, PalaceActivity.class);
+                        startActivity(intent);
+                    }
+
+                });
+        dialog.show();
+        if(heroN.getKeyCount() >= 3 && heroN.getMaterial() >= 500000 && !Achievement.cribber.isEnable()){
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+        }else{
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+        }
+    }
+
     private void showPalaceDetail() {
         final AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("殿堂");
@@ -794,9 +837,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        handler.sendEmptyMessage(103);
-                        Intent intent = new Intent(context, PalaceActivity.class);
-                        startActivity(intent);
+                        showPalaceWarn();
                     }
 
                 });

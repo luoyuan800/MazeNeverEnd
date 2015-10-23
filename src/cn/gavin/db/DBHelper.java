@@ -42,6 +42,7 @@ public class DBHelper {
         } catch (Exception e) {
             Log.e("DB", "DB ERROR", e);
             e.printStackTrace();
+            LogHelper.logException(e);
         }
     }
 

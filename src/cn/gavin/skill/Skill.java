@@ -267,4 +267,8 @@ public abstract class Skill {
     public void addMessage(String msg) {
         MainGameActivity.context.addMessage(format(msg));
     }
+
+    public boolean equal(Skill skill){
+        return skill != null && skill.getName().equalsIgnoreCase(skill.getName());
+    }
 }

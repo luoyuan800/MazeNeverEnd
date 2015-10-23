@@ -71,6 +71,11 @@ public class Monster {
     private Element element;
     private boolean isHold = false;
     private long holdTurn = 0;
+    private float silent;
+
+    public boolean isSilent(Random random){
+        return (random.nextInt(100) + random.nextFloat()) < silent;
+    }
 
     public static int getIndex(String name) {
         for (int i = 0; i < lastNames.length; i++) {
@@ -100,6 +105,9 @@ public class Monster {
         monster.builder.append(maze.getLev()).append("层").append("<br>-------");
         monster.element = Element.values()[random.nextInt(Element.values().length)];
         monster.formatName(hero);
+        if(maze.getLev() > 500 && random.nextBoolean()){
+            monster.silent = 5.8f;
+        }
         return monster;
     }
 

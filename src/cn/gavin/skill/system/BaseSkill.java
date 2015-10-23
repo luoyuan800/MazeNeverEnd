@@ -730,7 +730,7 @@ public class BaseSkill extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
                     builder.append("防御技能<br>");
-                    builder.append(skill.getProbability()).append("的概率释放，在受到伤害后恢复全部HP");
+                    builder.append(skill.getProbability()).append("的概率释放，在受到伤害后恢复全部HP（在殿堂中这个技能会修正为在收到伤害前恢复HP）.");
                     return builder.toString();
                 }
             });

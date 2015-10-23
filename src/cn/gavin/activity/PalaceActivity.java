@@ -130,6 +130,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
                             findViewById(R.id.palace_bak).setBackgroundResource(R.drawable.long_bak);
                             exitButton.setText("灰溜溜的爬出殿堂");
                         }
+                        pauseButton.setEnabled(false);
                         break;
                     case 11:
                         Animation shake = AnimationUtils.loadAnimation(context, R.anim.shake);
@@ -303,6 +304,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         hatTextView.setOnClickListener(this);
         exitButton = (Button) findViewById(R.id.exist_palace_button);
         exitButton.setOnClickListener(this);
+        pauseButton.setEnabled(true);
         refresh();
     }
 

@@ -5,7 +5,6 @@ import cn.gavin.activity.BaseContext;
 import cn.gavin.forge.Item;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.monster.Monster;
-import cn.gavin.monster.MonsterBook;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.utils.Random;
@@ -21,7 +20,7 @@ public class BattleController {
         Skill skill = hero.useDefendSkill(monster);
         boolean isJump = false;
         if (!monster.isHold()) {
-            if (skill != null) {
+            if (skill != null && !monster.isSilent(random)) {
                 isJump = skill.release(monster);
             } else {
                 long harm = monster.getAtk() - hero.getDefenseValue();
@@ -84,7 +83,12 @@ public class BattleController {
         skill = hero.useAttackSkill(monster);
         isJump = false;
         if (skill != null) {
-            isJump = skill.release(monster);
+            if (!monster.isSilent(hero.getRandom())) {
+                isJump = skill.release(monster);
+            }else{
+                addMessage(context,hero.getFormatName() + "想要使用技能" + skill.getName());
+                addMessage(context,monster.getFormatName() + "打断了" + hero.getFormatName() + "的技能");
+            }
         } else {
             if (hero.getHp() < hero.getUpperHp()) {
                 skill = hero.useRestoreSkill();
@@ -123,7 +127,6 @@ public class BattleController {
 
     public static boolean battle(Hero hero, Monster monster, Random random, Maze maze, BaseContext context) {
         int count = 0;
-        MonsterBook monsterBook = context.getMonsterBook();
         String msg = hero.getFormatName() + "遇到了" + monster.getFormatName();
         addMessage(context, msg);
         monster.addBattleDesc(msg);

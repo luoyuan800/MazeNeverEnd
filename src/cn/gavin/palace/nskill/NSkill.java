@@ -61,6 +61,8 @@ public abstract class NSkill {
             skill = new WaterWave(me, count);
         }else if(name.equals("虚无吞噬")){
             skill = new SwallowSkill(me, count);
+        }else if(name.equals("原能力")){
+            skill = new OriginalPower(me, count);
         }
         return skill;
     }

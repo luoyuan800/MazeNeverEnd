@@ -737,7 +737,7 @@ public class EvilSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return hero.getSkillPoint() > 0 && (SkillFactory.getSkill("不死之身", hero, dialog).isActive()
-                            || SkillFactory.getSkill("变身术", hero, dialog).isActive() || SkillFactory.getSkill("生命吸收", hero, dialog).isActive());
+                            || SkillFactory.getSkill("变身", hero, dialog).isActive() || SkillFactory.getSkill("生命吸收", hero, dialog).isActive());
                 }
             });
             skill.setDescription(new DescExpression() {

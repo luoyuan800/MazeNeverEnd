@@ -107,7 +107,7 @@ public abstract class Base {
             }
             if(!skip){
                 harm = judgeElement(target, harm, element);
-                if(harm < 0) harm = 0;
+                if(harm <= 0) harm = random.nextLong(target.getLev()) + 1;
                 addMessage(target.getFormatName() + "受到了<font color=\"red\">" + harm + "</font>点伤害");
                 target.addHp(-harm);
             }
@@ -231,5 +231,13 @@ public abstract class Base {
 
     public void setLev(long lev) {
         this.lev = lev;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public long getUHp() {
+        return uHp;
     }
 }
