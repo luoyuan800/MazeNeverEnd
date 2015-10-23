@@ -167,13 +167,6 @@ public class DBHelper {
                     }
                 }
             }
-            AttackSkill skill = new AttackSkill();
-            skill.setName("勇者之击");
-            if (skill.load()) {
-                if (skill.getAdditionHarm() > Integer.MAX_VALUE / 2) {
-                    skill.setAdditionHarm(Integer.MAX_VALUE / 2);
-                }
-            }
             if(oldVersion == 13){
                 new ForgeDB().upgradeTp1_5(db);
             }
