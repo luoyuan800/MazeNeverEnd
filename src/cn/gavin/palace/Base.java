@@ -53,7 +53,7 @@ public abstract class Base {
             if(harm < 0){
                 if(random.nextLong(100) < 5){
                     addMessage(getFormatName() + "击穿了" + target.getFormatName() + "的防御");
-                    harm = atk + target.def;
+                    harm = atk;
                 }else{
                     harm = 0;
                 }
@@ -240,4 +240,5 @@ public abstract class Base {
     public long getUHp() {
         return uHp;
     }
+
 }

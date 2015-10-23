@@ -239,8 +239,16 @@
                         android:text="中止挑战"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content" />
+                    <View
+                        android:layout_width="12sp"
+                        android:layout_height="12sp"
+                        />
 
-
+                    <Button
+                        android:id="@+id/restore_palace_button"
+                        android:text="1oW恢复一半生命"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
             </LinearLayout>

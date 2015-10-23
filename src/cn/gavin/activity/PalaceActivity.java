@@ -30,6 +30,7 @@ import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.palace.Palace;
 import cn.gavin.monster.MonsterBook;
+import cn.gavin.palace.PalaceHero;
 import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.skill.SkillDialog;
 
@@ -76,6 +77,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
     private SkillDialog skillDialog;
     private boolean isHidBattle;
     private Button exitButton;
+    private Button restoreButton;
 
     @Override
     public boolean isHideBattle() {
@@ -121,6 +123,17 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         public void handleMessage(Message msg) {
             try {
                 switch (msg.what) {
+                    case 13:
+                        PalaceHero mazeHero = (PalaceHero) maze.getHero();
+                        int material = 100000 + mazeHero.getRestoreCount() * 500000;
+                        if(heroN.getMaterial() > material) {
+                            heroN.addMaterial(material);
+                            mazeHero.setRestoreCount(mazeHero.getRestoreCount() + 1);
+                            mazeHero.addHp(mazeHero.getUHp() / 2 + 1);
+                            long value = (100000 + mazeHero.getRestoreCount() * 500000) / 10000;
+                            restoreButton.setText(Html.fromHtml("<font color=\"red\">" + value + "</font>W锻造点<br>恢复一半HP"));
+                        }
+                        break;
                     case 12:
                         Boolean b = (Boolean)msg.obj;
                         if(b){
@@ -131,6 +144,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
                             exitButton.setText("灰溜溜的爬出殿堂");
                         }
                         pauseButton.setEnabled(false);
+                        restoreButton.setEnabled(false);
                         break;
                     case 11:
                         Animation shake = AnimationUtils.loadAnimation(context, R.anim.shake);
@@ -173,6 +187,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
                 super.handleMessage(msg);
             } catch (Exception exp) {
                 Log.e(TAG, "MainGameActivity.Handler", exp);
+                LogHelper.logException(exp);
             }
         }
 
@@ -305,6 +320,8 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         exitButton = (Button) findViewById(R.id.exist_palace_button);
         exitButton.setOnClickListener(this);
         pauseButton.setEnabled(true);
+        restoreButton = (Button)findViewById(R.id.restore_palace_button);
+        restoreButton.setOnClickListener(this);
         refresh();
     }
 
@@ -345,6 +362,12 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
             hatTextView.setText(Html.fromHtml(heroN.getHat().getFormatName()));
         } else {
             hatTextView.setText("未装备");
+        }
+        long value = ((PalaceHero)maze.getHero()).getRestoreCount() * 500000 + 100000;
+        if(!pause && heroN.getMaterial() > value){
+            restoreButton.setEnabled(true);
+        }else{
+            restoreButton.setEnabled(false);
         }
     }
 
@@ -411,6 +434,9 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.restore_palace_button:
+                handler.sendEmptyMessage(13);
+                break;
             case R.id.exist_palace_button:
                 showExitDialog();
                 break;

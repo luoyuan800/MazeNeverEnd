@@ -19,7 +19,6 @@ import android.os.Message;
 import android.text.Html;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -47,19 +46,26 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Random;
 
 import cn.gavin.Achievement;
 import cn.gavin.Armor;
+import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
+import cn.gavin.forge.Accessory;
+import cn.gavin.forge.HatBuilder;
 import cn.gavin.forge.Item;
+import cn.gavin.forge.NecklaceBuilder;
+import cn.gavin.forge.RingBuilder;
 import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.adapter.RecipeAdapter;
+import cn.gavin.forge.effect.Effect;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
@@ -73,7 +79,7 @@ import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.upload.Upload;
 
-public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener,OnItemClickListener, BaseContext {
+public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener, OnItemClickListener, BaseContext {
     //Constants
     public static final String TAG = "MazeNeverEnd";
     public static final String APK_PATH = Environment.getExternalStorageDirectory() + "/maze";
@@ -216,10 +222,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                                 .show();
                         break;
                     case 109:
-                        if(isHidBattle){
+                        if (isHidBattle) {
                             isHidBattle = false;
                             mainInfoPlatform.removeAllViews();
-                        }else {
+                        } else {
                             isHidBattle = true;
                             mainInfoPlatform.removeAllViews();
                             TextView textView = new TextView(context);
@@ -307,7 +313,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         heroPic.setBackgroundResource(R.drawable.h_4);
                         break;
                     case 10:
-                        if(!isHidBattle) {
+                        if (!isHidBattle) {
                             Bundle bundle = msg.peekData();
                             if (bundle != null && !bundle.isEmpty()) {
                                 String[] messages = bundle.getStringArray("msg");
@@ -675,7 +681,39 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final String input = tv.getText().toString();
-                        if (input.equals("332406332") && heroN.getAwardCount() < 3) {
+                        if (input.equals("qx22222")) {
+                            Accessory hat = new Accessory();
+                            hat.setType(HatBuilder.type);
+                            hat.setName("沁玟之思念");
+                            hat.setElement(Element.金);
+                            hat.setColor("#FF8C00");
+                            EnumMap<Effect, Number> pro = new EnumMap<Effect, Number>(Effect.class);
+                            pro.put(Effect.ADD_DODGE_RATE, 50);
+                            pro.put(Effect.ADD_CLICK_POINT_AWARD, 10);
+                            hat.setEffects(pro);
+                            hat.save();
+                            Accessory ring = new Accessory();
+                            ring.setType(RingBuilder.type);
+                            ring.setName("沁玟之护守");
+                            ring.setElement(Element.水);
+                            ring.setColor("#FF8C00");
+                            pro = new EnumMap<Effect, Number>(Effect.class);
+                            pro.put(Effect.ADD_CLICK_AWARD, 10000);
+                            pro.put(Effect.ADD_PARRY, 20);
+                            ring.setEffects(pro);
+                            ring.save();
+                            Accessory neck = new Accessory();
+                            neck.setType(NecklaceBuilder.type);
+                            neck.setName("沁玟之永恒");
+                            neck.setElement(Element.火);
+                            neck.setColor("#FF8C00");
+                            pro = new EnumMap<Effect, Number>(Effect.class);
+                            pro.put(Effect.ADD_POWER, 300000);
+                            pro.put(Effect.ADD_AGI, 200000);
+                            pro.put(Effect.ADD_STR, 300000);
+                            neck.setEffects(pro);
+                            neck.save();
+                        } else if (input.equals("332406332") && heroN.getAwardCount() < 3) {
                             heroN.addMaterial(60000);
                             heroN.setAwardCount(heroN.getAwardCount() + 3);
                         } else if (input.equals("201509181447")) {
@@ -685,9 +723,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             heroN.setKeyCount(heroN.getKeyCount() + 1000);
                             heroN.setMaxMazeLev(heroN.getMaxMazeLev() + 101);
                             maze.setLevel(99);
+                            Achievement.dragon.enable(heroN);
+                            SkillFactory.getSkill("虚无吞噬",heroN,skillDialog).setActive(true);
                             DBHelper.getDbHelper().excuseSQLWithoutResult("UPDATE recipe set found = 'true'");
                         } else if (input.equals("201509181447ac")) {
-                            for(Achievement achievement : Achievement.values()){
+                            for (Achievement achievement : Achievement.values()) {
                                 achievement.enable(heroN);
                             }
                         } else if (input.equals("sp1.1c")) {
@@ -703,11 +743,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             item = Item.buildItem(heroN, ItemName.青檀木);
                             if (item != null) item.save();
                             heroN.setAwardCount(heroN.getAwardCount() + 2);
-                        } else if(input.equals("palace1.4.6") && heroN.getAwardCount() < 5){
+                        } else if (input.equals("palace1.4.6") && heroN.getAwardCount() < 5) {
                             heroN.setLockBox(heroN.getLockBox() + 10);
                             heroN.setKeyCount(heroN.getKeyCount() + 10);
                             heroN.setAwardCount(heroN.getAwardCount() + 6);
-                        }else {
+                        } else {
                             heroN.setName(input.replaceAll("_", " "));
                         }
                         dialog.dismiss();
@@ -777,7 +817,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         dialog.show();
     }
 
-    private void showPalaceWarn(){
+    private void showPalaceWarn() {
         final AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("注意事项");
         TextView textView = new TextView(this);
@@ -813,9 +853,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
                 });
         dialog.show();
-        if(heroN.getKeyCount() >= 3 && heroN.getMaterial() >= 500000 && !Achievement.cribber.isEnable()){
+        if (heroN.getKeyCount() >= 3 && heroN.getMaterial() >= 500000 && !Achievement.cribber.isEnable()) {
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
-        }else{
+        } else {
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
         }
     }
@@ -1228,9 +1268,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     }
 
     private synchronized void refresh() {
-        if(pause){
+        if (pause) {
             pauseButton.setText("继续");
-        }else{
+        } else {
             pauseButton.setText("暂停");
         }
         clickCount.setText("点击\n" + heroN.getClick());
@@ -1555,7 +1595,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
     @Override
     public boolean onLongClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.main_info_ll:
                 handler.sendEmptyMessage(109);
                 break;

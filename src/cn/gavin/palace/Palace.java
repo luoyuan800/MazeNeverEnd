@@ -84,6 +84,9 @@ public class Palace extends Maze {
                     context.setFinished(true);
                     break;
                 }
+                long restore = random.nextLong(hero.getUHp()/10 + heroN.getPower());
+                context.addMessage(hero.getFormatName() + "恢复了" + restore + "点HP");
+                hero.addHp(restore);
             } else if (hero.getHp() <= 0) {
                 context.addMessage(hero.getFormatName() + "在" + monster.getLev() + "层被" + monster.getFormatName() + "打败了！");
                 context.addMessage(hero.getFormatName() + "的殿堂挑战失败！");
