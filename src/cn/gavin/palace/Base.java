@@ -202,7 +202,11 @@ public abstract class Base {
     }
 
     public void setAtk(Long atk) {
-        this.atk = atk;
+        if(atk < Long.MAX_VALUE -100000) {
+            this.atk = atk;
+        }else{
+            this.atk = Long.MAX_VALUE - 100000;
+        }
     }
 
     public Random getRandom() {

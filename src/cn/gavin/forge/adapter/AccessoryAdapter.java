@@ -69,7 +69,7 @@ public class AccessoryAdapter extends BaseAdapter {
 
     private List<AccessoryList> loadAccessoryLists() {
         List<AccessoryList> res = new ArrayList<AccessoryList>();
-        List<Accessory> accessories = Accessory.loadAccessories();
+        List<Accessory> accessories = Accessory.loadAccessories(null);
         AccessoryList accessoryList = new AccessoryList();
         res.add(accessoryList);
         for (Accessory accessory : accessories) {

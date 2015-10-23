@@ -340,7 +340,7 @@ public class BaseSkill extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
                     builder.append("防御技能<br>");
-                    builder.append(skill.getProbability()).append("%概率反弹").append(20 + skill.getProbability() * 10).append("%的攻击伤害");
+                    builder.append(skill.getProbability()).append("%概率反弹").append(50 + skill.getProbability() * 5).append("%的攻击伤害");
                     return builder.toString();
                 }
             });
@@ -355,7 +355,7 @@ public class BaseSkill extends SkillLayout {
                     String msg1 = skill.format(monster.getFormatName() + "攻击" + hero.getFormatName());
                     context.addMessage(msg1);
                     monster.addBattleSkillDesc(msg1);
-                    long rHarm = Math.round(harm * ((50f + skill.getProbability() * 10f) / 100f));
+                    long rHarm = Math.round(harm * ((50f + skill.getProbability() * 5f) / 100f));
                     String msg2 = skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "反弹了" + rHarm + "的伤害");
                     context.addMessage(msg2);
                     monster.addBattleSkillDesc(msg2);

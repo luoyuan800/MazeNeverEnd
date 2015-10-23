@@ -1,6 +1,7 @@
 package cn.gavin.forge;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -184,10 +185,15 @@ public class Accessory extends Equipment {
         return builder.toString();
     }
 
-    public static List<Accessory> loadAccessories() {
+    public static List<Accessory> loadAccessories(SQLiteDatabase db) {
         List<Accessory> res = new ArrayList<Accessory>();
         try {
-            Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM accessory");
+            Cursor cursor;
+            if(db!=null){
+                cursor = db.rawQuery("SELECT * FROM accessory", null);
+            }else{
+                cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM accessory");
+            }
             while (!cursor.isAfterLast()) {
                 Accessory accessory = new Accessory();
                 accessory.setId(cursor.getString(cursor.getColumnIndex("id")));

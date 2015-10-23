@@ -1,6 +1,7 @@
 package cn.gavin.forge;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -145,12 +146,17 @@ public class Item {
         return item;
     }
 
-    public static ArrayList<Item> loadItems() {
+    public static ArrayList<Item> loadItems(SQLiteDatabase db) {
         DBHelper dbHelper = DBHelper.getDbHelper();
         String sql = "SELECT * FROM item";
         ArrayList<Item> items = new ArrayList<Item>();
         try {
-            Cursor cursor = dbHelper.excuseSOL(sql);
+            Cursor cursor;
+            if(db!=null){
+                cursor = db.rawQuery(sql, null);
+            }else{
+                cursor = dbHelper.excuseSOL(sql);
+            }
             while (!cursor.isAfterLast()) {
                 Item item = new Item();
                 item.id = cursor.getString(cursor.getColumnIndex("id"));

@@ -48,14 +48,22 @@ public class Palace extends Maze {
             monster.setContext(context);
             long lev = monster.getLev();
             context.addMessage(hero.getFormatName() + "进入了第 <b>" + lev + "</b> 层殿堂");
-            context.addMessage(hero.getFormatName() + "遇见了殿堂守护者 <b>" + monster.getFormatName() + "</b> ");
+            context.addMessage(hero.getFormatName() + "遇见了殿堂守护者<br><b>" + monster.getFormatName() + "</b><br>");
             context.addMessage(monster.getFormatName() + "对" + hero.getFormatName() + "说：<br><b>" + monster.getHello() + "</b> ");
             context.setPause(true);
             context.addMessage("<font color=\"blue\">点击右边按钮开始挑战-->></font>");
             boolean atk = random.nextLong(hero.getHp() / 2 + 1) > random.nextLong(monster.getHp() / 2 + 1);
+            int turn = 0;
             while (monster.getHp() > 0 && hero.getHp() > 0) {
                 if (context.isPause()) continue;
+                if (turn % 21 == 0) {
+                    context.addMessage("战斗来到了" + turn + "个回合，" + hero.getFormatName() + "和" +
+                            monster.getFormatName() + "因为烦躁攻击了提升了一倍！");
+                    hero.setAtk(hero.getAtk() * 2);
+                    monster.setAtk(monster.getAtk() * 2);
+                }
                 if (atk) {
+                    turn++;
                     hero.atk(monster);
                 } else {
                     monster.atk(hero);
@@ -84,7 +92,7 @@ public class Palace extends Maze {
                     context.setFinished(true);
                     break;
                 }
-                long restore = random.nextLong(hero.getUHp()/10 + heroN.getPower());
+                long restore = random.nextLong(hero.getUHp() / 20 + heroN.getPower());
                 context.addMessage(hero.getFormatName() + "恢复了" + restore + "点HP");
                 hero.addHp(restore);
             } else if (hero.getHp() <= 0) {

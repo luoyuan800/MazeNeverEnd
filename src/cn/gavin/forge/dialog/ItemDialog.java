@@ -139,7 +139,7 @@ public class ItemDialog {
     }
 
     class ItemAdapter extends BaseAdapter implements Filterable {
-        ArrayList<Item> list = Item.loadItems();
+        ArrayList<Item> list = Item.loadItems(null);
 
         private List<ItemList> adapterData = getItemListAdp(list);
 

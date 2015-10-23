@@ -10,11 +10,12 @@ import cn.gavin.palace.Base;
 public class ReboundSkill extends DefSkill {
     public ReboundSkill(Base me, long count) {
         super(me, count);
+        setRate(20);
     }
 
     @Override
     public boolean release(Base target, long harm) {
-        Double re = (harm * (20d + getRate() * 10)/100d);
+        Double re = (harm * (50d + getRate() * 5)/100d);
         target.addHp(-re.longValue());
         harm = harm - re.longValue();
         if(harm < 0) harm = 0;

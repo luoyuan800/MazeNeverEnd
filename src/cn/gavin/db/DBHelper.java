@@ -4,10 +4,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import java.util.EnumMap;
+
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.forge.Accessory;
 import cn.gavin.forge.ForgeDB;
+import cn.gavin.forge.Item;
+import cn.gavin.forge.effect.Effect;
 import cn.gavin.log.LogHelper;
 import cn.gavin.palace.PalaceMonster;
+import cn.gavin.skill.type.AttackSkill;
 
 /**
  * Created by gluo on 9/14/2015.
@@ -115,10 +122,117 @@ public class DBHelper {
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "CreateTable", e);
+            LogHelper.logException(e);
         }
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        upgrade8_9(db, oldVersion);
+        upgrade10_11(db, oldVersion);
+        upgrade11_12(db, oldVersion);
+        upgrade12_13(db, oldVersion);
+        upgrade13_14(db, oldVersion);
+    }
+
+    private void upgrade13_14(SQLiteDatabase db, int oldVersion){
+        try {
+            for (Accessory accessory : Accessory.loadAccessories(db)) {
+                EnumMap<Effect, Number> unTemp = new EnumMap<Effect, Number>(accessory.getEffects());
+                for (EnumMap.Entry<Effect, Number> entry : unTemp.entrySet()) {
+                    if (entry.getKey() == Effect.ADD_CLICK_POINT_AWARD) {
+                        accessory.getEffects().remove(entry.getKey());
+                    }
+                    if (entry.getKey() == Effect.ADD_AGI || entry.getKey() == Effect.ADD_POWER || entry.getKey() == Effect.ADD_STR) {
+                        if (entry.getValue().longValue() > 500000) {
+                            accessory.getEffects().put(entry.getKey(), entry.getValue().longValue() / 10);
+                        }
+                    }
+                }
+            }
+            for (Item item : Item.loadItems(db)) {
+                if (item.getEffect() == Effect.ADD_CLICK_POINT_AWARD) {
+                    item.setEffect(Effect.ADD_CLICK_AWARD);
+                }
+                if (item.getEffect1() == Effect.ADD_CLICK_POINT_AWARD) {
+                    item.setEffect1(Effect.ADD_CLICK_AWARD);
+                }
+                if (item.getEffect() == Effect.ADD_AGI || item.getEffect() == Effect.ADD_POWER || item.getEffect() == Effect.ADD_STR) {
+                    if (item.getEffectValue().longValue() > 500000) {
+                        item.setEffectValue(item.getEffectValue().longValue() / 10);
+                    }
+                }
+                if (item.getEffect1() == Effect.ADD_AGI || item.getEffect1() == Effect.ADD_POWER || item.getEffect1() == Effect.ADD_STR) {
+                    if (item.getEffect1Value().longValue() > 500000) {
+                        item.setEffect1Value(item.getEffect1Value().longValue() / 10);
+                    }
+                }
+            }
+            AttackSkill skill = new AttackSkill();
+            skill.setName("勇者之击");
+            if (skill.load()) {
+                if (skill.getAdditionHarm() > Integer.MAX_VALUE / 2) {
+                    skill.setAdditionHarm(Integer.MAX_VALUE / 2);
+                }
+            }
+            if(oldVersion == 13){
+                new ForgeDB().upgradeTp1_5(db);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            LogHelper.logException(e);
+        }
+    }
+
+    private void upgrade12_13(SQLiteDatabase db, int oldVersion) {
+        try {
+            if (oldVersion == 12) {
+                new ForgeDB().upgradeTo1_4_7(db);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("MazeNeverEnd", e.getMessage());
+            LogHelper.logException(e);
+        }
+    }
+
+    private void upgrade11_12(SQLiteDatabase db, int oldVersion) {
+        try {
+            if (oldVersion == 11) {
+                PalaceMonster.createDB(db);
+                String createTable = "CREATE TABLE npc(" +
+                        "name TEXT NOT NULL PRIMARY KEY," +
+                        "atk TEXT," +
+                        "hp TEXT," +
+                        "lev TEXT" +
+                        ")";
+                db.execSQL(createTable);
+                db.execSQL("CREATE UNIQUE INDEX npc_index ON npc (name,lev)");
+                new ForgeDB().upgradeTo1_4(database);
+                db.execSQL("DROP TABLE defender");
+                upgrade12_13(db, 12);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("MazeNeverEnd", e.getMessage());
+            LogHelper.logException(e);
+        }
+    }
+
+    private void upgrade10_11(SQLiteDatabase db, int oldVersion) {
+        try {
+            if (oldVersion == 10) {
+                new ForgeDB().upgradeTo1_3_2(db);
+                upgrade11_12(db,11);
+                upgrade12_13(db, 12);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("MazeNeverEnd", e.getMessage());
+            LogHelper.logException(e);
+        }
+    }
+
+    private void upgrade8_9(SQLiteDatabase db, int oldVersion) {
         try {
             if (oldVersion == 8) {
                 String createTable = "CREATE TABLE monster(" +
@@ -139,49 +253,14 @@ public class DBHelper {
                         "defeated TEXT" +
                         ")";
                 db.execSQL(createTable);
+                upgrade10_11(db,10);
+                upgrade11_12(db,11);
+                upgrade12_13(db, 12);
             }
         }catch(Exception e){
-            Log.e("MazeNeverEnd",e.getMessage());
-            LogHelper.writeLog();
+            Log.e("MazeNeverEnd", e.getMessage());
+            LogHelper.logException(e);
             e.printStackTrace();
-        }
-
-        try {
-            if (oldVersion == 10) {
-                new ForgeDB().upgradeTo1_3_2(db);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            Log.e("MazeNeverEnd",e.getMessage());
-            LogHelper.writeLog();
-        }
-        try {
-            if (oldVersion == 11) {
-                PalaceMonster.createDB(db);
-                String createTable = "CREATE TABLE npc(" +
-                        "name TEXT NOT NULL PRIMARY KEY," +
-                        "atk TEXT," +
-                        "hp TEXT," +
-                        "lev TEXT" +
-                        ")";
-                db.execSQL(createTable);
-                db.execSQL("CREATE UNIQUE INDEX npc_index ON npc (name,lev)");
-                new ForgeDB().upgradeTo1_4(database);
-                db.execSQL("DROP TABLE defender");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            Log.e("MazeNeverEnd",e.getMessage());
-            LogHelper.writeLog();
-        }
-        try {
-            if (oldVersion == 12) {
-                new ForgeDB().upgradeTo1_4_7(database);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            Log.e("MazeNeverEnd",e.getMessage());
-            LogHelper.writeLog();
         }
     }
 
