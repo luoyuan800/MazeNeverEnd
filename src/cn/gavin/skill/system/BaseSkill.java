@@ -141,6 +141,9 @@ public class BaseSkill extends SkillLayout {
                     long addition = (((AttackSkill) skill).getAdditionHarm()) + ((AttackSkill) skill).getBaseHarm();
                     if (addition < 0) addition = ((AttackSkill) skill).getAdditionHarm();
                     long harm = hero.getAttackValue() + ((AttackSkill) skill).getBaseHarm() + hero.getRandom().nextLong(addition + 1);
+                    if(harm <= 0){
+                        harm = hero.getRandom().nextLong(addition) + 1;
+                    }
                     String skillmsg = skill.format(hero.getFormatName() + "使用了技能" + skill.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点伤害");
                     context.addMessage(skillmsg);
                     monster.addBattleSkillDesc(skillmsg);
@@ -796,6 +799,9 @@ public class BaseSkill extends SkillLayout {
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long n = hero.getRandom().nextLong(((AttackSkill) skill).getBaseHarm() + 1) + 1;
                     long harm = n * hero.getAttackValue();
+                    if(harm <= 0){
+                        harm = hero.getAttackValue();
+                    }
                     monster.addHp(-harm);
                     String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，对" + monster.getFormatName() + "造成了" + harm + "伤害";
                     skill.addMessage(msg);

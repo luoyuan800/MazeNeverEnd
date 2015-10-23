@@ -363,7 +363,7 @@ public class SwindlerSkill extends SkillLayout {
                     StringBuilder builder = new StringBuilder();
                     builder.append("无需技能点激活，每前进100层迷宫随机激活。<br>").
                             append("防御技能。敌方攻击的时候");
-                    builder.append(skill.getProbability()).append("%的概率释放，抵消敌人的攻击。并且进行欺诈游戏;<br>抛一次硬币，正面就攻击敌人一次。欺诈师技能可以对这个技能生效。");
+                    builder.append(skill.getProbability()).append("%的概率释放，抵消敌人的攻击。并且<br>抛一次硬币，正面就攻击敌人一次。欺诈师技能可以对这个技能生效。");
                     return builder.toString();
                 }
             });

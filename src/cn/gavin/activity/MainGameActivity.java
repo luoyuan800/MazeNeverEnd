@@ -786,8 +786,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 "    <B>勇者之击、闪避、反弹、原能力、重击、魔王天赋、闪电、水波、多重攻击、欺诈游戏、虚无吞噬、龙爪、吐息、沙尘</B><br>" +
                 "2. 挑战过程中不能放入后台，否则会因为手机系统关闭后台线程导致挑战中止。<br>" +
                 "3. 因为很重要所以再说一遍，<font color=\"red\">不是所有的技能都可以在殿堂挑战中使用！</font><br>" +
-                "4. <font color=\"red\">作弊者</font>不允许进入殿堂！<br>" +
-                "5. 点击接受按钮表示你接受这些限制并且进入殿堂挑战.。"));
+                "4. 请大家和谐友爱互助，不要因为被打败而懊恼和诅咒作者被美女揩油。<br>" +
+                "5. <font color=\"red\">作弊者</font>不允许进入殿堂！<br>" +
+                "6. 点击接受按钮表示你接受这些限制并且进入殿堂挑战.。"));
         dialog.setView(textView);
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "不接受",
                 new DialogInterface.OnClickListener() {
@@ -1833,7 +1834,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 holder.name.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        achievementDesc.setText(item.a0.getDesc());
+                        achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a0.getName() + "</b> : " + item.a0.getDesc() + "</font>"));
                     }
                 });
                 holder.name.setEnabled(true);
@@ -1845,7 +1846,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 holder.name1.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        achievementDesc.setText(item.a1.getDesc());
+                        achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a1.getName() + "</b> : " + item.a1.getDesc() + "</font>"));
                     }
                 });
                 holder.name1.setEnabled(true);
@@ -1858,7 +1859,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 holder.name2.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        achievementDesc.setText(getItem(position).a2.getDesc());
+                        achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a2.getName() + "</b> : " + getItem(position).a2.getDesc() + "</font>"));
                     }
                 });
                 holder.name2.setEnabled(true);
@@ -1871,7 +1872,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 holder.name3.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        achievementDesc.setText(getItem(position).a3.getDesc());
+                        achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a3.getName() + "</b> : " + getItem(position).a3.getDesc() + "</font>"));
                     }
                 });
                 holder.name3.setEnabled(true);

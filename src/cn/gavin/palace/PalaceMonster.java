@@ -121,6 +121,18 @@ public class PalaceMonster extends Base {
 
     public static Stack<PalaceMonster> getPalaceMonster() {
         Stack<PalaceMonster> stack = new Stack<PalaceMonster>();
+        PalaceMonster dog = new PalaceMonster();
+        dog.setName("看门人");
+        dog.setLev(1);
+        dog.setHello("我是殿堂看门人，如果你连我也打不过，就不要进去了！");
+        dog.setElement(Element.无);
+        dog.setHp(10000);
+        dog.setDef(10000l);
+        dog.setAtk(10000l);
+        dog.setDodge(20);
+        dog.setHit(15);
+        dog.setParry(15);
+        stack.push(dog);
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM palace ORDER BY lev DESC");
         while (!cursor.isAfterLast()) {
             PalaceMonster monster = new PalaceMonster();

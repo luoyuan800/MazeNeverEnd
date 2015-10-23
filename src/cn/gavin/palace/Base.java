@@ -40,7 +40,7 @@ public abstract class Base {
         Element element = this.element;
         long harm = 0;
         if (skill != null) {
-            addMessage(getFormatName() + "使用技能" + skill.getName() + "攻击" + target.getFormatName());
+            addMessage(getFormatName() + "使用技能" + skill.getName());
             harm = skill.getHarm(target);
             element = skill.getElement();
             if(harm < 0){
@@ -66,7 +66,7 @@ public abstract class Base {
         if (isHit()) {
             return atk *= 1.5;
         } else {
-            return atk;
+            return atk + random.nextLong(lev);
         }
     }
 
@@ -82,7 +82,7 @@ public abstract class Base {
         if (isParry()) {
             return def *= 1.5;
         } else {
-            return def;
+            return def + random.nextLong(lev);
         }
     }
 

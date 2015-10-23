@@ -22,15 +22,20 @@ public class SwindleGame extends AtkSkill {
         long n = random.nextLong(count/1000 + 2);
         if(random.nextBoolean()){
             me.addMessage(me.getFormatName() + "抛了一次硬币，结果为正面");
+            me.addMessage(me.getFormatName() + "攻击" + target.getFormatName());
             long l = me.getAtk() - target.getDef();
             if(l <= 0) l = me.getLev();
-            return n * l;
+            long l1 = n * l;
+            if(l1 <= 0) l1 = 1l;
+            return l1;
         }else{
             me.addMessage(me.getFormatName() + "抛了一次硬币，结果为反面");
             me.addMessage(target.getFormatName() + "攻击" + me.getFormatName());
             long l = target.getAtk() - me.getDef();
             if(l <= 0) l = target.getLev();
-            return -(n* l);
+            long l1 = n * l;
+            if(l1 <= 0) l1 = 1l;
+            return -l1;
         }
     }
 }

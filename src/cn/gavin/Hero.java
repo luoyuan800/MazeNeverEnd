@@ -246,15 +246,12 @@ public class Hero implements BaseObject {
     }
 
     public void addSkill(Skill skill) {
+        if(firstSkill!=null && thirdSkill!=null && secondSkill!=null){
+            firstSkill.setOnUsed(false);
+        }
         if (firstSkill == null) firstSkill = skill;
         else if (secondSkill == null) secondSkill = skill;
         else if (thirdSkill == null) thirdSkill = skill;
-        else {
-            firstSkill.setOnUsed(false);
-            firstSkill = secondSkill;
-            secondSkill = thirdSkill;
-            thirdSkill = skill;
-        }
     }
 
     private Hero(String name, long hp, long attackValue, long defenseValue, long level) {

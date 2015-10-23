@@ -21,6 +21,6 @@ public class OriginalPower extends DefSkill {
 
     @Override
     public String getName() {
-        return null;
+        return "原能力";
     }
 }
