@@ -121,18 +121,6 @@ public class PalaceMonster extends Base {
 
     public static Stack<PalaceMonster> getPalaceMonster() {
         Stack<PalaceMonster> stack = new Stack<PalaceMonster>();
-        PalaceMonster dog = new PalaceMonster();
-        dog.setName("看门人");
-        dog.setLev(1);
-        dog.setHello("我是殿堂看门人，如果你连我也打不过，就不要进去了！");
-        dog.setElement(Element.无);
-        dog.setHp(10000);
-        dog.setDef(10000l);
-        dog.setAtk(10000l);
-        dog.setDodge(20);
-        dog.setHit(15);
-        dog.setParry(15);
-        stack.push(dog);
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM palace ORDER BY lev DESC");
         while (!cursor.isAfterLast()) {
             PalaceMonster monster = new PalaceMonster();
@@ -150,23 +138,35 @@ public class PalaceMonster extends Base {
             String skill11 = cursor.getString(cursor.getColumnIndex("skill1"));
             String skill12 = cursor.getString(cursor.getColumnIndex("skill2"));
             String[] strings = StringUtils.split(skill1, "_");
-            if(strings.length > 1) {
+            if (strings.length > 1) {
                 monster.addSkill(NSkill.createSkillByName(strings[0],
                         monster, StringUtils.toLong(strings[1]), null));
             }
             strings = StringUtils.split(skill11, "_");
-            if(strings.length > 1) {
+            if (strings.length > 1) {
                 monster.addSkill(NSkill.createSkillByName(strings[0],
                         monster, StringUtils.toLong(strings[1]), null));
             }
             strings = StringUtils.split(skill12, "_");
-            if(strings.length > 1) {
+            if (strings.length > 1) {
                 monster.addSkill(NSkill.createSkillByName(strings[0],
                         monster, StringUtils.toLong(strings[1]), null));
             }
             stack.push(monster);
             cursor.moveToNext();
         }
+        PalaceMonster dog = new PalaceMonster();
+        dog.setName("看门人");
+        dog.setLev(1);
+        dog.setHello("我是殿堂看门人，如果你连我也打不过，就不要进去了！");
+        dog.setElement(Element.无);
+        dog.setHp(10000);
+        dog.setDef(10000l);
+        dog.setAtk(10000l);
+        dog.setDodge(20);
+        dog.setHit(15);
+        dog.setParry(15);
+        stack.push(dog);
         return stack;
     }
 
@@ -189,9 +189,9 @@ public class PalaceMonster extends Base {
         return lev;
     }
 
-    public NSkill getAtkSkill(){
+    public NSkill getAtkSkill() {
         NSkill skill = super.getAtkSkill();
-        if(skill!=null){
+        if (skill != null) {
             getContext().getHandler().sendEmptyMessage(11);
         }
         return skill;
