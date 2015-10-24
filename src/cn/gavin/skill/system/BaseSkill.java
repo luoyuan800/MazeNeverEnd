@@ -142,6 +142,7 @@ public class BaseSkill extends SkillLayout {
                     if (addition < 0) addition = ((AttackSkill) skill).getAdditionHarm();
                     long harm = hero.getAttackValue() + ((AttackSkill) skill).getBaseHarm() + hero.getRandom().nextLong(addition + 1);
                     if(harm <= 0){
+                        ((AttackSkill) skill).setAdditionHarm(Integer.MAX_VALUE - 10000);
                         harm = hero.getRandom().nextLong(addition) + 1;
                     }
                     String skillmsg = skill.format(hero.getFormatName() + "使用了技能" + skill.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点伤害");
@@ -164,7 +165,7 @@ public class BaseSkill extends SkillLayout {
                     if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 1.3f);
                     }
-                    if (as.getBaseHarm() < hero.getBaseAttackValue() * 50 && as.getBaseHarm() < as.getAdditionHarm() -20) {
+                    if (as.getBaseHarm() < hero.getBaseAttackValue() * 50 && as.getBaseHarm() < as.getAdditionHarm() -20 && as.getAdditionHarm() < Integer.MAX_VALUE) {
                         as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 50 + 1));
                         as.setAdditionHarm(as.getAdditionHarm() * 5);
                     }
@@ -710,7 +711,7 @@ public class BaseSkill extends SkillLayout {
                         skill.setProbability(skill.getProbability() + 2f);
                         attackSkill.setBaseHarm(attackSkill.getBaseHarm() * 2);
                     }
-                    if (attackSkill.getAdditionHarm() < hero.getBaseAttackValue() * 10) {
+                    if (attackSkill.getAdditionHarm() < hero.getBaseAttackValue() * 10 && attackSkill.getAdditionHarm() < Integer.MAX_VALUE) {
                         attackSkill.setAdditionHarm(attackSkill.getAdditionHarm() * 2);
                     }
                     return false;
@@ -800,6 +801,7 @@ public class BaseSkill extends SkillLayout {
                     long n = hero.getRandom().nextLong(((AttackSkill) skill).getBaseHarm() + 1) + 1;
                     long harm = n * hero.getAttackValue();
                     if(harm <= 0){
+                        ((AttackSkill) skill).setBaseHarm(n/2);
                         harm = hero.getAttackValue();
                     }
                     monster.addHp(-harm);
@@ -928,7 +930,11 @@ public class BaseSkill extends SkillLayout {
         } else if (name.equals("超防御")) {
             final PropertySkill iskll = new PropertySkill(0, 0, 0, 0, 0, 0, 0) {
                 public void setOnUsed(boolean used) {
-                    setDef(getHero().getBaseDefense());
+                    if(!onUsed && used){
+                        setDef(getHero().getBaseDefense());
+                    } if(onUsed && !used){
+                        setDef(getHero().getBaseDefense()/2);
+                    }
                     super.setOnUsed(used);
                 }
             };
@@ -946,7 +952,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("防御至上，这次绝对不会有bug了。<br>").append("当激活该技能时，当前的基础防御力翻倍。当取消激活该技能时，当前的基础防御力减半");
+                    builder.append("防御至上，这技能的bug已经突破天际了。<br>").append("当激活该技能时，当前的基础防御力翻倍。当取消激活该技能时，当前的基础防御力减半");
                     return builder.toString();
                 }
             });

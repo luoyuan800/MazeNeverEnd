@@ -150,6 +150,10 @@ public class Hero implements BaseObject {
         this.formatName = "";
     }
 
+    public Long getRealHP(){
+        return hp;
+    }
+
     public Long getHp() {
         long rs = (isOnChange() ? changeHp : hp) + getSkillAdditionHp();
         if (rs == 0) {
@@ -542,6 +546,10 @@ public class Hero implements BaseObject {
             }
         }
         return null;
+    }
+
+    public Long getRealUHP(){
+        return upperHp;
     }
 
     public Long getUpperHp() {

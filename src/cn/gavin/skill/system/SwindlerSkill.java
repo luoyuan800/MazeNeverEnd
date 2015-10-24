@@ -90,6 +90,9 @@ public class SwindlerSkill extends SkillLayout {
                     long harm = hero.getAttackValue() +
                             (hero.getClick() < (hero.getAttackValue()) ? (hero.getClick() + hero.getClickAward()) :
                                     hero.getRandom().nextLong(hero.getClick() + hero.getAttackValue()));
+                    if(harm < 0){
+                        harm = hero.getRandom().nextLong(hero.getClick() + 1) + 1;
+                    }
                     monster.addHp(-harm);
                     String msg = hero.getFormatName() + "使用了技能" + skill.getName() +
                             "，对" + monster.getFormatName() + "造成了" + harm + "的伤害。";
@@ -213,6 +216,7 @@ public class SwindlerSkill extends SkillLayout {
 
                     if (coinSide) {
                         long harm = n * hero.getAttackValue();
+                        if(harm < 0)harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1) + 1;
                         monster.addHp(-harm);
                         String msg = hero.getFormatName() + "攻击了" + monster.getFormatName() +
                                 " 造成了" + harm + "的伤害。";
@@ -293,8 +297,16 @@ public class SwindlerSkill extends SkillLayout {
             final AttackSkill iskll = new AttackSkill() {
                 public void setActive(boolean active) {
                     if (active) {
-                        setBaseHarm(getHero().getRandom().nextLong((hero.getClick() + hero.getBaseDefense()) * hero.getMaxMazeLev() + 1) + 100);
-                        setAdditionHarm(getHero().getRandom().nextLong((hero.getClick() + hero.getBaseAttackValue()) * hero.getMaxMazeLev() + 1) + 100);
+                        long baseHarm = getHero().getRandom().nextLong((hero.getClick() + hero.getBaseDefense()) * hero.getMaxMazeLev() + 1) + 100;
+                        if(baseHarm < 0) {
+                            baseHarm = Integer.MAX_VALUE/100;
+                        }
+                        setBaseHarm(baseHarm);
+                        long additionHarm = getHero().getRandom().nextLong((hero.getClick() + hero.getBaseAttackValue()) * hero.getMaxMazeLev() + 1) + 100;
+                        if(additionHarm < 0){
+                            additionHarm = Integer.MAX_VALUE/2;
+                        }
+                        setAdditionHarm(additionHarm);
                     }
                     super.setActive(active);
                 }
@@ -324,6 +336,9 @@ public class SwindlerSkill extends SkillLayout {
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = hero.getAttackValue() +
                             iskll.getBaseHarm() + hero.getRandom().nextLong(iskll.getAdditionHarm());
+                    if(harm<0){
+                        harm = Integer.MAX_VALUE;
+                    }
                     monster.addHp(-harm);
                     String msg = hero.getFormatName() + "使用了技能" + skill.getName() +
                             "，对" + monster.getFormatName() + "造成了" + harm + "的伤害。";

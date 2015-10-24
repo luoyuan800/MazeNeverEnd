@@ -154,6 +154,7 @@ public class Item {
             Cursor cursor;
             if(db!=null){
                 cursor = db.rawQuery(sql, null);
+                cursor.moveToFirst();
             }else{
                 cursor = dbHelper.excuseSOL(sql);
             }

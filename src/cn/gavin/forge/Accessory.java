@@ -191,6 +191,7 @@ public class Accessory extends Equipment {
             Cursor cursor;
             if(db!=null){
                 cursor = db.rawQuery("SELECT * FROM accessory", null);
+                cursor.moveToFirst();
             }else{
                 cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM accessory");
             }

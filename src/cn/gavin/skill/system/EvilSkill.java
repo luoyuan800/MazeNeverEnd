@@ -357,6 +357,10 @@ public class EvilSkill extends SkillLayout {
                             setAgi(getHero().getAgility());
                             setStr(getHero().getStrength());
                             setLife(getHero().getPower());
+                        }else if(onUsed && !used){
+                            setAgi(getHero().getAgility()/2);
+                            setStr(getHero().getStrength()/2);
+                            setLife(getHero().getPower()/2);
                         }
                         super.setOnUsed(used);
                     }
@@ -467,6 +471,11 @@ public class EvilSkill extends SkillLayout {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = hero.getAttackValue() + iskll.getBaseHarm() + hero.getRandom().nextLong(iskll.getAdditionHarm() + 1);
+                    if(harm < 0){
+                        iskll.setAdditionHarm(Integer.MAX_VALUE);
+                        iskll.setBaseHarm(Integer.MAX_VALUE/8);
+                        harm = Integer.MAX_VALUE -100000;
+                    }
                     monster.addHp(-harm);
                     String msg = hero.getFormatName() + "使用了技能" + iskll.getName() + "，对" +
                             monster.getFormatName() + "造成了" + harm + "的闪电伤害";
@@ -482,7 +491,7 @@ public class EvilSkill extends SkillLayout {
                     if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 1.1f);
                     }
-                    if(iskll.getAdditionHarm() < hero.getBaseAttackValue() * 100) {
+                    if(iskll.getAdditionHarm() < hero.getBaseAttackValue() * 100 && iskll.getAdditionHarm() < Integer.MAX_VALUE) {
                         iskll.setBaseHarm(iskll.getBaseHarm() + 2000);
                         iskll.setAdditionHarm(iskll.getAdditionHarm() * 2);
                     }
@@ -756,7 +765,8 @@ public class EvilSkill extends SkillLayout {
                     long i = hero.getRandom().nextLong(iskll.getAdditionHarm() + 1) + 1;
                     long l = harm.longValue() * i;
                     if(l <= 0){
-                        l = harm.longValue() + 1;
+                        l = hero.getBaseAttackValue();
+                        iskll.setAdditionHarm(i/2);
                     }
                     monster.addHp(-l);
                     String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，对" +

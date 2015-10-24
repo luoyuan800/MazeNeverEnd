@@ -109,6 +109,7 @@ public class LoadHelper {
         heroN.setDodgeRate(preferences.getFloat("dodgeRate", 0));
         heroN.setClickPointAward(preferences.getLong("clickPointAward", 0));
         heroN.setElement(Element.valueOf(preferences.getString("element", "无")));
+        heroN.setOnSkill(false);
         MazeContents.hero = heroN;
         MazeContents.maze = maze;
     }

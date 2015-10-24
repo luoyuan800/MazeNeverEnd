@@ -30,8 +30,8 @@ public class SaveHelper {
         SharedPreferences preferences = context.getSharedPreferences("hero", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("name", heroN.getName());
-        editor.putLong("hp", heroN.getHp());
-        editor.putLong("upperHp", heroN.getUpperHp());
+        editor.putLong("hp", heroN.getRealHP());
+        editor.putLong("upperHp", heroN.getRealUHP());
         editor.putLong("baseAttackValue", heroN.getBaseAttackValue());
         editor.putLong("baseDefense", heroN.getBaseDefense());
         editor.putLong("click", heroN.getClick());
