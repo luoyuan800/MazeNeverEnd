@@ -107,8 +107,8 @@ public class ForgeDB {
         sql = String.format(base,"沁玟之永恒", "龙筋-冷杉木-冷杉木-冷杉木-冷杉木",
                 "ADD_POWER:-3000-ADD_AGI:-2000-ADD_STR:-1000","ADD_CLICK_AWARD:300", NecklaceBuilder.type,"#FF8C00");
         database.execSQL(sql);
-        sql = String.format(base,"余辉", "龙筋-白云-龙皮-冷杉木",
-                "ADD_UPPER_HP:400000-ADD_ATK:250000-ADD_DEF:-3000000","ADD_POWER:1000", NecklaceBuilder.type,"#FF8C00");
+        sql = String.format(base,"余辉", "龙筋-白云石-龙皮-冷杉木",
+                "ADD_UPPER_HP:400000-ADD_ATK:250000-ADD_DEF:-3000000","ADD_POWER:1000", NecklaceBuilder.type,"#800080");
         database.execSQL(sql);
     }
 }
