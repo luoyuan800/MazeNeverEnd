@@ -328,8 +328,8 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
     private synchronized void refresh() {
         clickCount.setText("点击\n" + heroN.getClick());
         mainContriHp.setText(maze.getHero().getHp() + "/" + heroN.getUpperHp());
-        mainContriAtt.setText(heroN.getUpperAtk() + "");
-        mainContriDef.setText(heroN.getUpperDef() + "");
+        mainContriAtt.setText(maze.getHero().getAtk() + "");
+        mainContriDef.setText(maze.getHero().getDef() + "");
         swordLev.setText(heroN.getSword() + "+" + heroN.getSwordLev());
         armorLev.setText(heroN.getArmor() + "+" + heroN.getArmorLev());
         int i =0;

@@ -68,6 +68,7 @@ public class ForgeDB {
         upgradeTo1_3_2(database);
         upgradeTo1_4(database);
         upgradeTo1_4_7(database);
+        upgradeTp1_5(database);
     }
 
     public void upgradeTo1_3_2(SQLiteDatabase database){

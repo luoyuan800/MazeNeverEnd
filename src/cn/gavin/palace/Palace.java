@@ -56,19 +56,23 @@ public class Palace extends Maze {
             int turn = 0;
             while (monster.getHp() > 0 && hero.getHp() > 0) {
                 if (context.isPause()) continue;
-                if (turn % 21 == 0) {
-                    context.addMessage("战斗来到了" + turn + "个回合，" + hero.getFormatName() + "和" +
+                if (turn != 0 && (turn % 37 == 0 || turn % 38 == 0)) {
+                    context.addMessage("由于战斗时间过长" + hero.getFormatName() + "和" +
                             monster.getFormatName() + "因为烦躁攻击了提升了一倍！");
                     hero.setAtk(hero.getAtk() * 2);
                     monster.setAtk(monster.getAtk() * 2);
                 }
                 if (atk) {
-                    turn++;
                     hero.atk(monster);
                 } else {
                     monster.atk(hero);
                 }
                 atk = !atk;
+                turn++;
+                if (turn != 0 && turn % 21 == 0) {
+                    hero.setAtk(hero.getAtk() / 2);
+                    monster.setAtk(monster.getAtk() / 2);
+                }
                 try {
                     Thread.sleep(context.getRefreshInfoSpeed());
                 } catch (InterruptedException e) {

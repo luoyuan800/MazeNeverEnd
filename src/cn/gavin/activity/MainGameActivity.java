@@ -577,7 +577,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private void showGetSkillPointDialog() {
         if (skillPointGetDialog == null) {
             skillPointGetDialog = new Builder(this).create();
-            skillPointGetDialog.setTitle("88888材料转换1点技能点");
+            skillPointGetDialog.setTitle("88888锻造点数转换1点技能点");
             skillPointGetDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -608,7 +608,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private void getLockBox() {
         if (getLockBoxDialog == null) {
             getLockBoxDialog = new Builder(this).create();
-            getLockBoxDialog.setTitle("72250换取一个带锁的宝箱");
+            getLockBoxDialog.setTitle("72250锻造点数换取一个带锁的宝箱");
             getLockBoxDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

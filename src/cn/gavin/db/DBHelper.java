@@ -14,7 +14,6 @@ import cn.gavin.forge.Item;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.log.LogHelper;
 import cn.gavin.palace.PalaceMonster;
-import cn.gavin.skill.type.AttackSkill;
 
 /**
  * Created by gluo on 9/14/2015.
@@ -27,7 +26,8 @@ public class DBHelper {
     private static int DB_VERSION_1_3_2 = 11;
     private static int DB_VERSION_1_4_7 = 13;
     private static int DB_VERSION_1_4 = 12;
-    private static int DB_VERSION = 14;
+    private static int DB_VERSION_1_4_8 = 14;
+    private static int DB_VERSION = 15;
 
     private Context context;
     private SQLiteDatabase database;
@@ -57,8 +57,7 @@ public class DBHelper {
         database = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
         if (database.getVersion() == 0) {
             onCreate(database);
-        }else
-        if (database.getVersion() < DB_VERSION) {
+        } else if (database.getVersion() < DB_VERSION) {
             onUpgrade(database, database.getVersion(), DB_VERSION);
         }
         database.setVersion(DB_VERSION);
@@ -131,10 +130,10 @@ public class DBHelper {
         upgrade10_11(db, oldVersion);
         upgrade11_12(db, oldVersion);
         upgrade12_13(db, oldVersion);
-        upgrade13_14(db, oldVersion);
+        upgrade14_15(db, oldVersion);
     }
 
-    private void upgrade13_14(SQLiteDatabase db, int oldVersion){
+    private void upgrade14_15(SQLiteDatabase db, int oldVersion) {
         try {
             for (Accessory accessory : Accessory.loadAccessories(db)) {
                 EnumMap<Effect, Number> unTemp = new EnumMap<Effect, Number>(accessory.getEffects());
@@ -167,10 +166,8 @@ public class DBHelper {
                     }
                 }
             }
-            if(oldVersion == 13){
-                new ForgeDB().upgradeTp1_5(db);
-            }
-        }catch (Exception e){
+            new ForgeDB().upgradeTp1_5(db);
+        } catch (Exception e) {
             e.printStackTrace();
             LogHelper.logException(e);
         }
@@ -181,7 +178,7 @@ public class DBHelper {
             if (oldVersion == 12) {
                 new ForgeDB().upgradeTo1_4_7(db);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             Log.e("MazeNeverEnd", e.getMessage());
             LogHelper.logException(e);
@@ -204,7 +201,7 @@ public class DBHelper {
                 db.execSQL("DROP TABLE defender");
                 upgrade12_13(db, 12);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             Log.e("MazeNeverEnd", e.getMessage());
             LogHelper.logException(e);
@@ -215,10 +212,10 @@ public class DBHelper {
         try {
             if (oldVersion == 10) {
                 new ForgeDB().upgradeTo1_3_2(db);
-                upgrade11_12(db,11);
+                upgrade11_12(db, 11);
                 upgrade12_13(db, 12);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             Log.e("MazeNeverEnd", e.getMessage());
             LogHelper.logException(e);
@@ -246,11 +243,11 @@ public class DBHelper {
                         "defeated TEXT" +
                         ")";
                 db.execSQL(createTable);
-                upgrade10_11(db,10);
-                upgrade11_12(db,11);
+                upgrade10_11(db, 10);
+                upgrade11_12(db, 11);
                 upgrade12_13(db, 12);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             Log.e("MazeNeverEnd", e.getMessage());
             LogHelper.logException(e);
             e.printStackTrace();
