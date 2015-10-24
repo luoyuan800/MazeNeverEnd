@@ -233,7 +233,7 @@ public class Accessory extends Equipment {
         return res;
     }
 
-    private void delete() {
+    public void delete() {
         DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM accessory WHERE id = '" + id + "'");
     }
 

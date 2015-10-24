@@ -192,8 +192,7 @@ public class Item {
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "loadItems", e);
-            rebuildItemTable();
-            LogHelper.writeLog();
+            LogHelper.logException(e);
         }
         return items;
     }

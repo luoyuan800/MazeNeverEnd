@@ -30,7 +30,7 @@ public class MainMenuActivity extends Activity implements OnClickListener {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 3:
-                    menuStart.setText("初始化数据");
+                    menuStart.setText("加载存档");
                     break;
                 case 2:
                     menuStart.setText("加载技能");
@@ -62,16 +62,16 @@ public class MainMenuActivity extends Activity implements OnClickListener {
         menuStart = (Button) findViewById(R.id.menu_start);
         menuStart.setOnClickListener(this);
         menuStart.setEnabled(false);
-        menuStart.setText("加载存档");
+        menuStart.setText("加载数据");
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    LoadHelper saveHelper = new LoadHelper(context);
-                    saveHelper.loadHero();
-                    handler.sendEmptyMessage(3);
                     DBHelper.init(MainMenuActivity.this);
                     MazeContents.skillDialog = new SkillDialog();
+                    handler.sendEmptyMessage(3);
+                    LoadHelper saveHelper = new LoadHelper(context);
+                    saveHelper.loadHero();
                     handler.sendEmptyMessage(2);
                     saveHelper.loadSkill(MazeContents.hero, MazeContents.skillDialog);
                     handler.sendEmptyMessage(1);
@@ -79,7 +79,7 @@ public class MainMenuActivity extends Activity implements OnClickListener {
                     handler.sendEmptyMessage(0);
                 } catch (Exception exp) {
                     Log.e(MainGameActivity.TAG, "Init", exp);
-                    LogHelper.writeLog();
+                    LogHelper.logException(exp);
                     throw new RuntimeException(exp);
                 }
             }

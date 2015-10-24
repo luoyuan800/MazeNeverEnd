@@ -136,34 +136,50 @@ public class DBHelper {
     private void upgrade14_15(SQLiteDatabase db, int oldVersion) {
         try {
             for (Accessory accessory : Accessory.loadAccessories(db)) {
+                boolean change = false;
                 EnumMap<Effect, Number> unTemp = new EnumMap<Effect, Number>(accessory.getEffects());
                 for (EnumMap.Entry<Effect, Number> entry : unTemp.entrySet()) {
                     if (entry.getKey() == Effect.ADD_CLICK_POINT_AWARD) {
                         accessory.getEffects().remove(entry.getKey());
+                        change = true;
                     }
                     if (entry.getKey() == Effect.ADD_AGI || entry.getKey() == Effect.ADD_POWER || entry.getKey() == Effect.ADD_STR) {
                         if (entry.getValue().longValue() > 500000) {
                             accessory.getEffects().put(entry.getKey(), entry.getValue().longValue() / 10);
+                            change = true;
                         }
                     }
                 }
+                if(change) {
+                    accessory.delete();
+                    accessory.save();
+                }
             }
             for (Item item : Item.loadItems(db)) {
+                boolean change = false;
                 if (item.getEffect() == Effect.ADD_CLICK_POINT_AWARD) {
                     item.setEffect(Effect.ADD_CLICK_AWARD);
+                    change = true;
                 }
                 if (item.getEffect1() == Effect.ADD_CLICK_POINT_AWARD) {
                     item.setEffect1(Effect.ADD_CLICK_AWARD);
+                    change = true;
                 }
                 if (item.getEffect() == Effect.ADD_AGI || item.getEffect() == Effect.ADD_POWER || item.getEffect() == Effect.ADD_STR) {
                     if (item.getEffectValue().longValue() > 500000) {
                         item.setEffectValue(item.getEffectValue().longValue() / 10);
+                        change = true;
                     }
                 }
                 if (item.getEffect1() == Effect.ADD_AGI || item.getEffect1() == Effect.ADD_POWER || item.getEffect1() == Effect.ADD_STR) {
                     if (item.getEffect1Value().longValue() > 500000) {
                         item.setEffect1Value(item.getEffect1Value().longValue() / 10);
+                        change = true;
                     }
+                }
+                if(change) {
+                    item.delete();
+                    item.save();
                 }
             }
             new ForgeDB().upgradeTp1_5(db);
