@@ -51,6 +51,7 @@ public class StringUtils {
 
     public static Long toLong(String number){
         try {
+            number = number.replaceFirst("~","-");
             return Long.parseLong(number);
         }catch (Exception e){
             try {

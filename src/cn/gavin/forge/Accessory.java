@@ -116,13 +116,16 @@ public class Accessory extends Equipment {
         StringBuilder base = new StringBuilder();
         if (effects != null) {
             for (Effect effect : effects.keySet()) {
-                base.append(effect.name()).append(":").append(effects.get(effect)).append("-");
+                String value = effects.get(effect).toString();
+                value = value.replace("-", "~");
+                base.append(effect.name()).append(":").append(value).append("-");
             }
         }
         StringBuilder addition = new StringBuilder();
         if (additionEffects != null) {
             for (Effect effect : additionEffects.keySet()) {
-                addition.append(effect.name()).append(":").append(additionEffects.get(effect)).append("-");
+                String value = additionEffects.get(effect).toString().replace("-","~");
+                addition.append(effect.name()).append(":").append(value).append("-");
             }
         }
         id = UUID.randomUUID().toString();

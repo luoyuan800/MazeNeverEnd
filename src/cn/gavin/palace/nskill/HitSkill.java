@@ -28,12 +28,13 @@ public class HitSkill extends AtkSkill {
 
     @Override
     public String getName() {
-        return "<重击>";
+        return "重击";
     }
 
     @Override
     public long getHarm(Base target) {
-        long l = me.getAtk() * me.getRandom().nextLong((count / 1000) * 2 + 1) - target.getDef();
+        long l1 = me.getRandom().nextLong((count / 1000) * 2 + 1) + 1;
+        long l = me.getAtk() * l1 - target.getDef();
         if(l <= 0) l = me.getLev();
         return l;
     }

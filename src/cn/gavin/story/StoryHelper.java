@@ -32,7 +32,7 @@ public class StoryHelper {
         }
         final Random random = hero.getRandom();
         boolean b = hero.getAgility() / 2000 > random.nextLong();
-        boolean a = Achievement.guider1.isEnable() ? random.nextInt(10000) > 9977 : random.nextInt(10000) < 5;
+        boolean a = Achievement.guider1.isEnable() ? random.nextInt(10000) > 9977 : random.nextInt(10000) < 35;
         if (Achievement.story.isEnable() && hero.getKeyCount() > 10 && !Achievement.restriction.isEnable() && a) {
             context.addMessage(String.format("%s找到了一扇上锁了的门，使用一把钥匙打开这扇门", hero.getFormatName()));
             hero.setKeyCount(hero.getKeyCount() - 1);

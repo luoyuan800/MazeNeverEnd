@@ -162,7 +162,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
                         break;
                     case 5:
                         clickCount.setText("点击\n" + heroN.getClick());
-                        heroPic.setBackgroundResource(R.drawable.h_2);
+                        heroPic.setBackgroundResource(R.drawable.h_4);
                         break;
                     case 10:
                         Bundle bundle = msg.peekData();
@@ -328,8 +328,8 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
     private synchronized void refresh() {
         clickCount.setText("点击\n" + heroN.getClick());
         mainContriHp.setText(maze.getHero().getHp() + "/" + heroN.getUpperHp());
-        mainContriAtt.setText(maze.getHero().getAtk() + "");
-        mainContriDef.setText(maze.getHero().getDef() + "");
+        mainContriAtt.setText(heroN.getUpperAtk() + "");
+        mainContriDef.setText(heroN.getUpperDef() + "");
         swordLev.setText(heroN.getSword() + "+" + heroN.getSwordLev());
         armorLev.setText(heroN.getArmor() + "+" + heroN.getArmorLev());
         int i =0;

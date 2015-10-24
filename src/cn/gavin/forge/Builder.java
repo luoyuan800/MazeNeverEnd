@@ -74,6 +74,7 @@ public abstract class Builder {
         } else if (names.containsAll(Arrays.asList("龙", "凤", "虎", "牛"))) {
             names.clear();
             names.add("小田螺の");
+            accessory.setColor("#C71585");
         }
         StringBuilder b = new StringBuilder();
         for (String s : names) {

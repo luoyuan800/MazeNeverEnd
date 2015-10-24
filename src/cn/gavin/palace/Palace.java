@@ -54,11 +54,13 @@ public class Palace extends Maze {
             context.addMessage("<font color=\"blue\">点击右边按钮开始挑战-->></font>");
             boolean atk = random.nextLong(hero.getHp() / 2 + 1) > random.nextLong(monster.getHp() / 2 + 1);
             int turn = 0;
-            while (monster.getHp() > 0 && hero.getHp() > 0) {
+            while (monster.getHp() > 0 && hero.getHp() > 0 && turn < 150) {
                 if (context.isPause()) continue;
                 if (turn != 0 && (turn % 37 == 0 || turn % 38 == 0)) {
                     context.addMessage("由于战斗时间过长" + hero.getFormatName() + "和" +
                             monster.getFormatName() + "因为烦躁攻击了提升了一倍！");
+                }
+                if(turn > 37){
                     hero.setAtk(hero.getAtk() * 2);
                     monster.setAtk(monster.getAtk() * 2);
                 }
@@ -69,7 +71,7 @@ public class Palace extends Maze {
                 }
                 atk = !atk;
                 turn++;
-                if (turn != 0 && turn % 21 == 0) {
+                if(turn > 37){
                     hero.setAtk(hero.getAtk() / 2);
                     monster.setAtk(monster.getAtk() / 2);
                 }
@@ -77,6 +79,16 @@ public class Palace extends Maze {
                     Thread.sleep(context.getRefreshInfoSpeed());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }
+            }
+            if(turn >= 150){
+                context.addMessage("战斗时间过长，" + hero.getFormatName() + "和" + monster.getFormatName() + "决定通过跑硬币决胜负！");
+                if(random.nextBoolean()){
+                    context.addMessage(hero.getFormatName() + "抛出了正面， 获得了胜利!");
+                    monster.setHp(0);
+                }else{
+                    context.addMessage(hero.getFormatName() + "抛出了反面，" + monster.getFormatName() + "获得了胜利！");
+                    hero.setHp(0);
                 }
             }
             if (monster.getHp() <= 0) {
