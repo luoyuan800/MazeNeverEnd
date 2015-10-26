@@ -46,10 +46,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Random;
 
+import cn.bmob.v3.listener.SaveListener;
 import cn.gavin.Achievement;
 import cn.gavin.Armor;
 import cn.gavin.Element;
@@ -77,6 +79,7 @@ import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
+import cn.gavin.upload.CdKey;
 import cn.gavin.upload.Upload;
 
 public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener, OnItemClickListener, BaseContext {
@@ -681,7 +684,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final String input = tv.getText().toString();
-                        if (input.equals("qx22222")) {
+                        if (input.startsWith("~")) {
+                            showKeyDialog(input);
+                        } else if (input.equals("qx22222") && heroN.getAwardCount() <= 6) {
                             Accessory hat = new Accessory();
                             hat.setType(HatBuilder.type);
                             hat.setName("沁玟之思念");
@@ -713,6 +718,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             pro.put(Effect.ADD_STR, 300000);
                             neck.setEffects(pro);
                             neck.save();
+                            heroN.setAwardCount(heroN.getAwardCount() + 6);
                         } else if (input.equals("332406332") && heroN.getAwardCount() < 3) {
                             heroN.addMaterial(60000);
                             heroN.setAwardCount(heroN.getAwardCount() + 3);
@@ -724,7 +730,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             heroN.setMaxMazeLev(heroN.getMaxMazeLev() + 101);
                             maze.setLevel(99);
                             Achievement.dragon.enable(heroN);
-                            SkillFactory.getSkill("虚无吞噬",heroN,skillDialog).setActive(true);
+                            SkillFactory.getSkill("虚无吞噬", heroN, skillDialog).setActive(true);
                             DBHelper.getDbHelper().excuseSQLWithoutResult("UPDATE recipe set found = 'true'");
                         } else if (input.equals("201509181447ac")) {
                             for (Achievement achievement : Achievement.values()) {
@@ -764,6 +770,13 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
                 });
         dialog.show();
+    }
+
+    private void showKeyDialog(String input) {
+        final ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle("正在校验兑换码");
+        progressDialog.show();
+        CdKey.checkKey(input, progressDialog);
     }
 
     private void showUpdate() {

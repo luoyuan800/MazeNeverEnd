@@ -165,9 +165,9 @@ public class BaseSkill extends SkillLayout {
                     if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 1.3f);
                     }
-                    if (as.getBaseHarm() < hero.getBaseAttackValue() * 50 && as.getBaseHarm() < as.getAdditionHarm() -20 && as.getAdditionHarm() < Integer.MAX_VALUE) {
+                    if (as.getBaseHarm() < hero.getBaseAttackValue() * 50 && as.getAdditionHarm() < Integer.MAX_VALUE) {
                         as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 50 + 1));
-                        as.setAdditionHarm(as.getAdditionHarm() * 5);
+                        as.setAdditionHarm(as.getAdditionHarm() * 4);
                     }
                     if(as.getBaseHarm() > as.getAdditionHarm() -20){
                         as.setBaseHarm(as.getAdditionHarm() -20);
@@ -281,8 +281,9 @@ public class BaseSkill extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     AttackSkill as = (AttackSkill) skill;
                     StringBuilder builder = new StringBuilder();
+                    builder.append("无视防御进行攻击。<br>");
                     builder.append(as.getProbability()).append("%的概率释放<br>");
-                    builder.append("使用技能后，有").append(as.getProbability() / 10f).append("%概率使得敌人眩晕");
+                    builder.append("使用技能后，有").append(100 - as.getProbability()*2).append("%概率使得敌人眩晕");
                     return builder.toString();
                 }
             });
@@ -290,12 +291,12 @@ public class BaseSkill extends SkillLayout {
             skill.setRelease(new UseExpression() {
                 @Override
                 public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                    long harm = hero.getAttackValue() + hero.getRandom().nextLong(hero.getStrength() / 100 + 1);
+                    long harm = hero.getUpperAtk() + hero.getRandom().nextLong(hero.getStrength() / 100 + 1);
                     String msg1 = skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "攻击" + monster.getFormatName() + "造成了" + harm + "点伤害");
                     context.addMessage(msg1);
                     monster.addBattleSkillDesc(msg1);
                     monster.addHp(-harm);
-                    if (hero.getRandom().nextLong(1000) > skill.getProbability()) {
+                    if (hero.getRandom().nextLong(100) > skill.getProbability() * 2) {
                         String msg2 = skill.format(monster.getFormatName() + "被打晕了");
                         context.addMessage(msg2);
                         monster.addBattleSkillDesc(msg2);
