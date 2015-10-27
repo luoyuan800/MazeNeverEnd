@@ -31,7 +31,7 @@ public class FuseItems {
                     effectNumberEnumMap.put(item.getEffect1(), number.longValue() + random.nextLong(item.getEffect1Value().longValue()*2 + 1));
                 }
             }
-            item.delete();
+            item.delete(null);
         }
         Item item = new Item();
         item.setName(items[index].getName());
@@ -60,7 +60,7 @@ public class FuseItems {
                 && item.getEffect1Value().longValue() > 70){
             item.setEffect1Value(random.nextLong(70) + 15);
         }
-        item.save();
+        item.save(null);
         return item;
     }
 }

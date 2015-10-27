@@ -102,6 +102,10 @@ public abstract class Builder {
         name = name.replaceAll("食", "宏");
         name = name.replaceAll("精", "魔");
         name = name.replaceAll("原", "神");
+        name = name.replace("牛蛇", "鬼");
+        name = name.replace("蛇牛", "魂");
+        name = name.replace("鼠牛", "天煞");
+        name = name.replace("牛鼠", "地煞");
         if (name.startsWith("龟")) {
             name = name.replaceAll("龟", "寿");
         }
@@ -150,7 +154,7 @@ public abstract class Builder {
         detectElement(accessory);
         accessory.setType(getType());
         for (Item item : items) {
-            item.delete();
+            item.delete(null);
         }
         accessory.setItems(items);
         accessory.save();

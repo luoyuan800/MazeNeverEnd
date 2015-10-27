@@ -77,4 +77,12 @@ public class StringUtils {
     public static void main(String...args){
         System.out.print(toStringHex("0x6c81739f"));
     }
+
+    public static Integer toInt(String type) {
+        try {
+            return Integer.parseInt(type);
+        }catch (Exception e){
+            return Double.valueOf(type).intValue();
+        }
+    }
 }

@@ -240,6 +240,7 @@ public class CdKey extends BmobObject {
                 TextView view = new TextView(context);
                 if (object.perform(MazeContents.hero)) {
                     view.setText(Html.fromHtml(object.toString()));
+                    succDialog.setView(view);
                 } else {
                     view.setText("这个兑换码已经使用过了！");
                     succDialog.setView(view);

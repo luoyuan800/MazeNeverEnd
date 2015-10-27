@@ -3,7 +3,6 @@ package cn.gavin.forge;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -17,7 +16,6 @@ import cn.gavin.forge.list.ItemName;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
-import cn.gavin.save.LoadHelper;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
@@ -184,7 +182,7 @@ public class Item {
                     }
                     items.add(item);
                 }catch (Exception e){
-                    item.delete();
+                    item.delete(null);
                 }
                 cursor.moveToNext();
             }
@@ -213,18 +211,35 @@ public class Item {
         }
     }
 
-    public void save() {
-        DBHelper dbHelper = DBHelper.getDbHelper();
+    public void save(SQLiteDatabase db) {
         String value = UUID.randomUUID().toString();
         String sql = String.format("INSERT INTO item (id,name,properties) values ('%s','%s', '%s')", value, name.name(), buildProperties());
-        dbHelper.excuseSQLWithoutResult(sql);
+        if(db== null) {
+            DBHelper dbHelper = DBHelper.getDbHelper();
+            dbHelper.excuseSQLWithoutResult(sql);
+        }else{
+            try {
+                db.execSQL(sql);
+            }catch (Exception e){
+                e.printStackTrace();
+                LogHelper.logException(e);
+            }
+        }
         id = value;
     }
 
-    public void delete() {
-        DBHelper dbHelper = DBHelper.getDbHelper();
+    public void delete(SQLiteDatabase db) {
         String sql = String.format("DELETE FROM item WHERE id = '%s'", id);
-        dbHelper.excuseSQLWithoutResult(sql);
+        if(db==null) {
+            DBHelper dbHelper = DBHelper.getDbHelper();
+            dbHelper.excuseSQLWithoutResult(sql);
+        }else{
+            try {
+                db.execSQL(sql);
+            }catch (Exception e){
+                LogHelper.logException(e);
+            }
+        }
     }
 
 }

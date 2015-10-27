@@ -110,7 +110,7 @@ public class BattleController {
                     addMessage(context, hitMsg);
                     monster.addBattleDesc(hitMsg);
                 }
-                String atkmsg = hero.getFormatName() + "攻击了" + monster.getFormatName() + "，造成了<font color=\"red\">" + attackValue + "</font>点伤害。";
+                String atkmsg = hero.getFormatName() + "攻击了" + monster.getFormatName() + "，造成了<font color=\"#000080\">" + attackValue + "</font>点伤害。";
                 addMessage(context, atkmsg);
                 monster.addBattleDesc(atkmsg);
             }
@@ -174,7 +174,7 @@ public class BattleController {
                 for (ItemName item : monster.getItems()) {
                     Item i = Item.buildItem(hero, maze, monster);
                     if (i != null) {
-                        i.save();
+                        i.save(null);
                         items.append(item.name()).append(" ");
                     }
                 }

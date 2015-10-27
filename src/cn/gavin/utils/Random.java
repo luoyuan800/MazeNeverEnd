@@ -17,7 +17,13 @@ public class Random extends java.util.Random {
             long k;
             j = Integer.MAX_VALUE - 1;
             k = (num - Integer.MAX_VALUE);
-            return (long) nextInt(j) + nextLong(k);
+            if(k > Integer.MAX_VALUE){
+                k = k - nextInt(Integer.MAX_VALUE - 1);
+            }
+            if(k > Integer.MAX_VALUE/2 && nextBoolean()){
+                k = nextInt(Integer.MAX_VALUE);
+            }
+            return (long) nextInt(j) + k/2;
         }
     }
 }

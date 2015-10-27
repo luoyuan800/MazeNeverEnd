@@ -65,7 +65,7 @@ public class PropertySkill extends Skill {
                 getHero().addAgility(agi);
                 getHero().addStrength(str);
                 getHero().addLife(life);
-                getHero().setUpperHp(getHero().getUpperHp() + hp);
+                getHero().setUpperHp(getHero().getRealUHP() + hp);
                 getHero().addAttackValue(atk);
                 getHero().addDefenseValue(def);
                 getHero().addClickAward(clickAward);
@@ -74,7 +74,7 @@ public class PropertySkill extends Skill {
                 getHero().addAgility(-agi);
                 getHero().addStrength(-str);
                 getHero().addLife(-life);
-                getHero().setUpperHp(getHero().getUpperHp() - hp);
+                getHero().setUpperHp(getHero().getRealUHP() - hp);
                 getHero().addAttackValue(-atk);
                 getHero().addDefenseValue(-def);
                 getHero().addClickAward(-clickAward);

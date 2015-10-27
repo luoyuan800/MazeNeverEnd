@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SkillFactory {
     private static Map<String, Skill> skillMap = new ConcurrentHashMap<String, Skill>();
 
-    public static Skill getSkill(String name, Hero hero, final SkillDialog dialog) {
+    public static synchronized Skill getSkill(String name, Hero hero, final SkillDialog dialog) {
         try {
             Skill skill = skillMap.get(name);
             if (skill == null) {
@@ -101,7 +101,7 @@ public class SkillFactory {
         };
     }
 
-    public static long reset() {
+    public static synchronized long reset() {
         int point = 0;
         for (Skill skill : skillMap.values()) {
             if (skill.isActive()) {

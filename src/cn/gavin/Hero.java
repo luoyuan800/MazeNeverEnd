@@ -138,7 +138,7 @@ public class Hero implements BaseObject {
 
     public void addClickAward(long num) {
         clickAward += num;
-        if (clickAward <= 0) clickAward = 1l;
+        if (clickAward > 5000) clickAward = 5000l;
     }
 
     public String getName() {
@@ -150,7 +150,7 @@ public class Hero implements BaseObject {
         this.formatName = "";
     }
 
-    public Long getRealHP(){
+    public Long getRealHP() {
         return hp;
     }
 
@@ -212,11 +212,10 @@ public class Hero implements BaseObject {
     }
 
     public void addAttackValue(long attackValue) {
-        if ((this.attackValue + attackValue) > 10) {
+        if (attackValue < 0 && this.attackValue <= Long.MAX_VALUE - attackValue) {
             this.attackValue += attackValue;
-        } else {
-            this.attackValue = 10l;
         }
+
     }
 
     public Long getBaseDefense() {
@@ -238,10 +237,8 @@ public class Hero implements BaseObject {
     }
 
     public void addDefenseValue(long defenseValue) {
-        if ((this.defenseValue + defenseValue) > 10) {
+        if (defenseValue < 0 || this.defenseValue <= Long.MAX_VALUE - defenseValue) {
             this.defenseValue += defenseValue;
-        } else {
-            this.defenseValue = 10l;
         }
     }
 
@@ -250,7 +247,10 @@ public class Hero implements BaseObject {
     }
 
     public void addSkill(Skill skill) {
-        if(firstSkill!=null && thirdSkill!=null && secondSkill!=null){
+        if (skill.equal(firstSkill) || skill.equal(secondSkill) || skill.equal(thirdSkill)) {
+            return;
+        }
+        if (firstSkill != null && thirdSkill != null && secondSkill != null) {
             firstSkill.setOnUsed(false);
         }
         if (firstSkill == null) firstSkill = skill;
@@ -378,8 +378,6 @@ public class Hero implements BaseObject {
                 Achievement.extreme.enable(this);
             }
         }
-        if (strength < 0) strength = 0l;
-        if (attackValue < 0) attackValue = 5l;
     }
 
     public Long getPower() {
@@ -405,8 +403,6 @@ public class Hero implements BaseObject {
                 upperHp += MAX_HP_RISE * life;
             }
         }
-        if (power < 0) power = 0l;
-        if (hp < 0) hp = 0l;
         if (upperHp < 0) upperHp = 20l;
     }
 
@@ -440,8 +436,6 @@ public class Hero implements BaseObject {
                 Achievement.master.enable(this);
             }
         }
-        if (agility < 0) agility = 0l;
-        if (defenseValue < 0) defenseValue = 0l;
         if (agility >= 10000) Achievement.skilldness.enable(this);
     }
 
@@ -477,7 +471,7 @@ public class Hero implements BaseObject {
 
     public void click(boolean award) {
         long interval = 95;
-        if (this.getClickAward() > 500) interval = 300;
+        if (this.getClickAward() > 300) interval = 200;
         if (this.getClickPointAward() > 5) interval += 100;
         if (System.currentTimeMillis() - latestClick > interval) {
             if (click < Long.MAX_VALUE - 1000) {
@@ -491,8 +485,16 @@ public class Hero implements BaseObject {
                             keyCount += 1;
                         }
                     }
-                    addMaterial(clickAward);
-                    addPoint(clickPointAward);
+                    if(clickAward > 500) {
+                        addMaterial(random.nextLong(clickAward) + 100);
+                    }else{
+                        addMaterial(clickAward);
+                    }
+                    if(clickPointAward > 5) {
+                        addPoint(random.nextLong(clickPointAward));
+                    }else{
+                        addMaterial(clickPointAward);
+                    }
                 }
                 this.click++;
                 switch (click.intValue()) {
@@ -548,7 +550,7 @@ public class Hero implements BaseObject {
         return null;
     }
 
-    public Long getRealUHP(){
+    public Long getRealUHP() {
         return upperHp;
     }
 
@@ -895,9 +897,9 @@ public class Hero implements BaseObject {
         } else {
 
             addReincarnation(name + "(" + reincaCount + ")", getUpperHp() + getUpperDef(), getUpperAtk(), getMaxMazeLev());
-            MAX_HP_RISE = random.nextLong(power / 5000 + 4) + 6;
-            DEF_RISE = random.nextLong(agility / 5000 + 2) + 2;
-            ATR_RISE = random.nextLong(strength / 5000 + 3) + 3;
+            MAX_HP_RISE = random.nextLong(power / 5000 + 4) + 6 + reincaCount;
+            DEF_RISE = random.nextLong(agility / 6000 + 2) + 2 + reincaCount;
+            ATR_RISE = random.nextLong(strength / 7000 + 3) + 3 + reincaCount;
             material -= mate;
             long attackValue = random.nextLong(20) + 10;
             long defenseValue = random.nextLong(20) + 10;
@@ -917,7 +919,8 @@ public class Hero implements BaseObject {
             strength = 5l;
             agility = 5l;
             hitRate = 0l;
-
+            clickPointAward = 0l;
+            clickAward = reincaCount + 1;
             DBHelper dbHelper = DBHelper.getDbHelper();
             dbHelper.beginTransaction();
             dbHelper.excuseSQLWithoutResult("DELETE FROM item");

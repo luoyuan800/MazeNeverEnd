@@ -202,7 +202,7 @@ public class EvilSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append(skill.getProbability()).append("%的概率释放，自身生命值上限增加").append(iskll.getBaseHarm()).append("倍");
+                    builder.append(skill.getProbability()).append("%的概率释放，自身生命值上限增加。强化效果结束时，HP会重置。").append(iskll.getBaseHarm()).append("倍");
                     return builder.toString();
                 }
             });
@@ -241,6 +241,7 @@ public class EvilSkill extends SkillLayout {
                                 }
                                 iskll.addMessage("强化技能效果消失了");
                                 hero.setOnSkill(false);
+                                hero.setHp(hero.getUpperHp());
 
                             }
                         }).start();
@@ -322,7 +323,7 @@ public class EvilSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("被动技能<br>");
+                    builder.append("你看我不到，你看我不到，你看我不到……<br>");
                     builder.append("降低");
                     builder.append(skill.getProbability()).append("%的遇怪概率。");
                     return builder.toString();
@@ -378,8 +379,8 @@ public class EvilSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("被动技能<br>");
-                    builder.append("激活时提升一倍力量、体力、敏捷。");
+                    builder.append("唯一一个影响基本属性的技能<br>");
+                    builder.append("激活时提升一倍力量、体力、敏捷。<br>反激活（重置技能）时力量、体力、敏捷减半。");
                     return builder.toString();
                 }
             });
@@ -418,7 +419,7 @@ public class EvilSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("装备后可以在HP变为零的时候有").append(skill.getProbability()).append("的概率原地满血复活。");
+                    builder.append("激活后可以在HP变为零的时候有").append(skill.getProbability()).append("的概率原地满血复活。");
                     return builder.toString();
                 }
             });
@@ -621,7 +622,7 @@ public class EvilSkill extends SkillLayout {
                     StringBuilder builder = new StringBuilder();
                     builder.append("我为万物。<br>").append(skill.getProbability()).
                             append("的概率释放。当对方攻击力比自己高的时候，变身成为对方。持续").append(iskll.getBaseHarm()).append("个回合").
-                            append("(变身只会改变名字、基本攻击和最高HP)。");
+                            append("(变身只会改变名字、基本攻击和最高HP)。变身效果结束时HP会重置。");
                     return builder.toString();
                 }
             });
@@ -660,6 +661,7 @@ public class EvilSkill extends SkillLayout {
                                 }
                                 iskll.addMessage(hero.getName() + "的变身效果消失了");
                                 hero.setOnChange(false);
+                                hero.setHp(hero.getUpperHp());
                             }
                         }).start();
                     }

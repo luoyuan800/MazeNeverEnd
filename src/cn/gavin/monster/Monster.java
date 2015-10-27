@@ -2,6 +2,7 @@ package cn.gavin.monster;
 
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import cn.gavin.Element;
@@ -17,17 +18,19 @@ import cn.gavin.utils.StringUtils;
  * gluo on 8/26/2015.
  */
 public class Monster {
-    private final static String[] firstNames = {"普通", "怪异", "飞翔", "稀有", "发狂", "神奇", "神经", "传奇"};
-    private final static long[] firstAdditionHP = {15, 25, 400, 1000, 500, 2000, 10000, 70000};
-    private final static long[] firstAdditionAtk = {3, 25, 100, 500, 2000, 2800, 4000, 10000};
-    private final static String[] secondNames = {"小", "中", "大", "大大", "红色", "绿色", "人面"};
-    private final static long[] secondAdditionHP = {15, 25, 100, 500, 1003, 2000, 6000};
-    private final static long[] secondAdditionAtk = {5, 10, 30, 100, 150, 500, 5500};
+    private final static String[] firstNames = {"普通", "怪异", "飞翔", "稀有", "发狂", "神奇", "神经", "传奇", "无敌"};
+    private final static long[] firstAdditionHP = {15, 25, 400, 1000, 500, 2000, 10000, 70000, 70000};
+    private final static long[] firstAdditionAtk = {3, 25, 100, 500, 2000, 2800, 4000, 10000, 20000};
+    private final static String[] secondNames = {"小", "中", "大", "大大", "红色", "绿色", "人面","强壮","无力","红唇"};
+    private final static long[] secondAdditionHP = {15, 25, 100, 500, 1003, 2000, 6000, 10000, 1000000, 100};
+    private final static long[] secondAdditionAtk = {5, 10, 30, 100, 150, 500, 5500, 500, 1, 9000};
     public final static String[] lastNames = {"蟑螂", "大蚯蚓", "异壳虫", "巨型飞蛾", "猪", "老鼠", "嗜血蚁",
             "老虎", "蛟", "变异蝎", "食人鸟", "丑蝙蝠", "蛇", "野牛", "龟", "三头蛇", "刺猬", "狼", "精灵",
-            "僵尸", "骷髅", "凤凰", "龙", "作者"};
-    private final static long[] baseHP = {8, 20, 55, 75, 95, 115, 400, 1000, 800, 520, 280, 350, 380, 450, 530, 1000, 1500, 2300, 4000, 4500, 6000, 10000, 20000, 70000};
-    private final static long[] baseAtk = {1, 5, 15, 25, 35, 56, 100, 120, 305, 40, 60, 125, 200, 450, 500, 700, 720, 1000, 1500, 2500, 300, 3400, 5000, 70000};
+            "僵尸", "骷髅", "凤凰", "龙", "作者", "熊","朱厌","陆吾","山魁","穷奇"};
+    private final static long[] baseHP = {8, 20, 55, 75, 95, 115, 400, 1000, 800, 520, 280, 350, 380,
+            450, 530, 1000, 1500, 2300, 4000, 4500, 6000, 10000, 20000, 70000, 30000, 60000, 80000, 50000, 100000};
+    private final static long[] baseAtk = {1, 5, 15, 25, 35, 56, 100, 120, 305, 40, 60, 125, 200,
+            450, 500, 700, 720, 1000, 1500, 2500, 300, 3400, 5000, 70000, 6000, 6500, 10000, 20000, 90000};
     private final static List[] itemNames = {
             Arrays.asList(ItemName.原石),
             Arrays.asList(ItemName.硝石),
@@ -134,7 +137,7 @@ public class Monster {
             hp = hero.getAttackValue() * 30;
         }
         if (atk < hero.getDefenseValue()) {
-            atk += random.nextLong(hero.getDefenseValue() * 3);
+            atk += random.nextLong(hero.getDefenseValue() * 2);
         }
         return new Monster("第" + maze.getLev() + "层", "守护", "者",
                 hp,
@@ -160,7 +163,11 @@ public class Monster {
         firstName = firstNames[first];
         secondName = secondNames[second];
         lastName = lastNames[last];
-        this.items = itemNames[last];
+        if(last < itemNames.length) {
+            this.items = itemNames[last];
+        }else{
+            this.items = Collections.emptyList();
+        }
         if (hero.getStrength() > 100 && hero.getAgility() > 1000 && hero.getPower() > 100 && random.nextLong(maze.getLev() / 100 + 1) > 100 && random.nextInt(100) < 11) {
             hp += random.nextLong((maze.getLev() + hero.getMaxMazeLev()) / 200) * random.nextLong((hero.getStrength() + hero.getAgility() + hero.getStrength()) / 100 + 1);
             atk += maze.getLev() * random.nextLong((hero.getStrength() + hero.getAgility() + hero.getPower()) / 800 + 1);

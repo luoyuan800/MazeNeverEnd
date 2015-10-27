@@ -18,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="end"
+            android:focusableInTouchMode="false"
             android:textSize="6sp" android:background="@drawable/h_1"/>
 
         <TextView
@@ -147,6 +148,7 @@
                                 android:layout_height="52dp"
                                 android:alpha="80"
                                 android:gravity="center"
+                                android:focusableInTouchMode="false"
                                 android:layout_weight="1"
                                 android:textSize="8sp" />
 
@@ -166,6 +168,7 @@
                                 android:alpha="70"
                                 android:gravity="center"
                                 android:layout_weight="1"
+                                android:focusableInTouchMode="false"
                                 android:textSize="8sp" />
 
                         </LinearLayout>
@@ -327,6 +330,7 @@
                             android:layout_gravity="start"
                             android:text="&lt;"
                             android:textSize="12sp"
+                            android:focusableInTouchMode="false"
                             android:textColor="#0dc2fb" />
                         <View
                                 android:id="@+id/skill_system_name"
@@ -343,6 +347,7 @@
                             android:layout_height="40dp"
                             android:layout_gravity="right"
                             android:text="&gt;"
+                            android:focusableInTouchMode="false"
                             android:textSize="12sp"
                             android:textColor="#0dc2fb" />
                     </LinearLayout>

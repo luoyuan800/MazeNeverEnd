@@ -28,3 +28,4 @@
 -keep class cn.bmob.v3.** {*;}
 -keep class cn.bmob.push.** {*;}
 -keep class cn.gavin.upload.PalaceObject{*;}
+-keep class cn.gavin.upload.CdKey{*;}

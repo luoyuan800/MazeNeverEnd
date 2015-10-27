@@ -17,6 +17,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:singleLine="false"
+            android:focusableInTouchMode="false"
             android:text="+1武器"
             android:textSize="10sp" />
 
@@ -26,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:focusableInTouchMode="false"
             android:text="+10武器"
             android:textSize="10sp" />
 
@@ -35,6 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:focusableInTouchMode="false"
             android:text="+100 武器"
             android:textSize="10sp" android:enabled="true"/>
     </LinearLayout>
@@ -51,6 +54,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:singleLine="false"
+            android:focusableInTouchMode="false"
             android:text="+1防具"
             android:textSize="10sp" />
 
@@ -60,6 +64,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center"
+            android:focusableInTouchMode="false"
             android:text="+10防具"
             android:textSize="10sp" />
 
@@ -69,6 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:focusableInTouchMode="false"
             android:text="+100 防具"
             android:textSize="10sp" android:enabled="true"/>
     </LinearLayout>
@@ -84,6 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:focusableInTouchMode="false"
             android:text="@string/strength_label"
             android:textSize="12sp" />
 
@@ -93,6 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:focusableInTouchMode="false"
             android:text="@string/life_label"
             android:textSize="12sp" />
 
@@ -102,6 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:focusableInTouchMode="false"
             android:text="@string/agile_label"
             android:textSize="12sp" />
     </LinearLayout>
@@ -117,6 +126,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:focusableInTouchMode="false"
             android:text="+n力"
             android:textSize="10sp" />
 
@@ -126,6 +136,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:focusableInTouchMode="false"
             android:text="+n体"
             android:textSize="10sp" />
 
@@ -135,6 +146,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:focusableInTouchMode="false"
             android:text="+n敏"
             android:textSize="10sp" />
     </LinearLayout>

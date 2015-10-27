@@ -36,7 +36,7 @@ public class StoryHelper {
         if (Achievement.story.isEnable() && hero.getKeyCount() > 10 && !Achievement.restriction.isEnable() && a) {
             context.addMessage(String.format("%s找到了一扇上锁了的门，使用一把钥匙打开这扇门", hero.getFormatName()));
             hero.setKeyCount(hero.getKeyCount() - 1);
-            if (Achievement.guider1.isEnable() && !Achievement.guider2.isEnable() && b && hero.getKeyCount() >= 14 && random.nextInt(100) > 95 && context.getMaze().getLev()%21 == 0) {
+            if (Achievement.guider1.isEnable() && !Achievement.guider2.isEnable() && b && hero.getKeyCount() >= 14 && random.nextInt(100) > 55 && context.getMaze().getLev()%21 == 0) {
                 context.addMessage(hero.getFormatName() + "在门后面遇见了<font color=\"#FF0000\">袁酥兄</font><br>" +
                         "<font color=\"#FF0000\">袁酥兄</font>：孩子我们又见面了~<br>" +
                         "<font color=\"#FF0000\">袁酥兄</font>：这次就我就告诉你一些高等级的秘密<br>" +

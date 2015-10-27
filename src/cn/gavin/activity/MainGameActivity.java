@@ -46,12 +46,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Random;
 
-import cn.bmob.v3.listener.SaveListener;
 import cn.gavin.Achievement;
 import cn.gavin.Armor;
 import cn.gavin.Element;
@@ -485,7 +483,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("是否确认转生？");
         TextView tv = new TextView(context);
-        tv.setText("注意：\n1.  你会失去所有技能等级。\n" +
+        tv.setText("注意：\n1.  你会失去所有技能等级、技能点数。\n" +
                 "2.  所有材料会被清空。\n" +
                 "3.  装备着的饰品会继承下来，其他装备会被丢弃。\n" +
                 "4.  未分配的能力点数会被清空.\n" +
@@ -647,6 +645,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         heroN.addMaterial(-699988);
+                        heroN.setOnSkill(false);
+                        heroN.setOnChange(false);
+                        heroN.setSkillAdditionHp(0l);
+                        heroN.setSkillAdditionAtk(0l);
+                        heroN.setSkillAdditionDef(0l);
                         heroN.setSkillPoint(heroN.getSkillPoint() + SkillFactory.reset());
                         handler.sendEmptyMessage(103);
                         dialog.dismiss();
@@ -743,11 +746,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             }
                         } else if (input.equals("forge1.2d") && heroN.getAwardCount() < 2) {
                             Item item = Item.buildItem(heroN, ItemName.蛇骨);
-                            if (item != null) item.save();
+                            if (item != null) item.save(null);
                             item = Item.buildItem(heroN, ItemName.龙皮);
-                            if (item != null) item.save();
+                            if (item != null) item.save(null);
                             item = Item.buildItem(heroN, ItemName.青檀木);
-                            if (item != null) item.save();
+                            if (item != null) item.save(null);
                             heroN.setAwardCount(heroN.getAwardCount() + 2);
                         } else if (input.equals("palace1.4.6") && heroN.getAwardCount() < 5) {
                             heroN.setLockBox(heroN.getLockBox() + 10);
@@ -972,20 +975,20 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         StringBuilder builder = new StringBuilder("开宝箱获得的材料:<br>------<br>");
         ItemName itemName = ItemName.values()[heroN.getRandom().nextInt(ItemName.values().length)];
         Item item = Item.buildItem(heroN, itemName);
-        item.save();
+        item.save(null);
         builder.append(item.toString());
         builder.append("<br>").append("-------<br>");
         if (heroN.getRandom().nextBoolean()) {
             itemName = ItemName.values()[heroN.getRandom().nextInt(ItemName.values().length)];
             item = Item.buildItem(heroN, itemName);
-            item.save();
+            item.save(null);
             builder.append(item.toString());
             builder.append("<br>").append("-------<br>");
         }
         if (heroN.getRandom().nextBoolean()) {
             itemName = ItemName.values()[heroN.getRandom().nextInt(ItemName.values().length)];
             item = Item.buildItem(heroN, itemName);
-            item.save();
+            item.save(null);
             builder.append(item.toString());
             builder.append("<br>").append("-------<br>");
         }

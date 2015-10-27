@@ -178,8 +178,8 @@ public class DBHelper {
                     }
                 }
                 if(change) {
-                    item.delete();
-                    item.save();
+                    item.delete(db);
+                    item.save(db);
                 }
             }
             new ForgeDB().upgradeTp1_5(db);

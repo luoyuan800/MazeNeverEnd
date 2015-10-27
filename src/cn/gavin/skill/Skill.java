@@ -269,6 +269,6 @@ public abstract class Skill {
     }
 
     public boolean equal(Skill skill){
-        return skill != null && skill.getName().equalsIgnoreCase(skill.getName());
+        return skill != null && name.equalsIgnoreCase(skill.getName());
     }
 }
