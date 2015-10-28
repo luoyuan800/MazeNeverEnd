@@ -186,7 +186,7 @@ public class BattleController {
                 }
             }
             isJump = true;
-        } else {
+        } else if(hero.getHp() <= 0){
             Skill notDieSkill = SkillFactory.getSkill("不死之身", hero, context.getSkillDialog());
             if (notDieSkill.isActive() && notDieSkill.perform()) {
                 isJump = notDieSkill.release(monster);
@@ -194,6 +194,8 @@ public class BattleController {
                 monster.setDefeat(false);
                 isJump = false;
             }
+        }else{
+            isJump = true;
         }
         return isJump;
     }
