@@ -20,4 +20,38 @@ public enum Element {
                 (e == 土 && this == 木) ||
                 (e == 无 && this != 无);
     }
+
+    public Element getReinforce() {
+        switch (this){
+            case 金:
+                return 土;
+            case 水:
+                return 金;
+            case 土:
+                return 火;
+            case 火:
+                return 木;
+            case 木:
+                return 水;
+            default:
+                return 无;
+        }
+    }
+
+    public Element getRestriction() {
+        switch (this){
+            case 金:
+                return 火;
+            case 水:
+                return 土;
+            case 土:
+                return 木;
+            case 火:
+                return 水;
+            case 木:
+                return 金;
+            default:
+                return 火;
+        }
+    }
 }

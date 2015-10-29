@@ -13,6 +13,11 @@ public abstract class DefSkill extends NSkill {
         this.me = me;
         this.count = count;
         random = new Random();
+        float rate = count/1000 + 2;
+        if(rate > 25){
+            rate = 25;
+        }
+        setRate(rate);
     }
     public long getHarm(Base target){
         return 0;

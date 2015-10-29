@@ -146,7 +146,7 @@ public class BaseSkill extends SkillLayout {
                         harm = hero.getRandom().nextLong(addition) + 1;
                     }
                     if(harm > hero.getBaseAttackValue() * 10){
-                        harm/=2;
+                        harm/=10;
                     }
                     String skillmsg = skill.format(hero.getFormatName() + "使用了技能" + skill.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点伤害");
                     context.addMessage(skillmsg);

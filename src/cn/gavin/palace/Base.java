@@ -17,10 +17,10 @@ import cn.gavin.utils.Random;
  */
 public abstract class Base {
     private long uHp;
-    private long hp;
-    private long def;
+    protected long hp;
+    protected long def;
     private Random random = new Random();
-    private long atk;
+    protected long atk;
     private int hit;
     private int parry;
     private String name;
@@ -245,4 +245,19 @@ public abstract class Base {
         return uHp;
     }
 
+    public int getHit() {
+        return hit;
+    }
+
+    public int getParry() {
+        return parry;
+    }
+
+    public int getDodge() {
+        return dodge;
+    }
+
+    public void setUHp(long hp){
+        this.uHp = hp;
+    }
 }

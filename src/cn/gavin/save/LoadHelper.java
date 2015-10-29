@@ -21,6 +21,7 @@ import cn.gavin.forge.Accessory;
 import cn.gavin.Element;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
+import cn.gavin.pet.Pet;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.utils.StringUtils;
@@ -112,6 +113,11 @@ public class LoadHelper {
         heroN.setOnSkill(false);
         MazeContents.hero = heroN;
         MazeContents.maze = maze;
+        Pet pet = new Pet();
+        pet.load(context);
+        if(StringUtils.isNotEmpty(pet.getName())){
+            heroN.setPet(pet);
+        }
     }
 
     private boolean loadOlderSaveFile(Hero heroN, Maze maze) {

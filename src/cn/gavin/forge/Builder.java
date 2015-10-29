@@ -200,7 +200,6 @@ public abstract class Builder {
                     }
                     if (l > 100000) {
                         color = "#9932CC";
-                        save = true;
                     }
                     if (l > 500000) {
                         color = "#B8860B";
@@ -221,7 +220,6 @@ public abstract class Builder {
                     }
                     if (sml > 5000) {
                         color = "#0000FF";
-                        save = true;
                     }
                     if (sml > 8000) {
                         color = "#9932CC";

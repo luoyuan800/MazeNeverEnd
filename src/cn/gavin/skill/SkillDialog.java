@@ -102,7 +102,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         skillDesc = (TextView) view.findViewById(R.id.skill_description);
         skillPoint = (TextView) view.findViewById(R.id.skill_point);
         sillNameText = (TextView) view.findViewById(R.id.skill_system_name);
-        sillNameText.setText(systemNames[0]);
+        sillNameText.setText("勇者");
         viewFlipper.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -130,16 +130,16 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
 
     private void changeSkillSystem() {
         if(viewFlipper.getCurrentView() instanceof LongSkill){
-            sillNameText.setText("龙裔技能");
+            sillNameText.setText("龙裔");
         }
         if(viewFlipper.getCurrentView() instanceof BaseSkill){
-            sillNameText.setText("勇者技能");
+            sillNameText.setText("勇者");
         }
         if(viewFlipper.getCurrentView() instanceof EvilSkill){
-            sillNameText.setText("魔王技能");
+            sillNameText.setText("魔王");
         }
         if(viewFlipper.getCurrentView() instanceof SwindlerSkill){
-            sillNameText.setText("欺诈师技能");
+            sillNameText.setText("欺诈师");
         }
         skillDesc.setText("");
     }

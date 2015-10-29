@@ -5,6 +5,7 @@ import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.monster.Monster;
 import cn.gavin.monster.MonsterBook;
+import cn.gavin.pet.Pet;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.story.StoryHelper;
@@ -128,6 +129,11 @@ public class Maze {
                     streaking++;
                     if (streaking >= 100) {
                         Achievement.unbeaten.enable(hero);
+                    }
+                    if(hero.getPet() == null){
+                        addMessage(context , hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
+                        Pet pet = Pet.catchPet(monster);
+                        hero.setPet(pet);
                     }
                 } else {
                     streaking = 0;

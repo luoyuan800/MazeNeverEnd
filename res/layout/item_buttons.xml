@@ -86,7 +86,7 @@
             android:layout_weight="1"
             android:enabled="false"
             android:focusableInTouchMode="false"
-            android:text="任务"
+            android:text="宠物"
             android:textSize="12sp"/>
 
         <Button

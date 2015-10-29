@@ -14,6 +14,11 @@ public abstract class AtkSkill extends NSkill {
         this.me = me;
         this.count = count;
         random = new Random();
+        float rate = count/1000 + 2;
+        if(rate > 25){
+            rate = 25;
+        }
+        setRate(rate);
     }
     public boolean release(Base target, long harm) {
         return false;

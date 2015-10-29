@@ -90,4 +90,8 @@ public abstract class NSkill {
     public Element getElement() {
         return me.getElement();
     }
+
+    public long getCount() {
+        return count;
+    }
 }

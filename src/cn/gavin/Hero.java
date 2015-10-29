@@ -16,6 +16,7 @@ import cn.gavin.forge.NecklaceBuilder;
 import cn.gavin.forge.RingBuilder;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.monster.Monster;
+import cn.gavin.pet.Pet;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.skill.type.AttackSkill;
@@ -83,6 +84,7 @@ public class Hero implements BaseObject {
     private Float dodgeRate = 0f;
     private Long clickPointAward = 0l;
     private Element element = Element.无;
+    private Pet pet;
 
     public Float getParry() {
         return parry;
@@ -138,7 +140,6 @@ public class Hero implements BaseObject {
 
     public void addClickAward(long num) {
         clickAward += num;
-        if (clickAward > 5000) clickAward = 5000l;
     }
 
     public String getName() {
@@ -1135,5 +1136,13 @@ public class Hero implements BaseObject {
 
     public void setElement(Element element) {
         this.element = element;
+    }
+
+    public Pet getPet() {
+        return pet;
+    }
+
+    public void setPet(Pet pet) {
+        this.pet = pet;
     }
 }

@@ -30,6 +30,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -172,6 +174,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private boolean isHidBattle;
     private int palaceCount;
     private boolean updatePalace;
+    private ImageView petView;
+    private TextView petCount;
 
 
     //Get Function
@@ -1281,6 +1285,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         upgradeHSwordButton.setOnClickListener(this);
         palaceButton = (Button) findViewById(R.id.palace_button);
         palaceButton.setOnClickListener(this);
+        petView = (ImageView) findViewById(R.id.pet_pic);
+        petView.setOnClickListener(this);
+        petCount = (TextView) findViewById(R.id.pet_click_count);
         refresh();
     }
 
@@ -1394,6 +1401,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             hatTextView.setText(Html.fromHtml(heroN.getHat().getFormatName()));
         } else {
             hatTextView.setText("未装备");
+        }
+        if(heroN.getPet()!=null){
+            petView.setImageResource(heroN.getPet().getImage());
+            petCount.setText("" + heroN.getPet().getIntimacy());
         }
     }
 
@@ -1625,7 +1636,12 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
-
+            case R.id.pet_pic:
+                if(heroN.getPet()!=null){
+                    heroN.getPet().click();
+                    heroN.click(false);
+                }
+                break;
             case R.id.palace_button:
                 showPalace();
                 break;

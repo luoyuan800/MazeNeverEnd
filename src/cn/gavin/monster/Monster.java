@@ -109,7 +109,7 @@ public class Monster {
         monster.element = Element.values()[random.nextInt(Element.values().length)];
         monster.formatName(hero);
         if(maze.getLev() > 500 && random.nextBoolean()){
-            monster.silent = 5.8f;
+            monster.silent = 6.8f;
         }
         return monster;
     }
