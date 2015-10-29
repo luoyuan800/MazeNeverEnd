@@ -75,6 +75,7 @@ import cn.gavin.maze.MazeService;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.monster.PalaceAdapt;
 import cn.gavin.palace.PalaceMonster;
+import cn.gavin.pet.PetDialog;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
@@ -176,6 +177,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private boolean updatePalace;
     private ImageView petView;
     private TextView petCount;
+    private Button petDetail;
+    private PetDialog petDialog;
 
 
     //Get Function
@@ -1288,6 +1291,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         petView = (ImageView) findViewById(R.id.pet_pic);
         petView.setOnClickListener(this);
         petCount = (TextView) findViewById(R.id.pet_hp);
+        petDetail = (Button) findViewById(R.id.pet_detail_button);
+        petDetail.setOnClickListener(this);
+        petDialog = new PetDialog(this);
         refresh();
     }
 
@@ -1405,9 +1411,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         if(heroN.getPet()!=null){
             petView.setImageResource(heroN.getPet().getImage());
             petCount.setText("" + heroN.getPet().getHp());
+            petDetail.setEnabled(true);
         }else{
             petView.setImageResource(R.color.disable);
             petCount.setText("");
+            petDetail.setEnabled(false);
         }
     }
 
@@ -1639,6 +1647,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.pet_detail_button:
+                if(heroN.getPet()!=null) {
+                    petDialog.show(heroN.getPet());
+                }
+                break;
             case R.id.pet_pic:
                 if(heroN.getPet()!=null){
                     heroN.getPet().click();

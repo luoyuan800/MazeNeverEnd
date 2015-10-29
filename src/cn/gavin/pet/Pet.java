@@ -2,8 +2,10 @@ package cn.gavin.pet;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import cn.gavin.Element;
 import cn.gavin.Hero;
+import cn.gavin.R;
 import cn.gavin.monster.Monster;
 import cn.gavin.palace.Base;
 import cn.gavin.palace.nskill.NSkill;
@@ -90,6 +92,10 @@ public class Pet extends Base {
             setMaxAtk(preferences.getLong("max_atk", 1));
             setMaxDef(preferences.getLong("max_def", 0));
             setMaxHp(preferences.getLong("max_hp", 0));
+            int index = Monster.getIndex(this.getName());
+            if (index >= 0 && index < Monster.lastNames.length - 7) {
+                setImage(this, index);
+            }
         }
     }
 
@@ -110,21 +116,103 @@ public class Pet extends Base {
 
     public static Pet catchPet(Monster monster) {
         Pet pet = new Pet();
-        pet.setMaxHp(monster.getMaxHP());
-        long monsterHp = monster.getHp();
+        pet.setElement(monster.getElement());
+        pet.setName(monster.getName());
+        long monsterHp = monster.getMaxHP();
         long hp = pet.getRandom().nextLong(monsterHp);
         if (hp == 0) {
             hp = monsterHp / 2;
         }
         pet.setMaxDef(monsterHp - hp);
+        pet.setMaxAtk(monster.getAtk());
         pet.setMaxHp(hp);
         pet.setHp(die(hp));
         pet.setAtk(die(pet.getMaxAtk()));
-        pet.setDef(die(pet.getMaxAtk()));
+        pet.setDef(die(pet.getMaxDef()));
+        int index = Monster.getIndex(pet.getName());
+        if (index >= 0 && index < Monster.lastNames.length - 7) {
+            setImage(pet, index);
+        }else{
+            return null;
+        }
         return pet;
     }
 
+    private static void setImage(Pet pet, int index) {
+        switch (index) {
+            case 0:
+                pet.image = R.drawable.zl;
+                break;
+            case 1:
+                pet.image = R.drawable.qy;
+                break;
+            case 2:
+                pet.image = R.drawable.pc;
+                break;
+            case 3:
+                pet.image = R.drawable.feie;
+                break;
+            case 4:
+                pet.image = R.drawable.zz;
+                break;
+            case 5:
+                pet.image = R.drawable.laoshu;
+                break;
+            case 6:
+                pet.image = R.drawable.mayi;
+                break;
+            case 7:
+                pet.image = R.drawable.laohu;
+                break;
+            case 8:
+                pet.image = R.drawable.jiao;
+                break;
+            case 9:
+                pet.image = R.drawable.xiezi;
+                break;
+            case 10:
+                pet.image = R.drawable.srn;
+                break;
+            case 11:
+                pet.image = R.drawable.bianfu;
+                break;
+            case 12:
+                pet.image = R.drawable.se;
+                break;
+            case 13:
+                pet.image = R.drawable.niu;
+                break;
+            case 14:
+                pet.image = R.drawable.wugui;
+                break;
+            case 15:
+                pet.image = R.drawable.santoushe;
+                break;
+            case 16:
+                pet.image = R.drawable.ciwei;
+                break;
+            case 17:
+                pet.image = R.drawable.lan;
+                break;
+            case 18:
+                pet.image = R.drawable.jingling;
+                break;
+            case 19:
+                pet.image = R.drawable.jiangshi;
+                break;
+            case 20:
+                pet.image = R.drawable.fengh;
+                break;
+            case 21:
+                pet.image = R.drawable.long_pet;
+                break;
+            default:
+                pet.image = R.drawable.h_4_s;
+        }
+    }
+
     public static long die(long num) {
+        if(num == 0) return 0;
         if (num > 100000) {
             return 10;
         }

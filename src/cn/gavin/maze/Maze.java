@@ -131,9 +131,11 @@ public class Maze {
                         Achievement.unbeaten.enable(hero);
                     }
                     if(hero.getPet() == null){
-                        addMessage(context , hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
                         Pet pet = Pet.catchPet(monster);
-                        hero.setPet(pet);
+                        if(pet!=null){
+                            addMessage(context , hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
+                            hero.setPet(pet);
+                        }
                     }
                 } else {
                     streaking = 0;
