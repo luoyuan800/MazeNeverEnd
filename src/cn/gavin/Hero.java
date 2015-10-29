@@ -212,7 +212,7 @@ public class Hero implements BaseObject {
     }
 
     public void addAttackValue(long attackValue) {
-        if (attackValue < 0 && this.attackValue <= Long.MAX_VALUE - attackValue) {
+        if (attackValue < 0 || this.attackValue <= Long.MAX_VALUE - attackValue) {
             this.attackValue += attackValue;
         }
 
@@ -891,15 +891,30 @@ public class Hero implements BaseObject {
     }
 
     public void reincarnation() {
-        long mate = (reincaCount + 1) * 600101;
+        long mate = (reincaCount + 2) * 600101;
         if (material < mate) {
             Toast.makeText(MainGameActivity.context, "锻造点数不足" + mate + "！" + getName(), Toast.LENGTH_SHORT).show();
         } else {
 
             addReincarnation(name + "(" + reincaCount + ")", getUpperHp() + getUpperDef(), getUpperAtk(), getMaxMazeLev());
-            MAX_HP_RISE = random.nextLong(power / 5000 + 4) + 6 + reincaCount;
-            DEF_RISE = random.nextLong(agility / 6000 + 2) + 2 + reincaCount;
-            ATR_RISE = random.nextLong(strength / 7000 + 3) + 3 + reincaCount;
+            long hpRise = random.nextLong(power / 5103 + 4) + MAX_HP_RISE + reincaCount;
+            long defRISE = random.nextLong(agility / 6309 + 2) + DEF_RISE + reincaCount;
+            long atkRISE = random.nextLong(strength / 7501 + 3) + ATR_RISE + reincaCount;
+            if(hpRise > 10 * MAX_HP_RISE){
+                MAX_HP_RISE  += random.nextLong(hpRise) + reincaCount + 1;
+            }else{
+                MAX_HP_RISE = hpRise;
+            }
+            if(defRISE > 10 * DEF_RISE){
+                DEF_RISE  += random.nextLong(defRISE) + reincaCount + 1;
+            }else{
+                DEF_RISE = defRISE;
+            }
+            if(atkRISE > 10 * ATR_RISE){
+                ATR_RISE  += random.nextLong(atkRISE) + reincaCount + 1;
+            }else{
+                ATR_RISE = atkRISE;
+            }
             material -= mate;
             long attackValue = random.nextLong(20) + 10;
             long defenseValue = random.nextLong(20) + 10;

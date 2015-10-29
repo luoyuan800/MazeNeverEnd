@@ -79,6 +79,7 @@ import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.upload.CdKey;
 import cn.gavin.upload.Upload;
+import cn.gavin.utils.StringUtils;
 
 public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener, OnItemClickListener, BaseContext {
     //Constants
@@ -756,7 +757,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             heroN.setLockBox(heroN.getLockBox() + 10);
                             heroN.setKeyCount(heroN.getKeyCount() + 10);
                             heroN.setAwardCount(heroN.getAwardCount() + 6);
-                        } else {
+                        } else if(StringUtils.isNotEmpty(input)){
                             heroN.setName(input.replaceAll("_", " "));
                         }
                         dialog.dismiss();

@@ -159,7 +159,7 @@ public abstract class Skill {
         String str = String.valueOf(num);
         long result = 0;
         for (int i = 0; i < str.length(); i++) {
-            result += Integer.parseInt(str.charAt(i) + "");
+            result += StringUtils.toInt(str.charAt(i) + "");
         }
         if (result > 30) {
             result = hero.getRandom().nextInt(30);

@@ -69,7 +69,7 @@ public class LoadHelper {
         maze.setLevel(preferences.getLong("currentMazeLev", 1));
         String ach = preferences.getString("achievement", "0");
         for (int i = 0; i < ach.length() && i < Achievement.values().length; i++) {
-            int enable = Integer.parseInt(ach.charAt(i) + "");
+            int enable = StringUtils.toInt(ach.charAt(i) + "");
             if (enable == 1) {
                 Achievement.values()[i].enable();
             }

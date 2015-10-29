@@ -82,7 +82,11 @@ public class StringUtils {
         try {
             return Integer.parseInt(type);
         }catch (Exception e){
-            return Double.valueOf(type).intValue();
+            try {
+                return Double.valueOf(type).intValue();
+            }catch (Exception exp){
+                return 1;
+            }
         }
     }
 }

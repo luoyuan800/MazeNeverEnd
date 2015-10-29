@@ -22,6 +22,8 @@ public class BattleController {
         if (!monster.isHold()) {
             if (skill != null && !monster.isSilent(random)) {
                 isJump = skill.release(monster);
+            } else if (monster.getName().contains("龙") && SkillFactory.getSkill("龙裔", hero, context.getSkillDialog()).isActive()) {
+                addMessage(context, hero.getFormatName() + "激发龙裔效果，免疫龙系怪物的伤害！");
             } else {
                 long harm = monster.getAtk() - hero.getDefenseValue();
                 //相克，伤害1.5倍
@@ -40,10 +42,7 @@ public class BattleController {
                     addMessage(context, s);
                     monster.addBattleDesc(s);
                 }
-                if (monster.getName().endsWith("龙") && SkillFactory.getSkill("龙裔", hero, context.getSkillDialog()).isActive()) {
-                    addMessage(context, hero.getFormatName() + "激发龙裔效果，免疫龙系怪物的伤害！");
-                    harm = 0;
-                }
+
                 if (harm >= hero.getHp()) {
                     Skill sy = SkillFactory.getSkill("瞬间移动", hero, context.getSkillDialog());
                     if (sy.isActive() && sy.perform()) {
@@ -85,9 +84,9 @@ public class BattleController {
         if (skill != null) {
             if (!monster.isSilent(hero.getRandom())) {
                 isJump = skill.release(monster);
-            }else{
-                addMessage(context,hero.getFormatName() + "想要使用技能" + skill.getName());
-                addMessage(context,monster.getFormatName() + "打断了" + hero.getFormatName() + "的技能");
+            } else {
+                addMessage(context, hero.getFormatName() + "想要使用技能" + skill.getName());
+                addMessage(context, monster.getFormatName() + "打断了" + hero.getFormatName() + "的技能");
             }
         } else {
             if (hero.getHp() < hero.getUpperHp()) {
@@ -186,7 +185,7 @@ public class BattleController {
                 }
             }
             isJump = true;
-        } else if(hero.getHp() <= 0){
+        } else if (hero.getHp() <= 0) {
             Skill notDieSkill = SkillFactory.getSkill("不死之身", hero, context.getSkillDialog());
             if (notDieSkill.isActive() && notDieSkill.perform()) {
                 isJump = notDieSkill.release(monster);
@@ -194,7 +193,7 @@ public class BattleController {
                 monster.setDefeat(false);
                 isJump = false;
             }
-        }else{
+        } else {
             isJump = true;
         }
         return isJump;

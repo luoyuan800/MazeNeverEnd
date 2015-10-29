@@ -37,6 +37,9 @@ public abstract class Builder {
         }
         if (isEnough()) {
             int p = random.nextInt(100);
+            if(MazeContents.hero!=null){
+                p -= random.nextLong(MazeContents.hero.getStrength()/1000000 + 2);
+            }
             if (a1 != null && p < a1.getPro()) {
                 build(a1, false);
                 return a1;
@@ -62,6 +65,12 @@ public abstract class Builder {
         if (names.contains("黑") && names.contains("白")) {
             names.clear();
             names.add("无常");
+            Map<Effect, Number> addition = accessory.getAdditionEffects();
+            if (addition == null) {
+                addition = new EnumMap<Effect, Number>(Effect.class);
+                accessory.setAdditionEffects(addition);
+            }
+            addition.put(Effect.ADD_UPPER_HP, 51119);
         } else if (names.containsAll(Arrays.asList("蛇", "鼠"))) {
             names.clear();
             names.add("风语");
@@ -71,10 +80,22 @@ public abstract class Builder {
         } else if (names.containsAll(Arrays.asList("黑", "硝"))) {
             names.clear();
             names.add("火神");
+            Map<Effect, Number> addition = accessory.getAdditionEffects();
+            if (addition == null) {
+                addition = new EnumMap<Effect, Number>(Effect.class);
+                accessory.setAdditionEffects(addition);
+            }
+            addition.put(Effect.ADD_ATK, 20009);
         } else if (names.containsAll(Arrays.asList("龙", "凤", "虎", "牛"))) {
             names.clear();
             names.add("小田螺の");
             accessory.setColor("#C71585");
+            Map<Effect, Number> addition = accessory.getAdditionEffects();
+            if (addition == null) {
+                addition = new EnumMap<Effect, Number>(Effect.class);
+                accessory.setAdditionEffects(addition);
+            }
+            addition.put(Effect.ADD_DODGE_RATE, 29);
         }
         StringBuilder b = new StringBuilder();
         for (String s : names) {
@@ -116,10 +137,10 @@ public abstract class Builder {
 
     private void build(Accessory accessory, boolean detectSave) {
         Map<Effect, Number> effectNumberMap = accessory.getEffects();
-        if(effectNumberMap == null){
+        if (effectNumberMap == null) {
             effectNumberMap = new EnumMap<Effect, Number>(Effect.class);
         }
-        Map<Effect, Number> constantEffectMap =  new EnumMap<Effect, Number>(effectNumberMap);
+        Map<Effect, Number> constantEffectMap = new EnumMap<Effect, Number>(effectNumberMap);
         for (Item item : items) {
             Effect effect = item.getEffect();
             if (effect != null) {
@@ -318,7 +339,7 @@ public abstract class Builder {
                         additionEffectsMap.put(Effect.valueOf(keyValue[0].trim()), StringUtils.toLong(keyValue[1]));
                     }
                 }
-                if(pro < 0) pro = 0;
+                if (pro < 0) pro = 0;
                 if (a1 == null || a1.getPro() < pro) {
                     a1 = new Accessory();
                     if (isUser) {
@@ -344,10 +365,10 @@ public abstract class Builder {
             }
             if (a1 != null && a2 != null) {
                 if ("#FF8C00".equalsIgnoreCase(a1.getColor())) {
-                    a1.setPro(a1.getPro()/2);
+                    a1.setPro(a1.getPro() / 2);
                 }
                 if ("#FF8C00".equalsIgnoreCase(a2.getColor())) {
-                    a2.setPro(a2.getPro()/2);
+                    a2.setPro(a2.getPro() / 2);
                 }
                 if ((a1.getPro() + a2.getPro()) >= 100) {
                     if (a1.getPro() >= a2.getPro()) {
