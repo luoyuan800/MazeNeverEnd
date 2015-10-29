@@ -1287,7 +1287,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         palaceButton.setOnClickListener(this);
         petView = (ImageView) findViewById(R.id.pet_pic);
         petView.setOnClickListener(this);
-        petCount = (TextView) findViewById(R.id.pet_click_count);
+        petCount = (TextView) findViewById(R.id.pet_hp);
         refresh();
     }
 
@@ -1404,7 +1404,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         }
         if(heroN.getPet()!=null){
             petView.setImageResource(heroN.getPet().getImage());
-            petCount.setText("" + heroN.getPet().getIntimacy());
+            petCount.setText("" + heroN.getPet().getHp());
+        }else{
+            petView.setImageResource(R.color.disable);
+            petCount.setText("");
         }
     }
 

@@ -5,22 +5,43 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainGameActivity">
 <LinearLayout android:orientation="horizontal" android:layout_height="wrap_content" android:layout_width="wrap_content"
-              android:id="@+id/linearLayout2" android:gravity="center" android:layout_marginLeft="30dp">
+              android:id="@+id/linearLayout2" android:gravity="center" android:layout_marginLeft="15dp">
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_weight="1"
-        android:orientation="vertical" android:id="@+id/linearLayout">
+        android:orientation="vertical" android:id="@+id/linearLayout" android:gravity="center|left">
 
-        <Button
-            android:id="@+id/hero_pic"
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical" android:layout_gravity="bottom" android:gravity="bottom">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pet_pic" android:src="@drawable/jingling"/>
+            </LinearLayout>
+            <Button
+                android:id="@+id/hero_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:focusableInTouchMode="false"
+                android:textSize="6sp" android:background="@drawable/h_1"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/pet_hp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:focusableInTouchMode="false"
-            android:textSize="6sp" android:background="@drawable/h_1"/>
-
+            android:layout_gravity="center|left"
+            android:gravity="center"
+            android:textSize="8sp" android:text="123768977666"/>
         <TextView
             android:id="@+id/hero_pic_click_count"
             android:layout_width="wrap_content"
@@ -50,24 +71,8 @@
         <View android:layout_width="match_parent" android:layout_height="12dp"/>
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/pet_pic"/>
-            <TextView
-                android:id="@+id/pet_click_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textSize="8sp" />
-            </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/local_box"

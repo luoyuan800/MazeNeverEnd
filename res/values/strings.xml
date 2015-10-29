@@ -28,6 +28,6 @@
     <string name="start_label">开 始 游 戏</string>
     <string name="hero_name">勇者</string>
     <string name="book_label">怪物</string>
-    <string name="skill_label">技能</string>
+    <string name="skill_label">技能</string><string name="pet_tip">宠物加点使用的是你的能力点数\n宠物加点后的成长和你的成长属性是一致的</string>
 
 </resources>
