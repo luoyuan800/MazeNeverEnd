@@ -113,11 +113,7 @@ public class LoadHelper {
         heroN.setOnSkill(false);
         MazeContents.hero = heroN;
         MazeContents.maze = maze;
-        Pet pet = new Pet();
-        pet.load(context);
-        if(StringUtils.isNotEmpty(pet.getName())){
-            heroN.setPet(pet);
-        }
+
     }
 
     private boolean loadOlderSaveFile(Hero heroN, Maze maze) {

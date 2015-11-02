@@ -18,7 +18,7 @@ import cn.gavin.utils.StringUtils;
  * gluo on 8/26/2015.
  */
 public class Monster {
-    private final static String[] firstNames = {"普通", "怪异", "飞翔", "稀有", "发狂", "神奇", "神经", "传奇", "无敌"};
+    public final static String[] firstNames = {"普通", "怪异", "飞翔", "稀有", "发狂", "神奇", "神经", "传奇", "无敌"};
     private final static long[] firstAdditionHP = {15, 25, 400, 1000, 500, 2000, 10000, 70000, 70000};
     private final static long[] firstAdditionAtk = {3, 25, 100, 500, 2000, 2800, 4000, 10000, 20000};
     private final static String[] secondNames = {"小", "中", "大", "大大", "红色", "绿色", "人面","强壮","无力","红唇"};

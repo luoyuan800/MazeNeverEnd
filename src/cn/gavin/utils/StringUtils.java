@@ -4,6 +4,16 @@ package cn.gavin.utils;
  * Created by gluo on 9/8/2015.
  */
 public class StringUtils {
+    public static String formatNumber(long num){
+        if(num > 100000000){
+            return num/100000000 + "亿";
+        }
+        if(num > 10000){
+            return num/10000 + "万";
+        }
+        return num + "";
+    }
+
     public static String toHexString(String s) {
         String str = "";
         for (int i = 0; i < s.length(); i++) {

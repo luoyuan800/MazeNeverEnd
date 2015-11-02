@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import cn.gavin.Element;
+import cn.gavin.activity.BaseContext;
 import cn.gavin.activity.PalaceActivity;
 import cn.gavin.palace.nskill.AtkSkill;
 import cn.gavin.palace.nskill.DefSkill;
@@ -16,7 +17,7 @@ import cn.gavin.utils.Random;
  * Created by gluo on 10/21/2015.
  */
 public abstract class Base {
-    private long uHp;
+    protected long uHp;
     protected long hp;
     protected long def;
     private Random random = new Random();
@@ -27,7 +28,7 @@ public abstract class Base {
     private int dodge = 15;
     private Element element;
     private Set<NSkill> skillSet = new LinkedHashSet<NSkill>(3);
-    private PalaceActivity context;
+    private BaseContext context;
     private long lev;
 
     void addSkill(NSkill skill) {
@@ -137,7 +138,7 @@ public abstract class Base {
         if(hp > uHp) hp = uHp;
     }
 
-    NSkill getAtkSkill() {
+    public NSkill getAtkSkill() {
         for(NSkill skill : skillSet){
             if(skill instanceof AtkSkill && skill.perform()){
                 return skill;
@@ -221,11 +222,11 @@ public abstract class Base {
         return "……";
     }
 
-    public PalaceActivity getContext() {
+    public BaseContext getContext() {
         return context;
     }
 
-    public void setContext(PalaceActivity context) {
+    public void setContext(BaseContext context) {
         this.context = context;
     }
 

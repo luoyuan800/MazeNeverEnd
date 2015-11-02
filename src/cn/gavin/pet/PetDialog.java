@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MazeContents;
@@ -30,6 +31,10 @@ public class PetDialog implements View.OnClickListener {
     private final Button releaseButton;
     private final ImageView petPic;
     private final TextView petIni;
+    private final Button addHpButton;
+    private final Button addAtkButton;
+    private final Button addDefButton;
+    private final TextView leveText;
     private Pet pet;
     private MainGameActivity context;
     private AlertDialog alertDialog;
@@ -60,6 +65,13 @@ public class PetDialog implements View.OnClickListener {
         releaseButton.setOnClickListener(this);
         petPic = (ImageView) view.findViewById(R.id.pet_detail_pic);
         petIni = (TextView) view.findViewById(R.id.pet_ini_value);
+        addHpButton = (Button) view.findViewById(R.id.pet_add_hp);
+        addHpButton.setOnClickListener(this);
+        addAtkButton = (Button) view.findViewById(R.id.pet_add_atk);
+        addAtkButton.setOnClickListener(this);
+        addDefButton = (Button) view.findViewById(R.id.pet_add_def);
+        addDefButton.setOnClickListener(this);
+        leveText = (TextView) view.findViewById(R.id.pet_level_label);
     }
 
     public void show(Pet pet) {
@@ -68,12 +80,18 @@ public class PetDialog implements View.OnClickListener {
         alertDialog.show();
     }
 
+    public void dismiss() {
+        if (alertDialog != null)
+            alertDialog.dismiss();
+    }
+
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
                     if (pet != null) {
                         nameValue.setText(Html.fromHtml(pet.getFormatName()));
+                        leveText.setText(Html.fromHtml("相遇在第<b>" + pet.getLev() + "</b>层"));
                         hpValue.setText(pet.getHp() + "/" + pet.getUHp());
                         atkValue.setText(pet.getAtk() + "");
                         defValue.setText(pet.getDef() + "");
@@ -84,6 +102,16 @@ public class PetDialog implements View.OnClickListener {
                         }
                         petPic.setImageResource(pet.getImage());
                         petIni.setText(pet.getIntimacy() + "");
+                        Hero hero = MazeContents.hero;
+                        if (hero.getPoint() < 1) {
+                            addHpButton.setEnabled(false);
+                            addAtkButton.setEnabled(false);
+                            addDefButton.setEnabled(false);
+                        } else {
+                            addHpButton.setEnabled(true);
+                            addAtkButton.setEnabled(true);
+                            addDefButton.setEnabled(true);
+                        }
                     }
             }
         }
@@ -92,6 +120,15 @@ public class PetDialog implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.pet_add_def:
+                pet.addDef(MazeContents.hero);
+                break;
+            case R.id.pet_add_atk:
+                pet.addAtk(MazeContents.hero);
+                break;
+            case R.id.pet_add_hp:
+                pet.addHp(MazeContents.hero);
+                break;
             case R.id.release_pet:
                 AlertDialog dialog = new AlertDialog.Builder(context).create();
                 dialog.setTitle("确认释放宠物？？");
@@ -115,13 +152,12 @@ public class PetDialog implements View.OnClickListener {
                                 alertDialog.hide();
                                 dialog.dismiss();
                                 pet.releasePet(MazeContents.hero, context);
-                                MazeContents.hero.setPet(null);
-                                context.addMessage(pet.getFormatName() + "对" + MazeContents.hero.getFormatName() + "说：拜拜……");
                             }
 
                         });
                 dialog.show();
                 break;
         }
+        handler.sendEmptyMessage(0);
     }
 }

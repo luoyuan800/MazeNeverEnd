@@ -21,10 +21,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical" android:layout_gravity="bottom" android:gravity="bottom">
-                <ImageView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/pet_pic" android:src="@drawable/jingling"/>
+                    android:id="@+id/pet_pic" />
             </LinearLayout>
             <Button
                 android:id="@+id/hero_pic"

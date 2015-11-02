@@ -33,6 +33,11 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/name_value" android:gravity="center" android:layout_weight="1"/>
             </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/pet_level_label"/>
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="fill_parent"
@@ -102,17 +107,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="+HP"
-                android:id="@+id/button"/>
+                android:id="@+id/pet_add_hp"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="+ATK"
-                android:id="@+id/button2"/>
+                android:id="@+id/pet_add_atk"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="+DEF"
-                android:id="@+id/button3"/>
+                android:id="@+id/pet_add_def"/>
     </LinearLayout>
     <TextView
             android:layout_width="wrap_content"

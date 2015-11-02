@@ -75,6 +75,7 @@ import cn.gavin.maze.MazeService;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.monster.PalaceAdapt;
 import cn.gavin.palace.PalaceMonster;
+import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDialog;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
@@ -175,7 +176,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private boolean isHidBattle;
     private int palaceCount;
     private boolean updatePalace;
-    private ImageView petView;
+    private TextView petView;
     private TextView petCount;
     private Button petDetail;
     private PetDialog petDialog;
@@ -487,6 +488,39 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     }
 
     //Popup dialog
+    private void showPayDialog() {
+        AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("是否确认？");
+        TextView tv = new TextView(context);
+        tv.setText("注意：\n1.  感谢您的支持，无论您是想踩还是赞~\n" +
+                "2.  这个并不是内购功能，请适量使用。过多的锻造点数并不能加快您的游戏进度。\n" +
+                "3.  您会获得额外的10W点锻造点数和随机的能力点数。\n" +
+                "4.  您会随机获得一个无法正常捕捉到的宠物。\n" +
+                "5.  为了游戏平衡奖励的宠物属性不会超过自己捕捉的宠物。");
+        dialog.setView(tv);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        alipay.pay();
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.show();
+
+    }
+
     private void showReincarnationDialog() {
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("是否确认转生？");
@@ -790,6 +824,30 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         CdKey.checkKey(input, progressDialog);
     }
 
+
+    private void showAwardPet(final Pet pet) {
+        AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("您获得了新宠物");
+        final TextView tv = new TextView(context);
+        StringBuilder builder = new StringBuilder("你获得了宠物<br>");
+        builder.append(pet.getFormatName()).append("<br>").append("hp:").append(pet.getHp()).append(" | ").append("atk:").append(pet.getAtk())
+                .append(" | def:").append(pet.getDef());
+        tv.setText(Html.fromHtml(builder.toString()));
+        dialog.setView(tv);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        //TODO
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.show();
+    }
+
     private void showUpdate() {
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("有更新版本-" + updateVersion);
@@ -852,7 +910,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 "3. 因为很重要所以再说一遍，<font color=\"red\">不是所有的技能都可以在殿堂挑战中使用！</font><br>" +
                 "4. 请大家和谐友爱互助，不要因为被打败而懊恼和诅咒作者被美女揩油。<br>" +
                 "5. <font color=\"red\">作弊者</font>不允许进入殿堂！<br>" +
-                "6. 点击接受按钮表示你接受这些限制并且进入殿堂挑战.。"));
+                "6. <font color=\"red\">至少上传过一次角色信息</font>才可以进入殿堂！<br>" +
+                "7. 点击接受按钮表示你接受这些限制并且进入殿堂挑战.。"));
         dialog.setView(textView);
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "不接受",
                 new DialogInterface.OnClickListener() {
@@ -877,7 +936,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
                 });
         dialog.show();
-        if (heroN.getKeyCount() >= 3 && heroN.getMaterial() >= 500000 && !Achievement.cribber.isEnable()) {
+        if (heroN.getKeyCount() >= 3 && heroN.getMaterial() >= 500000 && !Achievement.cribber.isEnable() && Achievement.uploader.isEnable()) {
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         } else {
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -1288,7 +1347,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         upgradeHSwordButton.setOnClickListener(this);
         palaceButton = (Button) findViewById(R.id.palace_button);
         palaceButton.setOnClickListener(this);
-        petView = (ImageView) findViewById(R.id.pet_pic);
+        petView = (TextView) findViewById(R.id.pet_pic);
         petView.setOnClickListener(this);
         petCount = (TextView) findViewById(R.id.pet_hp);
         petDetail = (Button) findViewById(R.id.pet_detail_button);
@@ -1408,15 +1467,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         } else {
             hatTextView.setText("未装备");
         }
-        if(heroN.getPet()!=null){
-            petView.setImageResource(heroN.getPet().getImage());
-            petCount.setText("" + heroN.getPet().getHp());
-            petDetail.setEnabled(true);
-        }else{
-            petView.setImageResource(R.color.disable);
-            petCount.setText("");
-            petDetail.setEnabled(false);
+        StringBuilder builder = new StringBuilder();
+        for(Pet pet : heroN.getPets()){
+            builder.append(pet.getType()).append("<br>");
         }
+        petView.setText(Html.fromHtml(builder.toString()));
     }
 
     private long saveTime = 0;
@@ -1648,15 +1703,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
             case R.id.pet_detail_button:
-                if(heroN.getPet()!=null) {
-                    petDialog.show(heroN.getPet());
-                }
+
                 break;
             case R.id.pet_pic:
-                if(heroN.getPet()!=null){
-                    heroN.getPet().click();
-                    heroN.click(false);
-                }
+
                 break;
             case R.id.palace_button:
                 showPalace();
@@ -1779,7 +1829,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 handler.sendEmptyMessage(0);
                 break;
             case R.id.buy_button:
-                alipay.pay();
+                showPayDialog();
                 heroN.click(false);
                 break;
             case R.id.character_itembar_contribute:

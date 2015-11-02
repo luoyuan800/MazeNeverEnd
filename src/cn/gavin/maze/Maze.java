@@ -26,6 +26,7 @@ public class Maze {
     private StoryHelper storyHelper;
     protected long lastSave;
     private long hunt = 150;
+    private int petRate = 1;
 
     public void setCsmgl(int csmgl) {
         this.csmgl = csmgl;
@@ -130,13 +131,11 @@ public class Maze {
                     if (streaking >= 100) {
                         Achievement.unbeaten.enable(hero);
                     }
-                    if(hero.getPet() == null){
                         Pet pet = Pet.catchPet(monster);
                         if(pet!=null){
                             addMessage(context , hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
-                            hero.setPet(pet);
+                            //TODO
                         }
-                    }
                 } else {
                     streaking = 0;
                     step = 0;

@@ -2,6 +2,7 @@ package cn.gavin;
 
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
@@ -84,7 +85,7 @@ public class Hero implements BaseObject {
     private Float dodgeRate = 0f;
     private Long clickPointAward = 0l;
     private Element element = Element.无;
-    private Pet pet;
+    private List<Pet> pets;
 
     public Float getParry() {
         return parry;
@@ -444,6 +445,7 @@ public class Hero implements BaseObject {
         onChange = false;
         onSkill = false;
         this.hp = upperHp;
+
     }
 
     public Long getMaxMazeLev() {
@@ -1138,11 +1140,14 @@ public class Hero implements BaseObject {
         this.element = element;
     }
 
-    public Pet getPet() {
-        return pet;
+    public List<Pet> getPets() {
+        if(pets == null){
+            pets = new ArrayList<Pet>();
+        }
+        return pets;
     }
 
-    public void setPet(Pet pet) {
-        this.pet = pet;
+    public void setPets(List<Pet> pets) {
+        this.pets = pets;
     }
 }

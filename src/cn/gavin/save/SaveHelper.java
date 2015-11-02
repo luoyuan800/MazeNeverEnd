@@ -88,9 +88,7 @@ public class SaveHelper {
         editor.putLong("clickPointAward", heroN.getClickPointAward());
         editor.putString("element", heroN.getElement().name());
         editor.apply();
-        if(heroN.getPet()!=null){
-            heroN.getPet().save(context);
-        }
+
     }
 
     public void saveSkill() {

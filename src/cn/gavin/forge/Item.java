@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.UUID;
 
 import cn.gavin.Hero;
@@ -24,7 +25,7 @@ import cn.gavin.utils.StringUtils;
  * ALL RIGHTS RESERVED.
  * Created by gluo on 9/25/2015.
  */
-public class Item {
+public class Item implements Comparator<Item> {
     private ItemName name;
     private Effect effect;
     private Effect effect1;
@@ -240,6 +241,11 @@ public class Item {
                 LogHelper.logException(e);
             }
         }
+    }
+
+    @Override
+    public int compare(Item lhs, Item rhs) {
+        return lhs.getName().name().compareTo(rhs.getName().name());
     }
 
 }

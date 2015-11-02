@@ -19,6 +19,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import cn.gavin.R;
@@ -262,6 +264,13 @@ public class ItemDialog {
                             newList.add(item);
                         }
                     }
+                    Collections.sort(newList, new Comparator<Item>(){
+
+                        @Override
+                        public int compare(Item lhs, Item rhs) {
+                            return lhs.getName().name().compareTo(rhs.getName().name());
+                        }
+                    });
                     List<ItemList> listAdp = getItemListAdp(newList);
                     results.values = listAdp;
                     results.count = listAdp.size();
