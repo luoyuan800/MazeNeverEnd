@@ -30,8 +30,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -76,7 +74,6 @@ import cn.gavin.monster.MonsterBook;
 import cn.gavin.monster.PalaceAdapt;
 import cn.gavin.palace.PalaceMonster;
 import cn.gavin.pet.Pet;
-import cn.gavin.pet.PetDialog;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
@@ -177,9 +174,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private int palaceCount;
     private boolean updatePalace;
     private TextView petView;
-    private TextView petCount;
     private Button petDetail;
-    private PetDialog petDialog;
 
 
     //Get Function
@@ -798,7 +793,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             heroN.setLockBox(heroN.getLockBox() + 10);
                             heroN.setKeyCount(heroN.getKeyCount() + 10);
                             heroN.setAwardCount(heroN.getAwardCount() + 6);
-                        } else if(StringUtils.isNotEmpty(input)){
+                        } else if (StringUtils.isNotEmpty(input)) {
                             heroN.setName(input.replaceAll("_", " "));
                         }
                         dialog.dismiss();
@@ -1349,10 +1344,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         palaceButton.setOnClickListener(this);
         petView = (TextView) findViewById(R.id.pet_pic);
         petView.setOnClickListener(this);
-        petCount = (TextView) findViewById(R.id.pet_hp);
         petDetail = (Button) findViewById(R.id.pet_detail_button);
         petDetail.setOnClickListener(this);
-        petDialog = new PetDialog(this);
         refresh();
     }
 
@@ -1468,7 +1461,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             hatTextView.setText("未装备");
         }
         StringBuilder builder = new StringBuilder();
-        for(Pet pet : heroN.getPets()){
+        for (Pet pet : heroN.getPets()) {
             builder.append(pet.getType()).append("<br>");
         }
         petView.setText(Html.fromHtml(builder.toString()));

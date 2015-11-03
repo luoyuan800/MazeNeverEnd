@@ -25,6 +25,7 @@ public class Pet extends Base {
     private long deathCount;
     private String type;
     private String id;
+    private boolean onUsed;
 
     public void click() {
         intimacy++;
@@ -268,5 +269,13 @@ public class Pet extends Base {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isOnUsed() {
+        return onUsed;
+    }
+
+    public void setOnUsed(boolean onUsed) {
+        this.onUsed = onUsed;
     }
 }

@@ -134,7 +134,7 @@ public class Maze {
                         Pet pet = Pet.catchPet(monster);
                         if(pet!=null){
                             addMessage(context , hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
-                            //TODO
+                            hero.getPets().add(pet);
                         }
                 } else {
                     streaking = 0;
