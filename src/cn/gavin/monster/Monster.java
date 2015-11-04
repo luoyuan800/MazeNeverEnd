@@ -8,6 +8,7 @@ import java.util.List;
 import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.forge.Item;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.maze.Maze;
 import cn.gavin.palace.PalaceMonster;
@@ -75,6 +76,7 @@ public class Monster {
     private boolean isHold = false;
     private long holdTurn = 0;
     private float silent;
+    private long rate = 300;
 
     public boolean isSilent(Random random){
         return (random.nextInt(100) + random.nextFloat()) < silent;
@@ -103,14 +105,15 @@ public class Monster {
             monster.material = 3000 + random.nextLong(10000);
         }
         monster.items = Arrays.asList(ItemName.原石, ItemName.铁矿石, ItemName.冷杉木,
-                ItemName.萤石, ItemName.白云石);
+                ItemName.萤石, ItemName.蚁须, ItemName.龙须);
         monster.builder = new StringBuilder("第");
         monster.builder.append(maze.getLev()).append("层").append("<br>-------");
         monster.element = Element.values()[random.nextInt(Element.values().length)];
         monster.formatName(hero);
         if(maze.getLev() > 500 && random.nextBoolean()){
-            monster.silent = 6.8f;
+            monster.silent = 18.8f;
         }
+        monster.setRate(1);
         return monster;
     }
 
@@ -201,6 +204,11 @@ public class Monster {
         builder = new StringBuilder("第");
         builder.append(maze.getLev()).append("层").append("<br>------------");
         element = Element.values()[random.nextInt(Element.values().length)];
+        rate = 100 - (mazeLev/100) - last * 4;
+        if(rate < 5){
+            rate = 5;
+        }
+        rate /= 2;
         formatName(hero);
     }
 
@@ -320,5 +328,13 @@ public class Monster {
 
     public void setHoldTurn(long holdTurn) {
         this.holdTurn = holdTurn;
+    }
+
+    public long getRate() {
+        return rate;
+    }
+
+    public void setRate(long rate) {
+        this.rate = rate;
     }
 }

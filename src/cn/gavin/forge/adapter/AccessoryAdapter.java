@@ -82,7 +82,7 @@ public class AccessoryAdapter extends BaseAdapter {
         return res;
     }
 
-    private final List<AccessoryList> adapterData = loadAccessoryLists();
+    private List<AccessoryList> adapterData = loadAccessoryLists();
     public TextView accDesc;
 
     @Override
@@ -190,6 +190,7 @@ public class AccessoryAdapter extends BaseAdapter {
                             }
                             dialogInterface.dismiss();
                             MainGameActivity.context.getHandler().sendEmptyMessage(0);
+                            notifyDataSetChanged();
                         }
                     });
                 } else {
@@ -209,6 +210,7 @@ public class AccessoryAdapter extends BaseAdapter {
                             }
                             dialogInterface.dismiss();
                             MainGameActivity.context.getHandler().sendEmptyMessage(0);
+                            notifyDataSetChanged();
                         }
                     });
                 }
@@ -261,12 +263,19 @@ public class AccessoryAdapter extends BaseAdapter {
                         ad2.show();
                         alertDialog.dismiss();
                         fartherDialog.dismiss();
+                        refresh();
                     }
                 });
                 alertDialog.show();
                 alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(!isOnUsed);
             }
         };
+    }
+
+    public void refresh(){
+        adapterData = loadAccessoryLists();
+        notifyDataSetChanged();
+
     }
 
     private boolean checkOnUsed(Accessory a) {

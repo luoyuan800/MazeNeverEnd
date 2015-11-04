@@ -74,6 +74,7 @@ import cn.gavin.monster.MonsterBook;
 import cn.gavin.monster.PalaceAdapt;
 import cn.gavin.palace.PalaceMonster;
 import cn.gavin.pet.Pet;
+import cn.gavin.pet.PetDialog;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
@@ -175,6 +176,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private boolean updatePalace;
     private TextView petView;
     private Button petDetail;
+    private PetDialog petDialog;
 
 
     //Get Function
@@ -1465,6 +1467,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             builder.append(pet.getType()).append("<br>");
         }
         petView.setText(Html.fromHtml(builder.toString()));
+        petDialog = new PetDialog(this);
     }
 
     private long saveTime = 0;
@@ -1696,7 +1699,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
             case R.id.pet_detail_button:
-
+                petDialog.show(heroN);
                 break;
             case R.id.pet_pic:
 

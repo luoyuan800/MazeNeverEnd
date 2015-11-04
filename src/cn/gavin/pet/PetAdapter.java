@@ -15,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +24,7 @@ import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MazeContents;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 gluo.
@@ -38,6 +40,10 @@ public class PetAdapter extends BaseAdapter implements View.OnClickListener{
 
     }
 
+    public void refresh(){
+        adapterData = PetDB.loadPet(null);
+        notifyDataSetChanged();
+    }
 
     static class PetViewHolder {
         private final TextView nameValue;
@@ -53,6 +59,9 @@ public class PetAdapter extends BaseAdapter implements View.OnClickListener{
         private final TextView defValue;
         private final TextView atkValue;
         private final CheckBox onUsedCheck;
+        private final TextView mName;
+        private final TextView fName;
+        private final TextView deathCount;
         View view;
         Pet pet;
         MainGameActivity context;
@@ -74,6 +83,9 @@ public class PetAdapter extends BaseAdapter implements View.OnClickListener{
             addDefButton = (Button) view.findViewById(R.id.pet_add_def);
             leveText = (TextView) view.findViewById(R.id.pet_level_label);
             onUsedCheck = (CheckBox) view.findViewById(R.id.pet_on_used_check);
+            fName = (TextView) view.findViewById(R.id.pet_f_name_value);
+            mName = (TextView) view.findViewById(R.id.pet_m_name_value);
+            deathCount = (TextView) view.findViewById(R.id.pet_death_value);
         }
 
         private void refresh(){
@@ -113,7 +125,7 @@ public class PetAdapter extends BaseAdapter implements View.OnClickListener{
                 }
                 petPic.setImageResource(pet.getImage());
                 petIni.setText(pet.getIntimacy() + "");
-                Hero hero = MazeContents.hero;
+                final Hero hero = MazeContents.hero;
                 if (hero.getPoint() < 1) {
                     addHpButton.setEnabled(false);
                     addAtkButton.setEnabled(false);
@@ -123,15 +135,28 @@ public class PetAdapter extends BaseAdapter implements View.OnClickListener{
                     addAtkButton.setEnabled(true);
                     addDefButton.setEnabled(true);
                 }
+                if(StringUtils.isNotEmpty(pet.getfName())){
+                    fName.setText(pet.getfName());
+                }else{
+                    fName.setText("未知");
+                }
+                if(StringUtils.isNotEmpty(pet.getmName())){
+                    mName.setText(pet.getmName());
+                }else{
+                    mName.setText("未知");
+                }
+                deathCount.setText(pet.getDeathCount() + "");
                 onUsedCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if(isChecked && !pet.isOnUsed()) {
-                            if (onUsedPetsId.size() > 10) {
+                            int petSize = hero.getPetSize();
+                            if (onUsedPetsId.size() >= petSize) {
                                 AlertDialog dialog = new AlertDialog.Builder(context).create();
                                 dialog.setTitle("队伍满");
                                 TextView view = new TextView(context);
-                                view.setText(Html.fromHtml("最多只能选择10个宠物加入出战的队伍中！"));
+                                view.setText(Html.fromHtml("最多只能选择" + petSize+ "个宠物加入出战的队伍中！"));
+                                onUsedCheck.setChecked(false);
                                 dialog.setView(view);
                                 dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认",
                                         new DialogInterface.OnClickListener() {
@@ -178,6 +203,7 @@ public class PetAdapter extends BaseAdapter implements View.OnClickListener{
                                         dialog.dismiss();
                                         onUsedCheck.setChecked(false);
                                         pet.releasePet(MazeContents.hero, context);
+                                        listener.refresh();
                                         refresh();
                                     }
 
@@ -224,10 +250,22 @@ public class PetAdapter extends BaseAdapter implements View.OnClickListener{
             onUsedPetIds.add(pet.getId());
         }
         listener = this;
+        this.hero = hero;
     }
 
-    private final List<Pet> adapterData;
+    private  List<Pet> adapterData;
     private Set<String> onUsedPetIds;
+    private Hero hero;
+    public void setToHero(){
+        List<Pet> pets = new ArrayList<Pet>(onUsedPetIds.size());
+        for(String id : onUsedPetIds){
+            Pet pet = new Pet();
+            pet.setId(id);
+            PetDB.load(pet);
+            pets.add(pet);
+        }
+        hero.setPets(pets);
+    }
 
     @Override
     public int getCount() {

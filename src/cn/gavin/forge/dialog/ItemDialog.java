@@ -38,6 +38,7 @@ public class ItemDialog {
     private Item selected;
     private TextView itemDesc;
     private ItemAdapter adapter;
+    private EditText filterText;
 
     public ItemDialog(Activity activity) {
         this.activity = activity;
@@ -51,6 +52,7 @@ public class ItemDialog {
         selected = null;
         itemDesc.setText("");
         itemDialog.show();
+        adapter.refresh(filterText.getText().toString());
         this.what = what;
     }
 
@@ -58,8 +60,8 @@ public class ItemDialog {
         itemDialog = new AlertDialog.Builder(activity).create();
         LinearLayout linearLayout = new LinearLayout(activity);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
-        EditText editText = new EditText(activity);
-        editText.addTextChangedListener(new TextWatcher() {
+        filterText = new EditText(activity);
+        filterText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -75,7 +77,7 @@ public class ItemDialog {
 
             }
         });
-        linearLayout.addView(editText);
+        linearLayout.addView(filterText);
         itemDesc = new TextView(activity);
         linearLayout.addView(itemDesc);
         ListView listView = new ListView(activity);
@@ -144,6 +146,11 @@ public class ItemDialog {
         ArrayList<Item> list = Item.loadItems(null);
 
         private List<ItemList> adapterData = getItemListAdp(list);
+
+        public void refresh(String s){
+            list = Item.loadItems(null);
+            getFilter().filter(s);
+        }
 
         @Override
         public int getCount() {

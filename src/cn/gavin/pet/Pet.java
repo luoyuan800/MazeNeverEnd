@@ -1,9 +1,7 @@
 package cn.gavin.pet;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
-import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
@@ -11,7 +9,7 @@ import cn.gavin.activity.MazeContents;
 import cn.gavin.monster.Monster;
 import cn.gavin.palace.Base;
 import cn.gavin.palace.nskill.NSkill;
-import cn.gavin.utils.StringUtils;
+import cn.gavin.utils.Random;
 
 /**
  * Copyright 2015 gluo.
@@ -26,6 +24,10 @@ public class Pet extends Base {
     private String type;
     private String id;
     private boolean onUsed;
+    private String fName;
+    private String mName;
+    private int sex;
+
 
     public void click() {
         intimacy++;
@@ -59,7 +61,7 @@ public class Pet extends Base {
         super.addHp(hp);
         if (hp <= 0) {
             intimacy *= 0.9;
-            deathCount ++;
+            deathCount++;
         }
     }
 
@@ -72,25 +74,41 @@ public class Pet extends Base {
     }
 
     public static Pet catchPet(Monster monster) {
-        Pet pet = new Pet();
-        pet.setElement(monster.getElement());
-        pet.setName(monster.getName());
-        long monsterHp = monster.getMaxHP();
-        long hp = pet.getRandom().nextLong(monsterHp);
-        if (hp == 0) {
-            hp = monsterHp / 2;
+        Random random = new Random();
+        double rate = (((monster.getMaxHP() * 3 - monster.getMaxHP() *
+                MazeContents.hero.getPetRate() * 2) / (monster.getMaxHP() * 3)) * monster.getRate() *
+                (2 - MazeContents.hero.getPetRate())) * 100 / 255;
+        if (rate >= 100) {
+            rate = 98;
         }
-        pet.setDef(monsterHp - hp);
-        pet.setAtk(monster.getAtk());
-        pet.setHp(hp);
-        int index = Monster.getIndex(pet.getName());
-        if (index >= 0 && index < Monster.lastNames.length - 7) {
-            setImage(pet, index);
-        }else{
+        double current = random.nextInt(100) + random.nextDouble();
+        if (PetDB.getPetCount(null) < 15 && rate > current) {
+            Pet pet = new Pet();
+            pet.setElement(monster.getElement());
+            pet.setName(monster.getName());
+            long monsterHp = monster.getMaxHP();
+            long hp = pet.getRandom().nextLong(monsterHp);
+            if (hp == 0) {
+                hp = monsterHp / 2;
+            }
+            pet.setDef(monsterHp - hp);
+            pet.setAtk(monster.getAtk());
+            pet.setHp(hp);
+            int index = Monster.getIndex(pet.getName());
+            if (index >= 0 && index < Monster.lastNames.length - 7) {
+                pet.setType(Monster.lastNames[index]);
+                setImage(pet, index);
+            } else {
+                return null;
+            }
+            pet.setLev(monster.getMazeLev());
+            pet.setIntimacy(0l);
+            pet.setSex(random.nextInt(2));
+            PetDB.save(pet);
+            return pet;
+        } else {
             return null;
         }
-        pet.setLev(monster.getMazeLev());
-        return pet;
     }
 
     private static void setImage(Pet pet, int index) {
@@ -169,7 +187,7 @@ public class Pet extends Base {
     }
 
     public static long die(long num) {
-        if(num == 0) return 0;
+        if (num == 0) return 0;
         if (num > 100000) {
             return 10;
         }
@@ -205,7 +223,7 @@ public class Pet extends Base {
     }
 
     public String getFormatName() {
-        return "<font color=\"#556B2F\">" + getName() + "</font>(" + getElement() + ")";
+        return "<font color=\"#556B2F\">" + getName() + (sex == 0 ? "♂" : "♀") + "</font>(" + getElement() + ")";
     }
 
     public void restore() {
@@ -225,24 +243,24 @@ public class Pet extends Base {
         this.deathCount = deathCount;
     }
 
-    public void addAtk(Hero hero){
-        if(atk <= hero.getUpperDef()/10){
+    public void addAtk(Hero hero) {
+        if (atk <= hero.getUpperDef() / 10) {
             atk += hero.ATR_RISE;
             hero.addPoint(-1);
         }
         click();
     }
 
-    public void addDef(Hero hero){
-        if(def <= hero.getUpperAtk()/10){
+    public void addDef(Hero hero) {
+        if (def <= hero.getUpperAtk() / 10) {
             def += hero.DEF_RISE;
             hero.addPoint(-1);
         }
         click();
     }
 
-    public void addHp(Hero hero){
-        if(getUHp() < hero.getHp()/10){
+    public void addHp(Hero hero) {
+        if (getUHp() < hero.getHp() / 2) {
             setUHp(getUHp() + hero.MAX_HP_RISE);
             hp += hero.MAX_HP_RISE;
             hero.addPoint(-1);
@@ -277,5 +295,46 @@ public class Pet extends Base {
 
     public void setOnUsed(boolean onUsed) {
         this.onUsed = onUsed;
+    }
+
+    public String getfName() {
+        return fName;
+    }
+
+    public void setfName(String fName) {
+        this.fName = fName;
+    }
+
+    public String getmName() {
+        return mName;
+    }
+
+    public void setmName(String mName) {
+        this.mName = mName;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+
+    public static Pet egg(Pet f, Pet m, long lev) {
+        Random random = new Random();
+        Pet egg = new Pet();
+        egg.setName(m.getType());
+        egg.setType("蛋");
+        egg.setDeathCount(255 - (f.getDeathCount() + m.getDeathCount()));
+        egg.setfName(f.getName());
+        egg.setmName(m.getName());
+        egg.setHp(f.getUHp()/2 + random.nextLong(m.getHp()));
+        egg.setAtk(f.getMaxAtk()/2 + random.nextLong(m.getMaxAtk()));
+        egg.setDef(f.getMaxDef()/2 + random.nextLong(m.getMaxDef()));
+        egg.setSex(random.nextInt(2));
+        egg.setLev(lev);
+        PetDB.save(egg);
+        return egg;
     }
 }

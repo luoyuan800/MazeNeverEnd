@@ -14,6 +14,7 @@ import cn.gavin.forge.Item;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.log.LogHelper;
 import cn.gavin.palace.PalaceMonster;
+import cn.gavin.pet.PetDB;
 
 /**
  * Created by gluo on 9/14/2015.
@@ -116,6 +117,7 @@ public class DBHelper {
             ForgeDB forgeDB = new ForgeDB();
             forgeDB.createTable(db);
             PalaceMonster.createDB(db);
+            PetDB.createDB(db);
             db.setTransactionSuccessful();
             db.endTransaction();
         } catch (Exception e) {

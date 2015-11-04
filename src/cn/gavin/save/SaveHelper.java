@@ -6,6 +6,7 @@ import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.maze.Maze;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.pet.Pet;
 import cn.gavin.skill.SkillFactory;
 
 /**
@@ -87,6 +88,15 @@ public class SaveHelper {
         editor.putFloat("dodgeRate", heroN.getDodgeRate());
         editor.putLong("clickPointAward", heroN.getClickPointAward());
         editor.putString("element", heroN.getElement().name());
+        editor.putInt("pet_size", heroN.getPetSize());
+        editor.putFloat("pet_rate", heroN.getPetRate());
+        editor.putFloat("egg_rate", heroN.getEggRate());
+        editor.putLong("egg_step", heroN.getEggStep());
+        StringBuilder petIds = new StringBuilder();
+        for(Pet pet : heroN.getPets()){
+            petIds.append(pet.getId()).append("_");
+        }
+        editor.putString("pet_id", petIds.toString());
         editor.apply();
 
     }

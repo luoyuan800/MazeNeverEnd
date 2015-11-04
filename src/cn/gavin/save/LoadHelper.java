@@ -22,6 +22,7 @@ import cn.gavin.Element;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.pet.Pet;
+import cn.gavin.pet.PetDB;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.utils.StringUtils;
@@ -110,6 +111,20 @@ public class LoadHelper {
         heroN.setDodgeRate(preferences.getFloat("dodgeRate", 0));
         heroN.setClickPointAward(preferences.getLong("clickPointAward", 0));
         heroN.setElement(Element.valueOf(preferences.getString("element", "无")));
+        heroN.setPetSize(preferences.getInt("pet_size", 3));
+        heroN.setPetRate(preferences.getFloat("pet_rate", 1.0f));
+        heroN.setEggRate(preferences.getFloat("egg_rate", 200f));
+        heroN.setEggStep(preferences.getLong("egg_step", 1));
+        String petIds = preferences.getString("pet_id", "");
+        String[] ids = StringUtils.split(petIds, "_");
+        for(String id : ids){
+            if(StringUtils.isNotEmpty(id)){
+                Pet pet = new Pet();
+                pet.setId(id);
+                heroN.getPets().add(pet);
+            }
+        }
+        PetDB.load(heroN.getPets().toArray(new Pet[heroN.getPets().size()]));
         heroN.setOnSkill(false);
         MazeContents.hero = heroN;
         MazeContents.maze = maze;

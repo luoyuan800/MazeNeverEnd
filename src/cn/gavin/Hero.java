@@ -86,6 +86,10 @@ public class Hero implements BaseObject {
     private Long clickPointAward = 0l;
     private Element element = Element.无;
     private List<Pet> pets;
+    private int petSize = 3;
+    private float petRate = 0.7f;
+    private float eggRate = 300;
+    private long eggStep;
 
     public Float getParry() {
         return parry;
@@ -1149,5 +1153,37 @@ public class Hero implements BaseObject {
 
     public void setPets(List<Pet> pets) {
         this.pets = pets;
+    }
+
+    public int getPetSize() {
+        return petSize;
+    }
+
+    public void setPetSize(int petSize) {
+        this.petSize = petSize;
+    }
+
+    public float getPetRate() {
+        return petRate;
+    }
+
+    public void setPetRate(float petRate) {
+        this.petRate = petRate;
+    }
+
+    public float getEggRate() {
+        return eggRate;
+    }
+
+    public void setEggRate(float eggRate) {
+        this.eggRate = eggRate;
+    }
+
+    public long getEggStep() {
+        return eggStep;
+    }
+
+    public void setEggStep(long eggStep) {
+        this.eggStep = eggStep;
     }
 }

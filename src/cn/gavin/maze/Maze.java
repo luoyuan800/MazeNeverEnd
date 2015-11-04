@@ -1,11 +1,16 @@
 package cn.gavin.maze;
 
+import java.util.List;
+
 import cn.gavin.Achievement;
+import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.activity.MazeContents;
 import cn.gavin.monster.Monster;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.pet.Pet;
+import cn.gavin.pet.PetDB;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.story.StoryHelper;
@@ -88,6 +93,17 @@ public class Maze {
 
                 hero.addPoint(point);
                 hero.addHp(random.nextLong(hero.getUpperHp() / 10 + 1) + random.nextLong(hero.getPower() / 500));
+                for(Pet pet : hero.getPets()){
+                    if(pet.getType().equals("蛋")){
+                        pet.setDeathCount(pet.getDeathCount() - hero.getEggStep());
+                        if(pet.getDeathCount() <= 0){
+                            addMessage(context, pet.getFormatName() + "出生了！");
+                            pet.setType(pet.getName());
+                            pet.setLev(level);
+                            PetDB.save(pet);
+                        }
+                    }
+                }
                 addMessage(context, "-------------------");
             } else if (random.nextLong(850 + hunt) > 993 && random.nextLong(hero.getAgility()) > random.nextLong(6971)) {
                 long mate = random.nextLong(level * 300 + 1) + random.nextLong(hero.getAgility() / 1000 + 100) + 100;
@@ -131,11 +147,13 @@ public class Maze {
                     if (streaking >= 100) {
                         Achievement.unbeaten.enable(hero);
                     }
-                        Pet pet = Pet.catchPet(monster);
-                        if(pet!=null){
-                            addMessage(context , hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
+                    Pet pet = Pet.catchPet(monster);
+                    if (pet != null) {
+                        addMessage(context, hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
+                        if (hero.getPets().size() < hero.getPetSize()) {
                             hero.getPets().add(pet);
                         }
+                    }
                 } else {
                     streaking = 0;
                     step = 0;
@@ -205,10 +223,57 @@ public class Maze {
 
             }
         }
-        if(level > 500000){
-            if(!Achievement.richer.isEnable()) {
+        if (level > 500000) {
+            if (!Achievement.richer.isEnable()) {
                 addMessage(MainGameActivity.context, "您不能再前进了，前面是付费玩家的地盘！");
-                level --;
+                level--;
+            }
+        }
+        if (level % 11 == 0 && PetDB.getPetCount(null) < 15) {
+            Pet f = null;
+            Pet m = null;
+            List<Pet> pets = hero.getPets();
+            for (Pet pet : pets) {
+                for (Pet p : pets) {
+                    if (pet.getSex() != p.getSex() && pet.getElement().isReinforce(p.getElement())) {
+                        if (p.getSex() == 0) {
+                            f = p;
+                            m = pet;
+                        } else {
+                            f = pet;
+                            m = p;
+                        }
+                        break;
+                    }
+                }
+                if (f != null && m != null) {
+                    break;
+                }
+            }
+            if (f != null && m != null) {
+                double rate = (((hero.getUpperAtk() * 3 - hero.getUpperAtk() *
+                        MazeContents.hero.getPetRate() * 2) / (hero.getUpperHp() * 3)) * hero.getEggRate() *
+                        (2 - MazeContents.hero.getPetRate())) * 200 / 255;
+                if(f.getType().equals(m.getType())){
+                    rate *= 1.5;
+                }
+                if(hero.getElement() == Element.火){
+                    rate *= 1.5;
+                }
+                if (rate >= 100) {
+                    rate = 98;
+                }
+
+                double current = random.nextInt(100) + random.nextDouble();
+                if (rate > current) {
+                    Pet egg = Pet.egg(f, m, level);
+                    if(egg!=null) {
+                        addMessage(MainGameActivity.context, f.getFormatName() + "和" + m.getFormatName() + "生了一个蛋。");
+                        if (hero.getPets().size() < hero.getPetSize()) {
+                            hero.getPets().add(egg);
+                        }
+                    }
+                }
             }
         }
         if (level != 0 && level % 100 == 0) {

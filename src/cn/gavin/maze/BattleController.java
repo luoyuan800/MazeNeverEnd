@@ -1,5 +1,7 @@
 package cn.gavin.maze;
 
+import java.util.List;
+
 import cn.gavin.Hero;
 import cn.gavin.activity.BaseContext;
 import cn.gavin.forge.Item;
@@ -23,11 +25,10 @@ public class BattleController {
         Skill skill = hero.useDefendSkill(monster);
         boolean isJump = false;
         if (!monster.isHold()) {
-            /*TODO
-            Pet pet = hero.getPet();
-            if (pet != null && pet.getHp() > 0) {
-                pet.setContext(context);
-                if (pet.dan()) {
+            List<Pet> pets = hero.getPets();
+            for (Pet pet : pets) {
+                if (pet != null && pet.getHp() > 0 && !pet.getType().equals("蛋") && pet.dan()) {
+                    pet.setContext(context);
                     long harm = monster.getAtk() - pet.getDef();
                     String petMsg = pet.getFormatName() + "舍身救主，挡下了这次攻击伤害（<font color=\"red\">" + harm + "</font>点)!";
                     addMessage(context, petMsg);
@@ -41,7 +42,8 @@ public class BattleController {
                     }
                     return false;
                 }
-            }*/
+            }
+
             if (skill != null && !monster.isSilent(random)) {
                 isJump = skill.release(monster);
             } else if (monster.getName().contains("龙") && SkillFactory.getSkill("龙裔", hero, context.getSkillDialog()).isActive()) {
@@ -102,30 +104,34 @@ public class BattleController {
         boolean isJump;
         skill = hero.useAttackSkill(monster);
         isJump = false;
-        /*TODO
-        Pet pet = hero.getPet();
-        if (pet != null && pet.getHp() > 0) {
-            if (pet.gon()) {
-                NSkill petSkill = pet.getAtkSkill();
-                long petHarm = 0;
-                if(petSkill!=null){
-                    String petSkillMsg = pet.getFormatName() + "使用了技能" + petSkill.getName();
-                    Base target = new Base(){
-                    };
-                    target.setDef(0l);
-                    target.setAtk(monster.getAtk());
-                    target.setHp(monster.getHp());
-                    target.setElement(monster.getElement());
-                    petHarm = petSkill.getHarm(target);
-                }else {
-                    petHarm = pet.getAtk();
+        List<Pet> pets = hero.getPets();
+        for (Pet pet : pets) {
+            if (pet != null && pet.getHp() > 0 && !"蛋".equals(pet.getType())) {
+                if (pet.gon()) {
+                    NSkill petSkill = pet.getAtkSkill();
+                    long petHarm = 0;
+                    if (petSkill != null) {
+                        String petSkillMsg = pet.getFormatName() + "使用了技能" + petSkill.getName();
+                        addMessage(context, petSkillMsg);
+                        monster.addBattleDesc(petSkillMsg);
+                        Base target = new Base() {
+                        };
+                        target.setDef(0l);
+                        target.setAtk(monster.getAtk());
+                        target.setHp(monster.getHp());
+                        target.setElement(monster.getElement());
+                        petHarm = petSkill.getHarm(target);
+                    } else {
+                        petHarm = pet.getAtk();
+                    }
+                    String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了" + petHarm + "点伤害";
+                    monster.addHp(petHarm);
+                    addMessage(context, petAtk);
+                    monster.addBattleDesc(petAtk);
+                    break;
                 }
-                String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了" + petHarm + "点伤害";
-                monster.addHp(petHarm);
-                addMessage(context, petAtk);
-                monster.addBattleDesc(petAtk);
             }
-        }*/
+        }
         if (skill != null) {
             if (!monster.isSilent(hero.getRandom())) {
                 isJump = skill.release(monster);
