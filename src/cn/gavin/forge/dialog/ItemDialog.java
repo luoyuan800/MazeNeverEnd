@@ -124,12 +124,13 @@ public class ItemDialog {
                         dialog.dismiss();
                     }
                 });
-            onpush.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+                onpush.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                onpush.show();
             }
         });
         linearLayout.addView(clean);
@@ -196,7 +197,7 @@ public class ItemDialog {
 
         private List<ItemList> adapterData = getItemListAdp(list);
 
-        public void refresh(String s){
+        public void refresh(String s) {
             list = Item.loadItems(null);
             getFilter().filter(s);
         }
@@ -249,7 +250,8 @@ public class ItemDialog {
                             itemDesc.setText(Html.fromHtml(getItem(position).i1.toString()));
                         }
                     }
-                });} else {
+                });
+            } else {
                 holder.name1.setText("");
                 holder.name1.setEnabled(false);
             }
@@ -281,7 +283,8 @@ public class ItemDialog {
                             itemDesc.setText(Html.fromHtml(getItem(position).i3.toString()));
                         }
                     }
-                });} else {
+                });
+            } else {
                 holder.name3.setText("");
                 holder.name3.setEnabled(false);
             }
@@ -312,13 +315,13 @@ public class ItemDialog {
                 protected FilterResults performFiltering(CharSequence constraint) {
                     FilterResults results = new FilterResults();
                     List<Item> newList = new ArrayList<Item>(list.size());
-                    for(Item item : list){
+                    for (Item item : list) {
                         String prefix = constraint.toString();
-                        if(item.getName().name().startsWith(prefix)){
+                        if (item.getName().name().startsWith(prefix)) {
                             newList.add(item);
                         }
                     }
-                    Collections.sort(newList, new Comparator<Item>(){
+                    Collections.sort(newList, new Comparator<Item>() {
 
                         @Override
                         public int compare(Item lhs, Item rhs) {
@@ -333,7 +336,7 @@ public class ItemDialog {
 
                 @Override
                 protected void publishResults(CharSequence constraint, FilterResults results) {
-                        adapterData = (List<ItemList>) results.values;
+                    adapterData = (List<ItemList>) results.values;
                     if (results.count > 0) {
                         notifyDataSetChanged();
                     } else {

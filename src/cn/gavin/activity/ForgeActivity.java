@@ -197,7 +197,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                             }
                         }
                         if(MazeContents.hero!=null){
-                            MazeContents.hero.addMaterial(100000);
+                            MazeContents.hero.addMaterial(-100000);
                         }
                         adapter.refresh();
                     }

@@ -203,6 +203,7 @@ public class PetAdapter extends BaseAdapter implements View.OnClickListener{
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                         onUsedCheck.setChecked(false);
+                                        listener.adapterData.remove(pet);
                                         pet.releasePet(MazeContents.hero, context);
                                         listener.refresh();
                                         refresh();

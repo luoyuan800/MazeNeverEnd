@@ -1159,6 +1159,9 @@ public class Hero implements BaseObject {
     }
 
     public int getPetSize() {
+        if(petSize <= 0){
+            petSize = 3;
+        }
         return petSize;
     }
 

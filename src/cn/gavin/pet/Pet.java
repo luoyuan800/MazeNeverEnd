@@ -108,7 +108,6 @@ public class Pet extends Base {
             pet.setLev(monster.getMazeLev());
             pet.setIntimacy(0l);
             pet.setSex(random.nextInt(2));
-            pet.setIntimacy(1000l);
             PetDB.save(pet);
             return pet;
         } else {
@@ -332,6 +331,7 @@ public class Pet extends Base {
         Pet egg = new Pet();
         String type = m.getType();
         egg.setName(type);
+        egg.setIntimacy(1000l);
         egg.setType("蛋");
         egg.setDeathCount(255 - (f.getDeathCount() + m.getDeathCount()));
         egg.setfName(f.getName());

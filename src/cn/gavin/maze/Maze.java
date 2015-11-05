@@ -191,106 +191,109 @@ public class Maze {
     }
 
     private void mazeLevelDetect() {
-        if (level > Integer.MAX_VALUE) {
-            if (level > Long.MAX_VALUE - 100) {
-                level--;
-            }
-        } else {
-            switch ((int) level) {
-                case 50:
-                    Achievement.maze50.enable(hero);
-                    break;
-                case 100:
-                    Achievement.maze100.enable(hero);
-                    break;
-                case 500:
-                    if (hero.getArmorLev() == 0 && hero.getSwordLev() == 0) {
-                        Achievement.speculator.enable(hero);
-                    }
-                    Achievement.maze500.enable(hero);
-                    break;
-                case 1000:
-                    Achievement.maze1000.enable(hero);
-                    break;
-                case 10000:
-                    if (Achievement.maze100.isEnable()) {
-                        Achievement.maze10000.enable(hero);
-                    } else {
-                        Achievement.cribber.enable(hero);
-                    }
-                    break;
-                case 50000:
-                    if (Achievement.maze10000.isEnable()) {
-                        Achievement.maze50000.enable(hero);
-                    } else {
-                        Achievement.cribber.enable(hero);
-                    }
-                    break;
-
-            }
-        }
-        if (level > 50000) {
-            if (!Achievement.richer.isEnable()) {
-                addMessage(MainGameActivity.context, "您不能再前进了，前面是付费玩家的地盘！");
-                level--;
-            }
-        }
-        if (level % 11 == 0 && PetDB.getPetCount(null) < hero.getPetSize() + 10) {
-            Pet f = null;
-            Pet m = null;
-            List<Pet> pets = hero.getPets();
-            for (Pet pet : pets) {
-                for (Pet p : pets) {
-                    if (pet.getSex() != p.getSex() && pet.getElement().isReinforce(p.getElement())) {
-                        if (p.getSex() == 0) {
-                            f = p;
-                            m = pet;
-                        } else {
-                            f = pet;
-                            m = p;
+        if(hero!=null) {
+            if (level > Integer.MAX_VALUE) {
+                if (level > Long.MAX_VALUE - 100) {
+                    level--;
+                }
+            } else {
+                switch ((int) level) {
+                    case 50:
+                        Achievement.maze50.enable(hero);
+                        break;
+                    case 100:
+                        Achievement.maze100.enable(hero);
+                        break;
+                    case 500:
+                        if (hero.getArmorLev() == 0 && hero.getSwordLev() == 0) {
+                            Achievement.speculator.enable(hero);
                         }
+                        Achievement.maze500.enable(hero);
+                        break;
+                    case 1000:
+                        Achievement.maze1000.enable(hero);
+                        break;
+                    case 10000:
+                        if (Achievement.maze100.isEnable()) {
+                            Achievement.maze10000.enable(hero);
+                        } else {
+                            Achievement.cribber.enable(hero);
+                        }
+                        break;
+                    case 50000:
+                        if (Achievement.maze10000.isEnable()) {
+                            Achievement.maze50000.enable(hero);
+                        } else {
+                            Achievement.cribber.enable(hero);
+                        }
+                        break;
+
+                }
+            }
+            if (level > 50000) {
+                if (!Achievement.richer.isEnable()) {
+                    addMessage(MainGameActivity.context, "您不能再前进了，前面是付费玩家的地盘！");
+                    level--;
+                }
+            }
+            if (level % 11 == 0 && PetDB.getPetCount(null) < hero.getPetSize() + 10) {
+                Pet f = null;
+                Pet m = null;
+                List<Pet> pets = hero.getPets();
+                for (Pet pet : pets) {
+                    for (Pet p : pets) {
+                        if (pet.getSex() != p.getSex() && pet.getElement().isReinforce(p.getElement())) {
+                            if (p.getSex() == 0) {
+                                f = p;
+                                m = pet;
+                            } else {
+                                f = pet;
+                                m = p;
+                            }
+                            break;
+                        }
+                    }
+                    if (f != null && m != null) {
                         break;
                     }
                 }
                 if (f != null && m != null) {
-                    break;
-                }
-            }
-            if (f != null && m != null) {
-                double rate = (((hero.getUpperAtk() * 3 - hero.getUpperAtk() *
-                        MazeContents.hero.getPetRate() * 2) / (hero.getUpperHp() * 3)) * hero.getEggRate() *
-                        (2 - MazeContents.hero.getPetRate())) * 200 / 255;
-                if(f.getType().equals(m.getType())){
-                    rate *= 1.5;
-                }
-                if(hero.getElement() == Element.火){
-                    rate *= 1.5;
-                }
-                if (rate >= 100) {
-                    rate = 98;
-                }
+                    double rate = (((hero.getUpperAtk() * 3 - hero.getUpperAtk() *
+                            MazeContents.hero.getPetRate() * 2) / (hero.getUpperHp() * 3)) * hero.getEggRate() *
+                            (2 - MazeContents.hero.getPetRate())) * 200 / 255;
+                    if (f.getType().equals(m.getType())) {
+                        rate *= 1.5;
+                    }
+                    if (hero.getElement() == Element.火) {
+                        rate *= 1.5;
+                    }
+                    if (rate >= 100) {
+                        rate = 98;
+                    }
 
-                double current = random.nextInt(100) + random.nextDouble();
-                if (rate > current) {
-                    Pet egg = Pet.egg(f, m, level);
-                    if(egg!=null) {
-                        addMessage(MainGameActivity.context, f.getFormatName() + "和" + m.getFormatName() + "生了一个蛋。");
-                        if (hero.getPets().size() < hero.getPetSize()) {
-                            hero.getPets().add(egg);
+                    double current = random.nextInt(100) + random.nextDouble();
+                    if (rate > current) {
+                        Pet egg = Pet.egg(f, m, level);
+                        if (egg != null) {
+                            addMessage(MainGameActivity.context, f.getFormatName() + "和" + m.getFormatName() + "生了一个蛋。");
+                            if (hero.getPets().size() < hero.getPetSize()) {
+                                hero.getPets().add(egg);
+                            }
                         }
                     }
                 }
+
             }
-        }
-        if (level != 0 && level % 100 == 0) {
-            Skill fSkill = SkillFactory.getSkill("浮生百刃", hero, MainGameActivity.context.getSkillDialog());
-            Skill xSkill = SkillFactory.getSkill("虚无吞噬", hero, MainGameActivity.context.getSkillDialog());
-            boolean qzs = SkillFactory.getSkill("欺诈师", hero, MainGameActivity.context.getSkillDialog()).isActive();
-            if (qzs && (random.nextLong(hero.getMaxMazeLev() + 1000) > 1100)) {
-                fSkill.setActive(true);
-            }
-            if (qzs && (random.nextLong(hero.getMaxMazeLev() + 1000) > 1150)) {
-                xSkill.setActive(true);
+            if (level != 0 && level % 100 == 0) {
+                Skill fSkill = SkillFactory.getSkill("浮生百刃", hero, MainGameActivity.context.getSkillDialog());
+                Skill xSkill = SkillFactory.getSkill("虚无吞噬", hero, MainGameActivity.context.getSkillDialog());
+                boolean qzs = SkillFactory.getSkill("欺诈师", hero, MainGameActivity.context.getSkillDialog()).isActive();
+                if (qzs && (random.nextLong(hero.getMaxMazeLev() + 1000) > 1100)) {
+                    fSkill.setActive(true);
+                }
+                if (qzs && (random.nextLong(hero.getMaxMazeLev() + 1000) > 1150)) {
+                    xSkill.setActive(true);
+                }
             }
         }
     }
