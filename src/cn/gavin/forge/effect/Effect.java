@@ -112,7 +112,37 @@ public enum Effect {
             if(award <= 0) award =1;
             return award;
         }
-    }, "增加格挡概率");
+    }, "增加格挡概率"),
+    ADD_PER_ATK(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            Random random = hero.getRandom();
+            long atk = random.nextLong((hero.getStrength() + monster.getMaxHP()) / 3705 + 1) * 100 /hero.getUpperAtk();
+            if(atk < 1) atk = 1;
+            if (atk > 10) atk = 10;
+            return atk;
+        }
+    }, "增加攻击上限%"),
+    ADD_PER_UPPER_HP(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            Random random = hero.getRandom();
+            long hp = (random.nextLong((hero.getAgility() + monster.getAtk())/2750) +1900) * 100 / hero.getRealUHP();
+            if(hp < 1) hp = 1;
+            if (hp > 10) hp = 10;
+            return hp;
+        }
+    }, "增加HP上限%"),
+    ADD_PER_DEF(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            Random random = hero.getRandom();
+            long def = random.nextLong((hero.getPower() + monster.getMaterial()) / 3500 + 1) * 100/hero.getUpperDef();
+            if(def < 1) def = 1;
+            if(def > 10) def = 10;
+            return def;
+        }
+    }, "增加防御上限%");
     private Calculate calculate;
     private String name;
 

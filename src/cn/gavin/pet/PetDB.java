@@ -103,7 +103,7 @@ public class PetDB {
     public static List<Pet> loadPet(SQLiteDatabase db) {
         Cursor cursor;
         List<Pet> pets = new ArrayList<Pet>();
-        String sql = "SELECT * FROM pet ORDER BY ORDER BY lev";
+        String sql = "SELECT * FROM pet ORDER BY lev";
         try {
             if (db != null) {
                 cursor = db.rawQuery(sql, null);

@@ -180,6 +180,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                 break;
             case R.id.forge_dismantle_button:
                 AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                final AccessoryAdapter adapter = new AccessoryAdapter(true, alertDialog);
                 alertDialog.setTitle("点击装备进行拆解");
                 alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
                     @Override
@@ -187,8 +188,22 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                         dialogInterface.dismiss();
                     }
                 });
+                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "一键拆解黑装/10w", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for(Accessory accessory : Accessory.loadAccessories(null)){
+                            if("#000000".equals(accessory.getColor())){
+                                accessory.dismantle();
+                            }
+                        }
+                        if(MazeContents.hero!=null){
+                            MazeContents.hero.addMaterial(100000);
+                        }
+                        adapter.refresh();
+                    }
+                });
                 ListView listView = new ListView(this);
-                listView.setAdapter(new AccessoryAdapter(true, alertDialog));
+                listView.setAdapter(adapter);
                 alertDialog.setView(listView);
                 alertDialog.show();
                 break;

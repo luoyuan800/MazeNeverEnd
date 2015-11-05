@@ -41,6 +41,7 @@ public class PetAdapter extends BaseAdapter implements View.OnClickListener{
     }
 
     public void refresh(){
+        PetDB.save(adapterData.toArray(new Pet[adapterData.size()]));
         adapterData = PetDB.loadPet(null);
         notifyDataSetChanged();
     }

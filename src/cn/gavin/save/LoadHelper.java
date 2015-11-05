@@ -121,10 +121,13 @@ public class LoadHelper {
             if(StringUtils.isNotEmpty(id)){
                 Pet pet = new Pet();
                 pet.setId(id);
-                heroN.getPets().add(pet);
+                PetDB.load(pet);
+                if(StringUtils.isNotEmpty(pet.getType())) {
+                    heroN.getPets().add(pet);
+                }
             }
         }
-        PetDB.load(heroN.getPets().toArray(new Pet[heroN.getPets().size()]));
+        heroN.setTitleColor(preferences.getString("title_color", "#ff00acff"));
         heroN.setOnSkill(false);
         MazeContents.hero = heroN;
         MazeContents.maze = maze;

@@ -27,6 +27,10 @@ public class Pet extends Base {
     private String fName;
     private String mName;
     private int sex;
+    private String color = "#556B2F";
+    private long atk_rise =1;
+    private long def_rise = 1;
+    private long hp_rise = 2;
 
 
     public void click() {
@@ -42,11 +46,11 @@ public class Pet extends Base {
     }
 
     public boolean dan() {
-        return getRandom().nextInt(1000) < getRandom().nextLong(intimacy / 1000);
+        return getRandom().nextInt(500) < getRandom().nextLong(intimacy / 500);
     }
 
     public boolean gon() {
-        return getRandom().nextInt(100) < getRandom().nextLong(intimacy / 1000);
+        return getRandom().nextInt(100) < getRandom().nextLong(intimacy / 500);
     }
 
     public void save() {
@@ -54,7 +58,7 @@ public class Pet extends Base {
     }
 
     public void load(Context context) {
-
+        PetDB.load(this);
     }
 
     public void addHp(long hp) {
@@ -82,7 +86,7 @@ public class Pet extends Base {
             rate = 98;
         }
         double current = random.nextInt(100) + random.nextDouble();
-        if (PetDB.getPetCount(null) < 15 && rate > current) {
+        if (PetDB.getPetCount(null) <  MazeContents.hero.getPetSize() + 5 && rate > current) {
             Pet pet = new Pet();
             pet.setElement(monster.getElement());
             pet.setName(monster.getName());
@@ -104,6 +108,7 @@ public class Pet extends Base {
             pet.setLev(monster.getMazeLev());
             pet.setIntimacy(0l);
             pet.setSex(random.nextInt(2));
+            pet.setIntimacy(1000l);
             PetDB.save(pet);
             return pet;
         } else {
@@ -223,7 +228,7 @@ public class Pet extends Base {
     }
 
     public String getFormatName() {
-        return "<font color=\"#556B2F\">" + getName() + (sex == 0 ? "♂" : "♀") + "</font>(" + getElement() + ")";
+        return "<font color=\"" + color + "\">" + getName() + (sex == 0 ? "♂" : "♀") + "</font>(" + getElement() + ")";
     }
 
     public void restore() {
@@ -231,6 +236,7 @@ public class Pet extends Base {
     }
 
     public void releasePet(Hero hero, MainGameActivity context) {
+        hero.removePet(this);
         context.addMessage(getFormatName() + "对" + hero.getFormatName() + "说：拜拜……");
         PetDB.delete(this);
     }
@@ -245,7 +251,7 @@ public class Pet extends Base {
 
     public void addAtk(Hero hero) {
         if (atk <= hero.getUpperDef() / 10) {
-            atk += hero.ATR_RISE;
+            atk += atk_rise;
             hero.addPoint(-1);
         }
         click();
@@ -253,7 +259,7 @@ public class Pet extends Base {
 
     public void addDef(Hero hero) {
         if (def <= hero.getUpperAtk() / 10) {
-            def += hero.DEF_RISE;
+            def += def_rise;
             hero.addPoint(-1);
         }
         click();
@@ -261,8 +267,8 @@ public class Pet extends Base {
 
     public void addHp(Hero hero) {
         if (getUHp() < hero.getHp() / 2) {
-            setUHp(getUHp() + hero.MAX_HP_RISE);
-            hp += hero.MAX_HP_RISE;
+            setUHp(getUHp() + hp_rise);
+            hp += hp_rise;
             hero.addPoint(-1);
         }
         click();
@@ -324,7 +330,8 @@ public class Pet extends Base {
     public static Pet egg(Pet f, Pet m, long lev) {
         Random random = new Random();
         Pet egg = new Pet();
-        egg.setName(m.getType());
+        String type = m.getType();
+        egg.setName(type);
         egg.setType("蛋");
         egg.setDeathCount(255 - (f.getDeathCount() + m.getDeathCount()));
         egg.setfName(f.getName());
@@ -334,6 +341,15 @@ public class Pet extends Base {
         egg.setDef(f.getMaxDef()/2 + random.nextLong(m.getMaxDef()));
         egg.setSex(random.nextInt(2));
         egg.setLev(lev);
+        if(!f.getType().equals(m.getType())){
+            if(random.nextInt(10000) + random.nextFloat() < 2.015){
+                egg.setType(Monster.lastNames[random.nextInt(Monster.lastNames.length)]);
+                egg.color = "#B8860B";
+                egg.atk_rise = MazeContents.hero.ATR_RISE;
+                egg.def_rise = MazeContents.hero.DEF_RISE;
+                egg.hp_rise = MazeContents.hero.MAX_HP_RISE;
+            }
+        }
         PetDB.save(egg);
         return egg;
     }

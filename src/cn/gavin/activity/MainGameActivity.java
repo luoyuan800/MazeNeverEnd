@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -726,7 +727,14 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final String input = tv.getText().toString();
-                        if (input.startsWith("~")) {
+                        if(input.startsWith("#")){
+                            try {
+                                itembarContri.setBackgroundColor(Color.parseColor(input));
+                                heroN.setTitleColor(input);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }else if (input.startsWith("~")) {
                             showKeyDialog(input);
                         } else if (input.equals("qx22222") && heroN.getAwardCount() <= 6) {
                             Accessory hat = new Accessory();
@@ -1259,6 +1267,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         // ---- ---- 标题（人物名称 | 最深迷宫数)
         itembarContri = (TextView) findViewById(R.id.character_itembar_contribute);
         itembarContri.setOnClickListener(this);
+        try {
+            itembarContri.setBackgroundColor(Color.parseColor(heroN.getTitleColor()));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         // ---- ---- 属性
         mainContriHp = (TextView) findViewById(R.id.main_contri_hp);
         mainContriAtt = (TextView) findViewById(R.id.main_contri_att);
@@ -1464,7 +1477,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         }
         StringBuilder builder = new StringBuilder();
         for (Pet pet : heroN.getPets()) {
-            builder.append(pet.getType()).append("<br>");
+            builder.append(pet.getType()).append(pet.getSex()== 0 ? "♂" : "♀").append("<br>");
         }
         petView.setText(Html.fromHtml(builder.toString()));
         petDialog = new PetDialog(this);
@@ -1702,7 +1715,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 petDialog.show(heroN);
                 break;
             case R.id.pet_pic:
-
+                for(Pet pet : heroN.getPets()){
+                    pet.click();
+                }
                 break;
             case R.id.palace_button:
                 showPalace();
@@ -1963,54 +1978,69 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             }
             final AchievementList item = getItem(position);
             holder.name.setText(item.a0.getName());
-            if (!item.a0.isEnable()) {
-                holder.name.setEnabled(false);
-            } else {
-                holder.name.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            holder.name.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(item.a0.isEnable()){
                         achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a0.getName() + "</b> : " + item.a0.getDesc() + "</font>"));
+                    }else{
+                        achievementDesc.setText(Html.fromHtml("<b>" + item.a0.getName() + "</b> : " + item.a0.getUnlockDesc()+ "。效果：？？？"));
                     }
-                });
-                holder.name.setEnabled(true);
+                }
+            });
+            if (!item.a0.isEnable()) {
+                holder.name.setTextColor(convertView.getResources().getColor(R.color.disable));
+            } else {
+                holder.name.setTextColor(convertView.getResources().getColor(R.color.active));
             }
             holder.name1.setText(item.a1.getName());
-            if (!item.a1.isEnable()) {
-                holder.name1.setEnabled(false);
-            } else {
-                holder.name1.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            holder.name1.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(item.a1.isEnable()){
                         achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a1.getName() + "</b> : " + item.a1.getDesc() + "</font>"));
+                    }else{
+                        achievementDesc.setText(Html.fromHtml("<b>" + item.a1.getName() + "</b> : " + item.a1.getUnlockDesc()+ "。效果：？？？"));
                     }
-                });
-                holder.name1.setEnabled(true);
+                }
+            });
+            if (!item.a1.isEnable()) {
+                holder.name1.setTextColor(convertView.getResources().getColor(R.color.disable));
+            } else {
+                holder.name1.setTextColor(convertView.getResources().getColor(R.color.active));
             }
             holder.name2.setText(item.a2.getName());
-            if (!item.a2.isEnable()) {
-                holder.name2.setEnabled(false);
-
-            } else {
-                holder.name2.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            holder.name2.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(item.a2.isEnable()){
                         achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a2.getName() + "</b> : " + getItem(position).a2.getDesc() + "</font>"));
+                    }else{
+                        achievementDesc.setText(Html.fromHtml("<b>" + item.a2.getName() + "</b> : " + item.a2.getUnlockDesc() + "。效果：？？？"));
                     }
-                });
-                holder.name2.setEnabled(true);
+                }
+            });
+            if (!item.a2.isEnable()) {
+                holder.name2.setTextColor(convertView.getResources().getColor(R.color.disable));
+            } else {
+                holder.name2.setTextColor(convertView.getResources().getColor(R.color.active));
             }
             holder.name3.setText(item.a3.getName());
+            holder.name3.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(item.a3.isEnable()){
+                        achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a3.getName() + "</b> : " + getItem(position).a3.getDesc() + "</font>"));
+                    }else{
+                        achievementDesc.setText(Html.fromHtml("<b>" + item.a3.getName() + "</b> : " + item.a3.getUnlockDesc()+ "。效果：？？？"));
+                    }
+                }
+            });
             if (!item.a3.isEnable()) {
-                holder.name3.setEnabled(false);
+                holder.name3.setTextColor(convertView.getResources().getColor(R.color.disable));
 
             } else {
-                holder.name3.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a3.getName() + "</b> : " + getItem(position).a3.getDesc() + "</font>"));
-                    }
-                });
-                holder.name3.setEnabled(true);
+                holder.name3.setTextColor(convertView.getResources().getColor(R.color.active));
             }
             return convertView;
         }

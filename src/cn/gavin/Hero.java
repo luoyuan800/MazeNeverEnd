@@ -90,6 +90,7 @@ public class Hero implements BaseObject {
     private float petRate = 0.7f;
     private float eggRate = 300;
     private long eggStep;
+    private String titleColor;
 
     public Float getParry() {
         return parry;
@@ -449,7 +450,9 @@ public class Hero implements BaseObject {
         onChange = false;
         onSkill = false;
         this.hp = upperHp;
-
+        for(Pet pet : getPets()){
+            pet.restore();
+        }
     }
 
     public Long getMaxMazeLev() {
@@ -1185,5 +1188,23 @@ public class Hero implements BaseObject {
 
     public void setEggStep(long eggStep) {
         this.eggStep = eggStep;
+    }
+
+    public void removePet(Pet pet) {
+        List<Pet> petList = getPets();
+        for(int i = 0; i< petList.size(); i++){
+            if(petList.get(i).getId().equals(pet.getId())){
+                petList.remove(i);
+                return;
+            }
+        }
+    }
+
+    public void setTitleColor(String titleColor) {
+        this.titleColor = titleColor;
+    }
+
+    public String getTitleColor() {
+        return titleColor;
     }
 }

@@ -86,6 +86,9 @@ public class Maze {
                     point = 50 + random.nextInt(60);
                 }
                 String msg = hero.getFormatName() + "进入了" + level + "层迷宫， 获得了<font color=\"#FF8C00\">" + point + "</font>点数奖励";
+                for(Pet pet : hero.getPets()){
+                    pet.click();
+                }
                 addMessage(context, msg);
                 if (level > hero.getMaxMazeLev()) {
                     hero.setMaxMazeLev(level);
@@ -134,7 +137,10 @@ public class Maze {
                     continue;
                 }
                 Monster monster = null;
-                if (random.nextLong(1000) > 899) {
+                if(!MazeContents.checkCheat(hero)){
+                    monster = Monster.CHEATBOSS();
+                }
+                if (monster == null && random.nextLong(1000) > 899) {
                     monster = Monster.getBoss(this, hero);
                     step += 21;
                 }
@@ -223,13 +229,13 @@ public class Maze {
 
             }
         }
-        if (level > 500000) {
+        if (level > 50000) {
             if (!Achievement.richer.isEnable()) {
                 addMessage(MainGameActivity.context, "您不能再前进了，前面是付费玩家的地盘！");
                 level--;
             }
         }
-        if (level % 11 == 0 && PetDB.getPetCount(null) < 15) {
+        if (level % 11 == 0 && PetDB.getPetCount(null) < hero.getPetSize() + 10) {
             Pet f = null;
             Pet m = null;
             List<Pet> pets = hero.getPets();

@@ -12,6 +12,7 @@ import java.net.URL;
 import cn.bmob.v3.listener.SaveListener;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.activity.MazeContents;
 import cn.gavin.skill.Skill;
 import cn.gavin.utils.StringUtils;
 
@@ -29,7 +30,8 @@ public class Upload {
     public boolean upload(final Hero hero){
         new Thread(){
             public void run(){
-                if((hero.getUpperHp() + hero.getUpperDef() + hero.getUpperAtk()) < (hero.getMaxMazeLev()*5900000*(hero.getPay()+ 2))) {
+                boolean check = MazeContents.checkCheat(hero);
+                if(check) {
                     PalaceObject object = new PalaceObject();
                     object.setHello(hero.getHello());
                     object.setAtk(hero.getUpperAtk().toString());

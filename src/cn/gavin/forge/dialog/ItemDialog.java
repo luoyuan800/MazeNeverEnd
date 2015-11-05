@@ -23,9 +23,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.ForgeActivity;
+import cn.gavin.activity.MazeContents;
 import cn.gavin.forge.Item;
+import cn.gavin.forge.effect.Effect;
 
 /**
  * Copyright 2015 luoyuan.
@@ -83,7 +86,53 @@ public class ItemDialog {
         ListView listView = new ListView(activity);
         listView.setAdapter(adapter);
         linearLayout.addView(listView);
+        Button clean = new Button(activity);
+        clean.setText("一键清除低属性材料（慎用！）");
+        clean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog onpush = new AlertDialog.Builder(activity).create();
+                onpush.setTitle("确认清除材料？");
+                TextView textView = new TextView(activity);
+                textView.setText("属性为增加基本攻击、防御、HP并且数值低于迷宫层数*30的材料会被清除！");
+                onpush.setView(textView);
+                onpush.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
 
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Hero hero = MazeContents.hero;
+                        if (hero != null) {
+                            for (Item item : Item.loadItems(null)) {
+                                boolean delete = false;
+                                Effect effect = item.getEffect();
+                                if (effect == Effect.ADD_DEF || effect == Effect.ADD_ATK || effect == Effect.ADD_UPPER_HP) {
+                                    if (item.getEffectValue().longValue() < hero.getMaxMazeLev() * 30) {
+                                        delete = true;
+                                    }
+                                }
+                                if (item.getEffect1() != null) {
+                                    effect = item.getEffect1();
+                                    delete = (effect == Effect.ADD_DEF || effect == Effect.ADD_ATK
+                                            || effect == Effect.ADD_UPPER_HP) && item.getEffect1Value().longValue() < hero.getMaxMazeLev() * 30;
+                                }
+                                if (delete) {
+                                    item.delete(null);
+                                }
+                            }
+                            adapter.refresh("");
+                        }
+                        dialog.dismiss();
+                    }
+                });
+            onpush.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            }
+        });
+        linearLayout.addView(clean);
         itemDialog.setView(linearLayout);
         itemDialog.setTitle("材料列表");
         itemDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
@@ -195,7 +244,6 @@ public class ItemDialog {
                 holder.name1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ItemList itemList = getItem(position);
                         if (getItem(position).i1 != null) {
                             selected = getItem(position).i1;
                             itemDesc.setText(Html.fromHtml(getItem(position).i1.toString()));
@@ -211,7 +259,6 @@ public class ItemDialog {
                 holder.name2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ItemList itemList = getItem(position);
                         if (getItem(position).i2 != null) {
                             selected = getItem(position).i2;
                             itemDesc.setText(Html.fromHtml(getItem(position).i2.toString()));

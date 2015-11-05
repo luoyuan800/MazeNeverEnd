@@ -97,6 +97,7 @@ public class SaveHelper {
             petIds.append(pet.getId()).append("_");
         }
         editor.putString("pet_id", petIds.toString());
+        editor.putString("title_color", heroN.getTitleColor());
         editor.apply();
 
     }

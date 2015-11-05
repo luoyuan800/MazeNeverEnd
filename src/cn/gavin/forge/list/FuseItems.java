@@ -60,7 +60,66 @@ public class FuseItems {
                 && item.getEffect1Value().longValue() > 70){
             item.setEffect1Value(random.nextLong(70) + 15);
         }
+        switch (item.getEffect()){
+            case ADD_ATK:
+               if(random.nextBoolean()){
+                   item.setEffect(Effect.ADD_PER_ATK);
+                   long longValue = item.getEffectValue().longValue();
+                   long value = calculate(longValue);
+                   item.setEffectValue(value);
+               }
+               break;
+            case ADD_UPPER_HP:
+                if(random.nextBoolean()){
+                    item.setEffect(Effect.ADD_PER_UPPER_HP);
+                    long longValue = item.getEffectValue().longValue();
+                    long value = calculate(longValue);
+                    item.setEffectValue(value);
+                }
+                break;
+            case ADD_DEF:
+                if(random.nextBoolean()){
+                    item.setEffect(Effect.ADD_PER_DEF);
+                    long longValue = item.getEffectValue().longValue();
+                    long value = calculate(longValue);
+                    item.setEffectValue(value);
+                }
+                break;
+        }
+        switch (item.getEffect1()){
+            case ADD_ATK:
+               if(random.nextBoolean()){
+                   item.setEffect(Effect.ADD_PER_ATK);
+                   long longValue = item.getEffect1Value().longValue();
+                   long value = calculate(longValue);
+                   item.setEffect1Value(value);
+               }
+               break;
+            case ADD_UPPER_HP:
+                if(random.nextBoolean()){
+                    item.setEffect1(Effect.ADD_PER_UPPER_HP);
+                    long longValue = item.getEffect1Value().longValue();
+                    long value = calculate(longValue);
+                    item.setEffect1Value(value);
+                }
+                break;
+            case ADD_DEF:
+                if(random.nextBoolean()){
+                    item.setEffect1(Effect.ADD_PER_DEF);
+                    long longValue = item.getEffect1Value().longValue();
+                    long value = calculate(longValue);
+                    item.setEffect1Value(value);
+                }
+                break;
+        }
         item.save(null);
         return item;
+    }
+
+    private static long calculate(long longValue) {
+        long value = (longValue / 10) * 100 / longValue;
+        if(value > 10) value = 10;
+        if(value < 1 ) value = 1;
+        return value;
     }
 }

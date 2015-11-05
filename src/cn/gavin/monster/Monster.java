@@ -337,4 +337,12 @@ public class Monster {
     public void setRate(long rate) {
         this.rate = rate;
     }
+
+    public static Monster CHEATBOSS() {
+        Monster monster = new Monster("真正", "强壮" ,"作者", Long.MAX_VALUE -10, Long.MAX_VALUE - 10);
+        monster.silent = 100;
+        monster.mazeLev = 0;
+        monster.element = Element.水;
+        return monster;
+    }
 }

@@ -95,16 +95,16 @@ public class Item implements Comparator<Item> {
         Item item = new Item();
         item.setName(name);
         Random random = hero.getRandom();
-        Effect e = Effect.values()[random.nextInt(Effect.values().length)];
-        if(e == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(100000000)!= 999){
-                e = Effect.values()[e.ordinal()-1];
+        Effect e = Effect.values()[random.nextInt(Effect.values().length - 3)];
+        if (e == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(100000000) != 999) {
+            e = Effect.values()[e.ordinal() - 1];
         }
         item.setEffect(e);
         item.setEffectValue(e.calculate(hero));
         if (random.nextBoolean()) {
-            Effect e1 = Effect.values()[random.nextInt(Effect.values().length)];
-            if(e1 == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(10000000)!= 999){
-                e1 = Effect.values()[e1.ordinal()+1];
+            Effect e1 = Effect.values()[random.nextInt(Effect.values().length - 3)];
+            if (e1 == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(10000000) != 999) {
+                e1 = Effect.values()[e1.ordinal() + 1];
             }
             if (e1 != e) {
                 item.setEffect1(e1);
@@ -126,16 +126,16 @@ public class Item implements Comparator<Item> {
         Item item = new Item();
         item.setName(name);
         Random random = hero.getRandom();
-        Effect e = Effect.values()[random.nextInt(Effect.values().length)];
-        if(e == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(100000000)!=999){
-            e = Effect.values()[e.ordinal()-1];
+        Effect e = Effect.values()[random.nextInt(Effect.values().length - 3)];
+        if (e == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(100000000) != 999) {
+            e = Effect.values()[e.ordinal() - 1];
         }
         item.setEffect(e);
         item.setEffectValue(e.calculate(hero, monster));
         if (maze.getLev() > 15 && random.nextBoolean()) {
-            Effect e1 = Effect.values()[random.nextInt(Effect.values().length)];
-            if(e == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(10000000)!= 999){
-                e = Effect.values()[e.ordinal()+1];
+            Effect e1 = Effect.values()[random.nextInt(Effect.values().length - 3)];
+            if (e == Effect.ADD_CLICK_POINT_AWARD && random.nextInt(10000000) != 999) {
+                e = Effect.values()[e.ordinal() + 1];
             }
             if (e1 != e) {
                 item.setEffect1(e1);
@@ -151,10 +151,10 @@ public class Item implements Comparator<Item> {
         ArrayList<Item> items = new ArrayList<Item>();
         try {
             Cursor cursor;
-            if(db!=null){
+            if (db != null) {
                 cursor = db.rawQuery(sql, null);
                 cursor.moveToFirst();
-            }else{
+            } else {
                 cursor = dbHelper.excuseSOL(sql);
             }
             while (!cursor.isAfterLast()) {
@@ -182,7 +182,7 @@ public class Item implements Comparator<Item> {
                         }
                     }
                     items.add(item);
-                }catch (Exception e){
+                } catch (Exception e) {
                     item.delete(null);
                 }
                 cursor.moveToNext();
@@ -205,7 +205,7 @@ public class Item implements Comparator<Item> {
             DBHelper.getDbHelper().excuseSQLWithoutResult("DROP TABLE recipe");
             DBHelper.getDbHelper().excuseSQLWithoutResult("DROP TABLE accessory");
             new ForgeDB().createTable(DBHelper.getDbHelper().getDatabase());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "RebuildTable", e);
             LogHelper.writeLog();
@@ -215,13 +215,13 @@ public class Item implements Comparator<Item> {
     public void save(SQLiteDatabase db) {
         String value = UUID.randomUUID().toString();
         String sql = String.format("INSERT INTO item (id,name,properties) values ('%s','%s', '%s')", value, name.name(), buildProperties());
-        if(db== null) {
+        if (db == null) {
             DBHelper dbHelper = DBHelper.getDbHelper();
             dbHelper.excuseSQLWithoutResult(sql);
-        }else{
+        } else {
             try {
                 db.execSQL(sql);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 LogHelper.logException(e);
             }
@@ -231,13 +231,13 @@ public class Item implements Comparator<Item> {
 
     public void delete(SQLiteDatabase db) {
         String sql = String.format("DELETE FROM item WHERE id = '%s'", id);
-        if(db==null) {
+        if (db == null) {
             DBHelper dbHelper = DBHelper.getDbHelper();
             dbHelper.excuseSQLWithoutResult(sql);
-        }else{
+        } else {
             try {
                 db.execSQL(sql);
-            }catch (Exception e){
+            } catch (Exception e) {
                 LogHelper.logException(e);
             }
         }

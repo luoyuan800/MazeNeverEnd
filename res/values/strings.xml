@@ -28,6 +28,6 @@
     <string name="start_label">开 始 游 戏</string>
     <string name="hero_name">勇者</string>
     <string name="book_label">怪物</string>
-    <string name="skill_label">技能</string><string name="pet_tip">宠物加点使用的是你的能力点数\n宠物加点后的成长和你的成长属性是一致的</string>
+    <string name="skill_label">技能</string><string name="pet_tip">宠物加点使用的是你的能力点数\n普通宠物加点后的成长是固定的，但是变异的宠物（带颜色的）是会受到你的成长属性影响\n宠物攻击、防御、HP是有上限的，这个上限根据人物成长会不断变化。</string>
 
 </resources>
