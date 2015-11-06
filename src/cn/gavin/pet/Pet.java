@@ -1,7 +1,6 @@
 package cn.gavin.pet;
 
 import android.content.Context;
-
 import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.R;
@@ -12,6 +11,7 @@ import cn.gavin.palace.Base;
 import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.pet.skill.GoldenSearcher;
 import cn.gavin.pet.skill.QuickGrow;
+import cn.gavin.skill.SkillFactory;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
@@ -32,7 +32,7 @@ public class Pet extends Base {
     private String mName;
     private int sex;
     private String color = "#556B2F";
-    private long atk_rise =1;
+    private long atk_rise = 1;
     private long def_rise = 1;
     private long hp_rise = 2;
 
@@ -68,7 +68,11 @@ public class Pet extends Base {
     public void addHp(long hp) {
         super.addHp(hp);
         if (hp <= 0) {
-            intimacy *= 0.9;
+            if (SkillFactory.getSkill("爱心", MazeContents.hero, null).isActive()) {
+                intimacy *= 0.9;
+            } else {
+                intimacy *= 0.6;
+            }
             deathCount++;
         }
     }
@@ -85,12 +89,22 @@ public class Pet extends Base {
         Random random = new Random();
         double rate = (((monster.getMaxHP() * 3 - monster.getMaxHP() *
                 MazeContents.hero.getPetRate() * 2) / (monster.getMaxHP() * 3)) * monster.getRate() *
-                (2 - MazeContents.hero.getPetRate())) * 100 / (255* MazeContents.hero.getPets().size());
+                (2 - MazeContents.hero.getPetRate())) * 50 / (255 * MazeContents.hero.getPets().size());
         if (rate >= 100) {
             rate = 98;
         }
         double current = random.nextInt(100) + random.nextDouble();
-        if (PetDB.getPetCount(null) <  MazeContents.hero.getPetSize() + 5 && rate > current) {
+        if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 5 && rate > current) {
+            Pet pet = cPet(monster, random);
+            if (pet == null) return null;
+            return pet;
+        } else {
+            return null;
+        }
+    }
+
+    public static Pet cPet(Monster monster, Random random) {
+        if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 5) {
             Pet pet = new Pet();
             pet.setElement(monster.getElement());
             pet.setName(monster.getName());
@@ -231,9 +245,9 @@ public class Pet extends Base {
     }
 
     public String getFormatName() {
-        if("蛋".equals(getType())){
+        if ("蛋".equals(getType())) {
             return "蛋";
-        }else {
+        } else {
             return "<font color=\"" + color + "\">" + getName() + (sex == 0 ? "♂" : "♀") + "</font>(" + getElement() + ")";
         }
     }
@@ -338,7 +352,7 @@ public class Pet extends Base {
         Random random = new Random();
         double rate = (((hero.getUpperAtk() * 3 - hero.getUpperAtk() *
                 MazeContents.hero.getPetRate() * 2) / (hero.getUpperHp() * 3)) * hero.getEggRate() *
-                (2 - MazeContents.hero.getPetRate())) * 300 / 255;
+                (2 - MazeContents.hero.getPetRate())) * 200 / 255;
         if (f.getType().equals(m.getType())) {
             rate *= 1.5;
         }
@@ -370,7 +384,7 @@ public class Pet extends Base {
             if (!f.getType().equals(m.getType())) {
                 if (random.nextInt(10000) + random.nextFloat() < 2.015) {
                     egg.setType(Monster.lastNames[random.nextInt(Monster.lastNames.length)]);
-                    if(egg.getType().equals("作者")){
+                    if (egg.getType().equals("作者")) {
                         egg.setType("蟑螂");
                     }
                     egg.color = "#B8860B";
@@ -379,16 +393,16 @@ public class Pet extends Base {
                     egg.hp_rise = MazeContents.hero.MAX_HP_RISE;
                 }
             }
-            if(random.nextInt(100) == 97){
-                if(random.nextBoolean()){
+            if (random.nextInt(100) == 97) {
+                if (random.nextBoolean()) {
                     egg.setSkill(new GoldenSearcher());
-                }else{
+                } else {
                     egg.setSkill(new QuickGrow());
                 }
             }
             PetDB.save(egg);
             return egg;
-        }else{
+        } else {
             return null;
         }
     }

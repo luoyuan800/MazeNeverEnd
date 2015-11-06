@@ -38,7 +38,7 @@ public class SkillFactory {
                 if(skill == null){
                     skill = LongSkill.getSkill(name,hero,dialog);
                 }
-                if (skill != null) {
+                if (skill != null && hero!=null && dialog!=null) {
                     skill.setSkillDialog(dialog);
                     skill.setPerform(new EnableExpression() {
                         @Override

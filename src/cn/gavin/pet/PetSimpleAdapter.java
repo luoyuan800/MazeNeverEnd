@@ -191,6 +191,8 @@ public class PetSimpleAdapter extends BaseAdapter {
                             dialog.show();
                         } else {
                             pet.setOnUsed(true);
+                            listener.setToHero();
+                            listener.refresh();
                             onUsedPetsId.add(pet.getId());
                         }
                     } else if (!isChecked && pet.isOnUsed()) {
@@ -376,6 +378,8 @@ public class PetSimpleAdapter extends BaseAdapter {
                                 dialog.show();
                             } else {
                                 pet.setOnUsed(true);
+                                listener.setToHero();
+                                listener.refresh();
                                 onUsedPetsId.add(pet.getId());
                             }
                         } else if (!isChecked && pet.isOnUsed()) {
