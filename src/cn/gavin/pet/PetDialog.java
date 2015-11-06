@@ -27,7 +27,7 @@ public class PetDialog {
 
     private MainGameActivity context;
     private AlertDialog alertDialog;
-    private PetAdapter adapter;
+    private PetSimpleAdapter adapter;
 
     public PetDialog(MainGameActivity context) {
         this.context = context;
@@ -39,6 +39,7 @@ public class PetDialog {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         adapter.setToHero();
+                        adapter.saveToDB();
                         alertDialog.hide();
                     }
 
@@ -49,6 +50,7 @@ public class PetDialog {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         alertDialog.hide();
+                        adapter.saveToDB();
                     }
 
                 });
@@ -57,7 +59,7 @@ public class PetDialog {
 
     public void show(Hero hero) {
         ListView listView = new ListView(context);
-        adapter = new PetAdapter(hero);
+        adapter = new PetSimpleAdapter(hero);
         listView.setAdapter(adapter);
         alertDialog.setView(listView);
         alertDialog.show();

@@ -3,7 +3,6 @@ package cn.gavin.maze;
 import java.util.List;
 
 import cn.gavin.Achievement;
-import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MazeContents;
@@ -11,6 +10,7 @@ import cn.gavin.monster.Monster;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
+import cn.gavin.pet.skill.PetSkill;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.story.StoryHelper;
@@ -86,8 +86,15 @@ public class Maze {
                     point = 50 + random.nextInt(60);
                 }
                 String msg = hero.getFormatName() + "进入了" + level + "层迷宫， 获得了<font color=\"#FF8C00\">" + point + "</font>点数奖励";
-                for(Pet pet : hero.getPets()){
+                for (Pet pet : hero.getPets()) {
                     pet.click();
+                    if(!"蛋".equals(pet.getType())){
+                        if(pet.getSkill()!=null){
+                            if(pet.getSkill() instanceof PetSkill) {
+                                ((PetSkill)pet.getSkill()).release(hero);
+                            }
+                        }
+                    }
                 }
                 addMessage(context, msg);
                 if (level > hero.getMaxMazeLev()) {
@@ -96,10 +103,10 @@ public class Maze {
 
                 hero.addPoint(point);
                 hero.addHp(random.nextLong(hero.getUpperHp() / 10 + 1) + random.nextLong(hero.getPower() / 500));
-                for(Pet pet : hero.getPets()){
-                    if(pet.getType().equals("蛋")){
+                for (Pet pet : hero.getPets()) {
+                    if (pet.getType().equals("蛋")) {
                         pet.setDeathCount(pet.getDeathCount() - hero.getEggStep());
-                        if(pet.getDeathCount() <= 0){
+                        if (pet.getDeathCount() <= 0) {
                             addMessage(context, pet.getFormatName() + "出生了！");
                             pet.setType(pet.getName());
                             pet.setLev(level);
@@ -137,7 +144,7 @@ public class Maze {
                     continue;
                 }
                 Monster monster = null;
-                if(!MazeContents.checkCheat(hero)){
+                if (!MazeContents.checkCheat(hero)) {
                     monster = Monster.CHEATBOSS();
                 }
                 if (monster == null && random.nextLong(1000) > 899) {
@@ -191,7 +198,7 @@ public class Maze {
     }
 
     private void mazeLevelDetect() {
-        if(hero!=null) {
+        if (hero != null) {
             if (level > Integer.MAX_VALUE) {
                 if (level > Long.MAX_VALUE - 100) {
                     level--;
@@ -242,7 +249,7 @@ public class Maze {
                 List<Pet> pets = hero.getPets();
                 for (Pet pet : pets) {
                     for (Pet p : pets) {
-                        if (pet.getSex() != p.getSex() && pet.getElement().isReinforce(p.getElement())) {
+                        if (pet.getSex() != p.getSex() && (pet.getElement().isReinforce(p.getElement())|| p.getElement().isReinforce(pet.getElement()))) {
                             if (p.getSex() == 0) {
                                 f = p;
                                 m = pet;
@@ -258,27 +265,11 @@ public class Maze {
                     }
                 }
                 if (f != null && m != null) {
-                    double rate = (((hero.getUpperAtk() * 3 - hero.getUpperAtk() *
-                            MazeContents.hero.getPetRate() * 2) / (hero.getUpperHp() * 3)) * hero.getEggRate() *
-                            (2 - MazeContents.hero.getPetRate())) * 200 / 255;
-                    if (f.getType().equals(m.getType())) {
-                        rate *= 1.5;
-                    }
-                    if (hero.getElement() == Element.火) {
-                        rate *= 1.5;
-                    }
-                    if (rate >= 100) {
-                        rate = 98;
-                    }
-
-                    double current = random.nextInt(100) + random.nextDouble();
-                    if (rate > current) {
-                        Pet egg = Pet.egg(f, m, level);
-                        if (egg != null) {
-                            addMessage(MainGameActivity.context, f.getFormatName() + "和" + m.getFormatName() + "生了一个蛋。");
-                            if (hero.getPets().size() < hero.getPetSize()) {
-                                hero.getPets().add(egg);
-                            }
+                    Pet egg = Pet.egg(f, m, level, hero);
+                    if (egg != null) {
+                        addMessage(MainGameActivity.context, f.getFormatName() + "和" + m.getFormatName() + "生了一个蛋。");
+                        if (hero.getPets().size() < hero.getPetSize()) {
+                            hero.getPets().add(egg);
                         }
                     }
                 }

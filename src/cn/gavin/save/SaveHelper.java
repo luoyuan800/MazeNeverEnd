@@ -7,6 +7,7 @@ import cn.gavin.Hero;
 import cn.gavin.maze.Maze;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.pet.Pet;
+import cn.gavin.pet.PetDB;
 import cn.gavin.skill.SkillFactory;
 
 /**
@@ -98,6 +99,7 @@ public class SaveHelper {
         }
         editor.putString("pet_id", petIds.toString());
         editor.putString("title_color", heroN.getTitleColor());
+        editor.putLong("reset_skill", heroN.getResetSkillCount());
         editor.apply();
 
     }
@@ -106,9 +108,17 @@ public class SaveHelper {
         SkillFactory.save();
     }
 
+    public void savePet(){
+        PetDB.save(context.getHero().getPets().toArray(new Pet[context.getHero().getPets().size()]));
+    }
 
     public void save() {
         saveHero();
         saveSkill();
+        savePet();
+    }
+
+    public void backUp(){
+        context.fileList();
     }
 }

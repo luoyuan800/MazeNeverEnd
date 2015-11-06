@@ -2,6 +2,7 @@ package cn.gavin.pet;
 
 import android.content.Context;
 
+import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
@@ -9,7 +10,10 @@ import cn.gavin.activity.MazeContents;
 import cn.gavin.monster.Monster;
 import cn.gavin.palace.Base;
 import cn.gavin.palace.nskill.NSkill;
+import cn.gavin.pet.skill.GoldenSearcher;
+import cn.gavin.pet.skill.QuickGrow;
 import cn.gavin.utils.Random;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 gluo.
@@ -81,7 +85,7 @@ public class Pet extends Base {
         Random random = new Random();
         double rate = (((monster.getMaxHP() * 3 - monster.getMaxHP() *
                 MazeContents.hero.getPetRate() * 2) / (monster.getMaxHP() * 3)) * monster.getRate() *
-                (2 - MazeContents.hero.getPetRate())) * 100 / 255;
+                (2 - MazeContents.hero.getPetRate())) * 100 / (255* MazeContents.hero.getPets().size());
         if (rate >= 100) {
             rate = 98;
         }
@@ -227,7 +231,11 @@ public class Pet extends Base {
     }
 
     public String getFormatName() {
-        return "<font color=\"" + color + "\">" + getName() + (sex == 0 ? "♂" : "♀") + "</font>(" + getElement() + ")";
+        if("蛋".equals(getType())){
+            return "蛋";
+        }else {
+            return "<font color=\"" + color + "\">" + getName() + (sex == 0 ? "♂" : "♀") + "</font>(" + getElement() + ")";
+        }
     }
 
     public void restore() {
@@ -326,31 +334,86 @@ public class Pet extends Base {
         this.sex = sex;
     }
 
-    public static Pet egg(Pet f, Pet m, long lev) {
+    public static Pet egg(Pet f, Pet m, long lev, Hero hero) {
         Random random = new Random();
-        Pet egg = new Pet();
-        String type = m.getType();
-        egg.setName(type);
-        egg.setIntimacy(1000l);
-        egg.setType("蛋");
-        egg.setDeathCount(255 - (f.getDeathCount() + m.getDeathCount()));
-        egg.setfName(f.getName());
-        egg.setmName(m.getName());
-        egg.setHp(f.getUHp()/2 + random.nextLong(m.getHp()));
-        egg.setAtk(f.getMaxAtk()/2 + random.nextLong(m.getMaxAtk()));
-        egg.setDef(f.getMaxDef()/2 + random.nextLong(m.getMaxDef()));
-        egg.setSex(random.nextInt(2));
-        egg.setLev(lev);
-        if(!f.getType().equals(m.getType())){
-            if(random.nextInt(10000) + random.nextFloat() < 2.015){
-                egg.setType(Monster.lastNames[random.nextInt(Monster.lastNames.length)]);
-                egg.color = "#B8860B";
-                egg.atk_rise = MazeContents.hero.ATR_RISE;
-                egg.def_rise = MazeContents.hero.DEF_RISE;
-                egg.hp_rise = MazeContents.hero.MAX_HP_RISE;
-            }
+        double rate = (((hero.getUpperAtk() * 3 - hero.getUpperAtk() *
+                MazeContents.hero.getPetRate() * 2) / (hero.getUpperHp() * 3)) * hero.getEggRate() *
+                (2 - MazeContents.hero.getPetRate())) * 300 / 255;
+        if (f.getType().equals(m.getType())) {
+            rate *= 1.5;
         }
-        PetDB.save(egg);
-        return egg;
+        if (hero.getElement() == Element.火) {
+            rate *= 1.5;
+        }
+        if (rate >= 100) {
+            rate = 98;
+        }
+
+        double current = random.nextInt(100) + random.nextDouble();
+        if (rate > current) {
+            Pet egg = new Pet();
+            String type = m.getType();
+            String firstName = StringUtils.split(f.getName(), "的")[0];
+            String secondName = StringUtils.split(m.getName(), "的")[1];
+            secondName = secondName.replace(type, "");
+            egg.setName(firstName + "的" + secondName + type);
+            egg.setIntimacy(1000l);
+            egg.setType("蛋");
+            egg.setDeathCount(255 - (f.getDeathCount() + m.getDeathCount()));
+            egg.setfName(f.getName());
+            egg.setmName(m.getName());
+            egg.setHp(f.getUHp() / 2 + random.nextLong(m.getHp()));
+            egg.setAtk(f.getMaxAtk() / 2 + random.nextLong(m.getMaxAtk()));
+            egg.setDef(f.getMaxDef() / 2 + random.nextLong(m.getMaxDef()));
+            egg.setSex(random.nextInt(2));
+            egg.setLev(lev);
+            if (!f.getType().equals(m.getType())) {
+                if (random.nextInt(10000) + random.nextFloat() < 2.015) {
+                    egg.setType(Monster.lastNames[random.nextInt(Monster.lastNames.length)]);
+                    if(egg.getType().equals("作者")){
+                        egg.setType("蟑螂");
+                    }
+                    egg.color = "#B8860B";
+                    egg.atk_rise = MazeContents.hero.ATR_RISE;
+                    egg.def_rise = MazeContents.hero.DEF_RISE;
+                    egg.hp_rise = MazeContents.hero.MAX_HP_RISE;
+                }
+            }
+            if(random.nextInt(100) == 97){
+                if(random.nextBoolean()){
+                    egg.setSkill(new GoldenSearcher());
+                }else{
+                    egg.setSkill(new QuickGrow());
+                }
+            }
+            PetDB.save(egg);
+            return egg;
+        }else{
+            return null;
+        }
+    }
+
+    public long getAtk_rise() {
+        return atk_rise;
+    }
+
+    public long getDef_rise() {
+        return def_rise;
+    }
+
+    public long getHp_rise() {
+        return hp_rise;
+    }
+
+    public void setAtk_rise(Long atk_rise) {
+        this.atk_rise = atk_rise;
+    }
+
+    public void setHp_rise(Long hp_rise) {
+        this.hp_rise = hp_rise;
+    }
+
+    public void setDef_rise(Long def_rise) {
+        this.def_rise = def_rise;
     }
 }

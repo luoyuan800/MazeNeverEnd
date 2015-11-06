@@ -206,6 +206,14 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                 listView.setAdapter(adapter);
                 alertDialog.setView(listView);
                 alertDialog.show();
+                Button button = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                if(MazeContents.hero!=null){
+                    if(MazeContents.hero.getMaterial() < 100000){
+                        button.setEnabled(false);
+                    }else{
+                        button.setEnabled(true);
+                    }
+                }
                 break;
             case R.id.forge_clean_button:
                 clean();

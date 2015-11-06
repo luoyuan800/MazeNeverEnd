@@ -91,6 +91,7 @@ public class Hero implements BaseObject {
     private float eggRate = 300;
     private long eggStep;
     private String titleColor;
+    private long resetSkillCount = 0;
 
     public Float getParry() {
         return parry;
@@ -800,6 +801,18 @@ public class Hero implements BaseObject {
                 case ADD_PARRY:
                     parry += effect.getValue();
                     break;
+                case ADD_PER_ATK:
+                    Double atk = getUpperAtk() * effect.getValue()/100d;
+                    addAttackValue(atk.longValue());
+                    break;
+                case ADD_PER_DEF:
+                    Double def = getUpperDef() * effect.getValue()/100d;
+                    addDefenseValue(def.longValue());
+                    break;
+                case ADD_PER_UPPER_HP:
+                    Double uHp = getUpperHp() * effect.getValue()/100d;
+                    addUpperHp(uHp.longValue());
+                    break;
             }
         }
     }
@@ -841,6 +854,18 @@ public class Hero implements BaseObject {
                 case ADD_PARRY:
                     parry -= effect.getValue();
                     if (parry < 0) parry = 0f;
+                    break;
+                case ADD_PER_ATK:
+                    Double atk = getUpperAtk() * effect.getValue()/100d;
+                    addAttackValue(-atk.longValue());
+                    break;
+                case ADD_PER_DEF:
+                    Double def = getUpperDef() * effect.getValue()/100d;
+                    addDefenseValue(-def.longValue());
+                    break;
+                case ADD_PER_UPPER_HP:
+                    Double uHp = getUpperHp() * effect.getValue()/100d;
+                    addUpperHp(-uHp.longValue());
                     break;
             }
         }
@@ -966,6 +991,7 @@ public class Hero implements BaseObject {
             Achievement.reBird.enable(this);
             dbHelper.endTransaction();
             MainGameActivity.context.addMessage(getFormatName() + "成功转生！");
+            MainGameActivity.context.save();
             reincaCount++;
         }
     }
@@ -1209,5 +1235,13 @@ public class Hero implements BaseObject {
 
     public String getTitleColor() {
         return titleColor;
+    }
+
+    public long getResetSkillCount() {
+        return resetSkillCount;
+    }
+
+    public void setResetSkillCount(long resetSkillCount) {
+        this.resetSkillCount = resetSkillCount;
     }
 }

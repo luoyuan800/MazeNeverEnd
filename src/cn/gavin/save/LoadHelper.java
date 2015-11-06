@@ -115,6 +115,7 @@ public class LoadHelper {
         heroN.setPetRate(preferences.getFloat("pet_rate", 1.0f));
         heroN.setEggRate(preferences.getFloat("egg_rate", 200f));
         heroN.setEggStep(preferences.getLong("egg_step", 1));
+        heroN.setResetSkillCount(preferences.getLong("reset_skill", 0));
         String petIds = preferences.getString("pet_id", "");
         String[] ids = StringUtils.split(petIds, "_");
         for(String id : ids){

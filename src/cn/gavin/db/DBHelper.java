@@ -28,7 +28,8 @@ public class DBHelper {
     private static int DB_VERSION_1_4_7 = 13;
     private static int DB_VERSION_1_4 = 12;
     private static int DB_VERSION_1_4_8 = 14;
-    private static int DB_VERSION = 15;
+    private static int DB_VERSION_1_5 = 15;
+    private static int DB_VERSION = 16;
 
     private Context context;
     private SQLiteDatabase database;
@@ -133,6 +134,16 @@ public class DBHelper {
         upgrade11_12(db, oldVersion);
         upgrade12_13(db, oldVersion);
         upgrade14_15(db, oldVersion);
+        upgrade15_16(db);
+    }
+
+    private void upgrade15_16(SQLiteDatabase db){
+        try{
+            PetDB.createDB(db);
+        }catch (Exception e){
+            e.printStackTrace();
+            LogHelper.logException(e);
+        }
     }
 
     private void upgrade14_15(SQLiteDatabase db, int oldVersion) {

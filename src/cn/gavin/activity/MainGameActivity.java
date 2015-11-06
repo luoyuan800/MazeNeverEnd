@@ -676,21 +676,23 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     }
 
     private void showResetSkillPointDialog() {
+        final long resetSkillValue = 799988 + 69988 * heroN.getResetSkillCount();
         AlertDialog resetSkillPointDialog;
         resetSkillPointDialog = new Builder(this).create();
-        resetSkillPointDialog.setTitle("消耗699988材料重置技能");
+        resetSkillPointDialog.setTitle("消耗" + resetSkillValue + "材料重置技能");
         resetSkillPointDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        heroN.addMaterial(-699988);
+                        heroN.addMaterial(-resetSkillValue);
                         heroN.setOnSkill(false);
                         heroN.setOnChange(false);
                         heroN.setSkillAdditionHp(0l);
                         heroN.setSkillAdditionAtk(0l);
                         heroN.setSkillAdditionDef(0l);
                         heroN.setSkillPoint(heroN.getSkillPoint() + SkillFactory.reset());
+                        heroN.setResetSkillCount(heroN.getResetSkillCount() + 1);
                         handler.sendEmptyMessage(103);
                         dialog.dismiss();
                     }
@@ -706,7 +708,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
                 });
         resetSkillPointDialog.show();
-        if (heroN.getMaterial() > 699988) {
+        if (heroN.getMaterial() > resetSkillValue) {
             resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         } else {
             resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -1712,6 +1714,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
             case R.id.pet_detail_button:
+                saveHelper.savePet();
                 petDialog.show(heroN);
                 break;
             case R.id.pet_pic:
@@ -1991,7 +1994,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             if (!item.a0.isEnable()) {
                 holder.name.setTextColor(convertView.getResources().getColor(R.color.disable));
             } else {
-                holder.name.setTextColor(convertView.getResources().getColor(R.color.active));
+                holder.name.setTextColor(convertView.getResources().getColor(R.color.onUse));
             }
             holder.name1.setText(item.a1.getName());
             holder.name1.setOnClickListener(new OnClickListener() {
@@ -2007,7 +2010,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             if (!item.a1.isEnable()) {
                 holder.name1.setTextColor(convertView.getResources().getColor(R.color.disable));
             } else {
-                holder.name1.setTextColor(convertView.getResources().getColor(R.color.active));
+                holder.name1.setTextColor(convertView.getResources().getColor(R.color.onUse));
             }
             holder.name2.setText(item.a2.getName());
             holder.name2.setOnClickListener(new OnClickListener() {
@@ -2023,7 +2026,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             if (!item.a2.isEnable()) {
                 holder.name2.setTextColor(convertView.getResources().getColor(R.color.disable));
             } else {
-                holder.name2.setTextColor(convertView.getResources().getColor(R.color.active));
+                holder.name2.setTextColor(convertView.getResources().getColor(R.color.onUse));
             }
             holder.name3.setText(item.a3.getName());
             holder.name3.setOnClickListener(new OnClickListener() {
@@ -2040,7 +2043,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 holder.name3.setTextColor(convertView.getResources().getColor(R.color.disable));
 
             } else {
-                holder.name3.setTextColor(convertView.getResources().getColor(R.color.active));
+                holder.name3.setTextColor(convertView.getResources().getColor(R.color.onUse));
             }
             return convertView;
         }

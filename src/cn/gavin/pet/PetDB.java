@@ -30,6 +30,9 @@ public class PetDB {
                 "skill_count TEXT," +
                 "intimacy TEXT," +
                 "death_c TEXT," +
+                "atk_rise TEXT," +
+                "def_rise TEXT," +
+                "hp_rise TEXT," +
                 "atk TEXT," +
                 "def TEXT," +
                 "hp TEXT," +
@@ -59,7 +62,9 @@ public class PetDB {
     }
 
     public static void save(Pet... pets) {
-        String base = "REPLACE INTO pet (id, name, type, intimacy, element, skill, skill_count, death_c, atk, def, hp,u_hp, lev, farther, mother, sex) values ('%s', '%s', '%s','%s','%s','%s','%s','%s','%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')";
+        String base = "REPLACE INTO pet (id, name, type, intimacy, element, skill, skill_count, " +
+                "death_c, atk, def, hp,u_hp, lev, farther, mother, sex, atk_rise, hp_rise, def_rise) " +
+                "values ('%s', '%s', '%s','%s','%s','%s','%s','%s','%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s','%s')";
         for (Pet pet : pets) {
             if (!StringUtils.isNotEmpty(pet.getId())) {
                 pet.setId(UUID.randomUUID().toString());
@@ -68,7 +73,8 @@ public class PetDB {
             String sql = String.format(base, pet.getId(), pet.getName(), pet.getType(),
                     pet.getIntimacy(), pet.getElement().name(), skill != null ? skill.getName() : "",
                     skill != null ? skill.getCount() : "0", pet.getDeathCount(), pet.getMaxAtk(),
-                    pet.getMaxDef(), pet.getHp(), pet.getUHp(), pet.getLev(), pet.getfName(), pet.getmName(), pet.getSex());
+                    pet.getMaxDef(), pet.getHp(), pet.getUHp(), pet.getLev(), pet.getfName(),
+                    pet.getmName(), pet.getSex(), pet.getAtk_rise(), pet.getHp_rise(), pet.getDef_rise());
             DBHelper.getDbHelper().excuseSQLWithoutResult(sql);
         }
     }
@@ -83,21 +89,28 @@ public class PetDB {
         for (Pet pet : pets) {
             Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM pet WHERE id ='" + pet.getId() + "'");
             if (!cursor.isAfterLast()) {
-                pet.setName(cursor.getString(cursor.getColumnIndex("name")));
-                pet.setType(cursor.getString(cursor.getColumnIndex("type")));
-                pet.setHp(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))));
-                pet.setAtk(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk"))));
-                pet.setDef(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def"))));
-                pet.setUHp(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("u_hp"))));
-                pet.setIntimacy(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("intimacy"))));
-                pet.setDeathCount(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("death_c"))));
-                pet.setLev(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("lev"))));
-                pet.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
-                pet.setfName(cursor.getString(cursor.getColumnIndex("farther")));
-                pet.setmName(cursor.getString(cursor.getColumnIndex("mother")));
-                pet.setSex(cursor.getInt(cursor.getColumnIndex("sex")));
+                buildPet(pet, cursor);
             }
         }
+    }
+
+    private static void buildPet(Pet pet, Cursor cursor) {
+        pet.setName(cursor.getString(cursor.getColumnIndex("name")));
+        pet.setType(cursor.getString(cursor.getColumnIndex("type")));
+        pet.setHp(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))));
+        pet.setAtk(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk"))));
+        pet.setDef(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def"))));
+        pet.setUHp(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("u_hp"))));
+        pet.setIntimacy(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("intimacy"))));
+        pet.setDeathCount(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("death_c"))));
+        pet.setLev(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("lev"))));
+        pet.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
+        pet.setfName(cursor.getString(cursor.getColumnIndex("farther")));
+        pet.setmName(cursor.getString(cursor.getColumnIndex("mother")));
+        pet.setSex(cursor.getInt(cursor.getColumnIndex("sex")));
+        pet.setAtk_rise(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk_rise"))));
+        pet.setDef_rise(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def_rise"))));
+        pet.setHp_rise(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp_rise"))));
     }
 
     public static List<Pet> loadPet(SQLiteDatabase db) {
@@ -113,20 +126,8 @@ public class PetDB {
             }
             while (!cursor.isAfterLast()) {
                 Pet pet = new Pet();
-                pet.setName(cursor.getString(cursor.getColumnIndex("name")));
-                pet.setType(cursor.getString(cursor.getColumnIndex("type")));
-                pet.setHp(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))));
-                pet.setAtk(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk"))));
-                pet.setDef(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def"))));
-                pet.setUHp(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("u_hp"))));
-                pet.setIntimacy(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("intimacy"))));
-                pet.setDeathCount(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("death_c"))));
-                pet.setLev(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("lev"))));
-                pet.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
+                buildPet(pet, cursor);
                 pet.setId(cursor.getString(cursor.getColumnIndex("id")));
-                pet.setfName(cursor.getString(cursor.getColumnIndex("farther")));
-                pet.setmName(cursor.getString(cursor.getColumnIndex("mother")));
-                pet.setSex(cursor.getInt(cursor.getColumnIndex("sex")));
                 //TODO skill
                 pets.add(pet);
                 cursor.moveToNext();
