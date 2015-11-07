@@ -54,7 +54,7 @@ public class Pet extends Base {
     }
 
     public boolean gon() {
-        return getRandom().nextInt(100) < getRandom().nextLong(intimacy / 500);
+        return getRandom().nextInt(100) < getRandom().nextLong(intimacy / 200);
     }
 
     public void save() {
@@ -97,6 +97,18 @@ public class Pet extends Base {
         if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 5 && rate > current) {
             Pet pet = cPet(monster, random);
             if (pet == null) return null;
+            if((SkillFactory.getSkill("神赋", MazeContents.hero, null).isActive() && random.nextInt(100) < 30) || random.nextInt(5000) < 5){
+                if (random.nextBoolean()) {
+                    pet.setSkill(new GoldenSearcher());
+                } else {
+                    pet.setSkill(new QuickGrow());
+                }
+            }
+            if(SkillFactory.getSkill("神赋", MazeContents.hero, null).isActive()){
+                pet.setAtk_rise(pet.getAtk_rise() * 3);
+                pet.setDef_rise(pet.getDef_rise() * 3);
+                pet.setHp_rise(pet.getHp_rise() * 3);
+            }
             return pet;
         } else {
             return null;
@@ -202,7 +214,7 @@ public class Pet extends Base {
                 pet.image = R.drawable.long_pet;
                 break;
             case 24:
-                pet.image = R.drawable.xion;
+                //pet.image = R.drawable.xion;
             default:
                 pet.image = R.drawable.h_4_s;
         }
@@ -381,11 +393,15 @@ public class Pet extends Base {
             egg.setDef(f.getMaxDef() / 2 + random.nextLong(m.getMaxDef()));
             egg.setSex(random.nextInt(2));
             egg.setLev(lev);
+            egg.setElement(Element.values()[random.nextInt(Element.values().length-1)]);
             if (!f.getType().equals(m.getType())) {
                 if (random.nextInt(10000) + random.nextFloat() < 2.015) {
-                    egg.setType(Monster.lastNames[random.nextInt(Monster.lastNames.length)]);
+                    String lastName = Monster.lastNames[random.nextInt(Monster.lastNames.length)];
+                    egg.setType(lastName);
+                    egg.setName("变异的" + lastName);
                     if (egg.getType().equals("作者")) {
                         egg.setType("蟑螂");
+                        egg.setAtk(egg.getAtk() * 2);
                     }
                     egg.color = "#B8860B";
                     egg.atk_rise = MazeContents.hero.ATR_RISE;
@@ -393,7 +409,7 @@ public class Pet extends Base {
                     egg.hp_rise = MazeContents.hero.MAX_HP_RISE;
                 }
             }
-            if (random.nextInt(100) == 97) {
+            if((SkillFactory.getSkill("恩赐", MazeContents.hero, null).isActive() && random.nextInt(100) < 40) || random.nextInt(1000) < 5){
                 if (random.nextBoolean()) {
                     egg.setSkill(new GoldenSearcher());
                 } else {

@@ -113,6 +113,7 @@ public class PetSimpleAdapter extends BaseAdapter {
                 if (view == null) {
                     view = new TextView(MainGameActivity.context);
                 }
+                view.setTextSize(15);
                 view.setText(Html.fromHtml(pet.getFormatName() + (pet.isOnUsed() ? "  √ " : "")));
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -151,6 +152,7 @@ public class PetSimpleAdapter extends BaseAdapter {
                 }
             });
             LinearLayout linearLayout = new LinearLayout(context);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
             linearLayout.addView(onUsedCheck);
             detail.setView(linearLayout);
             TextView name = new TextView(context);
@@ -192,12 +194,14 @@ public class PetSimpleAdapter extends BaseAdapter {
                         } else {
                             pet.setOnUsed(true);
                             listener.setToHero();
-                            listener.refresh();
                             onUsedPetsId.add(pet.getId());
+                            listener.refresh();
                         }
                     } else if (!isChecked && pet.isOnUsed()) {
                         pet.setOnUsed(false);
+                        listener.setToHero();
                         onUsedPetsId.remove(pet.getId());
+                        listener.refresh();
                     }
                 }
             });
@@ -232,6 +236,12 @@ public class PetSimpleAdapter extends BaseAdapter {
                     dialog.show();
                 }
             });
+
+            if (pet.isOnUsed()) {
+                onUsedCheck.setChecked(true);
+            } else {
+                onUsedCheck.setChecked(false);
+            }
             detail.show();
         }
     }
@@ -379,12 +389,14 @@ public class PetSimpleAdapter extends BaseAdapter {
                             } else {
                                 pet.setOnUsed(true);
                                 listener.setToHero();
-                                listener.refresh();
                                 onUsedPetsId.add(pet.getId());
+                                listener.refresh();
                             }
                         } else if (!isChecked && pet.isOnUsed()) {
                             pet.setOnUsed(false);
+                            listener.setToHero();
                             onUsedPetsId.remove(pet.getId());
+                            listener.refresh();
                         }
                     }
                 });

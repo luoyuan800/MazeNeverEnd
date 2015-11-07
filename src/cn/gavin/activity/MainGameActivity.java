@@ -12,58 +12,17 @@ import android.content.pm.PackageInfo;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
+import android.os.*;
 import android.text.Html;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ViewFlipper;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Random;
-
-import cn.gavin.Achievement;
-import cn.gavin.Armor;
-import cn.gavin.Element;
-import cn.gavin.Hero;
-import cn.gavin.R;
-import cn.gavin.Sword;
+import cn.gavin.*;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
-import cn.gavin.forge.Accessory;
-import cn.gavin.forge.HatBuilder;
-import cn.gavin.forge.Item;
-import cn.gavin.forge.NecklaceBuilder;
-import cn.gavin.forge.RingBuilder;
+import cn.gavin.forge.*;
 import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.adapter.RecipeAdapter;
 import cn.gavin.forge.effect.Effect;
@@ -71,10 +30,12 @@ import cn.gavin.forge.list.ItemName;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.maze.MazeService;
+import cn.gavin.monster.Monster;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.monster.PalaceAdapt;
 import cn.gavin.palace.PalaceMonster;
 import cn.gavin.pet.Pet;
+import cn.gavin.pet.PetDB;
 import cn.gavin.pet.PetDialog;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
@@ -83,6 +44,13 @@ import cn.gavin.skill.SkillFactory;
 import cn.gavin.upload.CdKey;
 import cn.gavin.upload.Upload;
 import cn.gavin.utils.StringUtils;
+
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Random;
 
 public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener, OnItemClickListener, BaseContext {
     //Constants
@@ -303,6 +271,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             Achievement.crapGame.enable();
                         }
                         Achievement.richer.enable(heroN);
+                        showAwardPet();
                         break;
                     case 1:
                         if (pause) {
@@ -729,14 +698,14 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final String input = tv.getText().toString();
-                        if(input.startsWith("#")){
+                        if (input.startsWith("#")) {
                             try {
                                 itembarContri.setBackgroundColor(Color.parseColor(input));
                                 heroN.setTitleColor(input);
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                        }else if (input.startsWith("~")) {
+                        } else if (input.startsWith("~")) {
                             showKeyDialog(input);
                         } else if (input.equals("qx22222") && heroN.getAwardCount() <= 6) {
                             Accessory hat = new Accessory();
@@ -806,7 +775,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             heroN.setKeyCount(heroN.getKeyCount() + 10);
                             heroN.setAwardCount(heroN.getAwardCount() + 6);
                         } else if (StringUtils.isNotEmpty(input)) {
-                            heroN.setName(input.replaceAll("_", " "));
+                            String name = input.replaceAll("_", " ");
+                            name = input.replaceAll("'", "`");
+                            heroN.setName(name);
                         }
                         dialog.dismiss();
                     }
@@ -832,7 +803,22 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     }
 
 
-    private void showAwardPet(final Pet pet) {
+    private void showAwardPet() {
+        final Pet pet = new Pet();
+        int i = 24 + heroN.getRandom().nextInt(4);
+        if(i >= Monster.lastNames.length){
+            i = Monster.lastNames.length - 1;
+        }
+        pet.setType(Monster.lastNames[i]);
+        pet.setAtk(heroN.getBaseAttackValue() / 105);
+        pet.setDef(heroN.getBaseDefense() / 205);
+        pet.setHp(heroN.getRealHP() / 1000);
+        pet.setElement(heroN.getElement());
+        pet.setName("奖励的普通" + pet.getType());
+        pet.setSex(heroN.getRandom().nextInt(2));
+        pet.setLev(maze.getLev());
+        pet.setIntimacy(0l);
+        PetDB.save(pet);
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("您获得了新宠物");
         final TextView tv = new TextView(context);
@@ -843,11 +829,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         dialog.setView(tv);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        //TODO
                         dialog.dismiss();
                     }
 
@@ -1233,7 +1216,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                heroN.setHello(textView.getText().toString());
+                String hello = textView.getText().toString();
+                hello = hello.replaceAll("'", "`");
+                heroN.setHello(hello);
                 handler.sendEmptyMessage(101);
                 dialog.dismiss();
             }
@@ -1271,7 +1256,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         itembarContri.setOnClickListener(this);
         try {
             itembarContri.setBackgroundColor(Color.parseColor(heroN.getTitleColor()));
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         // ---- ---- 属性
@@ -1460,8 +1445,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             }
         }
 
-        lockBoxCount.setText("X " + heroN.getLockBox());
-        keyCount.setText("X " + heroN.getKeyCount());
+        lockBoxCount.setText("" + heroN.getLockBox());
+        keyCount.setText("" + heroN.getKeyCount());
         if (heroN.getRing() != null) {
             ringTextView.setText(Html.fromHtml(heroN.getRing().getFormatName()));
         } else {
@@ -1479,7 +1464,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         }
         StringBuilder builder = new StringBuilder();
         for (Pet pet : heroN.getPets()) {
-            builder.append(pet.getType()).append(pet.getSex()== 0 ? "♂" : "♀").append("<br>");
+            if (!pet.getType().equals("蛋")) {
+                builder.append(pet.getType()).append(pet.getSex() == 0 ? "♂" : "♀").append("<br>");
+            } else {
+                builder.append(pet.getType()).append("<br>");
+            }
         }
         petView.setText(Html.fromHtml(builder.toString()));
         petDialog = new PetDialog(this);
@@ -1718,9 +1707,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 petDialog.show(heroN);
                 break;
             case R.id.pet_pic:
-                for(Pet pet : heroN.getPets()){
+                for (Pet pet : heroN.getPets()) {
                     pet.click();
                 }
+                heroN.click(false);
                 break;
             case R.id.palace_button:
                 showPalace();
@@ -1984,10 +1974,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             holder.name.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(item.a0.isEnable()){
+                    if (item.a0.isEnable()) {
                         achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a0.getName() + "</b> : " + item.a0.getDesc() + "</font>"));
-                    }else{
-                        achievementDesc.setText(Html.fromHtml("<b>" + item.a0.getName() + "</b> : " + item.a0.getUnlockDesc()+ "。效果：？？？"));
+                    } else {
+                        achievementDesc.setText(Html.fromHtml("<b>" + item.a0.getName() + "</b> : " + item.a0.getUnlockDesc() + "。效果：？？？"));
                     }
                 }
             });
@@ -2000,10 +1990,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             holder.name1.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(item.a1.isEnable()){
+                    if (item.a1.isEnable()) {
                         achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a1.getName() + "</b> : " + item.a1.getDesc() + "</font>"));
-                    }else{
-                        achievementDesc.setText(Html.fromHtml("<b>" + item.a1.getName() + "</b> : " + item.a1.getUnlockDesc()+ "。效果：？？？"));
+                    } else {
+                        achievementDesc.setText(Html.fromHtml("<b>" + item.a1.getName() + "</b> : " + item.a1.getUnlockDesc() + "。效果：？？？"));
                     }
                 }
             });
@@ -2016,9 +2006,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             holder.name2.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(item.a2.isEnable()){
+                    if (item.a2.isEnable()) {
                         achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a2.getName() + "</b> : " + getItem(position).a2.getDesc() + "</font>"));
-                    }else{
+                    } else {
                         achievementDesc.setText(Html.fromHtml("<b>" + item.a2.getName() + "</b> : " + item.a2.getUnlockDesc() + "。效果：？？？"));
                     }
                 }
@@ -2032,10 +2022,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             holder.name3.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(item.a3.isEnable()){
+                    if (item.a3.isEnable()) {
                         achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a3.getName() + "</b> : " + getItem(position).a3.getDesc() + "</font>"));
-                    }else{
-                        achievementDesc.setText(Html.fromHtml("<b>" + item.a3.getName() + "</b> : " + item.a3.getUnlockDesc()+ "。效果：？？？"));
+                    } else {
+                        achievementDesc.setText(Html.fromHtml("<b>" + item.a3.getName() + "</b> : " + item.a3.getUnlockDesc() + "。效果：？？？"));
                     }
                 }
             });

@@ -24,6 +24,7 @@ public class PropertySkill extends Skill {
     private float petRate;
     private float eggRate;
     private float eggStep;
+    private int petSize;
 
     public PropertySkill() {
 
@@ -74,6 +75,7 @@ public class PropertySkill extends Skill {
                 getHero().addClickAward(clickAward);
                 getHero().setPetRate(getHero().getPetRate() + petRate);
                 getHero().setEggRate(getHero().getEggRate() + eggRate);
+                getHero().setPetSize(getHero().getPetSize() + petSize);
                 Toast.makeText(MainGameActivity.context, "激活" + getName(), Toast.LENGTH_SHORT).show();
             } else if(!used && onUsed){
                 getHero().addAgility(-agi);
@@ -85,6 +87,7 @@ public class PropertySkill extends Skill {
                 getHero().addClickAward(-clickAward);
                 getHero().setPetRate(getHero().getPetRate() - petRate);
                 getHero().setEggRate(getHero().getEggRate() - eggRate);
+                getHero().setPetSize(getHero().getPetSize() - petSize);
             }
         }
         this.onUsed = used;
@@ -202,5 +205,13 @@ public class PropertySkill extends Skill {
 
     public float getEggStep() {
         return eggStep;
+    }
+
+    public int getPetSize() {
+        return petSize;
+    }
+
+    public void setPetSize(int petSize) {
+        this.petSize = petSize;
     }
 }

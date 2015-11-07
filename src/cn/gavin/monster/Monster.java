@@ -8,6 +8,7 @@ import java.util.List;
 import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.activity.MazeContents;
 import cn.gavin.forge.Item;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.maze.Maze;
@@ -343,6 +344,7 @@ public class Monster {
         monster.silent = 100;
         monster.mazeLev = 0;
         monster.element = Element.水;
+        monster.formatName(MazeContents.hero);
         return monster;
     }
 }

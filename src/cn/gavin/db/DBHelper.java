@@ -140,6 +140,7 @@ public class DBHelper {
     private void upgrade15_16(SQLiteDatabase db){
         try{
             PetDB.createDB(db);
+            new ForgeDB().upgradeTp1_6(db);
         }catch (Exception e){
             e.printStackTrace();
             LogHelper.logException(e);

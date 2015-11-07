@@ -2,6 +2,7 @@ package cn.gavin.palace;
 
 import java.util.Stack;
 
+import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.activity.PalaceActivity;
 import cn.gavin.maze.Maze;
@@ -91,6 +92,7 @@ public class Palace extends Maze {
                 context.addMessage("------------------------------");
                 if (monster instanceof PalaceHero) {
                     context.addMessage("恭喜你挑战成功！<br>你击败了所有的殿堂守护者。");
+                    Achievement.palace.enable(heroN);
                     long count = random.nextLong(lev / 2000 + 1) + 10;
                     context.addMessage(hero.getFormatName() + "获得了" + count + "个宝箱");
                     heroN.setLockBox(heroN.getLockBox() + count);

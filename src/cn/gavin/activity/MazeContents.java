@@ -24,6 +24,10 @@ public class MazeContents {
 
 
     public static boolean checkCheat(Hero hero) {
-        return ((hero.getUpperHp() + hero.getUpperDef() + hero.getUpperAtk()) < (hero.getMaxMazeLev() * 4900000 * (hero.getPay() + 2))) && !(hero.getMaxMazeLev() > 50000 && !Achievement.richer.isEnable());
+        long point = 2500 * hero.getMaxMazeLev();
+        boolean normal = hero.getStrength() < point && hero.getAgility() < point && hero.getPower() < point;
+        boolean normal2 = hero.getBaseAttackValue() < point * hero.ATR_RISE &&
+                hero.getBaseDefense() < point * hero.DEF_RISE && hero.getRealUHP() < point * 10 * hero.MAX_HP_RISE;
+        return normal && normal2 && ((hero.getUpperHp() + hero.getUpperDef() + hero.getUpperAtk()) < (hero.getMaxMazeLev() * 4900000 * (hero.getPay() + 2))) && !(hero.getMaxMazeLev() > 50000 && !Achievement.richer.isEnable());
     }
 }

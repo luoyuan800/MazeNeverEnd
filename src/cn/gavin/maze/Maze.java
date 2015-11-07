@@ -88,7 +88,15 @@ public class Maze {
                 String msg = hero.getFormatName() + "进入了" + level + "层迷宫， 获得了<font color=\"#FF8C00\">" + point + "</font>点数奖励";
                 for (Pet pet : hero.getPets()) {
                     pet.click();
-                    if(!"蛋".equals(pet.getType())){
+                    if (pet.getType().equals("蛋")) {
+                        pet.setDeathCount(pet.getDeathCount() - hero.getEggStep());
+                        if (pet.getDeathCount() <= 0) {
+                            addMessage(context, pet.getFormatName() + "出生了！");
+                            pet.setType(pet.getName());
+                            pet.setLev(level);
+                            PetDB.save(pet);
+                        }
+                    }else if(!"蛋".equals(pet.getType())){
                         if(pet.getSkill()!=null){
                             if(pet.getSkill() instanceof PetSkill) {
                                 ((PetSkill)pet.getSkill()).release(hero);
@@ -103,17 +111,7 @@ public class Maze {
 
                 hero.addPoint(point);
                 hero.addHp(random.nextLong(hero.getUpperHp() / 10 + 1) + random.nextLong(hero.getPower() / 500));
-                for (Pet pet : hero.getPets()) {
-                    if (pet.getType().equals("蛋")) {
-                        pet.setDeathCount(pet.getDeathCount() - hero.getEggStep());
-                        if (pet.getDeathCount() <= 0) {
-                            addMessage(context, pet.getFormatName() + "出生了！");
-                            pet.setType(pet.getName());
-                            pet.setLev(level);
-                            PetDB.save(pet);
-                        }
-                    }
-                }
+
                 addMessage(context, "-------------------");
             } else if (random.nextLong(850 + hunt) > 993 && random.nextLong(hero.getAgility()) > random.nextLong(6971)) {
                 long mate = random.nextLong(level * 300 + 1) + random.nextLong(hero.getAgility() / 1000 + 100) + 100;

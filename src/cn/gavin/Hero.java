@@ -89,7 +89,7 @@ public class Hero implements BaseObject {
     private int petSize = 3;
     private float petRate = 0.7f;
     private float eggRate = 300;
-    private long eggStep;
+    private long eggStep = 1;
     private String titleColor;
     private long resetSkillCount = 0;
 
@@ -210,7 +210,7 @@ public class Hero implements BaseObject {
 
     public Long getAttackValue() {
         long atk = isOnChange() ? changAtk : (attackValue + random.nextLong(sword.getBase()) + random.nextLong(swordLev + 1) * DEF_RISE + getSkillAdditionAtk());
-        if (random.nextLong(100) + hitRate + random.nextLong(agility + 1) / 5000 > 97 + random.nextInt(20) + random.nextLong(power + 1) / 5000) {
+        if (random.nextLong(100) + hitRate + random.nextLong(agility + 1) / 5000 > 97 + random.nextInt(100) + random.nextLong(power + 1) / 5000) {
             atk += atk / 3;
             isHit = true;
         } else {
@@ -235,7 +235,7 @@ public class Hero implements BaseObject {
     public Long getDefenseValue() {
         long defend = defenseValue + random.nextLong(armor.getBase()) + random.nextLong(armorLev + 1) * ATR_RISE + getSkillAdditionDef();
         if (parry > 100) parry = 90f;
-        if (random.nextLong(100) + parry + random.nextLong(agility + 1) / 5000 > 97 + random.nextInt(20) + random.nextLong(strength + 1) / 5000) {
+        if (random.nextLong(100) + parry + random.nextLong(agility + 1) / 5000 > 97 + random.nextInt(50) + random.nextLong(strength + 1) / 5000) {
             defend *= 3;
             isParry = true;
         } else {
@@ -1110,8 +1110,8 @@ public class Hero implements BaseObject {
     }
 
     public void setHitRate(long hitRate) {
-        if (hitRate > 18) {
-            hitRate = 15;
+        if (hitRate > 90) {
+            hitRate = 90;
         }
         if (hitRate < 0) hitRate = 0;
         this.hitRate = hitRate;
@@ -1145,8 +1145,8 @@ public class Hero implements BaseObject {
     }
 
     public void setDodgeRate(Float dodgeRate) {
-        if (dodgeRate > 15) {
-            dodgeRate = 15f;
+        if (dodgeRate > 90) {
+            dodgeRate = 90f;
         }
         if (dodgeRate < 0) {
             dodgeRate = 0f;

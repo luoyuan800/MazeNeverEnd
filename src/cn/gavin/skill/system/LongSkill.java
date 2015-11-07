@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import cn.gavin.Achievement;
 import cn.gavin.Element;
 import cn.gavin.Hero;
@@ -125,6 +124,9 @@ public class LongSkill extends SkillLayout {
                     String msg = hero.getFormatName() + "释放了" + iskll.getName() + "吓退了" + monster.getFormatName();
                     iskll.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
+                    if (skill.getCount() > 60000) {
+                        Achievement.folk.enable(hero);
+                    }
                     return true;
                 }
 
@@ -179,7 +181,7 @@ public class LongSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     if (skill.getProbability() < 65) {
-                        skill.setProbability(skill.getProbability() +5);
+                        skill.setProbability(skill.getProbability() + 5);
                     }
                     return true;
                 }

@@ -13,10 +13,7 @@ import android.widget.ViewFlipper;
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.skill.system.BaseSkill;
-import cn.gavin.skill.system.EvilSkill;
-import cn.gavin.skill.system.LongSkill;
-import cn.gavin.skill.system.SwindlerSkill;
+import cn.gavin.skill.system.*;
 import cn.gavin.skill.type.PropertySkill;
 
 import java.util.List;
@@ -92,10 +89,14 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         LongSkill longSkill = new LongSkill(context);
         longSkill.init(this);
 
+        PetSkill petSkill = new PetSkill(context);
+        petSkill.init(this);
+
         viewFlipper.addView(baseSkill);
         viewFlipper.addView(evilSkill);
         viewFlipper.addView(swindlerSkill);
         viewFlipper.addView(longSkill);
+        viewFlipper.addView(petSkill);
         linearLayout.addView(viewFlipper);
         detector = new GestureDetector(context, this);
         alertDialog.setView(view);
@@ -140,6 +141,9 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         }
         if(viewFlipper.getCurrentView() instanceof SwindlerSkill){
             sillNameText.setText("欺诈师");
+        }
+        if(viewFlipper.getCurrentView() instanceof PetSkill){
+            sillNameText.setText("宠物大师");
         }
         skillDesc.setText("");
     }
