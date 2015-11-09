@@ -313,8 +313,8 @@ public class PetSimpleAdapter extends BaseAdapter {
                 String source = getIntimacyString();
                 leveText.setText(Html.fromHtml(source));
                 hpValue.setText(pet.getHp() + "/" + pet.getUHp());
-                atkValue.setText(pet.getAtk() + "");
-                defValue.setText(pet.getDef() + "");
+                atkValue.setText(pet.getMaxAtk() + "");
+                defValue.setText(pet.getMaxDef() + "");
                 petOwner.setText(pet.getOwner());
                 Hero hero = MazeContents.hero;
                 if (hero.getPoint() < 1) {
@@ -338,11 +338,11 @@ public class PetSimpleAdapter extends BaseAdapter {
             if(intimacy < 1000){
                 source += "它好像不愿搭理你。";
             }else if(intimacy < 3000){
-                source += "它好像有一点傲娇的感觉。";
+                source += "它好像有一点傲娇。";
             }else if(intimacy < 10000){
-                source += "它好像很愿意亲近你了。";
+                source += "它好像在亲近你。";
             }else if(intimacy < 50000){
-                source += "它正在小心翼翼的跟随着你。";
+                source += "它似乎喜欢你了。";
             }else if(intimacy > 50000){
                 source += "它似乎不愿意离开你。";
             }
