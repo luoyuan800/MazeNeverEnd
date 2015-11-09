@@ -78,7 +78,7 @@ public class PetAdapter extends BaseAdapter implements View.OnClickListener{
             skillName = (TextView) view.findViewById(R.id.pet_skill_name);
             releaseButton = (Button) view.findViewById(R.id.release_pet);
             petPic = (ImageView) view.findViewById(R.id.pet_detail_pic);
-            petIni = (TextView) view.findViewById(R.id.pet_ini_value);
+            petIni = (TextView) view.findViewById(R.id.pet_owner_value);
             addHpButton = (Button) view.findViewById(R.id.pet_add_hp);
             addAtkButton = (Button) view.findViewById(R.id.pet_add_atk);
             addDefButton = (Button) view.findViewById(R.id.pet_add_def);

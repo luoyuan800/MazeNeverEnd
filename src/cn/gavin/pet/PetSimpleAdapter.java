@@ -159,7 +159,7 @@ public class PetSimpleAdapter extends BaseAdapter {
             name.setText(pet.getType());
             linearLayout.addView(name);
             TextView pa = new TextView(context);
-            pa.setText("父亲： " + pet.getfName() + "\n母亲:" + pet.getmName());
+            pa.setText("父亲： " + pet.getfName() + "\n母亲：" + pet.getmName());
             linearLayout.addView(pa);
             TextView bi = new TextView(context);
             if (pet.getDeathCount() < 10) {
@@ -334,7 +334,7 @@ public class PetSimpleAdapter extends BaseAdapter {
             this.pet = pet;
             if (pet != null) {
                 nameValue.setText(Html.fromHtml(pet.getFormatName()));
-                String source = "相遇在第<b>" + pet.getLev() + "</b>层。";
+                String source = "相遇在第<b>" + pet.getLev() + "</b>层。<font color=\"#6A5ACD\">";
                 long intimacy = pet.getIntimacy();
                 if(intimacy < 1000){
                     source += "不愿搭理你。";
@@ -347,6 +347,7 @@ public class PetSimpleAdapter extends BaseAdapter {
                 }else if(intimacy > 50000){
                     source += "不愿意离开你。";
                 }
+                source += "</font>";
                 leveText.setText(Html.fromHtml(source));
                 hpValue.setText(pet.getHp() + "/" + pet.getUHp());
                 atkValue.setText(pet.getAtk() + "");
@@ -357,7 +358,7 @@ public class PetSimpleAdapter extends BaseAdapter {
                     skillName.setText("无");
                 }
                 petPic.setImageResource(pet.getImage());
-                petOwner.setText(pet.getIntimacy() + "");
+                petOwner.setText(pet.getOwner() + "");
                 final Hero hero = MazeContents.hero;
                 if (hero.getPoint() < 1) {
                     addHpButton.setEnabled(false);

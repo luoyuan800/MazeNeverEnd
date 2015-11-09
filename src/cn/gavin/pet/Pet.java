@@ -1,6 +1,8 @@
 package cn.gavin.pet;
 
 import android.content.Context;
+
+import cn.gavin.Achievement;
 import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.R;
@@ -98,6 +100,7 @@ public class Pet extends Base {
         if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 5 && rate > current) {
             Pet pet = cPet(monster, random);
             if (pet == null) return null;
+            Achievement.pet.enable(MazeContents.hero);
             return pet;
         } else {
             return null;
@@ -423,6 +426,7 @@ public class Pet extends Base {
                 }
             }
             PetDB.save(egg);
+            Achievement.egg.enable(hero);
             return egg;
         } else {
             return null;
