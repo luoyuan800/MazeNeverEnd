@@ -35,6 +35,7 @@ public class Pet extends Base {
     private long atk_rise = 1;
     private long def_rise = 1;
     private long hp_rise = 2;
+    private String owner;
 
 
     public void click() {
@@ -97,18 +98,6 @@ public class Pet extends Base {
         if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 5 && rate > current) {
             Pet pet = cPet(monster, random);
             if (pet == null) return null;
-            if((SkillFactory.getSkill("神赋", MazeContents.hero, null).isActive() && random.nextInt(100) < 30) || random.nextInt(5000) < 5){
-                if (random.nextBoolean()) {
-                    pet.setSkill(new GoldenSearcher());
-                } else {
-                    pet.setSkill(new QuickGrow());
-                }
-            }
-            if(SkillFactory.getSkill("神赋", MazeContents.hero, null).isActive()){
-                pet.setAtk_rise(pet.getAtk_rise() * 3);
-                pet.setDef_rise(pet.getDef_rise() * 3);
-                pet.setHp_rise(pet.getHp_rise() * 3);
-            }
             return pet;
         } else {
             return null;
@@ -138,6 +127,19 @@ public class Pet extends Base {
             pet.setLev(monster.getMazeLev());
             pet.setIntimacy(0l);
             pet.setSex(random.nextInt(2));
+            pet.setOwner(MazeContents.hero.getName());
+            if((SkillFactory.getSkill("神赋", MazeContents.hero, null).isActive() && random.nextInt(100) < 30) || random.nextInt(5000) < 5){
+                if (random.nextBoolean()) {
+                    pet.setSkill(new GoldenSearcher());
+                } else {
+                    pet.setSkill(new QuickGrow());
+                }
+            }
+            if(SkillFactory.getSkill("神赋", MazeContents.hero, null).isActive()){
+                pet.setAtk_rise(pet.getAtk_rise() * 3);
+                pet.setDef_rise(pet.getDef_rise() * 3);
+                pet.setHp_rise(pet.getHp_rise() * 3);
+            }
             PetDB.save(pet);
             return pet;
         } else {
@@ -391,9 +393,13 @@ public class Pet extends Base {
             egg.setHp(f.getUHp() / 2 + random.nextLong(m.getHp()));
             egg.setAtk(f.getMaxAtk() / 2 + random.nextLong(m.getMaxAtk()));
             egg.setDef(f.getMaxDef() / 2 + random.nextLong(m.getMaxDef()));
+            egg.setAtk_rise((f.getAtk_rise() + m.getAtk_rise())/2);
+            egg.setDef_rise((f.getDef_rise() + m.getDef_rise())/2);
+            egg.setHp_rise((f.getHp_rise() + m.getHp_rise())/2);
             egg.setSex(random.nextInt(2));
             egg.setLev(lev);
-            egg.setElement(Element.values()[random.nextInt(Element.values().length-1)]);
+            egg.setElement(Element.values()[random.nextInt(Element.values().length - 1)]);
+            egg.setOwner(hero.getName());
             if (!f.getType().equals(m.getType())) {
                 if (random.nextInt(10000) + random.nextFloat() < 2.015) {
                     String lastName = Monster.lastNames[random.nextInt(Monster.lastNames.length)];
@@ -445,5 +451,13 @@ public class Pet extends Base {
 
     public void setDef_rise(Long def_rise) {
         this.def_rise = def_rise;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

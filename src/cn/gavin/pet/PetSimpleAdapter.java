@@ -159,7 +159,7 @@ public class PetSimpleAdapter extends BaseAdapter {
             name.setText(pet.getType());
             linearLayout.addView(name);
             TextView pa = new TextView(context);
-            pa.setText("父亲： " + pet.getfName() + "\n母亲" + pet.getmName());
+            pa.setText("父亲： " + pet.getfName() + "\n母亲:" + pet.getmName());
             linearLayout.addView(pa);
             TextView bi = new TextView(context);
             if (pet.getDeathCount() < 10) {
@@ -169,6 +169,8 @@ public class PetSimpleAdapter extends BaseAdapter {
             } else {
                 bi.setText("不知道里面是神马...");
             }
+            linearLayout.addView(bi);
+            linearLayout.addView(releaseButton);
             onUsedCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -253,7 +255,7 @@ public class PetSimpleAdapter extends BaseAdapter {
         private final Button addDefButton;
         private final Button addAtkButton;
         private final Button addHpButton;
-        private final TextView petIni;
+        private final TextView petOwner;
         private final ImageView petPic;
         private final Button releaseButton;
         private final TextView skillName;
@@ -295,7 +297,7 @@ public class PetSimpleAdapter extends BaseAdapter {
             skillName = (TextView) view.findViewById(R.id.pet_skill_name);
             releaseButton = (Button) view.findViewById(R.id.release_pet);
             petPic = (ImageView) view.findViewById(R.id.pet_detail_pic);
-            petIni = (TextView) view.findViewById(R.id.pet_ini_value);
+            petOwner = (TextView) view.findViewById(R.id.pet_owner_value);
             addHpButton = (Button) view.findViewById(R.id.pet_add_hp);
             addAtkButton = (Button) view.findViewById(R.id.pet_add_atk);
             addDefButton = (Button) view.findViewById(R.id.pet_add_def);
@@ -311,7 +313,7 @@ public class PetSimpleAdapter extends BaseAdapter {
                 hpValue.setText(pet.getHp() + "/" + pet.getUHp());
                 atkValue.setText(pet.getAtk() + "");
                 defValue.setText(pet.getDef() + "");
-                petIni.setText(pet.getIntimacy() + "");
+                petOwner.setText(pet.getOwner());
                 Hero hero = MazeContents.hero;
                 if (hero.getPoint() < 1) {
                     addHpButton.setEnabled(false);
@@ -332,7 +334,20 @@ public class PetSimpleAdapter extends BaseAdapter {
             this.pet = pet;
             if (pet != null) {
                 nameValue.setText(Html.fromHtml(pet.getFormatName()));
-                leveText.setText(Html.fromHtml("相遇在第<b>" + pet.getLev() + "</b>层"));
+                String source = "相遇在第<b>" + pet.getLev() + "</b>层。";
+                long intimacy = pet.getIntimacy();
+                if(intimacy < 1000){
+                    source += "不愿搭理你。";
+                }else if(intimacy < 3000){
+                    source += "很傲娇的感觉。";
+                }else if(intimacy < 10000){
+                    source += "很愿意亲近你了。";
+                }else if(intimacy < 50000){
+                    source += "小心翼翼的跟随着你。";
+                }else if(intimacy > 50000){
+                    source += "不愿意离开你。";
+                }
+                leveText.setText(Html.fromHtml(source));
                 hpValue.setText(pet.getHp() + "/" + pet.getUHp());
                 atkValue.setText(pet.getAtk() + "");
                 defValue.setText(pet.getDef() + "");
@@ -342,7 +357,7 @@ public class PetSimpleAdapter extends BaseAdapter {
                     skillName.setText("无");
                 }
                 petPic.setImageResource(pet.getImage());
-                petIni.setText(pet.getIntimacy() + "");
+                petOwner.setText(pet.getIntimacy() + "");
                 final Hero hero = MazeContents.hero;
                 if (hero.getPoint() < 1) {
                     addHpButton.setEnabled(false);

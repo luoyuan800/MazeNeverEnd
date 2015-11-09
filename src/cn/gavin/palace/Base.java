@@ -31,7 +31,7 @@ public abstract class Base {
     private BaseContext context;
     private long lev;
 
-    void addSkill(NSkill skill) {
+    public void addSkill(NSkill skill) {
         if (skill != null)
             skillSet.add(skill);
     }

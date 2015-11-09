@@ -125,6 +125,9 @@ public abstract class Skill {
                 }
             }
         }
+        if(skillDialog!=null){
+            skillDialog.getHandler().sendEmptyMessage(0);
+        }
     }
 
     public Button getSkillButton() {

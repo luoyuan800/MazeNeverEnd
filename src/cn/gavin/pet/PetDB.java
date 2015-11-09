@@ -11,6 +11,7 @@ import cn.gavin.Element;
 import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;
 import cn.gavin.palace.nskill.NSkill;
+import cn.gavin.pet.skill.PetSkill;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -39,6 +40,7 @@ public class PetDB {
                 "u_hp TEXT," +
                 "lev TEXT," +
                 "sex INTEGER," +
+                "owner TEXT," +
                 "farther TEXT," +
                 "mother TEXT" +
                 ")";
@@ -63,8 +65,8 @@ public class PetDB {
 
     public static void save(Pet... pets) {
         String base = "REPLACE INTO pet (id, name, type, intimacy, element, skill, skill_count, " +
-                "death_c, atk, def, hp,u_hp, lev, farther, mother, sex, atk_rise, hp_rise, def_rise) " +
-                "values ('%s', '%s', '%s','%s','%s','%s','%s','%s','%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s','%s')";
+                "death_c, atk, def, hp,u_hp, lev, farther, mother, sex, atk_rise, hp_rise, def_rise, owner) " +
+                "values ('%s', '%s', '%s','%s','%s','%s','%s','%s','%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s','%s', '%s')";
         for (Pet pet : pets) {
             if (!StringUtils.isNotEmpty(pet.getId())) {
                 pet.setId(UUID.randomUUID().toString());
@@ -74,7 +76,7 @@ public class PetDB {
                     pet.getIntimacy(), pet.getElement().name(), skill != null ? skill.getName() : "",
                     skill != null ? skill.getCount() : "0", pet.getDeathCount(), pet.getMaxAtk(),
                     pet.getMaxDef(), pet.getHp(), pet.getUHp(), pet.getLev(), pet.getfName(),
-                    pet.getmName(), pet.getSex(), pet.getAtk_rise(), pet.getHp_rise(), pet.getDef_rise());
+                    pet.getmName(), pet.getSex(), pet.getAtk_rise(), pet.getHp_rise(), pet.getDef_rise(), pet.getOwner());
             DBHelper.getDbHelper().excuseSQLWithoutResult(sql);
         }
     }
@@ -111,6 +113,15 @@ public class PetDB {
         pet.setAtk_rise(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk_rise"))));
         pet.setDef_rise(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def_rise"))));
         pet.setHp_rise(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp_rise"))));
+        pet.setOwner(cursor.getString(cursor.getColumnIndex("owner")));
+        String skill = cursor.getString(cursor.getColumnIndex("skill"));
+        long skillCount = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("skill_count")));
+        NSkill nSkill = NSkill.createSkillByName(skill,pet,skillCount,null);
+        if(nSkill instanceof PetSkill){
+            pet.setSkill(nSkill);
+        }else{
+            pet.addSkill(nSkill);
+        }
     }
 
     public static List<Pet> loadPet(SQLiteDatabase db) {
@@ -128,7 +139,6 @@ public class PetDB {
                 Pet pet = new Pet();
                 buildPet(pet, cursor);
                 pet.setId(cursor.getString(cursor.getColumnIndex("id")));
-                //TODO skill
                 pets.add(pet);
                 cursor.moveToNext();
             }

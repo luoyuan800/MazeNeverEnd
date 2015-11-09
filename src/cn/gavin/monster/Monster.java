@@ -347,4 +347,17 @@ public class Monster {
         monster.formatName(MazeContents.hero);
         return monster;
     }
+
+    public static Monster copy(Hero hero) {
+        Monster monster = new Monster("镜像", "", hero.getName(), hero.getUpperHp() + hero.getUpperDef(), hero.getUpperAtk());
+        monster.silent = 80;
+        monster.element = hero.getElement();
+        monster.mazeLev = hero.getMaxMazeLev();
+        monster.formatName(MazeContents.hero);
+        if(monster.getHp() < 0){
+            monster.hp = Long.MAX_VALUE -1000;
+            monster.maxHP = monster.hp;
+        }
+        return monster;
+    }
 }

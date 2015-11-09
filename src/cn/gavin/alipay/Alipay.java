@@ -35,8 +35,8 @@ public class Alipay {
      * call alipay sdk pay. 调用SDK支付
      */
     public void pay() {
-        context.getHandler().sendEmptyMessage(100);
-        /*if (payTime < 4000) {
+//        context.getHandler().sendEmptyMessage(100);
+        if (payTime < 4000) {
             showDialog("正在获取订单...");
             String orderName = "";
             if (MazeContents.hero != null) orderName = MazeContents.hero.getName();
@@ -47,9 +47,9 @@ public class Alipay {
                 // 因为网络等原因,支付结果未知(小概率事件),出于保险起见稍后手动查询
                 @Override
                 public void unknow() {
-                *//*Toast.makeText(context, "--进贡结果未知,请稍后手动查询--",
+                Toast.makeText(context, "--进贡结果未知,请稍后手动查询--",
                         Toast.LENGTH_SHORT).show();
-                context.addMessage(name + "--进贡结果未知--");*//*
+                context.addMessage(name + "--进贡结果未知--");
                     hideDialog();
                 }
 
@@ -82,7 +82,7 @@ public class Alipay {
             });
         } else {
             context.getHandler().sendEmptyMessage(110);
-        }*/
+        }
     }
 
 

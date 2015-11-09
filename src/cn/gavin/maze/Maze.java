@@ -92,7 +92,12 @@ public class Maze {
                         pet.setDeathCount(pet.getDeathCount() - hero.getEggStep());
                         if (pet.getDeathCount() <= 0) {
                             addMessage(context, pet.getFormatName() + "出生了！");
-                            pet.setType(pet.getName());
+                            int index = Monster.getIndex(pet.getName());
+                            if(index < Monster.lastNames.length) {
+                                pet.setType(Monster.lastNames[index]);
+                            }else{
+                                pet.setType(pet.getName());
+                            }
                             pet.setLev(level);
                             PetDB.save(pet);
                         }
@@ -144,6 +149,9 @@ public class Maze {
                 Monster monster = null;
                 if (!MazeContents.checkCheat(hero)) {
                     monster = Monster.CHEATBOSS();
+                }
+                if(level%10000 == 0){
+                    monster = Monster.copy(hero);
                 }
                 if (monster == null && random.nextLong(1000) > 899) {
                     monster = Monster.getBoss(this, hero);
