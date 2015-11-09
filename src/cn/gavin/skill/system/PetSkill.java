@@ -90,7 +90,7 @@ public class PetSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("激活后增加捕获宠物的几率。");
+                    builder.append("激活后增加捕获宠物的几率。不可和培育家一起激活!");
                     return builder.toString();
                 }
             });
@@ -127,7 +127,7 @@ public class PetSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("激活后增加获得宠物蛋的几率。");
+                    builder.append("激活后增加获得宠物蛋的几率。不可与驯兽师一起激活！");
                     return builder.toString();
                 }
             });

@@ -38,8 +38,8 @@ public class PetDialog {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        adapter.setToHero();
                         adapter.saveToDB();
+                        adapter.setToHero();
                         alertDialog.hide();
                     }
 
@@ -51,6 +51,7 @@ public class PetDialog {
                     public void onClick(DialogInterface dialog, int which) {
                         alertDialog.hide();
                         adapter.saveToDB();
+                        adapter.setToHero();
                     }
 
                 });

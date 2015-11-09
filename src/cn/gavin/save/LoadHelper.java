@@ -130,6 +130,7 @@ public class LoadHelper {
         }
         heroN.setTitleColor(preferences.getString("title_color", "#ff00acff"));
         heroN.setOnSkill(false);
+        maze.setCsmgl(preferences.getInt("csm", 9987));
         MazeContents.hero = heroN;
         MazeContents.maze = maze;
 

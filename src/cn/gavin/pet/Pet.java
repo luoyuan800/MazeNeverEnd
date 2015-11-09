@@ -45,10 +45,10 @@ public class Pet extends Base {
         if (intimacy > 50000000) {
             intimacy--;
         }
-        if (getRandom().nextLong(intimacy / 10000) > 100 + getRandom().nextInt(50000)) {
-            uHp *= 1.5;
-            atk *= 1.1;
-            def *= 1.2;
+        if (getRandom().nextLong(intimacy) > getRandom().nextLong(100000) + 1000) {
+            uHp += 100;
+            atk += 50;
+            def += 150;
         }
     }
 
@@ -92,7 +92,7 @@ public class Pet extends Base {
         Random random = new Random();
         double rate = (((monster.getMaxHP() * 3 - monster.getMaxHP() *
                 MazeContents.hero.getPetRate() * 2) / (monster.getMaxHP() * 3)) * monster.getRate() *
-                (2 - MazeContents.hero.getPetRate())) * 50 / (255 * MazeContents.hero.getPets().size());
+                (2 - MazeContents.hero.getPetRate())) * 25 / (255 * MazeContents.hero.getPets().size());
         if (rate >= 100) {
             rate = 98;
         }
@@ -288,7 +288,7 @@ public class Pet extends Base {
     }
 
     public void addAtk(Hero hero) {
-        if (atk <= hero.getUpperDef() / 10) {
+        if (atk <= hero.getUpperDef() * 2) {
             atk += atk_rise;
             hero.addPoint(-1);
         }
@@ -296,7 +296,7 @@ public class Pet extends Base {
     }
 
     public void addDef(Hero hero) {
-        if (def <= hero.getUpperAtk() / 10) {
+        if (def <= hero.getUpperAtk()) {
             def += def_rise;
             hero.addPoint(-1);
         }
@@ -304,7 +304,7 @@ public class Pet extends Base {
     }
 
     public void addHp(Hero hero) {
-        if (getUHp() < hero.getHp() / 2) {
+        if (getUHp() < hero.getHp()) {
             setUHp(getUHp() + hp_rise);
             hp += hp_rise;
             hero.addPoint(-1);
@@ -369,7 +369,7 @@ public class Pet extends Base {
         Random random = new Random();
         double rate = (((hero.getUpperAtk() * 3 - hero.getUpperAtk() *
                 MazeContents.hero.getPetRate() * 2) / (hero.getUpperHp() * 3)) * hero.getEggRate() *
-                (2 - MazeContents.hero.getPetRate())) * 200 / 255;
+                (2 - MazeContents.hero.getPetRate())) * 50 / 255;
         if (f.getType().equals(m.getType())) {
             rate *= 1.5;
         }

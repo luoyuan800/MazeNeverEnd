@@ -100,6 +100,7 @@ public class SaveHelper {
         editor.putString("pet_id", petIds.toString());
         editor.putString("title_color", heroN.getTitleColor());
         editor.putLong("reset_skill", heroN.getResetSkillCount());
+        editor.putInt("csm", maze.getCsmgl());
         editor.apply();
 
     }

@@ -113,7 +113,7 @@ public class PetSimpleAdapter extends BaseAdapter {
                 if (view == null) {
                     view = new TextView(MainGameActivity.context);
                 }
-                view.setTextSize(15);
+                view.setTextSize(20);
                 view.setText(Html.fromHtml(pet.getFormatName() + (pet.isOnUsed() ? "  √ " : "")));
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -287,7 +287,7 @@ public class PetSimpleAdapter extends BaseAdapter {
             detail.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
+                    dismiss();
                 }
             });
             nameValue = (TextView) view.findViewById(R.id.name_value);
