@@ -92,7 +92,7 @@ public class Pet extends Base {
         Random random = new Random();
         double rate = (((monster.getMaxHP() * 3 - monster.getMaxHP() *
                 MazeContents.hero.getPetRate() * 2) / (monster.getMaxHP() * 3)) * monster.getRate() *
-                (2 - MazeContents.hero.getPetRate())) * 25 / (255 * MazeContents.hero.getPets().size());
+                (2 - MazeContents.hero.getPetRate())) * 20 / (255 * MazeContents.hero.getPets().size());
         if (rate >= 100) {
             rate = 98;
         }
@@ -369,7 +369,7 @@ public class Pet extends Base {
         Random random = new Random();
         double rate = (((hero.getUpperAtk() * 3 - hero.getUpperAtk() *
                 MazeContents.hero.getPetRate() * 2) / (hero.getUpperHp() * 3)) * hero.getEggRate() *
-                (2 - MazeContents.hero.getPetRate())) * 100 / 255;
+                (2 - MazeContents.hero.getPetRate())) * 30 / 255;
         if (f.getType().equals(m.getType())) {
             rate *= 1.5;
         }
