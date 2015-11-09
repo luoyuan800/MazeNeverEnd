@@ -240,7 +240,7 @@ public class PetSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("捕获术", hero, dialog).isActive();
+                    return SkillFactory.getSkill("捕捉术", hero, dialog).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {

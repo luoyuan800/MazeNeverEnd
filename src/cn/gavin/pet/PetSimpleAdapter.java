@@ -310,20 +310,7 @@ public class PetSimpleAdapter extends BaseAdapter {
 
         private void refresh() {
             if (pet != null) {
-                String source = "相遇在第<b>" + pet.getLev() + "</b>层。<font color=\"#6A5ACD\">";
-                long intimacy = pet.getIntimacy();
-                if(intimacy < 1000){
-                    source += "不愿搭理你。";
-                }else if(intimacy < 3000){
-                    source += "很傲娇的感觉。";
-                }else if(intimacy < 10000){
-                    source += "很愿意亲近你了。";
-                }else if(intimacy < 50000){
-                    source += "小心翼翼的跟随着你。";
-                }else if(intimacy > 50000){
-                    source += "不愿意离开你。";
-                }
-                source += "</font>";
+                String source = getIntimacyString();
                 leveText.setText(Html.fromHtml(source));
                 hpValue.setText(pet.getHp() + "/" + pet.getUHp());
                 atkValue.setText(pet.getAtk() + "");
@@ -345,25 +332,29 @@ public class PetSimpleAdapter extends BaseAdapter {
             }
         }
 
+        private String getIntimacyString() {
+            String source = "相遇在第<b>" + pet.getLev() + "</b>层。<font color=\"#6A5ACD\">";
+            long intimacy = pet.getIntimacy();
+            if(intimacy < 1000){
+                source += "它好像不愿搭理你。";
+            }else if(intimacy < 3000){
+                source += "它好像有一点傲娇的感觉。";
+            }else if(intimacy < 10000){
+                source += "它好像很愿意亲近你了。";
+            }else if(intimacy < 50000){
+                source += "它正在小心翼翼的跟随着你。";
+            }else if(intimacy > 50000){
+                source += "它似乎不愿意离开你。";
+            }
+            source += "</font>";
+            return source;
+        }
+
         public void updatePet(final Pet pet, final Set<String> onUsedPetsId) {
             this.pet = pet;
             if (pet != null) {
                 nameValue.setText(Html.fromHtml(pet.getFormatName()));
-                String source = "相遇在第<b>" + pet.getLev() + "</b>层。<font color=\"#6A5ACD\">";
-                long intimacy = pet.getIntimacy();
-                if(intimacy < 1000){
-                    source += "不愿搭理你。";
-                }else if(intimacy < 3000){
-                    source += "很傲娇的感觉。";
-                }else if(intimacy < 10000){
-                    source += "很愿意亲近你了。";
-                }else if(intimacy < 50000){
-                    source += "小心翼翼的跟随着你。";
-                }else if(intimacy > 50000){
-                    source += "不愿意离开你。";
-                }
-                source += "</font>";
-                leveText.setText(Html.fromHtml(source));
+                leveText.setText(Html.fromHtml(getIntimacyString()));
                 hpValue.setText(pet.getHp() + "/" + pet.getUHp());
                 atkValue.setText(pet.getAtk() + "");
                 defValue.setText(pet.getDef() + "");

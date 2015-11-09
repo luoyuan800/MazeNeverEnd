@@ -138,7 +138,7 @@ public class Pet extends Base {
                     pet.setSkill(new QuickGrow());
                 }
             }
-            if(SkillFactory.getSkill("神赋", MazeContents.hero, null).isActive()){
+            if(SkillFactory.getSkill("霸气", MazeContents.hero, null).isActive()){
                 pet.setAtk_rise(pet.getAtk_rise() * 3);
                 pet.setDef_rise(pet.getDef_rise() * 3);
                 pet.setHp_rise(pet.getHp_rise() * 3);
@@ -369,7 +369,7 @@ public class Pet extends Base {
         Random random = new Random();
         double rate = (((hero.getUpperAtk() * 3 - hero.getUpperAtk() *
                 MazeContents.hero.getPetRate() * 2) / (hero.getUpperHp() * 3)) * hero.getEggRate() *
-                (2 - MazeContents.hero.getPetRate())) * 50 / 255;
+                (2 - MazeContents.hero.getPetRate())) * 100 / 255;
         if (f.getType().equals(m.getType())) {
             rate *= 1.5;
         }
