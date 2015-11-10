@@ -857,15 +857,15 @@ public class Hero implements BaseObject {
                     if (parry < 0) parry = 0f;
                     break;
                 case ADD_PER_ATK:
-                    Double atk = getUpperAtk() * effect.getValue()/100d;
+                    Double atk = attackValue * effect.getValue()/100d;
                     addAttackValue(-atk.longValue());
                     break;
                 case ADD_PER_DEF:
-                    Double def = getUpperDef() * effect.getValue()/100d;
+                    Double def = defenseValue * effect.getValue()/100d;
                     addDefenseValue(-def.longValue());
                     break;
                 case ADD_PER_UPPER_HP:
-                    Double uHp = getUpperHp() * effect.getValue()/100d;
+                    Double uHp = getRealUHP() * effect.getValue()/100d;
                     addUpperHp(-uHp.longValue());
                     break;
             }
