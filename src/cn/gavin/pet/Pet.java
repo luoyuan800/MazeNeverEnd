@@ -53,11 +53,11 @@ public class Pet extends Base {
     }
 
     public boolean dan() {
-        return getRandom().nextInt(500) < getRandom().nextLong(intimacy / 500);
+        return hp > 0 && getRandom().nextInt(500) < getRandom().nextLong(intimacy / 500);
     }
 
     public boolean gon() {
-        return getRandom().nextInt(100) < getRandom().nextLong(intimacy / 200);
+        return hp > 0 && getRandom().nextInt(100) < getRandom().nextLong(intimacy / 200);
     }
 
     public void save() {
@@ -381,7 +381,7 @@ public class Pet extends Base {
         }
 
         double current = random.nextInt(100) + random.nextDouble();
-        if (rate > current) {
+        if (!f.getId().equals(m.getId()) && rate > current) {
             Pet egg = new Pet();
             String type = m.getType();
             String firstName = StringUtils.split(f.getName(), "的")[0];

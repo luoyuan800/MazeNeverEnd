@@ -29,6 +29,7 @@ import cn.gavin.activity.ForgeActivity;
 import cn.gavin.activity.MazeContents;
 import cn.gavin.forge.Item;
 import cn.gavin.forge.effect.Effect;
+import cn.gavin.utils.Random;
 
 /**
  * Copyright 2015 luoyuan.
@@ -86,6 +87,51 @@ public class ItemDialog {
         ListView listView = new ListView(activity);
         listView.setAdapter(adapter);
         linearLayout.addView(listView);
+        Button add = new Button(activity);
+        add.setText("一键随机添加材料");
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Random random = new Random();
+                int i = 0;
+                for (ItemList list : adapter.adapterData) {
+                    if ( i < 5 && random.nextBoolean()) {
+                        if (activity instanceof ForgeActivity) {
+                            if (i == 0 && list.i1 != null) {
+                                Message message = new Message();
+                                message.what = R.id.forge_item_1;
+                                message.obj = list.i1;
+                                ((ForgeActivity) activity).handler.sendMessage(message);
+                                i++;
+                            }
+                            if (i == 1 && list.i2 != null) {
+                                Message message = new Message();
+                                message.what = R.id.forge_item_2;
+                                message.obj = list.i2;
+                                ((ForgeActivity) activity).handler.sendMessage(message);
+                                i++;
+                            }
+                            if (i == 2 && list.i3 != null) {
+                                Message message = new Message();
+                                message.what = R.id.forge_item_3;
+                                message.obj = list.i3;
+                                ((ForgeActivity) activity).handler.sendMessage(message);
+                                i++;
+                            }
+                            if (i == 3 && list.i4 != null) {
+                                Message message = new Message();
+                                message.what = R.id.forge_item_4;
+                                message.obj = list.i4;
+                                ((ForgeActivity) activity).handler.sendMessage(message);
+                                i++;
+                            }
+                        }
+                    }
+                }
+                itemDialog.hide();
+            }
+        });
+        linearLayout.addView(add);
         Button clean = new Button(activity);
         clean.setText("一键清除低属性材料（慎用！）");
         clean.setOnClickListener(new View.OnClickListener() {

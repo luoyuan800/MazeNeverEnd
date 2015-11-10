@@ -255,7 +255,7 @@ public class Maze {
                 List<Pet> pets = hero.getPets();
                 for (Pet pet : pets) {
                     for (Pet p : pets) {
-                        if (pet.getSex() != p.getSex() && (pet.getElement().isReinforce(p.getElement())|| p.getElement().isReinforce(pet.getElement()))) {
+                        if (!p.equals(pet) && pet.getSex() != p.getSex() && (pet.getElement().isReinforce(p.getElement())|| p.getElement().isReinforce(pet.getElement()))) {
                             if (p.getSex() == 0) {
                                 f = p;
                                 m = pet;

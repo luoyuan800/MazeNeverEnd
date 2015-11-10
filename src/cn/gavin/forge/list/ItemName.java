@@ -41,6 +41,7 @@ public enum ItemName {
     白云石(ItemName.石头),
     龙筋(ItemName.筋),
     蛇筋(ItemName.筋),
+    蛟筋(ItemName.筋),
     虎筋(ItemName.筋),
     牛筋(ItemName.筋),
     鼠筋(ItemName.筋),

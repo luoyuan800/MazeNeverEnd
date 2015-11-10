@@ -247,7 +247,9 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                     if(item1!=null && item2!=null&&item3!=null&&item4!=null&&item5!=null) {
                         Item item = FuseItems.fuse(item1, item2, item3, item4, item5);
                         clean();
-                        resultText.setText(Html.fromHtml("获得了<br>" + item.toString()));
+                        if(item!=null) {
+                            resultText.setText(Html.fromHtml("获得了<br>" + item.toString()));
+                        }
                     }else{
                         resultText.setText("需要五个材料才可以进行融合");
                     }
