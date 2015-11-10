@@ -202,7 +202,7 @@ public class EvilSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append(skill.getProbability()).append("%的概率释放，自身生命值上限增加。强化效果结束时，HP会重置。").append(iskll.getBaseHarm()).append("倍");
+                    builder.append(skill.getProbability()).append("%的概率释放，自身生命值上限增加").append(iskll.getBaseHarm()).append("倍").append("。强化效果结束时，HP会重置。");
                     return builder.toString();
                 }
             });

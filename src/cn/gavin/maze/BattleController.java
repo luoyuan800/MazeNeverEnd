@@ -214,7 +214,7 @@ public class BattleController {
             return true;
         }
         if (monster.getHp() <= 0) {
-            String defeatmsg = hero.getFormatName() + "击败了" + monster.getFormatName() + "， 获得了<font color=\"blue\">" + monster.getMaterial() + "</font>份锻造材料。";
+            String defeatmsg = hero.getFormatName() + "击败了" + monster.getFormatName() + "， 获得了<font color=\"blue\">" + monster.getMaterial() + "</font>份锻造点数。";
             addMessage(context, defeatmsg);
             monster.addBattleDesc(defeatmsg);
             hero.addMaterial(monster.getMaterial());

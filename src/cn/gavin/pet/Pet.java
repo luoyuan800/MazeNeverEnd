@@ -34,9 +34,9 @@ public class Pet extends Base {
     private String mName;
     private int sex;
     private String color = "#556B2F";
-    private long atk_rise = 1;
-    private long def_rise = 1;
-    private long hp_rise = 2;
+    private long atk_rise = 5;
+    private long def_rise = 5;
+    private long hp_rise = 20;
     private String owner;
 
 
@@ -384,6 +384,9 @@ public class Pet extends Base {
         if (!f.getId().equals(m.getId()) && rate > current) {
             Pet egg = new Pet();
             String type = m.getType();
+            if("蛋".equals(type) || f.getName().endsWith("蛋") || m.getName().endsWith("蛋")){
+                return null;
+            }
             String firstName = StringUtils.split(f.getName(), "的")[0];
             String secondName = StringUtils.split(m.getName(), "的")[1];
             secondName = secondName.replace(type, "");

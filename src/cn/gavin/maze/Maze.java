@@ -120,7 +120,7 @@ public class Maze {
                 addMessage(context, "-------------------");
             } else if (random.nextLong(850 + hunt) > 993 && random.nextLong(hero.getAgility()) > random.nextLong(6971)) {
                 long mate = random.nextLong(level * 300 + 1) + random.nextLong(hero.getAgility() / 1000 + 100) + 100;
-                addMessage(context, hero.getFormatName() + "找到了一个宝箱， 获得了<font color=\"#FF8C00\">" + mate + "</font>材料");
+                addMessage(context, hero.getFormatName() + "找到了一个宝箱， 获得了<font color=\"#FF8C00\">" + mate + "</font>锻造点数");
                 hero.addMaterial(mate);
                 addMessage(context, "-------------------");
             } else if (hero.getHp() < hero.getUpperHp() && random.nextLong(1000) > 989) {
@@ -254,16 +254,18 @@ public class Maze {
                 Pet m = null;
                 List<Pet> pets = hero.getPets();
                 for (Pet pet : pets) {
-                    for (Pet p : pets) {
-                        if (!p.equals(pet) && pet.getSex() != p.getSex() && (pet.getElement().isReinforce(p.getElement())|| p.getElement().isReinforce(pet.getElement()))) {
-                            if (p.getSex() == 0) {
-                                f = p;
-                                m = pet;
-                            } else {
-                                f = pet;
-                                m = p;
+                    if(!pet.getType().equals("蛋")) {
+                        for (Pet p : pets) {
+                            if (!p.equals(pet) && !p.getType().equals("蛋") && pet.getSex() != p.getSex() && (pet.getElement().isReinforce(p.getElement()) || p.getElement().isReinforce(pet.getElement()))) {
+                                if (p.getSex() == 0) {
+                                    f = p;
+                                    m = pet;
+                                } else {
+                                    f = pet;
+                                    m = p;
+                                }
+                                break;
                             }
-                            break;
                         }
                     }
                     if (f != null && m != null) {
