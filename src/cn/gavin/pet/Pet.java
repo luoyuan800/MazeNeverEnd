@@ -411,6 +411,7 @@ public class Pet extends Base {
                     if (egg.getType().equals("作者")) {
                         egg.setType("蟑螂");
                         egg.setAtk(egg.getAtk() * 2);
+                        egg.setName("变异的蟑螂");
                     }
                     egg.color = "#B8860B";
                     egg.atk_rise = MazeContents.hero.ATR_RISE;

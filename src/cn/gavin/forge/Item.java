@@ -145,6 +145,10 @@ public class Item implements Comparator<Item> {
         return item;
     }
 
+    public boolean idEqual(Item item){
+        return StringUtils.isNotEmpty(id) && item!=null && id.equals(item.id);
+    }
+
     public static ArrayList<Item> loadItems(SQLiteDatabase db) {
         DBHelper dbHelper = DBHelper.getDbHelper();
         String sql = "SELECT * FROM item";

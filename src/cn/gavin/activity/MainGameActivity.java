@@ -1809,7 +1809,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 skillDialog.show(heroN);
                 break;
             case R.id.update_button:
-                showDownload();
+                showUpdate();
                 break;
             case R.id.upload_button:
                 showUpload();

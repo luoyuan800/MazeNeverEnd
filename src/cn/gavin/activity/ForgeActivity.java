@@ -392,7 +392,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
     }
 
     public boolean contains(Item item) {
-        return item1 == item || item2 == item || item3 == item || item4 == item || item5 == item;
+        return item.idEqual(item1) || item.idEqual(item2) || item.idEqual(item3) || item.idEqual(item4) || item.idEqual(item5);
     }
 
 }

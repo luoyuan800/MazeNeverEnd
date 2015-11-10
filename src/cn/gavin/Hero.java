@@ -92,6 +92,7 @@ public class Hero implements BaseObject {
     private long eggStep = 1;
     private String titleColor;
     private long resetSkillCount = 0;
+    private String bakColor;
 
     public Float getParry() {
         return parry;
@@ -1243,5 +1244,13 @@ public class Hero implements BaseObject {
 
     public void setResetSkillCount(long resetSkillCount) {
         this.resetSkillCount = resetSkillCount;
+    }
+
+    public String getBakColor() {
+        return bakColor;
+    }
+
+    public void setBakColor(String bakColor) {
+        this.bakColor = bakColor;
     }
 }
