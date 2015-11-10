@@ -144,6 +144,7 @@ public class CdKey extends BmobObject {
             accessory.setName(accName);
             accessory.setElement(Element.valueOf(accElement));
             accessory.setColor(accColor);
+            accessory.setType(accType);
             EnumMap<Effect, Number> effectNumberEnumMap = new EnumMap<Effect, Number>(Effect.class);
             for (String effect : StringUtils.split(accEffect, "-")) {
                 String[] effectValue = StringUtils.split(effect, ":");
