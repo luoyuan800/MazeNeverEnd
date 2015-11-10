@@ -565,6 +565,9 @@ public class PetSkill extends SkillLayout {
             if (!skill.load()) {
                 iskll.setPetSize(5);
             }
+            if(iskll.getPetSize() < 5){
+                iskll.setPetSize(5);
+            }
         }
         return skill;
     }

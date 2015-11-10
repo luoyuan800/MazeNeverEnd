@@ -8,9 +8,11 @@ import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
+import java.util.Map;
 
 import cn.gavin.Achievement;
 import cn.gavin.Armor;
+import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.Sword;
 import cn.gavin.activity.MainGameActivity;
@@ -18,7 +20,7 @@ import cn.gavin.activity.MainMenuActivity;
 import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
-import cn.gavin.Element;
+import cn.gavin.forge.effect.Effect;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.pet.Pet;
@@ -43,6 +45,33 @@ public class LoadHelper {
         context = activity;
     }
 
+    public void loadValue(Hero hero) {
+        SharedPreferences preferences = context.getSharedPreferences("preValueForHat", Context.MODE_PRIVATE);
+        boolean save = preferences.getBoolean("exist", false);
+        if (save) {
+            for (Map.Entry<String, ?> entry : preferences.getAll().entrySet()) {
+                if (!entry.getKey().equalsIgnoreCase("exist")) {
+                    hero.preValueForHat.put(Effect.valueOf(entry.getKey()), preferences.getLong(entry.getKey(), 0l));
+                }
+            }
+        }
+
+        preferences = context.getSharedPreferences("preValueForNet", Context.MODE_PRIVATE);
+        save = preferences.getBoolean("exist", false);
+        if (save) {
+            for (Map.Entry<String, ?> entry : preferences.getAll().entrySet()) {
+                hero.preValueForNek.put(Effect.valueOf(entry.getKey()), preferences.getLong(entry.getKey(), 0l));
+            }
+        }
+
+        preferences = context.getSharedPreferences("preValueForRing", Context.MODE_PRIVATE);
+        save = preferences.getBoolean("exist", false);
+        if (save) {
+            for (Map.Entry<String, ?> entry : preferences.getAll().entrySet()) {
+                hero.preValueForRing.put(Effect.valueOf(entry.getKey()), preferences.getLong(entry.getKey(), 0l));
+            }
+        }
+    }
 
     public void loadHero() {
         Hero heroN = new Hero("勇者");
@@ -102,10 +131,10 @@ public class LoadHelper {
                 heroN.setAccessory(hat);
         }
         Achievement.linger.enable(heroN);
-        heroN.MAX_HP_RISE = preferences.getLong("MAX_HP_RISE",5 );
-        heroN.ATR_RISE = preferences.getLong("ATR_RISE",2 );
-        heroN.DEF_RISE = preferences.getLong("DEF_RISE",1 );
-        heroN.setReincaCount(preferences.getLong("reincaCount",0));
+        heroN.MAX_HP_RISE = preferences.getLong("MAX_HP_RISE", 5);
+        heroN.ATR_RISE = preferences.getLong("ATR_RISE", 2);
+        heroN.DEF_RISE = preferences.getLong("DEF_RISE", 1);
+        heroN.setReincaCount(preferences.getLong("reincaCount", 0));
         heroN.setHitRate(preferences.getLong("hitRate", 0));
         heroN.setParry(preferences.getFloat("parry", 0));
         heroN.setDodgeRate(preferences.getFloat("dodgeRate", 0));
@@ -118,12 +147,12 @@ public class LoadHelper {
         heroN.setResetSkillCount(preferences.getLong("reset_skill", 0));
         String petIds = preferences.getString("pet_id", "");
         String[] ids = StringUtils.split(petIds, "_");
-        for(String id : ids){
-            if(StringUtils.isNotEmpty(id)){
+        for (String id : ids) {
+            if (StringUtils.isNotEmpty(id)) {
                 Pet pet = new Pet();
                 pet.setId(id);
                 PetDB.load(pet);
-                if(StringUtils.isNotEmpty(pet.getType())) {
+                if (StringUtils.isNotEmpty(pet.getType())) {
                     heroN.getPets().add(pet);
                 }
             }
@@ -131,6 +160,7 @@ public class LoadHelper {
         heroN.setTitleColor(preferences.getString("title_color", "#ff00acff"));
         heroN.setOnSkill(false);
         maze.setCsmgl(preferences.getInt("csm", 9987));
+        loadValue(heroN);
         MazeContents.hero = heroN;
         MazeContents.maze = maze;
 

@@ -90,7 +90,8 @@ public class BattleController {
                         monster.addBattleDesc(parrymsg);
                     }
                     hero.addHp(-harm);
-                    String defmsg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了<font color=\"red\">" + harm + "</font>点伤害。";
+                    String defmsg = monster.getFormatName() + "攻击了" + hero.getFormatName() +
+                            "，造成了<font color=\"red\">" + StringUtils.formatNumber(harm) + "</font>点伤害。";
                     addMessage(context, defmsg);
                     monster.addBattleDesc(defmsg);
                 }
@@ -124,7 +125,8 @@ public class BattleController {
                     } else {
                         petHarm = pet.getAtk();
                     }
-                    String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了" + petHarm + "点伤害";
+                    String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了"
+                            + StringUtils.formatNumber(petHarm) + "点伤害";
                     monster.addHp(petHarm);
                     addMessage(context, petAtk);
                     monster.addBattleDesc(petAtk);
@@ -160,7 +162,7 @@ public class BattleController {
                     addMessage(context, hitMsg);
                     monster.addBattleDesc(hitMsg);
                 }
-                String atkmsg = hero.getFormatName() + "攻击了" + monster.getFormatName() + "，造成了<font color=\"#000080\">" + attackValue + "</font>点伤害。";
+                String atkmsg = hero.getFormatName() + "攻击了" + monster.getFormatName() + "，造成了<font color=\"#000080\">" + StringUtils.formatNumber(attackValue) + "</font>点伤害。";
                 addMessage(context, atkmsg);
                 monster.addBattleDesc(atkmsg);
             }

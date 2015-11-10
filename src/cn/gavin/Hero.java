@@ -221,7 +221,7 @@ public class Hero implements BaseObject {
     }
 
     public void addAttackValue(long attackValue) {
-        if (attackValue < 0 || this.attackValue <= Long.MAX_VALUE - attackValue) {
+        if (attackValue < 0 || this.attackValue <= Long.MAX_VALUE / 3 - attackValue) {
             this.attackValue += attackValue;
         }
 
@@ -246,7 +246,7 @@ public class Hero implements BaseObject {
     }
 
     public void addDefenseValue(long defenseValue) {
-        if (defenseValue < 0 || this.defenseValue <= Long.MAX_VALUE - defenseValue) {
+        if (defenseValue < 0 || this.defenseValue <= Long.MAX_VALUE / 3 - defenseValue) {
             this.defenseValue += defenseValue;
         }
     }
@@ -452,7 +452,7 @@ public class Hero implements BaseObject {
         onChange = false;
         onSkill = false;
         this.hp = upperHp;
-        for(Pet pet : getPets()){
+        for (Pet pet : getPets()) {
             pet.restore();
         }
     }
@@ -497,14 +497,14 @@ public class Hero implements BaseObject {
                             keyCount += 1;
                         }
                     }
-                    if(clickAward > 500) {
+                    if (clickAward > 500) {
                         addMaterial(random.nextLong(clickAward) + 100);
-                    }else{
+                    } else {
                         addMaterial(clickAward);
                     }
-                    if(clickPointAward > 5) {
+                    if (clickPointAward > 5) {
                         addPoint(random.nextLong(clickPointAward));
-                    }else{
+                    } else {
                         addMaterial(clickPointAward);
                     }
                 }
@@ -591,7 +591,7 @@ public class Hero implements BaseObject {
     }
 
     public void addUpperHp(long hp) {
-        if (this.upperHp + hp < Long.MAX_VALUE - 1000) {
+        if (this.upperHp + hp < Long.MAX_VALUE / 2 - 1000) {
             if ((this.upperHp + hp) > 9) {
                 this.upperHp += hp;
             } else {
@@ -762,7 +762,66 @@ public class Hero implements BaseObject {
         } else {
             this.ring = null;
         }
+        preValueForRing.clear();
         appendEffect();
+    }
+
+    public EnumMap<Effect, Long> preValueForRing = new EnumMap<Effect, Long>(Effect.class);
+    public EnumMap<Effect, Long> preValueForNek = new EnumMap<Effect, Long>(Effect.class);
+    public EnumMap<Effect, Long> preValueForHat = new EnumMap<Effect, Long>(Effect.class);
+
+    private long getPerValue(int accType, Effect key) {
+        Long value;
+        switch (accType) {
+            case HatBuilder.type:
+                if (preValueForHat != null) {
+                    value = preValueForHat.get(key);
+                    if (value != null) {
+                        return value;
+                    }
+                }
+                break;
+            case NecklaceBuilder.type:
+                if (preValueForNek != null) {
+                    value = preValueForNek.get(key);
+                    if (value != null) {
+                        return value;
+                    }
+                }
+                break;
+            case RingBuilder.type:
+                if (preValueForRing != null) {
+                    value = preValueForRing.get(key);
+                    if (value != null) {
+                        return value;
+                    }
+                }
+                break;
+        }
+        return 0;
+    }
+
+    private void putPerValue(int accType, Effect key, Long value) {
+        switch (accType) {
+            case HatBuilder.type:
+                if (preValueForHat != null) {
+                    preValueForHat.put(key, value);
+
+                }
+                break;
+            case NecklaceBuilder.type:
+                if (preValueForNek != null) {
+                    preValueForNek.put(key, value);
+
+                }
+                break;
+            case RingBuilder.type:
+                if (preValueForRing != null) {
+                    preValueForRing.put(key, value);
+
+                }
+                break;
+        }
     }
 
     private void appendEffect(Accessory accessory) {
@@ -803,15 +862,27 @@ public class Hero implements BaseObject {
                     parry += effect.getValue();
                     break;
                 case ADD_PER_ATK:
-                    Double atk = getUpperAtk() * effect.getValue()/100d;
+                    Double atk = attackValue * effect.getValue() / 100d;
+                    if (Math.abs(atk) != atk) {
+                        atk = 0d;
+                    }
+                    putPerValue(accessory.getType(), effect.getKey(), atk.longValue());
                     addAttackValue(atk.longValue());
                     break;
                 case ADD_PER_DEF:
-                    Double def = getUpperDef() * effect.getValue()/100d;
+                    Double def = defenseValue * effect.getValue() / 100d;
+                    if (Math.abs(def) != def) {
+                        def = 0d;
+                    }
+                    putPerValue(accessory.getType(), effect.getKey(), def.longValue());
                     addDefenseValue(def.longValue());
                     break;
                 case ADD_PER_UPPER_HP:
-                    Double uHp = getUpperHp() * effect.getValue()/100d;
+                    Double uHp = getRealUHP() * effect.getValue() / 100d;
+                    if (Math.abs(uHp) != uHp) {
+                        uHp = 0d;
+                    }
+                    putPerValue(accessory.getType(), effect.getKey(), uHp.longValue());
                     addUpperHp(uHp.longValue());
                     break;
             }
@@ -857,16 +928,18 @@ public class Hero implements BaseObject {
                     if (parry < 0) parry = 0f;
                     break;
                 case ADD_PER_ATK:
-                    Double atk = attackValue * effect.getValue()/100d;
-                    addAttackValue(-atk.longValue());
+                    Long atk = getPerValue(accessory.getType(), effect.getKey());
+                    addAttackValue(-atk);
                     break;
                 case ADD_PER_DEF:
-                    Double def = defenseValue * effect.getValue()/100d;
-                    addDefenseValue(-def.longValue());
+                    Long def = getPerValue(accessory.getType(), effect.getKey());
+
+                    addDefenseValue(-def);
                     break;
                 case ADD_PER_UPPER_HP:
-                    Double uHp = getRealUHP() * effect.getValue()/100d;
-                    addUpperHp(-uHp.longValue());
+                    Long uHp = getPerValue(accessory.getType(), effect.getKey());
+
+                    addUpperHp(-uHp);
                     break;
             }
         }
@@ -888,6 +961,7 @@ public class Hero implements BaseObject {
         } else {
             this.necklace = null;
         }
+        preValueForNek.clear();
         appendEffect();
     }
 
@@ -923,6 +997,7 @@ public class Hero implements BaseObject {
         } else {
             this.hat = null;
         }
+        preValueForHat.clear();
         appendEffect();
     }
 
@@ -936,19 +1011,19 @@ public class Hero implements BaseObject {
             long hpRise = random.nextLong(power / 5103 + 4) + MAX_HP_RISE + reincaCount;
             long defRISE = random.nextLong(agility / 6309 + 2) + DEF_RISE + reincaCount;
             long atkRISE = random.nextLong(strength / 7501 + 3) + ATR_RISE + reincaCount;
-            if(hpRise > 10 * MAX_HP_RISE){
-                MAX_HP_RISE  += random.nextLong(hpRise) + reincaCount + 1;
-            }else{
+            if (hpRise > 10 * MAX_HP_RISE) {
+                MAX_HP_RISE += random.nextLong(hpRise) + reincaCount + 1;
+            } else {
                 MAX_HP_RISE = hpRise;
             }
-            if(defRISE > 10 * DEF_RISE){
-                DEF_RISE  += random.nextLong(defRISE) + reincaCount + 1;
-            }else{
+            if (defRISE > 10 * DEF_RISE) {
+                DEF_RISE += random.nextLong(defRISE) + reincaCount + 1;
+            } else {
                 DEF_RISE = defRISE;
             }
-            if(atkRISE > 10 * ATR_RISE){
-                ATR_RISE  += random.nextLong(atkRISE) + reincaCount + 1;
-            }else{
+            if (atkRISE > 10 * ATR_RISE) {
+                ATR_RISE += random.nextLong(atkRISE) + reincaCount + 1;
+            } else {
                 ATR_RISE = atkRISE;
             }
             material -= mate;
@@ -972,6 +1047,9 @@ public class Hero implements BaseObject {
             hitRate = 0l;
             clickPointAward = 0l;
             clickAward = reincaCount + 1;
+            petSize += 1;
+            eggRate += 1;
+            petRate = 1;
             DBHelper dbHelper = DBHelper.getDbHelper();
             dbHelper.beginTransaction();
             dbHelper.excuseSQLWithoutResult("DELETE FROM item");
@@ -988,6 +1066,9 @@ public class Hero implements BaseObject {
             if (hat != null) {
                 hat.save();
             }
+            preValueForHat.clear();
+            preValueForNek.clear();
+            preValueForRing.clear();
             appendEffect();
             Achievement.reBird.enable(this);
             dbHelper.endTransaction();
@@ -1175,7 +1256,7 @@ public class Hero implements BaseObject {
     }
 
     public List<Pet> getPets() {
-        if(pets == null){
+        if (pets == null) {
             pets = new ArrayList<Pet>();
         }
         return pets;
@@ -1186,7 +1267,7 @@ public class Hero implements BaseObject {
     }
 
     public int getPetSize() {
-        if(petSize <= 0){
+        if (petSize <= 0) {
             petSize = 3;
         }
         return petSize;
@@ -1222,8 +1303,8 @@ public class Hero implements BaseObject {
 
     public void removePet(Pet pet) {
         List<Pet> petList = getPets();
-        for(int i = 0; i< petList.size(); i++){
-            if(petList.get(i).getId().equals(pet.getId())){
+        for (int i = 0; i < petList.size(); i++) {
+            if (petList.get(i).getId().equals(pet.getId())) {
                 petList.remove(i);
                 return;
             }

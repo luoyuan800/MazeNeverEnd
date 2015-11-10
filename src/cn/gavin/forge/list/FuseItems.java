@@ -64,7 +64,7 @@ public class FuseItems {
             if (item.getEffect() != null) {
                 switch (item.getEffect()) {
                     case ADD_ATK:
-                        if (random.nextBoolean()) {
+                        if (random.nextInt(100) < 20) {
                             item.setEffect(Effect.ADD_PER_ATK);
                             long longValue = item.getEffectValue().longValue();
                             long value = calculate(longValue);
@@ -72,7 +72,7 @@ public class FuseItems {
                         }
                         break;
                     case ADD_UPPER_HP:
-                        if (random.nextBoolean()) {
+                        if (random.nextInt(100) < 20) {
                             item.setEffect(Effect.ADD_PER_UPPER_HP);
                             long longValue = item.getEffectValue().longValue();
                             long value = calculate(longValue);
@@ -80,11 +80,26 @@ public class FuseItems {
                         }
                         break;
                     case ADD_DEF:
-                        if (random.nextBoolean()) {
+                        if (random.nextInt(100) < 20) {
                             item.setEffect(Effect.ADD_PER_DEF);
                             long longValue = item.getEffectValue().longValue();
                             long value = calculate(longValue);
                             item.setEffectValue(value);
+                        }
+                        break;
+                    case ADD_PER_UPPER_HP:
+                        if(item.getEffectValue().longValue() > 50){
+                            item.setEffectValue(50);
+                        }
+                        break;
+                    case ADD_PER_ATK:
+                        if(item.getEffectValue().longValue() > 50){
+                            item.setEffectValue(50);
+                        }
+                        break;
+                    case ADD_PER_DEF:
+                        if(item.getEffectValue().longValue() > 50){
+                            item.setEffectValue(50);
                         }
                         break;
                 }
@@ -92,7 +107,7 @@ public class FuseItems {
             if (item.getEffect1() != null) {
                 switch (item.getEffect1()) {
                     case ADD_ATK:
-                        if (random.nextBoolean()) {
+                        if (random.nextInt(100) < 20) {
                             item.setEffect(Effect.ADD_PER_ATK);
                             long longValue = item.getEffect1Value().longValue();
                             long value = calculate(longValue);
@@ -100,7 +115,7 @@ public class FuseItems {
                         }
                         break;
                     case ADD_UPPER_HP:
-                        if (random.nextBoolean()) {
+                        if (random.nextInt(100) < 20) {
                             item.setEffect1(Effect.ADD_PER_UPPER_HP);
                             long longValue = item.getEffect1Value().longValue();
                             long value = calculate(longValue);
@@ -108,11 +123,26 @@ public class FuseItems {
                         }
                         break;
                     case ADD_DEF:
-                        if (random.nextBoolean()) {
+                        if (random.nextInt(100) < 20) {
                             item.setEffect1(Effect.ADD_PER_DEF);
                             long longValue = item.getEffect1Value().longValue();
                             long value = calculate(longValue);
                             item.setEffect1Value(value);
+                        }
+                        break;
+                    case ADD_PER_UPPER_HP:
+                        if(item.getEffect1Value().longValue() > 60){
+                            item.setEffect1Value(60);
+                        }
+                        break;
+                    case ADD_PER_ATK:
+                        if(item.getEffect1Value().longValue() > 60){
+                            item.setEffect1Value(60);
+                        }
+                        break;
+                    case ADD_PER_DEF:
+                        if(item.getEffect1Value().longValue() > 90){
+                            item.setEffect1Value(60);
                         }
                         break;
                 }

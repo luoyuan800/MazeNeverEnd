@@ -5,11 +5,14 @@ package cn.gavin.utils;
  */
 public class StringUtils {
     public static String formatNumber(long num){
+        Double value = 0d;
         if(num > 100000000){
-            return num/100000000 + "亿";
+            value = num/100000000d;
+            return value + "亿";
         }
         if(num > 10000){
-            return num/10000 + "万";
+            value = num/10000d;
+            return value + "万";
         }
         return num + "";
     }

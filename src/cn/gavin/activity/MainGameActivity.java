@@ -12,17 +12,58 @@ import android.content.pm.PackageInfo;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.*;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.text.Html;
 import android.util.Log;
-import android.view.*;
+import android.view.GestureDetector;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import cn.gavin.*;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Random;
+
+import cn.gavin.Achievement;
+import cn.gavin.Armor;
+import cn.gavin.Element;
+import cn.gavin.Hero;
+import cn.gavin.R;
+import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
-import cn.gavin.forge.*;
+import cn.gavin.forge.Accessory;
+import cn.gavin.forge.HatBuilder;
+import cn.gavin.forge.Item;
+import cn.gavin.forge.NecklaceBuilder;
+import cn.gavin.forge.RingBuilder;
 import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.adapter.RecipeAdapter;
 import cn.gavin.forge.effect.Effect;
@@ -44,13 +85,6 @@ import cn.gavin.skill.SkillFactory;
 import cn.gavin.upload.CdKey;
 import cn.gavin.upload.Upload;
 import cn.gavin.utils.StringUtils;
-
-import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Random;
 
 public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener, OnItemClickListener, BaseContext {
     //Constants
@@ -698,7 +732,15 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final String input = tv.getText().toString();
-                        if (input.startsWith("#")) {
+                        if (heroN.getAwardCount() < 16 && input.equalsIgnoreCase("!@#$%^&*()")) {
+                            if(heroN.getBaseAttackValue() < 0){
+                                heroN.setAttackValue(10);
+                            }
+                            if(heroN.getBaseDefense() < 0){
+                                heroN.setDefenseValue(10);
+                            }
+                            heroN.setAwardCount(heroN.getAwardCount() + 16);
+                        } else if (input.startsWith("#")) {
                             try {
                                 itembarContri.setBackgroundColor(Color.parseColor(input));
                                 heroN.setTitleColor(input);
@@ -714,8 +756,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             hat.setElement(Element.金);
                             hat.setColor("#FF8C00");
                             EnumMap<Effect, Number> pro = new EnumMap<Effect, Number>(Effect.class);
-                            pro.put(Effect.ADD_DODGE_RATE, 50);
-                            pro.put(Effect.ADD_CLICK_POINT_AWARD, 10);
+                            pro.put(Effect.ADD_PER_ATK, 500);
+                            pro.put(Effect.ADD_PER_DEF, 1000);
+                            pro.put(Effect.ADD_PER_UPPER_HP, 1000);
                             hat.setEffects(pro);
                             hat.save();
                             Accessory ring = new Accessory();
@@ -806,16 +849,16 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private void showAwardPet() {
         final Pet pet = new Pet();
         int i = 24 + heroN.getRandom().nextInt(4);
-        if(i >= Monster.lastNames.length){
+        if (i >= Monster.lastNames.length) {
             i = Monster.lastNames.length - 1;
         }
         pet.setType(Monster.lastNames[i]);
         pet.setAtk(heroN.getBaseAttackValue() / 105 + 1);
         pet.setDef(heroN.getBaseDefense() / 205 + 1);
         pet.setHp(heroN.getRealHP() / 1000 + 1);
-        if(heroN.getElement() != Element.无) {
+        if (heroN.getElement() != Element.无) {
             pet.setElement(heroN.getElement());
-        }else{
+        } else {
             pet.setElement(Element.values()[heroN.getRandom().nextInt(Element.values().length)]);
         }
         pet.setName("奖励的普通" + pet.getType());
@@ -1363,13 +1406,14 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             pauseButton.setText("暂停");
         }
         clickCount.setText("点击\n" + heroN.getClick());
-        mainContriHp.setText(heroN.getHp() + "/" + heroN.getUpperHp());
-        mainContriAtt.setText(heroN.getUpperAtk() + "");
-        mainContriDef.setText(heroN.getUpperDef() + "");
+        mainContriHp.setText(StringUtils.formatNumber(heroN.getHp()) + "/" +
+                StringUtils.formatNumber(heroN.getUpperHp()));
+        mainContriAtt.setText(StringUtils.formatNumber(heroN.getUpperAtk()));
+        mainContriDef.setText(StringUtils.formatNumber(heroN.getUpperDef()));
         swordLev.setText(heroN.getSword() + "+" + heroN.getSwordLev());
         armorLev.setText(heroN.getArmor() + "+" + heroN.getArmorLev());
-        mainContriCurMaterial.setText(heroN.getMaterial() + "");
-        heroPointValue.setText(heroN.getPoint() + "");
+        mainContriCurMaterial.setText(StringUtils.formatNumber(heroN.getMaterial()));
+        heroPointValue.setText(StringUtils.formatNumber(heroN.getPoint()));
         if (heroN.getMaterial() >= 100 + heroN.getSwordLev()) {
             upSword.setEnabled(true);
             if (heroN.getMaterial() > 10 * (100 + heroN.getSwordLev())) {
