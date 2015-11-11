@@ -405,6 +405,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
             @Override
             public void onClick(int status) {
+                try{
                 switch (status) {
                     case UpdateStatus.Update:
                         save();
@@ -415,10 +416,17 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         exist();
                         break;
                 }
+                }catch (Exception e){
+                    LogHelper.logException(e);
+                }
             }
         });
+        try{
         BmobUpdateAgent.setUpdateOnlyWifi(false);
         BmobUpdateAgent.update(this);
+        }catch (Exception e){
+            LogHelper.logException(e);
+        }
 //        checkUpdate();
         gameThreadRunning = true;
         service.setPackage(getPackageName());
