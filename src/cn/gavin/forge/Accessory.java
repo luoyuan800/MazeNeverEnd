@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -59,7 +58,7 @@ public class Accessory extends Equipment {
 
     public void setName(String name) {
         String[] nameTag = StringUtils.split(name, "<br>");
-        if(nameTag.length > 1){
+        if (nameTag.length > 1) {
             tag = nameTag[1];
         }
         this.name = nameTag[0];
@@ -126,7 +125,7 @@ public class Accessory extends Equipment {
         StringBuilder addition = new StringBuilder();
         if (additionEffects != null) {
             for (Effect effect : additionEffects.keySet()) {
-                String value = additionEffects.get(effect).toString().replace("-","~");
+                String value = additionEffects.get(effect).toString().replace("-", "~");
                 addition.append(effect.name()).append(":").append(value).append("-");
             }
         }
@@ -175,7 +174,7 @@ public class Accessory extends Equipment {
         StringBuilder builder = new StringBuilder();
         builder.append("<font color=\"").append(color).append("\">");
         builder.append(name).append("</font><br>");
-        if(StringUtils.isNotEmpty(tag))builder.append(tag).append("<br>");
+        if (StringUtils.isNotEmpty(tag)) builder.append(tag).append("<br>");
         builder.append("属性: ").append(element.name()).append("<br>");
         for (Effect effect : effects.keySet()) {
             builder.append("<br>").append(effect.getName()).append(":").append(effects.get(effect));
@@ -194,10 +193,10 @@ public class Accessory extends Equipment {
         List<Accessory> res = new ArrayList<Accessory>();
         try {
             Cursor cursor;
-            if(db!=null){
+            if (db != null) {
                 cursor = db.rawQuery("SELECT * FROM accessory", null);
                 cursor.moveToFirst();
-            }else{
+            } else {
                 cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM accessory");
             }
             while (!cursor.isAfterLast()) {
@@ -211,7 +210,12 @@ public class Accessory extends Equipment {
                     for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
                         String[] keyValue = StringUtils.split(str, ":");
                         if (keyValue.length > 1) {
-                            base.put(Effect.valueOf(keyValue[0].trim()), StringUtils.toLong(keyValue[1]));
+                            Effect effect = Effect.valueOf(keyValue[0].trim());
+                            Long value = StringUtils.toLong(keyValue[1]);
+                            if(effect == Effect.ADD_PER_ATK || effect == Effect.ADD_PER_DEF || effect == Effect.ADD_PER_UPPER_HP ){
+                                if(value > 60) value = 60l;
+                            }
+                            base.put(effect, value);
                         }
                     }
                     EnumMap<Effect, Number> addition = new EnumMap<Effect, Number>(Effect.class);
@@ -259,7 +263,12 @@ public class Accessory extends Equipment {
                     for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
                         String[] keyValue = StringUtils.split(str, ":");
                         if (keyValue.length > 1) {
-                            base.put(Effect.valueOf(keyValue[0].trim()), StringUtils.toLong(keyValue[1]));
+                            Effect effect = Effect.valueOf(keyValue[0].trim());
+                            Long value = StringUtils.toLong(keyValue[1]);
+                            if (effect == Effect.ADD_PER_ATK || effect == Effect.ADD_PER_DEF || effect == Effect.ADD_PER_UPPER_HP) {
+                                if (value > 60) value = 60l;
+                            }
+                            base.put(effect, value);
                         }
                     }
                     EnumMap<Effect, Number> addition = new EnumMap<Effect, Number>(Effect.class);
@@ -289,7 +298,7 @@ public class Accessory extends Equipment {
     }
 
     public synchronized List<Item> dismantle() {
-        if(!StringUtils.isNotEmpty(id)){
+        if (!StringUtils.isNotEmpty(id)) {
             return Collections.emptyList();
         }
         Random random = new Random();
@@ -304,22 +313,22 @@ public class Accessory extends Equipment {
                     item.setEffectValue(entry.getValue().longValue() / 6 + random.nextLong(entry.getValue().longValue() + 1) + 1);
                 } else if (item.getEffect1() == null && random.nextBoolean()) {
                     item.setEffect1(entry.getKey());
-                    item.setEffect1Value(entry.getValue().longValue() / 5 + random.nextLong(entry.getValue().longValue() + 1) +1);
+                    item.setEffect1Value(entry.getValue().longValue() / 5 + random.nextLong(entry.getValue().longValue() + 1) + 1);
                 }
                 if (item.getEffect() != null && item.getEffect1() != null) {
                     break;
                 }
             }
-            if(item.getEffect() == null){
+            if (item.getEffect() == null) {
                 EnumMap.Entry<Effect, Number> entry = effects.entrySet().iterator().next();
                 item.setEffect(entry.getKey());
                 item.setEffectValue(entry.getValue());
             }
-            if(item.getEffect() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000)!=99){
+            if (item.getEffect() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000) != 99) {
                 item.setEffect(Effect.ADD_PARRY);
             }
 
-            if(item.getEffect1() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000)!=99){
+            if (item.getEffect1() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000) != 99) {
                 item.setEffect1(Effect.ADD_PARRY);
             }
             item.save(null);
@@ -330,31 +339,31 @@ public class Accessory extends Equipment {
                 for (EnumMap.Entry<Effect, Number> entry : effects.entrySet()) {
                     if (item.getEffect() == null && random.nextBoolean()) {
                         item.setEffect(entry.getKey());
-                        item.setEffectValue(entry.getValue().longValue() / 5 + random.nextLong(entry.getValue().longValue()/2 + 1) + 1);
+                        item.setEffectValue(entry.getValue().longValue() / 5 + random.nextLong(entry.getValue().longValue() / 2 + 1) + 1);
                     } else if (item.getEffect1() == null && random.nextBoolean()) {
                         item.setEffect1(entry.getKey());
-                        item.setEffect1Value(entry.getValue().longValue() / 4 + random.nextLong(entry.getValue().longValue()/2 + 1) + 1);
+                        item.setEffect1Value(entry.getValue().longValue() / 4 + random.nextLong(entry.getValue().longValue() / 2 + 1) + 1);
                     }
                     if (item.getEffect() != null && item.getEffect1() != null) {
                         break;
                     }
                 }
-                if(item.getEffect() == null||item.getEffectValue() == null){
+                if (item.getEffect() == null || item.getEffectValue() == null) {
                     EnumMap.Entry<Effect, Number> entry = effects.entrySet().iterator().next();
                     item.setEffect(entry.getKey());
-                    item.setEffectValue(entry.getValue().longValue()/4);
+                    item.setEffectValue(entry.getValue().longValue() / 4);
                 }
                 item.save(null);
                 items.add(item);
-                if(item.getEffect() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000)!=99){
+                if (item.getEffect() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000) != 99) {
                     item.setEffect(Effect.ADD_PARRY);
                 }
 
-                if(item.getEffect1() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000)!=99){
+                if (item.getEffect1() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000) != 99) {
                     item.setEffect1(Effect.ADD_PARRY);
                 }
             }
-            if(getAdditionEffects()!=null && !additionEffects.isEmpty()){
+            if (getAdditionEffects() != null && !additionEffects.isEmpty()) {
                 for (EnumMap.Entry<Effect, Number> entry : additionEffects.entrySet()) {
                     item = new Item();
                     item.setName(ItemName.values()[random.nextInt(ItemName.values().length)]);
@@ -364,18 +373,18 @@ public class Accessory extends Equipment {
                     items.add(item);
                 }
             }
-            if(item.getEffect() == null){
+            if (item.getEffect() == null) {
                 EnumMap.Entry<Effect, Number> entry = effects.entrySet().iterator().next();
                 item.setEffect(entry.getKey());
-                item.setEffectValue(entry.getValue().longValue()/5);
+                item.setEffectValue(entry.getValue().longValue() / 5);
             }
-            if(item.getEffect() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000)!=99){
+            if (item.getEffect() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000) != 99) {
                 item.setEffect(Effect.ADD_PARRY);
             }
-            if(item.getEffect1() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000)!=99){
+            if (item.getEffect1() == Effect.ADD_CLICK_POINT_AWARD && random.nextLong(100000) != 99) {
                 item.setEffect1(Effect.ADD_PARRY);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "dismantle", e);
         }

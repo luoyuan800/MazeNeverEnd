@@ -60,7 +60,9 @@ public class LoadHelper {
         save = preferences.getBoolean("exist", false);
         if (save) {
             for (Map.Entry<String, ?> entry : preferences.getAll().entrySet()) {
-                hero.preValueForNek.put(Effect.valueOf(entry.getKey()), preferences.getLong(entry.getKey(), 0l));
+                if (!entry.getKey().equalsIgnoreCase("exist")) {
+                    hero.preValueForNek.put(Effect.valueOf(entry.getKey()), preferences.getLong(entry.getKey(), 0l));
+                }
             }
         }
 
@@ -68,7 +70,9 @@ public class LoadHelper {
         save = preferences.getBoolean("exist", false);
         if (save) {
             for (Map.Entry<String, ?> entry : preferences.getAll().entrySet()) {
-                hero.preValueForRing.put(Effect.valueOf(entry.getKey()), preferences.getLong(entry.getKey(), 0l));
+                if (!entry.getKey().equalsIgnoreCase("exist")) {
+                    hero.preValueForRing.put(Effect.valueOf(entry.getKey()), preferences.getLong(entry.getKey(), 0l));
+                }
             }
         }
     }

@@ -175,6 +175,9 @@ public class Item implements Comparator<Item> {
                             if (proVal.length > 1) {
                                 Effect e = Effect.valueOf(proVal[0]);
                                 Long value = StringUtils.toLong(proVal[1]);
+                                if(e == Effect.ADD_PER_ATK || e == Effect.ADD_PER_DEF || e == Effect.ADD_PER_UPPER_HP ){
+                                    if(value > 20) value = 20l;
+                                }
                                 if (item.getEffect() == null) {
                                     item.setEffect(e);
                                     item.setEffectValue(value);

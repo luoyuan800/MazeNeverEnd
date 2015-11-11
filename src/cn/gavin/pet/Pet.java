@@ -12,6 +12,7 @@ import cn.gavin.monster.Monster;
 import cn.gavin.palace.Base;
 import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.pet.skill.GoldenSearcher;
+import cn.gavin.pet.skill.HealthSkill;
 import cn.gavin.pet.skill.QuickGrow;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.utils.Random;
@@ -137,6 +138,8 @@ public class Pet extends Base {
                 } else {
                     pet.setSkill(new QuickGrow());
                 }
+            }else if(random.nextInt(1000) == 1){
+                pet.setSkill(new HealthSkill());
             }
             if(SkillFactory.getSkill("霸气", MazeContents.hero, null).isActive()){
                 pet.setAtk_rise(pet.getAtk_rise() * 3);

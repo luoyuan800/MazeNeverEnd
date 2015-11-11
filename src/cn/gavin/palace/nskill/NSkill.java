@@ -2,6 +2,9 @@ package cn.gavin.palace.nskill;
 
 import cn.gavin.Element;
 import cn.gavin.palace.Base;
+import cn.gavin.pet.skill.GoldenSearcher;
+import cn.gavin.pet.skill.HealthSkill;
+import cn.gavin.pet.skill.QuickGrow;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.utils.Random;
@@ -63,6 +66,12 @@ public abstract class NSkill {
             skill = new SwallowSkill(me, count);
         }else if(name.equals("原能力")){
             skill = new OriginalPower(me, count);
+        } else if(name.equals("治疗术")){
+            skill = new HealthSkill();
+        } else if(name.equals("自动获取额外能力点")){
+            skill = new QuickGrow();
+        } else if(name.equals("自动收集锻造点数")){
+            skill = new GoldenSearcher();
         }
         return skill;
     }
