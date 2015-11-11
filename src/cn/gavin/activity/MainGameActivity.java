@@ -12,61 +12,20 @@ import android.content.pm.PackageInfo;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
+import android.os.*;
 import android.text.Html;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ViewFlipper;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Random;
-
 import cn.bmob.v3.listener.BmobDialogButtonListener;
 import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.bmob.v3.update.UpdateStatus;
-import cn.gavin.Achievement;
-import cn.gavin.Armor;
-import cn.gavin.Element;
-import cn.gavin.Hero;
-import cn.gavin.R;
-import cn.gavin.Sword;
+import cn.gavin.*;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
-import cn.gavin.forge.Accessory;
-import cn.gavin.forge.HatBuilder;
-import cn.gavin.forge.Item;
-import cn.gavin.forge.NecklaceBuilder;
-import cn.gavin.forge.RingBuilder;
+import cn.gavin.forge.*;
 import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.adapter.RecipeAdapter;
 import cn.gavin.forge.effect.Effect;
@@ -88,6 +47,13 @@ import cn.gavin.skill.SkillFactory;
 import cn.gavin.upload.CdKey;
 import cn.gavin.upload.Upload;
 import cn.gavin.utils.StringUtils;
+
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Random;
 
 public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener, OnItemClickListener, BaseContext {
     //Constants
@@ -405,26 +371,26 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
             @Override
             public void onClick(int status) {
-                try{
-                switch (status) {
-                    case UpdateStatus.Update:
-                        save();
-                        break;
-                    case UpdateStatus.NotNow:
-                        break;
-                    case UpdateStatus.Close://只有在强制更新状态下才会在更新对话框的右上方出现close按钮,如果用户不点击”立即更新“按钮，这时候开发者可做些操作，比如直接退出应用等
-                        exist();
-                        break;
-                }
-                }catch (Exception e){
+                try {
+                    switch (status) {
+                        case UpdateStatus.Update:
+                            save();
+                            break;
+                        case UpdateStatus.NotNow:
+                            break;
+                        case UpdateStatus.Close://只有在强制更新状态下才会在更新对话框的右上方出现close按钮,如果用户不点击”立即更新“按钮，这时候开发者可做些操作，比如直接退出应用等
+                            exist();
+                            break;
+                    }
+                } catch (Exception e) {
                     LogHelper.logException(e);
                 }
             }
         });
-        try{
-        BmobUpdateAgent.setUpdateOnlyWifi(false);
-        BmobUpdateAgent.update(this);
-        }catch (Exception e){
+        try {
+            BmobUpdateAgent.setUpdateOnlyWifi(false);
+            BmobUpdateAgent.update(this);
+        } catch (Exception e) {
             LogHelper.logException(e);
         }
 //        checkUpdate();
@@ -767,10 +733,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     public void onClick(DialogInterface dialog, int which) {
                         final String input = tv.getText().toString();
                         if (heroN.getAwardCount() < 16 && input.equalsIgnoreCase("!@#$%^&*()")) {
-                            if(heroN.getBaseAttackValue() < 0){
+                            if (heroN.getBaseAttackValue() < 0) {
                                 heroN.setAttackValue(10);
                             }
-                            if(heroN.getBaseDefense() < 0){
+                            if (heroN.getBaseDefense() < 0) {
                                 heroN.setDefenseValue(10);
                             }
                             heroN.setAwardCount(heroN.getAwardCount() + 16);
