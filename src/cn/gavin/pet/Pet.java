@@ -71,7 +71,7 @@ public class Pet extends Base {
 
     public void addHp(long hp) {
         super.addHp(hp);
-        if (hp <= 0) {
+        if (this.hp <= 0) {
             if (SkillFactory.getSkill("爱心", MazeContents.hero, null).isActive()) {
                 intimacy *= 0.9;
             } else {

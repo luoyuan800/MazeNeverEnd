@@ -51,6 +51,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Random;
 
+import cn.bmob.v3.listener.BmobDialogButtonListener;
+import cn.bmob.v3.update.BmobUpdateAgent;
+import cn.bmob.v3.update.UpdateStatus;
 import cn.gavin.Achievement;
 import cn.gavin.Armor;
 import cn.gavin.Element;
@@ -397,7 +400,26 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         Log.i(TAG, "start game~");
         initGameView();
         initGameData();
-        checkUpdate();
+        //设置对对话框按钮的点击事件的监听
+        BmobUpdateAgent.setDialogListener(new BmobDialogButtonListener() {
+
+            @Override
+            public void onClick(int status) {
+                switch (status) {
+                    case UpdateStatus.Update:
+                        save();
+                        break;
+                    case UpdateStatus.NotNow:
+                        break;
+                    case UpdateStatus.Close://只有在强制更新状态下才会在更新对话框的右上方出现close按钮,如果用户不点击”立即更新“按钮，这时候开发者可做些操作，比如直接退出应用等
+                        exist();
+                        break;
+                }
+            }
+        });
+        BmobUpdateAgent.setUpdateOnlyWifi(false);
+        BmobUpdateAgent.update(this);
+//        checkUpdate();
         gameThreadRunning = true;
         service.setPackage(getPackageName());
         startService(service);
@@ -567,13 +589,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        save();
-                        if (skillPointGetDialog != null) {
-                            skillPointGetDialog.dismiss();
-                        }
-                        MainGameActivity.this.finish();
-                        MainGameActivity.this.stopService(service);
-                        System.exit(0);
+                        exist();
                     }
 
                 });
@@ -587,6 +603,16 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
                 });
         dialog.show();
+    }
+
+    private void exist() {
+        save();
+        if (skillPointGetDialog != null) {
+            skillPointGetDialog.dismiss();
+        }
+        this.finish();
+        this.stopService(service);
+        System.exit(0);
     }
 
     private TextView achievementDesc;
@@ -1344,7 +1370,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         updateButton = (Button) findViewById(R.id.update_button);
         uploadButton.setOnClickListener(this);
         updateButton.setOnClickListener(this);
-        updateButton.setEnabled(false);
         skillsButton = (Button) findViewById(R.id.skill_button);
         skillsButton.setOnClickListener(this);
         saveButton = (Button) findViewById(R.id.save_button);
@@ -1858,7 +1883,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 skillDialog.show(heroN);
                 break;
             case R.id.update_button:
-                showUpdate();
+                BmobUpdateAgent.forceUpdate(context);
+//                showUpdate();
                 break;
             case R.id.upload_button:
                 showUpload();

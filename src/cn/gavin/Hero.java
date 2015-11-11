@@ -451,7 +451,7 @@ public class Hero implements BaseObject {
     public void restore() {
         onChange = false;
         onSkill = false;
-        this.hp = upperHp;
+        this.hp = getUpperHp();
         for (Pet pet : getPets()) {
             pet.restore();
         }

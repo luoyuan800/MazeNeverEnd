@@ -14,6 +14,7 @@ import android.widget.Button;
 import com.bmob.pay.tool.BmobPay;
 
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.gavin.R;
 import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;

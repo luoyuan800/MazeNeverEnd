@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.gavin"
-    android:versionCode="15"
-    android:versionName="1.6.4">
+    android:versionCode="165"
+    android:versionName="1.6.5">
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -53,6 +53,10 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent" />
         <!-- bmob pay sdk activity end -->
+        <activity
+            android:name="cn.bmob.v3.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
     </application>
 
 

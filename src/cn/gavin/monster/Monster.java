@@ -184,7 +184,7 @@ public class Monster {
         hp += baseHP[last] * random.nextLong(maze.getLev() + 1);
         atk += baseAtk[last] * hero.getReincaCount();
         if (hp < hero.getAttackValue()) {
-            hp += random.nextLong(hero.getAttackValue() * 2);
+            hp += random.nextLong(hero.getAttackValue() * 5);
         }
         if (hp > hero.getAttackValue() * 19) {
             hp = hero.getAttackValue() * 20;

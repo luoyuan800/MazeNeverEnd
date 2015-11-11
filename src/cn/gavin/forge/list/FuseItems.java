@@ -2,6 +2,7 @@ package cn.gavin.forge.list;
 
 import java.util.EnumMap;
 
+import cn.gavin.activity.MazeContents;
 import cn.gavin.forge.Item;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.log.LogHelper;
@@ -143,6 +144,27 @@ public class FuseItems {
                     case ADD_PER_DEF:
                         if(item.getEffect1Value().longValue() > 90){
                             item.setEffect1Value(60);
+                        }
+                        break;
+                    case ADD_STR:
+                        if(MazeContents.hero!=null) {
+                            if (item.getEffect1Value().longValue() > MazeContents.hero.getStrength()/1000) {
+                                item.setEffect1Value(MazeContents.hero.getStrength()/1001);
+                            }
+                        }
+                        break;
+                    case ADD_AGI:
+                        if(MazeContents.hero!=null) {
+                            if (item.getEffect1Value().longValue() > MazeContents.hero.getAgility()/1000) {
+                                item.setEffect1Value(MazeContents.hero.getStrength()/1001);
+                            }
+                        }
+                        break;
+                    case ADD_POWER:
+                        if(MazeContents.hero!=null) {
+                            if (item.getEffect1Value().longValue() > MazeContents.hero.getAgility()/500) {
+                                item.setEffect1Value(MazeContents.hero.getStrength()/501);
+                            }
                         }
                         break;
                 }
