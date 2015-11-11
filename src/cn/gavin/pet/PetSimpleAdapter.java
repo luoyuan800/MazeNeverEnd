@@ -446,9 +446,10 @@ public class PetSimpleAdapter extends BaseAdapter {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                         detail.dismiss();
-                                        onUsedCheck.setChecked(false);
                                         listener.adapterData.remove(pet);
+                                        pet.setOnUsed(false);
                                         pet.releasePet(MazeContents.hero, context);
+                                        onUsedCheck.setChecked(false);
                                         listener.refresh();
                                         refresh();
                                     }

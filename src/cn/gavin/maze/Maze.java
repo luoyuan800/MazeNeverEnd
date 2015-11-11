@@ -188,6 +188,8 @@ public class Maze {
                 }
                 monsterBook.addMonster(monster);
                 addMessage(context, "-----------------------------");
+            }else{
+                addMessage(context, hero.getFormatName() + "思考了一下人生...");
             }
             try {
                 Thread.sleep(context.getRefreshInfoSpeed());

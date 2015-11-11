@@ -145,6 +145,7 @@ public class LoadHelper {
         heroN.setClickPointAward(preferences.getLong("clickPointAward", 0));
         heroN.setElement(Element.valueOf(preferences.getString("element", "无")));
         heroN.setPetSize(preferences.getInt("pet_size", 3));
+        if(heroN.getPetSize() > 20) heroN.setPetSize(20);
         heroN.setPetRate(preferences.getFloat("pet_rate", 1.0f));
         heroN.setEggRate(preferences.getFloat("egg_rate", 200f));
         heroN.setEggStep(preferences.getLong("egg_step", 1));
