@@ -12,7 +12,7 @@ import java.net.URL;
 import cn.bmob.v3.listener.SaveListener;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.activity.MazeContents;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.skill.Skill;
 import cn.gavin.utils.StringUtils;
 

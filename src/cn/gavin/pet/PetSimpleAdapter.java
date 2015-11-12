@@ -22,7 +22,7 @@ import java.util.Set;
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.activity.MazeContents;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -33,6 +33,7 @@ import cn.gavin.utils.StringUtils;
 public class PetSimpleAdapter extends BaseAdapter {
 
     static PetSimpleAdapter listener;
+    final PetDetailDialog detailDialog;
 
     public void refresh() {
         saveToDB();
@@ -54,6 +55,7 @@ public class PetSimpleAdapter extends BaseAdapter {
         }
         listener = this;
         this.hero = hero;
+        detailDialog = new PetDetailDialog(MainGameActivity.context);
     }
 
     private List<Pet> adapterData;
@@ -63,9 +65,7 @@ public class PetSimpleAdapter extends BaseAdapter {
     public void setToHero() {
         List<Pet> pets = new ArrayList<Pet>(onUsedPetIds.size());
         for (String id : onUsedPetIds) {
-            Pet pet = new Pet();
-            pet.setId(id);
-            PetDB.load(pet);
+            Pet pet = PetDB.load(id);
             pets.add(pet);
         }
         hero.setPets(pets);
@@ -121,9 +121,8 @@ public class PetSimpleAdapter extends BaseAdapter {
                         if ("蛋".equals(pet.getType())) {
                             new EggDetail(pet, MainGameActivity.context, onUsedPetIds);
                         } else {
-                            PetDetailDialog detailDialog = new PetDetailDialog(MainGameActivity.context);
-                            detailDialog.show();
-                            detailDialog.updatePet(pet, onUsedPetIds);
+                            listener.detailDialog.show();
+                            listener.detailDialog.updatePet(pet, onUsedPetIds);
                         }
                     }
                 });
@@ -153,7 +152,13 @@ public class PetSimpleAdapter extends BaseAdapter {
             });
             LinearLayout linearLayout = new LinearLayout(context);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
-            linearLayout.addView(onUsedCheck);
+            LinearLayout layout = new LinearLayout(context);
+            layout.setOrientation(LinearLayout.HORIZONTAL);
+            layout.addView(onUsedCheck);
+            ImageView imageView = new ImageView(context);
+            imageView.setImageResource(R.drawable.egg);
+            layout.addView(imageView);
+            linearLayout.addView(layout);
             detail.setView(linearLayout);
             TextView name = new TextView(context);
             name.setText(pet.getType());
@@ -164,7 +169,7 @@ public class PetSimpleAdapter extends BaseAdapter {
             TextView bi = new TextView(context);
             if (pet.getDeathCount() < 10) {
                 bi.setText("好像要破壳而出了！");
-            } else if (pet.getDeathCount() < 50) {
+            } else if (pet.getDeathCount() < 80) {
                 bi.setText("似乎有点动静...");
             } else {
                 bi.setText("不知道里面是什么...");
@@ -363,7 +368,7 @@ public class PetSimpleAdapter extends BaseAdapter {
                 } else {
                     skillName.setText("无");
                 }
-                petPic.setImageResource(pet.getImage());
+                petPic.setImageResource(MazeContents.getImageByName(pet.getName()));
                 petOwner.setText(pet.getOwner());
                 final Hero hero = MazeContents.hero;
                 if (hero.getPoint() < 1) {
@@ -446,6 +451,7 @@ public class PetSimpleAdapter extends BaseAdapter {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                         detail.dismiss();
+                                        onUsedPetsId.remove(pet.getId());
                                         listener.adapterData.remove(pet);
                                         pet.setOnUsed(false);
                                         pet.releasePet(MazeContents.hero, context);

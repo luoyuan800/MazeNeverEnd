@@ -17,7 +17,7 @@ import cn.bmob.v3.listener.GetListener;
 import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.activity.MazeContents;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.forge.Accessory;
 import cn.gavin.forge.Item;
 import cn.gavin.forge.effect.Effect;

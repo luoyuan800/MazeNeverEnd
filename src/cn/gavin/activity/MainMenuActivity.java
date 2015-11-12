@@ -14,12 +14,12 @@ import android.widget.Button;
 import com.bmob.pay.tool.BmobPay;
 
 import cn.bmob.v3.Bmob;
-import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.gavin.R;
 import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.skill.SkillDialog;
+import cn.gavin.utils.MazeContents;
 
 public class MainMenuActivity extends Activity implements OnClickListener {
     public MainMenuActivity context;

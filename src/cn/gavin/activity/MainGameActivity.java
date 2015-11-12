@@ -46,6 +46,7 @@ import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.upload.CdKey;
 import cn.gavin.upload.Upload;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
 
 import java.io.*;

@@ -26,7 +26,7 @@ import java.util.List;
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.ForgeActivity;
-import cn.gavin.activity.MazeContents;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.forge.Item;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.utils.Random;

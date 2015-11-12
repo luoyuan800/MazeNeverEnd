@@ -15,7 +15,7 @@ import java.util.List;
 
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.activity.MazeContents;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.forge.Accessory;
 import cn.gavin.forge.HatBuilder;
 import cn.gavin.forge.Item;

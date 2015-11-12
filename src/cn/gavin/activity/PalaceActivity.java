@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
 
 import java.util.List;
 
@@ -33,6 +32,7 @@ import cn.gavin.monster.MonsterBook;
 import cn.gavin.palace.PalaceHero;
 import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.skill.SkillDialog;
+import cn.gavin.utils.MazeContents;
 
 public class PalaceActivity extends Activity implements OnClickListener, BaseContext {
     //Constants

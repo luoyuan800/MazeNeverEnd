@@ -8,7 +8,7 @@ import java.util.EnumMap;
 import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.activity.MazeContents;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.maze.Maze;
 import cn.gavin.pet.Pet;

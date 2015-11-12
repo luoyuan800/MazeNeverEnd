@@ -17,7 +17,7 @@ import cn.gavin.Hero;
 import cn.gavin.Sword;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MainMenuActivity;
-import cn.gavin.activity.MazeContents;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
 import cn.gavin.forge.effect.Effect;
@@ -154,9 +154,7 @@ public class LoadHelper {
         String[] ids = StringUtils.split(petIds, "_");
         for (String id : ids) {
             if (StringUtils.isNotEmpty(id)) {
-                Pet pet = new Pet();
-                pet.setId(id);
-                PetDB.load(pet);
+                Pet pet = PetDB.load(id);
                 if (StringUtils.isNotEmpty(pet.getType())) {
                     heroN.getPets().add(pet);
                 }

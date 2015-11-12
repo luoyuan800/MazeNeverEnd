@@ -11,7 +11,7 @@ import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.Sword;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.activity.MazeContents;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.Skill;

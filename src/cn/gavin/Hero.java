@@ -177,7 +177,7 @@ public class Hero implements BaseObject {
         } else {
             if (hp < 0) {
                 this.hp += hp;
-            } else if (this.hp < (Integer.MAX_VALUE - hp - 100)) {
+            } else if (this.hp < (Long.MAX_VALUE/2 - hp - 10000)) {
                 this.hp += hp;
             }
             if (this.hp <= 0 && getSkillAdditionHp() <= 0) {
@@ -505,7 +505,7 @@ public class Hero implements BaseObject {
                     if (clickPointAward > 5) {
                         addPoint(random.nextLong(clickPointAward));
                     } else {
-                        addMaterial(clickPointAward);
+                        addPoint(clickPointAward);
                     }
                 }
                 this.click++;
@@ -1047,7 +1047,7 @@ public class Hero implements BaseObject {
             hitRate = 0l;
             clickPointAward = 0l;
             clickAward = reincaCount + 1;
-            petSize += 1;
+            petSize = 3 + reincaCount.intValue() + 1;
             eggRate += 1;
             petRate = 1;
             DBHelper dbHelper = DBHelper.getDbHelper();

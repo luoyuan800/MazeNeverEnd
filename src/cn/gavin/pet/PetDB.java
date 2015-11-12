@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,13 +50,13 @@ public class PetDB {
         db.execSQL("CREATE UNIQUE INDEX pet_index ON pet (id)");
     }
 
-    public static int getPetCount(SQLiteDatabase database){
+    public static int getPetCount(SQLiteDatabase database) {
         String sql = "SELECT count(*) FROM pet";
         Cursor cursor;
-        if(database!=null){
+        if (database != null) {
             cursor = database.rawQuery(sql, null);
             cursor.moveToFirst();
-        }else{
+        } else {
             cursor = DBHelper.getDbHelper().excuseSOL(sql);
         }
         int i = cursor.getInt(0);
@@ -78,12 +79,14 @@ public class PetDB {
                     pet.getMaxDef(), pet.getHp(), pet.getUHp(), pet.getLev(), pet.getfName(),
                     pet.getmName(), pet.getSex(), pet.getAtk_rise(), pet.getHp_rise(), pet.getDef_rise(), pet.getOwner());
             DBHelper.getDbHelper().excuseSQLWithoutResult(sql);
+            petCatch.put(pet.getId(),pet);
         }
     }
 
     public static void delete(Pet... pets) {
         for (Pet pet : pets) {
             DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM pet WHERE id ='" + pet.getId() + "'");
+            petCatch.remove(pet.getId());
         }
     }
 
@@ -92,6 +95,7 @@ public class PetDB {
             Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM pet WHERE id ='" + pet.getId() + "'");
             if (!cursor.isAfterLast()) {
                 buildPet(pet, cursor);
+                petCatch.put(pet.getId(), pet);
             }
         }
     }
@@ -116,37 +120,56 @@ public class PetDB {
         pet.setOwner(cursor.getString(cursor.getColumnIndex("owner")));
         String skill = cursor.getString(cursor.getColumnIndex("skill"));
         long skillCount = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("skill_count")));
-        NSkill nSkill = NSkill.createSkillByName(skill,pet,skillCount,null);
-        if(nSkill instanceof PetSkill){
+        NSkill nSkill = NSkill.createSkillByName(skill, pet, skillCount, null);
+        if (nSkill instanceof PetSkill) {
             pet.setSkill(nSkill);
-        }else{
+        } else {
             pet.addSkill(nSkill);
         }
     }
 
     public static List<Pet> loadPet(SQLiteDatabase db) {
-        Cursor cursor;
-        List<Pet> pets = new ArrayList<Pet>();
-        String sql = "SELECT * FROM pet ORDER BY intimacy";
-        try {
-            if (db != null) {
-                cursor = db.rawQuery(sql, null);
-                cursor.moveToFirst();
-            } else {
-                cursor = DBHelper.getDbHelper().excuseSOL(sql);
+        if (!petCatch.isEmpty()) {
+            return new ArrayList<Pet>(petCatch.values());
+        } else {
+            Cursor cursor;
+            List<Pet> pets = new ArrayList<Pet>();
+            String sql = "SELECT * FROM pet ORDER BY intimacy";
+            try {
+                if (db != null) {
+                    cursor = db.rawQuery(sql, null);
+                    cursor.moveToFirst();
+                } else {
+                    cursor = DBHelper.getDbHelper().excuseSOL(sql);
+                }
+                while (!cursor.isAfterLast()) {
+                    Pet pet = new Pet();
+                    buildPet(pet, cursor);
+                    pet.setId(cursor.getString(cursor.getColumnIndex("id")));
+                    pets.add(pet);
+                    petCatch.put(pet.getId(), pet);
+                    cursor.moveToNext();
+                }
+                cursor.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogHelper.logException(e);
             }
-            while (!cursor.isAfterLast()) {
-                Pet pet = new Pet();
-                buildPet(pet, cursor);
-                pet.setId(cursor.getString(cursor.getColumnIndex("id")));
-                pets.add(pet);
-                cursor.moveToNext();
-            }
-            cursor.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            LogHelper.logException(e);
+            return pets;
         }
-        return pets;
     }
+
+    public static Pet load(String id){
+        Pet p = petCatch.get(id);
+        if(p !=null){
+            return p;
+        }else{
+            Pet pet = new Pet();
+            pet.setId(id);
+            load(pet);
+            return pet;
+        }
+    }
+
+    public static HashMap<String, Pet> petCatch = new HashMap<String, Pet>();
 }

@@ -2,7 +2,7 @@ package cn.gavin.forge.list;
 
 import java.util.EnumMap;
 
-import cn.gavin.activity.MazeContents;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.forge.Item;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.log.LogHelper;

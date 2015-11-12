@@ -7,7 +7,9 @@ import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.activity.MazeContents;
+import cn.gavin.pet.skill.PetSkill;
+import cn.gavin.pet.skill.PetSkillList;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.monster.Monster;
 import cn.gavin.palace.Base;
 import cn.gavin.palace.nskill.NSkill;
@@ -46,7 +48,7 @@ public class Pet extends Base {
         if (intimacy > 50000000) {
             intimacy--;
         }
-        if (getRandom().nextLong(intimacy) > getRandom().nextLong(100000) + 1000) {
+        if (getRandom().nextLong(intimacy) > 2000) {
             uHp += 100;
             atk += 50;
             def += 150;
@@ -133,10 +135,11 @@ public class Pet extends Base {
             pet.setSex(random.nextInt(2));
             pet.setOwner(MazeContents.hero.getName());
             if((SkillFactory.getSkill("神赋", MazeContents.hero, null).isActive() && random.nextInt(100) < 30) || random.nextInt(5000) < 5){
-                if (random.nextBoolean()) {
-                    pet.setSkill(new GoldenSearcher());
+                NSkill petS = PetSkillList.values()[random.nextInt(PetSkillList.values().length)].getSkill(pet);
+                if (petS instanceof PetSkill) {
+                    pet.setSkill(petS);
                 } else {
-                    pet.setSkill(new QuickGrow());
+                    pet.addSkill(petS);
                 }
             }else if(random.nextInt(1000) == 1){
                 pet.setSkill(new HealthSkill());
@@ -153,7 +156,7 @@ public class Pet extends Base {
         }
     }
 
-    private static void setImage(Pet pet, int index) {
+    public static void setImage(Pet pet, int index) {
         switch (index) {
             case 0:
                 pet.image = R.drawable.zl;
@@ -412,10 +415,8 @@ public class Pet extends Base {
             if (!f.getType().equals(m.getType())) {
                 if (random.nextInt(10000) + random.nextFloat() < 2.015) {
                     String lastName = Monster.lastNames[random.nextInt(Monster.lastNames.length)];
-                    egg.setType(lastName);
                     egg.setName("变异的" + lastName);
-                    if (egg.getType().equals("作者")) {
-                        egg.setType("蟑螂");
+                    if (lastName.equals("作者")) {
                         egg.setAtk(egg.getAtk() * 2);
                         egg.setName("变异的蟑螂");
                     }
@@ -426,11 +427,14 @@ public class Pet extends Base {
                 }
             }
             if((SkillFactory.getSkill("恩赐", MazeContents.hero, null).isActive() && random.nextInt(100) < 40) || random.nextInt(1000) < 5){
-                if (random.nextBoolean()) {
-                    egg.setSkill(new GoldenSearcher());
+                NSkill petS = PetSkillList.values()[random.nextInt(PetSkillList.values().length)].getSkill(egg);
+                if (petS instanceof PetSkill) {
+                    egg.setSkill(petS);
                 } else {
-                    egg.setSkill(new QuickGrow());
+                    egg.addSkill(petS);
                 }
+            }if(random.nextInt(1000) < 10){
+                egg.setSkill(new HealthSkill());
             }
             PetDB.save(egg);
             Achievement.egg.enable(hero);

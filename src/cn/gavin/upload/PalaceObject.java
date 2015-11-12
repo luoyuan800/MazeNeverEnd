@@ -1,7 +1,6 @@
 package cn.gavin.upload;
 
 import cn.bmob.v3.BmobObject;
-import cn.gavin.activity.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.utils.StringUtils;
 

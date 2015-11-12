@@ -4,8 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.ScrollView;
 import cn.gavin.Hero;
-import cn.gavin.activity.MainGameActivity;
-import cn.gavin.activity.MazeContents;
+import cn.gavin.utils.MazeContents;
 
 /**
  * Created by luoyuan on 9/13/15.

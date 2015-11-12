@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import cn.gavin.R;
@@ -29,7 +28,7 @@ import cn.gavin.forge.RingBuilder;
 import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.dialog.ItemDialog;
 import cn.gavin.forge.list.FuseItems;
-import cn.gavin.monster.MonsterBook;
+import cn.gavin.utils.MazeContents;
 
 
 /**

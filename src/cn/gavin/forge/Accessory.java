@@ -13,7 +13,7 @@ import java.util.UUID;
 
 import cn.gavin.Element;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.activity.MazeContents;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.forge.list.ItemName;
@@ -215,6 +215,7 @@ public class Accessory extends Equipment {
                             if(effect == Effect.ADD_PER_ATK || effect == Effect.ADD_PER_DEF || effect == Effect.ADD_PER_UPPER_HP ){
                                 if(value > 60) value = 60l;
                             }
+                            value = MazeContents.reduceLegacyEffect(effect, value);
                             base.put(effect, value);
                         }
                     }
@@ -268,6 +269,7 @@ public class Accessory extends Equipment {
                             if (effect == Effect.ADD_PER_ATK || effect == Effect.ADD_PER_DEF || effect == Effect.ADD_PER_UPPER_HP) {
                                 if (value > 60) value = 60l;
                             }
+                            value = MazeContents.reduceLegacyEffect(effect, value);
                             base.put(effect, value);
                         }
                     }

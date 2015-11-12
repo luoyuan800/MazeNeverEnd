@@ -13,7 +13,7 @@ import java.util.Set;
 
 import cn.gavin.Element;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.activity.MazeContents;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;

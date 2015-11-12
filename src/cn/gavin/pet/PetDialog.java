@@ -2,21 +2,10 @@ package cn.gavin.pet;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Handler;
-import android.os.Message;
-import android.text.Html;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import cn.gavin.Hero;
-import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.activity.MazeContents;
 
 /**
  * Copyright 2015 gluo.
