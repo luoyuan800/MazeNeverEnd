@@ -14,21 +14,15 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.gavin.R;
-import cn.gavin.forge.Accessory;
-import cn.gavin.forge.Builder;
-import cn.gavin.forge.HatBuilder;
-import cn.gavin.forge.Item;
-import cn.gavin.forge.NecklaceBuilder;
-import cn.gavin.forge.RingBuilder;
+import cn.gavin.forge.*;
 import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.dialog.ItemDialog;
 import cn.gavin.forge.list.FuseItems;
 import cn.gavin.utils.MazeContents;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -135,21 +129,22 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
         return detector.onTouchEvent(event);
     }
 
-    private void setSystem(boolean next){
-        if(next){
+    private void setSystem(boolean next) {
+        if (next) {
             systemName.setText(getNextSystemName());
 
-        }else{
+        } else {
             systemName.setText(getPrevSystemName());
         }
-        if(index == 3){
+        if (index == 3) {
             conformButton.setEnabled(false);
             forgeButton.setText("融合");
-        }else{
+        } else {
             conformButton.setEnabled(true);
             forgeButton.setText("打造");
         }
     }
+
     public GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener() {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
@@ -190,12 +185,12 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                 alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "一键拆解黑装/10w", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        for(Accessory accessory : Accessory.loadAccessories(null)){
-                            if("#000000".equals(accessory.getColor())){
+                        for (Accessory accessory : Accessory.loadAccessories(null)) {
+                            if ("#000000".equals(accessory.getColor())) {
                                 accessory.dismantle();
                             }
                         }
-                        if(MazeContents.hero!=null){
+                        if (MazeContents.hero != null) {
                             MazeContents.hero.addMaterial(-100000);
                         }
                         adapter.refresh();
@@ -206,10 +201,10 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                 alertDialog.setView(listView);
                 alertDialog.show();
                 Button button = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                if(MazeContents.hero!=null){
-                    if(MazeContents.hero.getMaterial() < 100000){
+                if (MazeContents.hero != null) {
+                    if (MazeContents.hero.getMaterial() < 100000) {
                         button.setEnabled(false);
-                    }else{
+                    } else {
                         button.setEnabled(true);
                     }
                 }
@@ -242,18 +237,17 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                 }
                 break;
             case R.id.forge_do_button:
-                if(index == 3){
-                    if(item1!=null && item2!=null&&item3!=null&&item4!=null&&item5!=null) {
-                        Item item = FuseItems.fuse(item1, item2, item3, item4, item5);
-                        clean();
-                        if(item!=null) {
-                            resultText.setText(Html.fromHtml("获得了<br>" + item.toString()));
+                if (MazeContents.hero.getMaterial() >= mate) {
+                    if (index == 3) {
+                        if (item1 != null && item2 != null && item3 != null && item4 != null && item5 != null) {
+                            Item item = FuseItems.fuse(item1, item2, item3, item4, item5);
+                            if (item != null) {
+                                resultText.setText(Html.fromHtml("获得了<br>" + item.toString()));
+                            }
+                        } else {
+                            resultText.setText("需要五个材料才可以进行融合");
                         }
-                    }else{
-                        resultText.setText("需要五个材料才可以进行融合");
-                    }
-                }else {
-                    if (MazeContents.hero.getMaterial() >= mate) {
+                    } else {
                         items.clear();
                         if (item1 != null) items.add(item1);
                         if (item2 != null) items.add(item2);
@@ -276,18 +270,19 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                             Accessory accessory = builder.build(items);
                             if (accessory != null) {
                                 showResult(accessory);
-                                clean();
                             } else {
                                 resultText.setText(Html.fromHtml(builder.notEnough()));
                             }
                         } else {
                             resultText.setText("选择的打造材料不足，请继续添加!");
                         }
-                    } else {
-                        Toast.makeText(this, "--锻造点数不足" + mate + "--", Toast.LENGTH_SHORT)
-                                .show();
-                        resultText.setText("--锻造点数不足" + mate + "!--");
                     }
+                    MazeContents.hero.addMaterial(-mate);
+                    clean();
+                } else {
+                    Toast.makeText(this, "--锻造点数不足" + mate + "--", Toast.LENGTH_SHORT)
+                            .show();
+                    resultText.setText("--锻造点数不足" + mate + "!--");
                 }
         }
 
@@ -305,7 +300,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
         item3Button.setText("");
         item4Button.setText("");
         item5Button.setText("");
-        if(itemDialog!=null)itemDialog.dismiss();
+        if (itemDialog != null) itemDialog.dismiss();
         itemDialog = null;
     }
 
@@ -315,7 +310,6 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
         final TextView tv = new TextView(this);
         tv.setText(Html.fromHtml(accessory.toString()));
         dialog.setView(tv);
-        MazeContents.hero.addMaterial(-mate);
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定",
                 new DialogInterface.OnClickListener() {
 
@@ -361,7 +355,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
 
     @Override
     public boolean onLongClick(View view) {
-        switch(view.getId()) {
+        switch (view.getId()) {
             case R.id.forge_item_1:
                 if (item1 != null) {
                     resultText.setText(Html.fromHtml(item1.toString()));

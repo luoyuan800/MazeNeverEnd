@@ -186,8 +186,8 @@ public class PetSkill extends SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if (skill.getProbability() < 15) {
-                        skill.setProbability(skill.getProbability() + 0.6f);
+                    if (skill.getProbability() < 25) {
+                        skill.setProbability(skill.getProbability() + 3.6f);
                     }
                     return true;
                 }

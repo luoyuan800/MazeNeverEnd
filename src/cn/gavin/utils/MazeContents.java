@@ -140,6 +140,9 @@ public class MazeContents {
             case 21:
                 image = R.drawable.long_pet;
                 break;
+            case 22:
+                image = R.drawable.kulou;
+                break;
             case 24:
                 image = R.drawable.xion;
                 break;

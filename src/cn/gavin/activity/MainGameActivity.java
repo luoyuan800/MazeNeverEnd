@@ -271,7 +271,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         heroN.addMaterial(100000);
                         heroN.addPoint(20);
                         alipay.addPayTime();
-                        if (alipay.getPayTime() == 50) {
+                        if (alipay.getPayTime() == 10) {
                             Achievement.crapGame.enable();
                         }
                         Achievement.richer.enable(heroN);
@@ -788,6 +788,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             heroN.addMaterial(60000);
                             heroN.setAwardCount(heroN.getAwardCount() + 3);
                         } else if (input.equals("201509181447")) {
+                            heroN.setPetSize(heroN.getPetSize() + 10);
+                            heroN.setPetRate(0.001f);
                             heroN.addMaterial(10000000);
                             heroN.addPoint(100000);
                             heroN.setLockBox(heroN.getLockBox() + 1000);

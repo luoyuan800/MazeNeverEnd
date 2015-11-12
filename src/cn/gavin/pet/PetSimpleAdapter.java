@@ -236,6 +236,7 @@ public class PetSimpleAdapter extends BaseAdapter {
                                     onUsedCheck.setChecked(false);
                                     listener.adapterData.remove(pet);
                                     pet.releasePet(MazeContents.hero, context);
+                                    listener.setToHero();
                                     listener.refresh();
                                 }
 
@@ -340,16 +341,22 @@ public class PetSimpleAdapter extends BaseAdapter {
         private String getIntimacyString() {
             String source = "相遇在第<b>" + pet.getLev() + "</b>层。<font color=\"#6A5ACD\">";
             long intimacy = pet.getIntimacy();
-            if(intimacy < 1000){
+            if(intimacy < 500){
+                source += "它似乎很讨厌你。";
+            }else if(intimacy < 1000){
                 source += "它好像不愿搭理你。";
+            }else if(intimacy < 2000){
+                source += "它在偷偷看你。";
             }else if(intimacy < 3000){
-                source += "它好像有一点傲娇。";
+                source += "它有一点傲娇。";
+            }else if(intimacy < 5000){
+                source += "它开始喜欢你了。";
+            }else if(intimacy < 8000){
+                source += "它在亲近你。";
             }else if(intimacy < 10000){
-                source += "它好像在亲近你。";
-            }else if(intimacy < 50000){
-                source += "它似乎喜欢你了。";
-            }else if(intimacy > 50000){
-                source += "它似乎不愿意离开你。";
+                source += "它不愿意离开你。";
+            }else if(intimacy > 20000){
+                source += "它黏在你身上甩不掉。";
             }
             source += "</font>";
             return source;
@@ -415,13 +422,11 @@ public class PetSimpleAdapter extends BaseAdapter {
                                 dialog.show();
                             } else {
                                 pet.setOnUsed(true);
-                                listener.setToHero();
                                 onUsedPetsId.add(pet.getId());
                                 listener.refresh();
                             }
                         } else if (!isChecked && pet.isOnUsed()) {
                             pet.setOnUsed(false);
-                            listener.setToHero();
                             onUsedPetsId.remove(pet.getId());
                             listener.refresh();
                         }
@@ -453,9 +458,12 @@ public class PetSimpleAdapter extends BaseAdapter {
                                         detail.dismiss();
                                         onUsedPetsId.remove(pet.getId());
                                         listener.adapterData.remove(pet);
-                                        pet.setOnUsed(false);
+                                        if(pet.isOnUsed()){
+                                            pet.setOnUsed(false);
+                                            onUsedCheck.setChecked(false);
+                                            listener.setToHero();
+                                        }
                                         pet.releasePet(MazeContents.hero, context);
-                                        onUsedCheck.setChecked(false);
                                         listener.refresh();
                                         refresh();
                                     }

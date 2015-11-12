@@ -1,12 +1,12 @@
 package cn.gavin.forge.list;
 
-import java.util.EnumMap;
-
-import cn.gavin.utils.MazeContents;
 import cn.gavin.forge.Item;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.log.LogHelper;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
+
+import java.util.EnumMap;
 
 /**
  * Copyright 2015 gluo.
@@ -89,18 +89,44 @@ public class FuseItems {
                         }
                         break;
                     case ADD_PER_UPPER_HP:
-                        if(item.getEffectValue().longValue() > 50){
+                        if (item.getEffectValue().longValue() > 50) {
                             item.setEffectValue(50);
                         }
                         break;
                     case ADD_PER_ATK:
-                        if(item.getEffectValue().longValue() > 50){
+                        if (item.getEffectValue().longValue() > 50) {
                             item.setEffectValue(50);
                         }
                         break;
                     case ADD_PER_DEF:
-                        if(item.getEffectValue().longValue() > 50){
+                        if (item.getEffectValue().longValue() > 50) {
                             item.setEffectValue(50);
+                        }
+                        break;
+                    case ADD_STR:
+                        if (MazeContents.hero != null) {
+                            if (item.getEffectValue().longValue() > MazeContents.hero.getStrength() / 1000) {
+                                item.setEffectValue(MazeContents.hero.getStrength() / 10001);
+                            }
+                        }
+                        break;
+                    case ADD_AGI:
+                        if (MazeContents.hero != null) {
+                            if (item.getEffectValue().longValue() > MazeContents.hero.getAgility() / 1000) {
+                                item.setEffectValue(MazeContents.hero.getAgility() / 10001);
+                            }
+                        }
+                        break;
+                    case ADD_POWER:
+                        if (MazeContents.hero != null) {
+                            if (item.getEffectValue().longValue() > MazeContents.hero.getPower() / 500) {
+                                item.setEffectValue(MazeContents.hero.getPower() / 5001);
+                            }
+                        }
+                        break;
+                    case ADD_CLICK_AWARD:
+                        if (item.getEffect1Value().longValue() > 1000) {
+                            item.setEffect1Value(10001);
                         }
                         break;
                 }
@@ -132,39 +158,44 @@ public class FuseItems {
                         }
                         break;
                     case ADD_PER_UPPER_HP:
-                        if(item.getEffect1Value().longValue() > 60){
+                        if (item.getEffect1Value().longValue() > 60) {
                             item.setEffect1Value(60);
                         }
                         break;
                     case ADD_PER_ATK:
-                        if(item.getEffect1Value().longValue() > 60){
+                        if (item.getEffect1Value().longValue() > 60) {
                             item.setEffect1Value(60);
                         }
                         break;
                     case ADD_PER_DEF:
-                        if(item.getEffect1Value().longValue() > 90){
+                        if (item.getEffect1Value().longValue() > 90) {
                             item.setEffect1Value(60);
                         }
                         break;
                     case ADD_STR:
-                        if(MazeContents.hero!=null) {
-                            if (item.getEffect1Value().longValue() > MazeContents.hero.getStrength()/1000) {
-                                item.setEffect1Value(MazeContents.hero.getStrength()/1001);
+                        if (MazeContents.hero != null) {
+                            if (item.getEffect1Value().longValue() > MazeContents.hero.getStrength() / 1000) {
+                                item.setEffect1Value(MazeContents.hero.getStrength() / 10001);
                             }
                         }
                         break;
                     case ADD_AGI:
-                        if(MazeContents.hero!=null) {
-                            if (item.getEffect1Value().longValue() > MazeContents.hero.getAgility()/1000) {
-                                item.setEffect1Value(MazeContents.hero.getStrength()/1001);
+                        if (MazeContents.hero != null) {
+                            if (item.getEffect1Value().longValue() > MazeContents.hero.getAgility() / 1000) {
+                                item.setEffect1Value(MazeContents.hero.getAgility() / 10001);
                             }
                         }
                         break;
                     case ADD_POWER:
-                        if(MazeContents.hero!=null) {
-                            if (item.getEffect1Value().longValue() > MazeContents.hero.getAgility()/500) {
-                                item.setEffect1Value(MazeContents.hero.getStrength()/501);
+                        if (MazeContents.hero != null) {
+                            if (item.getEffect1Value().longValue() > MazeContents.hero.getPower() / 500) {
+                                item.setEffect1Value(MazeContents.hero.getPower() / 5001);
                             }
+                        }
+                        break;
+                    case ADD_CLICK_AWARD:
+                        if (item.getEffect1Value().longValue() > 1000) {
+                            item.setEffect1Value(10001);
                         }
                         break;
                 }
