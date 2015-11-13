@@ -129,9 +129,12 @@ public class PetDB {
     }
 
     public static List<Pet> loadPet(SQLiteDatabase db) {
-        if (!petCatch.isEmpty()) {
+        if (!petCatch.isEmpty() && getPetCount(db) <= petCatch.size()) {
             return new ArrayList<Pet>(petCatch.values());
         } else {
+            if(!petCatch.isEmpty()){
+                save();
+            }
             Cursor cursor;
             List<Pet> pets = new ArrayList<Pet>();
             String sql = "SELECT * FROM pet ORDER BY intimacy";
@@ -172,4 +175,10 @@ public class PetDB {
     }
 
     public static HashMap<String, Pet> petCatch = new HashMap<String, Pet>();
+
+    public static void save(){
+        for(Pet pet : petCatch.values()){
+            pet.save();
+        }
+    }
 }

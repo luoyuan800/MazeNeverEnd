@@ -8,6 +8,7 @@ import java.util.List;
 import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.pet.Pet;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.maze.Maze;

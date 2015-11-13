@@ -22,6 +22,7 @@ import java.util.Set;
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
 
@@ -46,6 +47,7 @@ public class PetSimpleAdapter extends BaseAdapter {
     }
 
 public void close(){
+        adapterData.clear();
         detailDialog.dismiss();
 }
 
@@ -373,8 +375,9 @@ public void close(){
                 hpValue.setText(pet.getHp() + "/" + pet.getUHp());
                 atkValue.setText(pet.getMaxAtk() + "");
                 defValue.setText(pet.getMaxDef() + "");
-                if (pet.getSkill() != null) {
-                    skillName.setText(pet.getSkill().getName());
+                NSkill skill = pet.getAllSkill();
+                if (skill != null) {
+                    skillName.setText(skill.getName());
                 } else {
                     skillName.setText("无");
                 }

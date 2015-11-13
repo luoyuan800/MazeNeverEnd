@@ -38,7 +38,7 @@ public class PetDialog {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        alertDialog.hide();
+                        dismiss();
                         adapter.saveToDB();
                         adapter.setToHero();
                     }

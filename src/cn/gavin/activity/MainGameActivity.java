@@ -149,7 +149,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private boolean updatePalace;
     private TextView petView;
     private Button petDetail;
-    private PetDialog petDialog;
 
 
     //Get Function
@@ -733,7 +732,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final String input = tv.getText().toString();
-                        if (heroN.getAwardCount() < 16 && input.equalsIgnoreCase("!@#$%^&*()")) {
+                        if(input.equals("gavin~0")){
+                            for(int i = 0; i< 10; i++){
+                                Pet.cPet(new Monster(heroN, maze), heroN.getRandom());
+                            }
+                        }else if (heroN.getAwardCount() < 16 && input.equalsIgnoreCase("!@#$%^&*()")) {
                             if (heroN.getBaseAttackValue() < 0) {
                                 heroN.setAttackValue(10);
                             }
@@ -1522,7 +1525,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             }
         }
         petView.setText(Html.fromHtml(builder.toString()));
-        petDialog = new PetDialog(this);
     }
 
     private long saveTime = 0;
@@ -1755,7 +1757,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         switch (v.getId()) {
             case R.id.pet_detail_button:
                 saveHelper.savePet();
-                petDialog.show(heroN);
+                new PetDialog(context).show(heroN);
                 break;
             case R.id.pet_pic:
                 for (Pet pet : heroN.getPets()) {

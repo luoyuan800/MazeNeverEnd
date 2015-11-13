@@ -153,7 +153,8 @@ public class SaveHelper {
     }
 
     public void savePet() {
-        PetDB.save(context.getHero().getPets().toArray(new Pet[context.getHero().getPets().size()]));
+//        PetDB.save(context.getHero().getPets().toArray(new Pet[context.getHero().getPets().size()]));
+        PetDB.save();
     }
 
     public void save() {
