@@ -91,6 +91,15 @@ public class Pet extends Base {
         return skill;
     }
 
+    public NSkill getAllSkill(){
+        if(skill != null){
+            return skill;
+        }else if(!getSkills().isEmpty()){
+            return getSkills().iterator().next();
+        }
+        return null;
+    }
+
     public static Pet catchPet(Monster monster) {
         Random random = new Random();
         double rate = (((monster.getMaxHP() * 3 - monster.getMaxHP() *
@@ -225,7 +234,8 @@ public class Pet extends Base {
                 pet.image = R.drawable.long_pet;
                 break;
             case 24:
-                //pet.image = R.drawable.xion;
+                pet.image = R.drawable.xion;
+                break;
             default:
                 pet.image = R.drawable.h_4_s;
         }
@@ -413,7 +423,7 @@ public class Pet extends Base {
             egg.setElement(Element.values()[random.nextInt(Element.values().length - 1)]);
             egg.setOwner(hero.getName());
             if (!f.getType().equals(m.getType())) {
-                if (random.nextInt(10000) + random.nextFloat() < 2.015) {
+                if (random.nextInt(10000) + random.nextFloat() < 11.015) {
                     String lastName = Monster.lastNames[random.nextInt(Monster.lastNames.length)];
                     egg.setName("变异的" + lastName);
                     if (lastName.equals("作者")) {
@@ -436,6 +446,28 @@ public class Pet extends Base {
             }if(random.nextInt(1000) < 10){
                 egg.setSkill(new HealthSkill());
             }
+            NSkill pSkill = egg.getAllSkill();
+            if(pSkill == null){
+                if(f.getAllSkill()!=null && m.getAllSkill()!=null){
+                    if(random.nextBoolean()){
+                        pSkill = f.getAllSkill();
+                    }else{
+                        pSkill = m.getAllSkill();
+                    }
+                }else if(f.getAllSkill()!=null){
+                    pSkill = f.getAllSkill();
+                } else if(m.getAllSkill() !=null){
+                    pSkill = m.getAllSkill();
+                }
+                if(pSkill!= null){
+                    if (pSkill instanceof PetSkill) {
+                        egg.setSkill(pSkill);
+                    } else {
+                        egg.addSkill(pSkill);
+                    }
+                }
+            }
+
             PetDB.save(egg);
             Achievement.egg.enable(hero);
             return egg;

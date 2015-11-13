@@ -56,8 +56,10 @@ public class PetDialog {
     }
 
     public void dismiss() {
-        if (alertDialog != null)
+        if (alertDialog != null) {
             alertDialog.dismiss();
+        }
+        adapter.close();
     }
 
 }

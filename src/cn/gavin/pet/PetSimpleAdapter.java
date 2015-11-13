@@ -45,6 +45,9 @@ public class PetSimpleAdapter extends BaseAdapter {
         PetDB.save(adapterData.toArray(new Pet[adapterData.size()]));
     }
 
+public void close(){
+        detailDialog.dismiss();
+}
 
     public PetSimpleAdapter(Hero hero) {
         adapterData = PetDB.loadPet(null);
@@ -293,7 +296,7 @@ public class PetSimpleAdapter extends BaseAdapter {
             detail.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    dismiss();
+                    detail.hide();
                 }
             });
             nameValue = (TextView) view.findViewById(R.id.name_value);

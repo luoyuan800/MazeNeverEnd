@@ -72,7 +72,7 @@ public class PetDB {
             if (!StringUtils.isNotEmpty(pet.getId())) {
                 pet.setId(UUID.randomUUID().toString());
             }
-            NSkill skill = pet.getSkill();
+            NSkill skill = pet.getAllSkill();
             String sql = String.format(base, pet.getId(), pet.getName(), pet.getType(),
                     pet.getIntimacy(), pet.getElement().name(), skill != null ? skill.getName() : "",
                     skill != null ? skill.getCount() : "0", pet.getDeathCount(), pet.getMaxAtk(),

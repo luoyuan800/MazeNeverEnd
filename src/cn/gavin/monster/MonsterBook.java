@@ -39,6 +39,10 @@ public class MonsterBook {
 
     public void addMonster(Monster monster) {
         MonsterItem item = new MonsterItem();
+        if(monster.getName().equals("无名小卒") && monster.getMazeLev() == 19999){
+            monster.atk = 1;
+            monster.setMaxHP(1);
+        }
         int index = Monster.getIndex(monster.getName());
         String name = "";
         if (index < Monster.lastNames.length) {

@@ -398,7 +398,9 @@ public class Hero implements BaseObject {
             point--;
             power++;
             if (upperHp < (Long.MAX_VALUE - MAX_HP_RISE)) {
-                hp += MAX_HP_RISE;
+                if(hp >= 0 || random.nextBoolean()) {
+                    hp += MAX_HP_RISE;
+                }
                 upperHp += MAX_HP_RISE;
             }
         }
@@ -1048,6 +1050,7 @@ public class Hero implements BaseObject {
             clickPointAward = 0l;
             clickAward = reincaCount + 1;
             petSize = 3 + reincaCount.intValue() + 1;
+            if(petSize > 10) petSize = 10;
             eggRate += 1;
             petRate = 1;
             DBHelper dbHelper = DBHelper.getDbHelper();

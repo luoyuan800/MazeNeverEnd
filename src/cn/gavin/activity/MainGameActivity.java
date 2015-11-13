@@ -389,8 +389,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             }
         });
         try {
-            BmobUpdateAgent.setUpdateOnlyWifi(false);
             BmobUpdateAgent.update(this);
+            PalaceMonster.getPalaceCount(context);
         } catch (Exception e) {
             LogHelper.logException(e);
         }

@@ -109,6 +109,7 @@ public class Monster {
         monster.builder = new StringBuilder("第");
         monster.builder.append(maze.getLev()).append("层").append("<br>-------");
         monster.element = Element.values()[random.nextInt(Element.values().length)];
+        monster.mazeLev = maze.getLev();
         monster.formatName(hero);
         if(maze.getLev() > 500 && random.nextBoolean()){
             monster.silent = 18.8f;
@@ -136,8 +137,8 @@ public class Monster {
         if (maze.getLev() < 100) {
             atk /= 3;
         }
-        if (hp > hero.getAttackValue() * 30) {
-            hp = hero.getAttackValue() * 30;
+        if (hp > hero.getAttackValue() * 40) {
+            hp = hero.getAttackValue() * 40;
         }
         if (atk < hero.getDefenseValue()) {
             atk += random.nextLong(hero.getDefenseValue() * 2);
@@ -158,6 +159,7 @@ public class Monster {
 
     public Monster(Hero hero, Maze maze) {
         Random random = new Random();
+        mazeLev = maze.getLev();
         int first = (int) random.nextLong(maze.getLev() / 50 < firstNames.length ? maze.getLev() / 50 + 1 : firstNames.length);
         int second = (int) random.nextLong(maze.getLev() < secondNames.length ? maze.getLev() + 1 : secondNames.length);
         int last = (int) random.nextLong(maze.getLev() < lastNames.length ? maze.getLev() + 1 : lastNames.length);
@@ -182,11 +184,11 @@ public class Monster {
         }
         hp += baseHP[last] * random.nextLong(maze.getLev() + 1);
         atk += baseAtk[last] * hero.getReincaCount();
-        if (hp < hero.getAttackValue()) {
-            hp += random.nextLong(hero.getAttackValue() * 5);
+        if (hp < hero.getAttackValue() * 5) {
+            hp += random.nextLong(hero.getAttackValue() * 10);
         }
-        if (hp > hero.getAttackValue() * 19) {
-            hp = hero.getAttackValue() * 20;
+        if (hp > hero.getAttackValue() * 29) {
+            hp = hero.getAttackValue() * 30;
         }
         if (hero.getMaterial() > 90000000) {
             atk += random.nextLong(hero.getAttackValue() / (hero.getMaxMazeLev() + 1));
@@ -217,6 +219,9 @@ public class Monster {
             setFormatName("<B><font color=\"red\">" + getName() + "</font></B>" + "(" + element + ")");
         } else {
             setFormatName(getName() + "(" + element + ")");
+            if(silent == 0 && mazeLev > 1000) {
+                silent = hero.getRandom().nextInt(5) + hero.getRandom().nextFloat();
+            }
         }
     }
 
@@ -358,5 +363,9 @@ public class Monster {
             monster.maxHP = monster.hp;
         }
         return monster;
+    }
+
+    public void setMaxHP(int maxHP) {
+        this.maxHP = maxHP;
     }
 }

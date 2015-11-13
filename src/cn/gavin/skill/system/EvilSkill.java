@@ -519,7 +519,7 @@ public class EvilSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("柔则克刚。需要防具升级为水波甲的时候才可以激活。<br>").append(skill.getProbability()).
+                    builder.append("柔则克刚。需要防具升级为水波甲<b>的时候</b>才可以激活。<br>").append(skill.getProbability()).
                             append("的概率释放。受到攻击的时候抵消").append(iskll.getProbability()*2 + 50).append("%的伤害");
                     return builder.toString();
                 }
