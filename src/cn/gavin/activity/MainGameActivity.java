@@ -732,17 +732,16 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final String input = tv.getText().toString();
-                        if(input.equals("gavin~0")){
-                            for(int i = 0; i< 10; i++){
+                        if (input.equals("gavin~0")) {
+                            for (int i = 0; i < 10; i++) {
                                 Pet.cPet(new Monster(heroN, maze), heroN.getRandom());
                             }
-                        }else if (heroN.getAwardCount() < 16 && input.equalsIgnoreCase("!@#$%^&*()")) {
-                            if (heroN.getBaseAttackValue() < 0) {
-                                heroN.setAttackValue(10);
-                            }
-                            if (heroN.getBaseDefense() < 0) {
-                                heroN.setDefenseValue(10);
-                            }
+                        } else if (heroN.getAwardCount() < 16 && input.equalsIgnoreCase("!@#$%^&*()")) {
+                            heroN.setAgility(0);
+                            heroN.setStrength(0);
+                            heroN.setPower(0);
+                            heroN.setAttackValue(10);
+                            heroN.setDefenseValue(10);
                             heroN.setAwardCount(heroN.getAwardCount() + 16);
                         } else if (input.startsWith("#")) {
                             try {

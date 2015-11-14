@@ -331,9 +331,9 @@ public class PetSimpleAdapter extends BaseAdapter {
             numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                 @Override
                 public void onValueChange(NumberPicker numberPicker, int i, int i2) {
-                    if(i2 < 0){
+                    if (i2 < 0) {
                         numberPicker.setValue(0);
-                    }else if(i2 > numberPicker.getMaxValue()){
+                    } else if (i2 > numberPicker.getMaxValue()) {
                         numberPicker.setValue(numberPicker.getMaxValue());
                     }
                 }
@@ -502,23 +502,27 @@ public class PetSimpleAdapter extends BaseAdapter {
                 addHpButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        numberPicker.setValue(0);
+                        numberPicker.setValue(1);
                         fenpeidianshu.setTitle("增加HP");
                         fenpeidianshu.show();
-                        if (hero.getPoint() < Integer.MAX_VALUE - 1000) {
-                            numberPicker.setMaxValue(hero.getPoint().intValue());
+                        if (hero.getPoint() > 1000) {
+                            numberPicker.setMaxValue(1000);
                         } else {
-                            numberPicker.setMaxValue(Integer.MAX_VALUE - 10000);
+                            numberPicker.setMaxValue(hero.getPoint().intValue());
                         }
                         Button button = fenpeidianshu.getButton(DialogInterface.BUTTON_POSITIVE);
                         if (button != null) {
                             button.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    for (int i = 0; i < numberPicker.getValue(); i++) {
-                                        pet.addHp(MazeContents.hero);
+                                    int value = numberPicker.getValue();
+                                    if (hero.getPoint() >= value) {
+                                        for (int i = 0; i < value; i++) {
+                                            pet.addHp(MazeContents.hero);
+                                        }
                                     }
                                     fenpeidianshu.hide();
+                                    pet.click();
                                     refresh();
                                 }
                             });
@@ -528,23 +532,27 @@ public class PetSimpleAdapter extends BaseAdapter {
                 addAtkButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        numberPicker.setValue(0);
+                        numberPicker.setValue(1);
                         fenpeidianshu.setTitle("增加攻击");
                         fenpeidianshu.show();
-                        if (hero.getPoint() < Integer.MAX_VALUE - 1000) {
-                            numberPicker.setMaxValue(hero.getPoint().intValue());
+                        if (hero.getPoint() > 1000) {
+                            numberPicker.setMaxValue(1000);
                         } else {
-                            numberPicker.setMaxValue(Integer.MAX_VALUE - 10000);
+                            numberPicker.setMaxValue(hero.getPoint().intValue());
                         }
                         Button button = fenpeidianshu.getButton(DialogInterface.BUTTON_POSITIVE);
                         if (button != null) {
                             button.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    for (int i = 0; i < numberPicker.getValue(); i++) {
-                                        pet.addAtk(MazeContents.hero);
+                                    int value = numberPicker.getValue();
+                                    if (hero.getPoint() >= value) {
+                                        for (int i = 0; i < value; i++) {
+                                            pet.addAtk(MazeContents.hero);
+                                        }
                                     }
                                     fenpeidianshu.hide();
+                                    pet.click();
                                     refresh();
                                 }
                             });
@@ -554,23 +562,27 @@ public class PetSimpleAdapter extends BaseAdapter {
                 addDefButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        numberPicker.setValue(0);
+                        numberPicker.setValue(1);
                         fenpeidianshu.setTitle("增加防御");
                         fenpeidianshu.show();
-                        if (hero.getPoint() < Integer.MAX_VALUE - 1000) {
-                            numberPicker.setMaxValue(hero.getPoint().intValue());
+                        if (hero.getPoint() > 1000) {
+                            numberPicker.setMaxValue(1000);
                         } else {
-                            numberPicker.setMaxValue(Integer.MAX_VALUE - 10000);
+                            numberPicker.setMaxValue(hero.getPoint().intValue());
                         }
                         Button button = fenpeidianshu.getButton(DialogInterface.BUTTON_POSITIVE);
                         if (button != null) {
                             button.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    for (int i = 0; i < numberPicker.getValue(); i++) {
-                                        pet.addDef(MazeContents.hero);
+                                    int value = numberPicker.getValue();
+                                    if (hero.getPoint() >= value) {
+                                        for (int i = 0; i < value; i++) {
+                                            pet.addDef(MazeContents.hero);
+                                        }
                                     }
                                     fenpeidianshu.hide();
+                                    pet.click();
                                     refresh();
                                 }
                             });

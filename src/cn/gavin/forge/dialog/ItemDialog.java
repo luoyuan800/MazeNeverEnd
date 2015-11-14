@@ -131,7 +131,7 @@ public class ItemDialog {
                 itemDialog.hide();
             }
         });
-        linearLayout.addView(add);
+//        linearLayout.addView(add);
         Button clean = new Button(activity);
         clean.setText("一键清除低属性材料（慎用！）");
         clean.setOnClickListener(new View.OnClickListener() {

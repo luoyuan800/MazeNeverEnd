@@ -30,6 +30,9 @@ public class BattleController {
                 if (pet != null && pet.getHp() > 0 && !pet.getType().equals("蛋") && pet.dan()) {
                     pet.setContext(context);
                     long harm = monster.getAtk() - pet.getDef();
+                    if(harm < 0){
+                        harm = random.nextLong(hero.getMaxMazeLev());
+                    }
                     String petMsg = pet.getFormatName() + "舍身救主，挡下了这次攻击伤害（<font color=\"red\">" + harm + "</font>点)!";
                     addMessage(context, petMsg);
                     monster.addBattleDesc(petMsg);

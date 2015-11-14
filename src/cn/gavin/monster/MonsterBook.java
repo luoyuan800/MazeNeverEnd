@@ -39,10 +39,10 @@ public class MonsterBook {
 
     public void addMonster(Monster monster) {
         MonsterItem item = new MonsterItem();
-        if(monster.getName().equals("无名小卒") && monster.getMazeLev() == 19999){
+        /*if(monster.getName().equals("无名小卒") && monster.getMazeLev() == 19999){
             monster.atk = 1;
             monster.setMaxHP(1);
-        }
+        }*/
         int index = Monster.getIndex(monster.getName());
         String name = "";
         if (index < Monster.lastNames.length) {
@@ -58,13 +58,17 @@ public class MonsterBook {
             item.load();
             long atk = StringUtils.isNotEmpty(item.getMaxATKATK()) ? StringUtils.toLong(item.getMaxATKATK()) : 0;
             long hp = StringUtils.isNotEmpty(item.getMaxHPHP()) ? StringUtils.toLong(item.getMaxHPHP()) : 0;
-            if (monster.getAtk() > atk) {
+        String battleMsg = monster.getBattleMsg();
+        if(StringUtils.split(battleMsg, "<br>").length > 250){
+           battleMsg = "战斗时间过长，无法记录！";
+        }
+        if (monster.getAtk() > atk) {
                 item.setMaxATKName(monster.getFormatName());
                 item.setMaxATKATK(monster.getAtk() + "");
                 item.setMaxATKHP(monster.getMaxHP() + "");
                 item.setMaxATKLev(monster.getMazeLev() + "");
                 item.setMaxATKDefeat(monster.isDefeat());
-                item.setMaxATKDesc(monster.getBattleMsg());
+                item.setMaxATKDesc(battleMsg);
             }
             if (monster.getMaxHP() > hp) {
                 item.setMaxHPName(monster.getFormatName());
@@ -72,7 +76,7 @@ public class MonsterBook {
                 item.setMaxHPHP(monster.getMaxHP() + "");
                 item.setMaxHPLev(monster.getMazeLev() + "");
                 item.setMaxHPDefeat(monster.isDefeat());
-                item.setMaxHPDesc(monster.getBattleMsg());
+                item.setMaxHPDesc(battleMsg);
             }
             if (monster.isDefeat()) {
                 item.setDefeat(item.getDefeat() + 1);

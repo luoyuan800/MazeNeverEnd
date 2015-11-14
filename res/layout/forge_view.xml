@@ -132,6 +132,11 @@
             android:text="打造" />
 
         <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="随机打造"
+                android:id="@+id/button" android:layout_gravity="center_vertical" android:enabled="false"/>
+        <Button
             android:id="@+id/forge_clean_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -307,16 +307,16 @@ public class Pet extends Base {
         if (atk <= hero.getUpperDef() * 2) {
             atk += atk_rise;
             hero.addPoint(-1);
+            click();
         }
-        click();
     }
 
     public void addDef(Hero hero) {
         if (def <= hero.getUpperAtk()) {
             def += def_rise;
             hero.addPoint(-1);
+            click();
         }
-        click();
     }
 
     public void addHp(Hero hero) {
@@ -324,8 +324,8 @@ public class Pet extends Base {
             setUHp(getUHp() + hp_rise);
             hp += hp_rise;
             hero.addPoint(-1);
+            click();
         }
-        click();
     }
 
 

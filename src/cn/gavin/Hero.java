@@ -1,14 +1,6 @@
 package cn.gavin;
 
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
@@ -16,6 +8,7 @@ import cn.gavin.forge.HatBuilder;
 import cn.gavin.forge.NecklaceBuilder;
 import cn.gavin.forge.RingBuilder;
 import cn.gavin.forge.effect.Effect;
+import cn.gavin.log.LogHelper;
 import cn.gavin.monster.Monster;
 import cn.gavin.pet.Pet;
 import cn.gavin.skill.Skill;
@@ -24,6 +17,9 @@ import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.RestoreSkill;
 import cn.gavin.utils.Random;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Hero implements BaseObject {
     private static final String TAG = "Hero";
@@ -177,7 +173,7 @@ public class Hero implements BaseObject {
         } else {
             if (hp < 0) {
                 this.hp += hp;
-            } else if (this.hp < (Long.MAX_VALUE/2 - hp - 10000)) {
+            } else if (this.hp < (Long.MAX_VALUE / 2 - hp - 10000)) {
                 this.hp += hp;
             }
             if (this.hp <= 0 && getSkillAdditionHp() <= 0) {
@@ -354,7 +350,7 @@ public class Hero implements BaseObject {
     }
 
     public void addPoint(long point) {
-        if (point < 0 || this.point < (Long.MAX_VALUE - point - 5000))
+        if (point < 0 || this.point < (Long.MAX_VALUE / 2 - point - 5000))
             this.point += point;
         if (this.point < 0) this.point = 0l;
         if (this.point >= 5000) Achievement.lazy.enable(this);
@@ -365,7 +361,7 @@ public class Hero implements BaseObject {
     }
 
     public void addStrength() {
-        if (point != 0 && strength < (Integer.MAX_VALUE)) {
+        if (point != 0 && strength < (Integer.MAX_VALUE - 500)) {
             point--;
             strength++;
             if (attackValue < (Long.MAX_VALUE - ATR_RISE - 500))
@@ -398,7 +394,7 @@ public class Hero implements BaseObject {
             point--;
             power++;
             if (upperHp < (Long.MAX_VALUE - MAX_HP_RISE)) {
-                if(hp >= 0 || random.nextBoolean()) {
+                if (hp >= 0 || random.nextBoolean()) {
                     hp += MAX_HP_RISE;
                 }
                 upperHp += MAX_HP_RISE;
@@ -1004,86 +1000,91 @@ public class Hero implements BaseObject {
     }
 
     public void reincarnation() {
-        long mate = (reincaCount + 2) * 600101;
-        if (material < mate) {
-            Toast.makeText(MainGameActivity.context, "锻造点数不足" + mate + "！" + getName(), Toast.LENGTH_SHORT).show();
-        } else {
+        try {
+            long mate = (reincaCount + 2) * 600101;
+            if (material < mate) {
+                Toast.makeText(MainGameActivity.context, "锻造点数不足" + mate + "！" + getName(), Toast.LENGTH_SHORT).show();
+            } else {
 
-            addReincarnation(name + "(" + reincaCount + ")", getUpperHp() + getUpperDef(), getUpperAtk(), getMaxMazeLev());
-            long hpRise = random.nextLong(power / 5103 + 4) + MAX_HP_RISE + reincaCount;
-            long defRISE = random.nextLong(agility / 6309 + 2) + DEF_RISE + reincaCount;
-            long atkRISE = random.nextLong(strength / 7501 + 3) + ATR_RISE + reincaCount;
-            if (hpRise > 10 * MAX_HP_RISE) {
-                MAX_HP_RISE += random.nextLong(hpRise) + reincaCount + 1;
-            } else {
-                MAX_HP_RISE = hpRise;
+                addReincarnation(name + "(" + reincaCount + ")", getUpperHp() + getUpperDef(), getUpperAtk(), getMaxMazeLev());
+                long hpRise = random.nextLong(power / 5103 + 4) + MAX_HP_RISE + reincaCount;
+                long defRISE = random.nextLong(agility / 6309 + 2) + DEF_RISE + reincaCount;
+                long atkRISE = random.nextLong(strength / 7501 + 3) + ATR_RISE + reincaCount;
+                if (hpRise > 10 * MAX_HP_RISE) {
+                    MAX_HP_RISE += random.nextLong(hpRise / 9) + reincaCount + 1;
+                } else {
+                    MAX_HP_RISE = hpRise;
+                }
+                if (defRISE > 10 * DEF_RISE) {
+                    DEF_RISE += random.nextLong(defRISE / 9) + reincaCount + 1;
+                } else {
+                    DEF_RISE = defRISE;
+                }
+                if (atkRISE > 10 * ATR_RISE) {
+                    ATR_RISE += random.nextLong(atkRISE / 9) + reincaCount + 1;
+                } else {
+                    ATR_RISE = atkRISE;
+                }
+                material -= mate;
+                long attackValue = random.nextLong(20) + 10;
+                long defenseValue = random.nextLong(20) + 10;
+                long upperHp = random.nextLong(20) + 25;
+                SkillFactory.clean();
+                setUpperHp(upperHp);
+                hp = upperHp;
+                setAttackValue(attackValue);
+                setDefenseValue(defenseValue);
+                point = 1l;
+                parry = 0f;
+                armor = Armor.破布;
+                sword = Sword.木剑;
+                armorLev = 1l;
+                swordLev = 1l;
+                power = 5l;
+                strength = 5l;
+                agility = 5l;
+                hitRate = 0l;
+                clickPointAward = 0l;
+                clickAward = reincaCount + 1;
+                petSize = 3 + reincaCount.intValue() + 1;
+                if (petSize > 10) petSize = 10;
+                eggRate += 1;
+                petRate = 1;
+                DBHelper dbHelper = DBHelper.getDbHelper();
+                dbHelper.beginTransaction();
+                dbHelper.excuseSQLWithoutResult("DELETE FROM item");
+                dbHelper.excuseSQLWithoutResult("DELETE FROM accessory");
+                Accessory ring = getRing();
+                if (ring != null) {
+                    ring.save();
+                }
+                Accessory necklace = getNecklace();
+                if (necklace != null) {
+                    necklace.save();
+                }
+                Accessory hat = getHat();
+                if (hat != null) {
+                    hat.save();
+                }
+                preValueForHat.clear();
+                preValueForNek.clear();
+                preValueForRing.clear();
+                appendEffect();
+                Achievement.reBird.enable(this);
+                dbHelper.endTransaction();
+                MainGameActivity.context.addMessage(getFormatName() + "成功转生！");
+                MainGameActivity.context.save();
+                reincaCount++;
             }
-            if (defRISE > 10 * DEF_RISE) {
-                DEF_RISE += random.nextLong(defRISE) + reincaCount + 1;
-            } else {
-                DEF_RISE = defRISE;
-            }
-            if (atkRISE > 10 * ATR_RISE) {
-                ATR_RISE += random.nextLong(atkRISE) + reincaCount + 1;
-            } else {
-                ATR_RISE = atkRISE;
-            }
-            material -= mate;
-            long attackValue = random.nextLong(20) + 10;
-            long defenseValue = random.nextLong(20) + 10;
-            long upperHp = random.nextLong(20) + 25;
-            SkillFactory.clean();
-            setUpperHp(upperHp);
-            hp = upperHp;
-            setAttackValue(attackValue);
-            setDefenseValue(defenseValue);
-            point = 1l;
-            parry = 0f;
-            armor = Armor.破布;
-            sword = Sword.木剑;
-            armorLev = 1l;
-            swordLev = 1l;
-            power = 5l;
-            strength = 5l;
-            agility = 5l;
-            hitRate = 0l;
-            clickPointAward = 0l;
-            clickAward = reincaCount + 1;
-            petSize = 3 + reincaCount.intValue() + 1;
-            if(petSize > 10) petSize = 10;
-            eggRate += 1;
-            petRate = 1;
-            DBHelper dbHelper = DBHelper.getDbHelper();
-            dbHelper.beginTransaction();
-            dbHelper.excuseSQLWithoutResult("DELETE FROM item");
-            dbHelper.excuseSQLWithoutResult("DELETE FROM accessory");
-            Accessory ring = getRing();
-            if (ring != null) {
-                ring.save();
-            }
-            Accessory necklace = getNecklace();
-            if (necklace != null) {
-                necklace.save();
-            }
-            Accessory hat = getHat();
-            if (hat != null) {
-                hat.save();
-            }
-            preValueForHat.clear();
-            preValueForNek.clear();
-            preValueForRing.clear();
-            appendEffect();
-            Achievement.reBird.enable(this);
-            dbHelper.endTransaction();
-            MainGameActivity.context.addMessage(getFormatName() + "成功转生！");
-            MainGameActivity.context.save();
-            reincaCount++;
+        } catch (Exception e) {
+            Toast.makeText(MainGameActivity.context, "数据异常！！转生失败！", Toast.LENGTH_SHORT).show();
+            LogHelper.logException(e);
         }
     }
 
     private void addReincarnation(String name, long hp, long atk, long lev) {
         String sql = String.format("REPLACE INTO npc(name, lev, hp, atk) " +
-                        "values('%s','%s','%s','%s')",
+                "values('%s','%s','%s','%s')",
                 name, lev, hp, atk);
         DBHelper.getDbHelper().excuseSQLWithoutResult(sql);
     }

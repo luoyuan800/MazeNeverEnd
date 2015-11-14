@@ -82,8 +82,8 @@ public class Maze {
                 level++;
                 mazeLevelDetect();
                 long point = 1 + level / 10 + random.nextLong(level + 1) / 300;
-                if (point > 100) {
-                    point = 50 + random.nextInt(60);
+                if (point > 70) {
+                    point = 40 + random.nextInt(70);
                 }
                 String msg = hero.getFormatName() + "进入了" + level + "层迷宫， 获得了<font color=\"#FF8C00\">" + point + "</font>点数奖励";
                 for (Pet pet : hero.getPets()) {
@@ -211,6 +211,7 @@ public class Maze {
                         break;
                     case 4:
                         addMessage(context, hero.getFormatName() + "正在发呆...");
+                        break;
                 }
             }
             try {
