@@ -127,6 +127,7 @@ public abstract class Base {
     private NSkill getDefSkill() {
         for(NSkill skill : skillSet){
             if(skill instanceof DefSkill && skill.perform()){
+                skill.setCount(skill.getCount() + 1);
                 return skill;
             }
         }
@@ -141,6 +142,7 @@ public abstract class Base {
     public NSkill getAtkSkill() {
         for(NSkill skill : skillSet){
             if(skill instanceof AtkSkill && skill.perform()){
+                ((AtkSkill) skill).setCount(skill.getCount() + 1);
                 return skill;
             }
         }

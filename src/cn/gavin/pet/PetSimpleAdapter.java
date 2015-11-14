@@ -6,25 +6,18 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import android.widget.*;
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright 2015 gluo.
@@ -46,10 +39,10 @@ public class PetSimpleAdapter extends BaseAdapter {
         PetDB.save(adapterData.toArray(new Pet[adapterData.size()]));
     }
 
-public void close(){
+    public void close() {
         adapterData.clear();
         detailDialog.dismiss();
-}
+    }
 
     public PetSimpleAdapter(Hero hero) {
         adapterData = PetDB.loadPet(null);
@@ -260,6 +253,8 @@ public void close(){
     }
 
     static class PetDetailDialog {
+        private final AlertDialog fenpeidianshu;
+        private NumberPicker numberPicker;
         private final TextView nameValue;
         private final TextView hpValue;
         private final TextView leveText;
@@ -301,6 +296,7 @@ public void close(){
                     detail.hide();
                 }
             });
+            numberPicker = new NumberPicker(context);
             nameValue = (TextView) view.findViewById(R.id.name_value);
             hpValue = (TextView) view.findViewById(R.id.hp_value);
             atkValue = (TextView) view.findViewById(R.id.atk_value);
@@ -317,6 +313,31 @@ public void close(){
             fName = (TextView) view.findViewById(R.id.pet_f_name_value);
             mName = (TextView) view.findViewById(R.id.pet_m_name_value);
             deathCount = (TextView) view.findViewById(R.id.pet_death_value);
+            fenpeidianshu = new AlertDialog.Builder(context).create();
+            fenpeidianshu.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    fenpeidianshu.hide();
+                }
+            });
+            fenpeidianshu.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            fenpeidianshu.setView(numberPicker);
+            numberPicker.setMinValue(0);
+            numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                @Override
+                public void onValueChange(NumberPicker numberPicker, int i, int i2) {
+                    if(i2 < 0){
+                        numberPicker.setValue(0);
+                    }else if(i2 > numberPicker.getMaxValue()){
+                        numberPicker.setValue(numberPicker.getMaxValue());
+                    }
+                }
+            });
         }
 
         private void refresh() {
@@ -346,21 +367,21 @@ public void close(){
         private String getIntimacyString() {
             String source = "相遇在第<b>" + pet.getLev() + "</b>层。<font color=\"#6A5ACD\">";
             long intimacy = pet.getIntimacy();
-            if(intimacy < 500){
+            if (intimacy < 500) {
                 source += "它似乎很讨厌你。";
-            }else if(intimacy < 1000){
+            } else if (intimacy < 1000) {
                 source += "它好像不愿搭理你。";
-            }else if(intimacy < 2000){
+            } else if (intimacy < 2000) {
                 source += "它在偷偷看你。";
-            }else if(intimacy < 3000){
+            } else if (intimacy < 3000) {
                 source += "它有一点傲娇。";
-            }else if(intimacy < 5000){
+            } else if (intimacy < 5000) {
                 source += "它开始喜欢你了。";
-            }else if(intimacy < 8000){
+            } else if (intimacy < 8000) {
                 source += "它在亲近你。";
-            }else if(intimacy < 10000){
+            } else if (intimacy < 10000) {
                 source += "它不愿意离开你。";
-            }else if(intimacy > 20000){
+            } else if (intimacy > 20000) {
                 source += "它黏在你身上甩不掉。";
             }
             source += "</font>";
@@ -464,7 +485,7 @@ public void close(){
                                         detail.dismiss();
                                         onUsedPetsId.remove(pet.getId());
                                         listener.adapterData.remove(pet);
-                                        if(pet.isOnUsed()){
+                                        if (pet.isOnUsed()) {
                                             pet.setOnUsed(false);
                                             onUsedCheck.setChecked(false);
                                             listener.setToHero();
@@ -481,22 +502,79 @@ public void close(){
                 addHpButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        pet.addHp(MazeContents.hero);
-                        refresh();
+                        numberPicker.setValue(0);
+                        fenpeidianshu.setTitle("增加HP");
+                        fenpeidianshu.show();
+                        if (hero.getPoint() < Integer.MAX_VALUE - 1000) {
+                            numberPicker.setMaxValue(hero.getPoint().intValue());
+                        } else {
+                            numberPicker.setMaxValue(Integer.MAX_VALUE - 10000);
+                        }
+                        Button button = fenpeidianshu.getButton(DialogInterface.BUTTON_POSITIVE);
+                        if (button != null) {
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    for (int i = 0; i < numberPicker.getValue(); i++) {
+                                        pet.addHp(MazeContents.hero);
+                                    }
+                                    fenpeidianshu.hide();
+                                    refresh();
+                                }
+                            });
+                        }
                     }
                 });
                 addAtkButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        pet.addAtk(MazeContents.hero);
-                        refresh();
+                        numberPicker.setValue(0);
+                        fenpeidianshu.setTitle("增加攻击");
+                        fenpeidianshu.show();
+                        if (hero.getPoint() < Integer.MAX_VALUE - 1000) {
+                            numberPicker.setMaxValue(hero.getPoint().intValue());
+                        } else {
+                            numberPicker.setMaxValue(Integer.MAX_VALUE - 10000);
+                        }
+                        Button button = fenpeidianshu.getButton(DialogInterface.BUTTON_POSITIVE);
+                        if (button != null) {
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    for (int i = 0; i < numberPicker.getValue(); i++) {
+                                        pet.addAtk(MazeContents.hero);
+                                    }
+                                    fenpeidianshu.hide();
+                                    refresh();
+                                }
+                            });
+                        }
                     }
                 });
                 addDefButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        pet.addDef(MazeContents.hero);
-                        refresh();
+                        numberPicker.setValue(0);
+                        fenpeidianshu.setTitle("增加防御");
+                        fenpeidianshu.show();
+                        if (hero.getPoint() < Integer.MAX_VALUE - 1000) {
+                            numberPicker.setMaxValue(hero.getPoint().intValue());
+                        } else {
+                            numberPicker.setMaxValue(Integer.MAX_VALUE - 10000);
+                        }
+                        Button button = fenpeidianshu.getButton(DialogInterface.BUTTON_POSITIVE);
+                        if (button != null) {
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    for (int i = 0; i < numberPicker.getValue(); i++) {
+                                        pet.addDef(MazeContents.hero);
+                                    }
+                                    fenpeidianshu.hide();
+                                    refresh();
+                                }
+                            });
+                        }
                     }
                 });
                 if (pet.isOnUsed()) {

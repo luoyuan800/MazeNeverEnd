@@ -1,11 +1,8 @@
 package cn.gavin.maze;
 
-import java.util.List;
-
 import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.utils.MazeContents;
 import cn.gavin.monster.Monster;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.pet.Pet;
@@ -14,7 +11,10 @@ import cn.gavin.pet.skill.PetSkill;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.story.StoryHelper;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
+
+import java.util.List;
 
 /**
  * Created by gluo on 8/26/2015.
@@ -93,18 +93,18 @@ public class Maze {
                         if (pet.getDeathCount() <= 0) {
                             addMessage(context, pet.getFormatName() + "出生了！");
                             int index = Monster.getIndex(pet.getName());
-                            if(index < Monster.lastNames.length) {
+                            if (index < Monster.lastNames.length) {
                                 pet.setType(Monster.lastNames[index]);
-                            }else{
+                            } else {
                                 pet.setType(pet.getName());
                             }
                             pet.setLev(level);
                             PetDB.save(pet);
                         }
-                    }else if(!"蛋".equals(pet.getType())){
-                        if(pet.getSkill()!=null){
-                            if(pet.getSkill() instanceof PetSkill) {
-                                ((PetSkill)pet.getSkill()).release(hero);
+                    } else if (!"蛋".equals(pet.getType())) {
+                        if (pet.getSkill() != null) {
+                            if (pet.getSkill() instanceof PetSkill) {
+                                ((PetSkill) pet.getSkill()).release(hero);
                             }
                         }
                     }
@@ -150,7 +150,7 @@ public class Maze {
                 if (!MazeContents.checkCheat(hero)) {
                     monster = Monster.CHEATBOSS();
                 }
-                if(level%10000 == 0){
+                if (level % 10000 == 0) {
                     monster = Monster.copy(hero);
                 }
                 if (monster == null && random.nextLong(1000) > 899) {
@@ -188,8 +188,30 @@ public class Maze {
                 }
                 monsterBook.addMonster(monster);
                 addMessage(context, "-----------------------------");
-            }else{
-                addMessage(context, hero.getFormatName() + "思考了一下人生...");
+            } else {
+                switch (random.nextInt(5)) {
+                    case 0:
+                        addMessage(context, hero.getFormatName() + "思考了一下人生...");
+                        break;
+                    case 1:
+                        addMessage(context, hero.getFormatName() + "犹豫了一下不知道做什么好。");
+                        break;
+                    case 2:
+                        addMessage(context, hero.getFormatName() + "感觉到肚子饿了！");
+                        break;
+                    case 3:
+                        if (hero.getPets().size() > 0) {
+                            addMessage(context, hero.getFormatName() + "和宠物们玩耍了一下会。");
+                            for(Pet pet : hero.getPets()){
+                                pet.click();
+                            }
+                        } else {
+                            addMessage(context, hero.getFormatName() + "想要养宠物");
+                        }
+                        break;
+                    case 4:
+                        addMessage(context, hero.getFormatName() + "正在发呆...");
+                }
             }
             try {
                 Thread.sleep(context.getRefreshInfoSpeed());
@@ -256,7 +278,7 @@ public class Maze {
                 Pet m = null;
                 List<Pet> pets = hero.getPets();
                 for (Pet pet : pets) {
-                    if(!pet.getType().equals("蛋")) {
+                    if (!pet.getType().equals("蛋")) {
                         for (Pet p : pets) {
                             if (!p.equals(pet) && !p.getType().equals("蛋") && pet.getSex() != p.getSex() && (pet.getElement().isReinforce(p.getElement()) || p.getElement().isReinforce(pet.getElement()))) {
                                 if (p.getSex() == 0) {

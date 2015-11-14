@@ -185,11 +185,11 @@ public class Monster {
         }
         hp += baseHP[last] * random.nextLong(maze.getLev() + 1);
         atk += baseAtk[last] * hero.getReincaCount();
-        if (hp < hero.getAttackValue() * 5) {
-            hp += random.nextLong(hero.getAttackValue() * 10);
+        if (hp < hero.getAttackValue()) {
+            hp += random.nextLong(hero.getAttackValue() * 2);
         }
-        if (hp > hero.getAttackValue() * 29) {
-            hp = hero.getAttackValue() * 30;
+        if (hp > hero.getAttackValue() * 19) {
+            hp = hero.getAttackValue() * 20;
         }
         if (hero.getMaterial() > 90000000) {
             atk += random.nextLong(hero.getAttackValue() / (hero.getMaxMazeLev() + 1));
@@ -221,7 +221,7 @@ public class Monster {
         } else {
             setFormatName(getName() + "(" + element + ")");
             if(silent == 0 && mazeLev > 1000) {
-                silent = hero.getRandom().nextInt(5) + hero.getRandom().nextFloat();
+                silent = hero.getRandom().nextLong(5 + mazeLev/1000) + hero.getRandom().nextFloat();
             }
         }
     }
