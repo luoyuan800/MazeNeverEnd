@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import cn.gavin.R;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 luoyuan.
@@ -99,10 +100,18 @@ public class MonsterDetailDialog implements View.OnClickListener {
         TextView textView = new TextView(context);
         switch (view.getId()){
             case R.id.max_atk_desc:
-                textView.setText(Html.fromHtml(monster.getMaxATKDesc()));
+                String atkDesc = monster.getMaxATKDesc();
+                if(StringUtils.split(atkDesc, "<br>").length > 100){
+                    atkDesc = "战斗时间过长，记录无法显示！";
+                }
+                textView.setText(Html.fromHtml(atkDesc));
                 break;
             case R.id.max_hp_desc:
-                textView.setText(Html.fromHtml(monster.getMaxHPDesc()));
+                String maxHPDesc = monster.getMaxHPDesc();
+                if(StringUtils.split(maxHPDesc, "<br>").length > 100){
+                    maxHPDesc = "战斗时间过长，记录无法显示！";
+                }
+                textView.setText(Html.fromHtml(maxHPDesc));
                 break;
         }
         scrollView.addView(textView);

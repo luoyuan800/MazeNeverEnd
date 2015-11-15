@@ -1,7 +1,5 @@
 package cn.gavin.maze;
 
-import java.util.List;
-
 import cn.gavin.Hero;
 import cn.gavin.activity.BaseContext;
 import cn.gavin.forge.Item;
@@ -14,6 +12,8 @@ import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
+
+import java.util.List;
 
 /**
  * Copyright 2015 gluo.
@@ -30,10 +30,10 @@ public class BattleController {
                 if (pet != null && pet.getHp() > 0 && !pet.getType().equals("蛋") && pet.dan()) {
                     pet.setContext(context);
                     long harm = monster.getAtk() - pet.getDef();
-                    if(harm < 0){
+                    if (harm < 0) {
                         harm = random.nextLong(hero.getMaxMazeLev());
                     }
-                    String petMsg = pet.getFormatName() + "舍身救主，挡下了这次攻击伤害（<font color=\"red\">" + harm + "</font>点)!";
+                    String petMsg = pet.getFormatName() + "舍身救主，挡下了这次攻击伤害（<font color=\"red\">" + StringUtils.formatNumber(harm) + "</font>点)!";
                     addMessage(context, petMsg);
                     monster.addBattleDesc(petMsg);
                     if (harm < 0) harm = 0;
@@ -46,9 +46,11 @@ public class BattleController {
                     return false;
                 }
             }
-
-            if (skill != null && !monster.isSilent(random)) {
-                isJump = skill.release(monster);
+            if(skill!=null && monster.isSilent(random)){
+                addMessage(context, hero.getFormatName() + "想要使用技能" + skill.getName());
+                addMessage(context, monster.getFormatName() + "打断了" + hero.getFormatName() + "的技能");
+            }else if (skill != null) {
+                    isJump = skill.release(monster);
             } else if (monster.getName().contains("龙") && SkillFactory.getSkill("龙裔", hero, context.getSkillDialog()).isActive()) {
                 addMessage(context, hero.getFormatName() + "激发龙裔效果，免疫龙系怪物的伤害！");
             } else {
@@ -197,6 +199,29 @@ public class BattleController {
                     String s = "阿西巴，这怪怎么打不死的？" + hero.getFormatName() + "小声的嘟哝着。";
                     addMessage(context, s);
                     monster.addBattleDesc(s);
+                } else if (count != 0 && count % 21 == 0) {
+                    String s = "由于战斗时间过长，" + hero.getFormatName() + "和" + monster.getFormatName() + "决定玩一局筛子游戏，谁的筛子数大，谁的当前生命值减半。";
+                    addMessage(context, s);
+                    monster.addBattleDesc(s);
+                    int i = random.nextInt(6) + 1;
+                    int j = random.nextInt(6) + 1;
+                    s = hero.getFormatName() + "抛出筛子，点数为：" + i;
+                    addMessage(context, s);
+                    monster.addBattleDesc(s);
+                    s = monster.getFormatName() + "抛出筛子，点数为：" + j;
+                    addMessage(context, s);
+                    monster.addBattleDesc(s);
+                    if (i > j) {
+                        hero.addHp(-hero.getHp() / 2);
+                        s = hero.getFormatName() + "HP减半了";
+                        addMessage(context, s);
+                        monster.addBattleDesc(s);
+                    } else {
+                        monster.addHp(-monster.getHp() / 2);
+                        s = monster.getFormatName() + "HP减半了";
+                        addMessage(context, s);
+                        monster.addBattleDesc(s);
+                    }
                 }
                 isJump = BattleController.heroAtk(context, hero, monster);
             } else {

@@ -58,7 +58,7 @@ public class Elementalist extends SkillLayout {
                         skill.addMessage(hero.getFormatName() + "" + monster.getElement().getRestriction());
                     }
                     harm *= 1.5;
-                    monster.addHp(harm);
+                    monster.addHp(-harm);
                     skill.addMessage(hero.getFormatName() + "" + monster.getFormatName() + "" + harm + "");
                     return false;
                 }
@@ -185,7 +185,7 @@ public class Elementalist extends SkillLayout {
                         harm += monster.getAtk();
                     }
                     context.addMessage(hero.getFormatName() + "" + monster.getFormatName() + "" + harm + "");
-                    monster.addHp(harm);
+                    monster.addHp(-harm);
                     return false;
                 }
             });

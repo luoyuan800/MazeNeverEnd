@@ -172,7 +172,7 @@ public class PetSkill extends SkillLayout {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = hero.getAttackValue();
-                    monster.addHp(harm);
+                    monster.addHp(-harm);
                     if (monster.getHp() <= 0) {
                         Pet pet = Pet.cPet(monster, hero.getRandom());
                         if (pet != null) {
@@ -353,7 +353,7 @@ public class PetSkill extends SkillLayout {
                                         petHarm = pet.getAtk();
                                     }
                                     String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了" + petHarm + "点伤害";
-                                    monster.addHp(petHarm);
+                                    monster.addHp(-petHarm);
                                     iskll.addMessage(petAtk);
                                     monster.addBattleSkillDesc(petAtk);
                                     monster.addBattleDesc(petAtk);
@@ -431,7 +431,7 @@ public class PetSkill extends SkillLayout {
                                         petHarm = pet.getAtk();
                                     }
                                     String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了" + petHarm + "点伤害";
-                                    monster.addHp(petHarm);
+                                    monster.addHp(-petHarm);
                                     iskll.addMessage(petAtk);
                                     monster.addBattleSkillDesc(petAtk);
                                     monster.addBattleDesc(petAtk);

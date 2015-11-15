@@ -127,18 +127,24 @@ public class Monster {
         if (atk > hero.getUpperHp() + hero.getDefenseValue()) {
             atk = atk / 2;
         }
+        if(maze.getLev() < 5000){
+            atk/=2;
+        } else if (maze.getLev() < 1000) {
+            atk /= 3;
+        }
+        if (maze.getLev() < 100) {
+            atk /= 4;
+        }
+        if(maze.getLev() < hero.getMaxMazeLev()/2){
+            atk/=2;
+        }
 
         if (hero.getMaterial() > 10000000) {
             atk += random.nextLong(hero.getMaterial() / (MainGameActivity.context != null ? MainGameActivity.context.getAlipay().getPayTime() + 1 : 1) + 1);
 
         }
-        if (maze.getLev() < 200) {
-            atk /= 2;
-        }
-        if (maze.getLev() < 100) {
-            atk /= 3;
-        }
-        if (hp > hero.getAttackValue() * 40) {
+
+        if (hp > hero.getUpperAtk() * 40) {
             hp = hero.getAttackValue() * 40;
         }
         if (atk < hero.getDefenseValue()) {
@@ -174,8 +180,8 @@ public class Monster {
         }else{
             this.items = Collections.emptyList();
         }
-        if (hero.getStrength() > 100 && hero.getAgility() > 1000 && hero.getPower() > 100 && random.nextLong(maze.getLev() / 100 + 1) > 100 && random.nextInt(100) < 11) {
-            hp += random.nextLong((maze.getLev() + hero.getMaxMazeLev()) / 200) * random.nextLong((hero.getStrength() + hero.getAgility() + hero.getStrength()) / 100 + 1);
+        if (hero.getStrength() > 100 && hero.getAgility() > 1000 && hero.getPower() > 100 && random.nextLong(maze.getLev() / 1000 + 1) > 1000 && random.nextInt(100) < 11) {
+            hp += secondAdditionHP[second] * random.nextLong(maze.getLev());
             atk += maze.getLev() * random.nextLong((hero.getStrength() + hero.getAgility() + hero.getPower()) / 800 + 1);
             atk += baseAtk[last] * random.nextLong(maze.getLev() + hero.getMaxMazeLev() / 100 + 1);
             atk += secondAdditionAtk[second] * random.nextLong(maze.getLev()/500);
@@ -183,22 +189,29 @@ public class Monster {
             if (atk < hero.getDefenseValue()) atk = random.nextLong(hero.getAttackValue() + atk);
             atk += random.nextLong((hero.getUpperAtk() + hero.getUpperHp() + hero.getUpperDef()) / (6 * hero.getMaxMazeLev()) + hero.getMaxMazeLev());
         }
-        hp += baseHP[last] * random.nextLong(maze.getLev() + 1);
         atk += baseAtk[last] * hero.getReincaCount();
-        if (hp < hero.getAttackValue()) {
-            hp += random.nextLong(hero.getAttackValue() * 2);
+        if (hp < hero.getUpperAtk() && maze.getLev() % 500 == 0) {
+            hp += random.nextLong(hero.getUpperHp() * 10);
         }
-        if (hp > hero.getAttackValue() * 19) {
-            hp = hero.getAttackValue() * 20;
+
+        if (hp > hero.getUpperAtk() * 30) {
+            hp = hero.getUpperAtk() + random.nextLong(hero.getUpperAtk() * 15);
+            if(maze.getLev() % 607 == 0){
+                atk += random.nextLong(hero.getUpperAtk());
+            }else if(maze.getLev() > 5000){
+                atk += random.nextLong(hero.getUpperHp()/2);
+            }
         }
-        if (hero.getMaterial() > 90000000) {
+
+        if (hero.getMaterial() > 100000000) {
             atk += random.nextLong(hero.getAttackValue() / (hero.getMaxMazeLev() + 1));
             hp += random.nextLong(hero.getMaterial() / (MainGameActivity.context != null ? MainGameActivity.context.getAlipay().getPayTime() + 1 : 1) + 1);
         }
-        if (hp <= 0) hp = Integer.MAX_VALUE - 10;
+        if (hp <= 0) hp = Integer.MAX_VALUE - 1000;
         if (atk <= 0) hp = Integer.MAX_VALUE - 100;
-        if (maze.getLev() < 150) {
+        if (maze.getLev() < 1500) {
             atk /= 4;
+            hp/=3;
         }
         long m1 = random.nextLong(hp + 1) / 180 + 5;
         long m2 = random.nextLong(atk + 1) / 409 + 10;
@@ -218,10 +231,12 @@ public class Monster {
     private void formatName(Hero hero) {
         if (getAtk() > (hero.getUpperHp() + hero.getDefenseValue()) / 2) {
             setFormatName("<B><font color=\"red\">" + getName() + "</font></B>" + "(" + element + ")");
-        } else {
+            if(silent == 0 && mazeLev > 1000) {
+                silent = hero.getRandom().nextLong(1 + mazeLev/1000) + hero.getRandom().nextFloat();
+            }} else {
             setFormatName(getName() + "(" + element + ")");
             if(silent == 0 && mazeLev > 1000) {
-                silent = hero.getRandom().nextLong(5 + mazeLev/1000) + hero.getRandom().nextFloat();
+                silent = hero.getRandom().nextLong(4 + mazeLev/5000) + hero.getRandom().nextFloat();
             }
         }
     }
