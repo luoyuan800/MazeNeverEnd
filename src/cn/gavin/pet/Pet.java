@@ -423,7 +423,7 @@ public class Pet extends Base {
             egg.setElement(Element.values()[random.nextInt(Element.values().length - 1)]);
             egg.setOwner(hero.getName());
             if (!f.getType().equals(m.getType())) {
-                if (random.nextInt(10000) + random.nextFloat() < 11.015) {
+                if (random.nextInt(10000) + random.nextFloat() < 21.115) {
                     String lastName = Monster.lastNames[random.nextInt(Monster.lastNames.length)];
                     egg.setName("变异的" + lastName);
                     if (lastName.equals("作者")) {
