@@ -164,7 +164,7 @@ public class PetSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("使用这个技能击败敌人的时候100%捕捉成功。<br>").append(iskll.getProbability()).append("%几率释放。");
+                    builder.append("使用这个技能<b>击败<b>敌人的时候100%捕捉成功。<br>").append(iskll.getProbability()).append("%几率释放。");
                     return builder.toString();
                 }
             });
@@ -173,10 +173,15 @@ public class PetSkill extends SkillLayout {
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = hero.getAttackValue();
                     monster.addHp(-harm);
+                    String msg = hero.getFormatName() + "" + monster.getFormatName() + "" + harm + "";
+                    iskll.addMessage(msg);
+                    monster.addBattleDesc(msg);
                     if (monster.getHp() <= 0) {
                         Pet pet = Pet.cPet(monster, hero.getRandom());
                         if (pet != null) {
-                            iskll.addMessage(hero.getFormatName() + "捕捉到了" + pet.getFormatName());
+                           msg = hero.getFormatName() + "捕捉到了" + pet.getFormatName();
+                            iskll.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
                         }
                     }
                     return false;

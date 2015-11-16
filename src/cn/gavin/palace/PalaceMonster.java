@@ -100,6 +100,7 @@ public class PalaceMonster extends Base {
             long hp = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))) + StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def")));
             Monster monster = new Monster("", "【守护者】", cursor.getString(cursor.getColumnIndex("name")), atk, hp);
             monster.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
+            monster.setSilent(65);
             return monster;
         }
         return null;
