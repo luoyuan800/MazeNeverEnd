@@ -40,37 +40,67 @@ public class MazeContents {
         try {
             switch (effect) {
                 case ADD_DEF:
-                    if (hero != null && value > hero.getUpperDef() * 1.5) {
-                        return (long) (hero.getUpperAtk() * 1.5);
+                    if (hero != null && value > hero.getUpperDef() * 5) {
+                        if (hero.getUpperDef() > 0) {
+                            return (long) (hero.getUpperDef() * 5);
+                        } else {
+                            return value / 2;
+                        }
                     }
                 case ADD_ATK:
-                    if (hero != null && value > hero.getUpperAtk() * 1.5) {
-                        return (long) (hero.getUpperAtk() * 1.5);
+                    if (hero != null && value > hero.getUpperAtk() * 5) {
+                        if (hero.getUpperAtk() > 0) {
+                            return (long) (hero.getUpperAtk() * 5);
+                        } else {
+                            return value / 2;
+                        }
                     }
                 case ADD_UPPER_HP:
-                    if (hero != null && value > hero.getRealUHP() * 1.5) {
-                        return (long) (hero.getUpperAtk() * 1.5);
+                    if (hero != null && value > hero.getRealUHP() * 5) {
+                        if (hero.getRealUHP() > 0) {
+                            return (long) (hero.getRealUHP() * 5);
+                        } else {
+                            return value / 2;
+                        }
                     }
                 case ADD_POWER:
                     if (hero != null && value > hero.getPower()) {
-                        return hero.getPower();
+                        if (hero.getPower() > 0) {
+                            return hero.getPower();
+                        } else {
+                            return value / 2;
+                        }
                     }
                 case ADD_AGI:
                     if (hero != null && value > hero.getAgility()) {
-                        return hero.getAgility();
+                        if (hero.getAgility() > 0) {
+                            return hero.getAgility();
+                        } else {
+                            return value / 2;
+                        }
                     }
                 case ADD_STR:
                     if (hero != null && value > hero.getStrength()) {
-                        return hero.getStrength();
+                        if (hero.getStrength() > 0) {
+                            return hero.getStrength();
+                        } else {
+                            return value / 2;
+                        }
+                    }
+                case ADD_PER_ATK:
+                case ADD_PER_DEF:
+                case ADD_PER_UPPER_HP:
+                    if (value > 80) {
+                        return 80l;
                     }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             LogHelper.logException(e);
         }
         return value;
     }
 
-    public static int getImageByName(String name){
+    public static int getImageByName(String name) {
         int index = Monster.getIndex(name);
         int image = R.drawable.h_4_s;
         switch (index) {

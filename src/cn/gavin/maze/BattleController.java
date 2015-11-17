@@ -132,7 +132,7 @@ public class BattleController {
                     }
                     String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了"
                             + StringUtils.formatNumber(petHarm) + "点伤害";
-                    monster.addHp(petHarm);
+                    monster.addHp(-petHarm);
                     addMessage(context, petAtk);
                     monster.addBattleDesc(petAtk);
                     break;

@@ -590,11 +590,7 @@ public class Hero implements BaseObject {
 
     public void addUpperHp(long hp) {
         if (this.upperHp + hp < Long.MAX_VALUE / 2 - 1000) {
-            if ((this.upperHp + hp) > 9) {
                 this.upperHp += hp;
-            } else {
-                upperHp = 10l;
-            }
             //addHp(hp);
         }
     }

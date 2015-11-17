@@ -215,7 +215,6 @@ public class Accessory extends Equipment {
                             if(effect == Effect.ADD_PER_ATK || effect == Effect.ADD_PER_DEF || effect == Effect.ADD_PER_UPPER_HP ){
                                 if(value > 60) value = 60l;
                             }
-                            value = MazeContents.reduceLegacyEffect(effect, value);
                             base.put(effect, value);
                         }
                     }
@@ -269,7 +268,6 @@ public class Accessory extends Equipment {
                             if (effect == Effect.ADD_PER_ATK || effect == Effect.ADD_PER_DEF || effect == Effect.ADD_PER_UPPER_HP) {
                                 if (value > 60) value = 60l;
                             }
-                            value = MazeContents.reduceLegacyEffect(effect, value);
                             base.put(effect, value);
                         }
                     }

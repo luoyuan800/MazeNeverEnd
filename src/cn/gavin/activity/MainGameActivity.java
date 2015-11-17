@@ -1789,7 +1789,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 heroN.click(false);
                 break;
             case R.id.local_box:
-                if (heroN.getKeyCount() > 0 && heroN.getLockBox() > 0) {
+                if (heroN.getKeyCount() > 0 && heroN.getLockBox() > 0 && Item.getItemCount() < 1000) {
                     heroN.setKeyCount(heroN.getKeyCount() - 1);
                     showLockBox();
                     heroN.click(false);

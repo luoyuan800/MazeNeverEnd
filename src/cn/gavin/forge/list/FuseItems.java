@@ -18,8 +18,15 @@ public class FuseItems {
         try {
             EnumMap<Effect, Number> effectNumberEnumMap = new EnumMap<Effect, Number>(Effect.class);
             Random random = new Random();
+            if(MazeContents.reduceLegacyEffect(items[0].getEffect(), items[0].getEffectValue().longValue()) != items[0].getEffectValue().longValue()){
+                //如果超出上限了，直接返回第一个物品
+                return items[0];
+            }
             effectNumberEnumMap.put(items[0].getEffect(), items[0].getEffectValue());
             if (items[0].getEffect1() != null && items[0].getEffect1() != items[0].getEffect()) {
+                if(MazeContents.reduceLegacyEffect(items[0].getEffect1(), items[0].getEffect1Value().longValue()) != items[0].getEffect1Value().longValue()){
+                    return items[0];
+                }
                 effectNumberEnumMap.put(items[0].getEffect1(), items[0].getEffect1Value());
             }
             for (Item item : items) {
@@ -38,12 +45,16 @@ public class FuseItems {
             Item item = new Item();
             item.setName(items[0].getName());
             for (EnumMap.Entry<Effect, Number> entry : effectNumberEnumMap.entrySet()) {
+                Number value = entry.getValue();
+                Effect key = entry.getKey();
+                value = MazeContents.reduceLegacyEffect(key, value.longValue());
+                value=value.longValue()/3;
                 if (item.getEffect() == null) {
-                    item.setEffect(entry.getKey());
-                    item.setEffectValue(entry.getValue());
+                    item.setEffect(key);
+                    item.setEffectValue(value);
                 } else if (item.getEffect1() == null) {
-                    item.setEffect1(entry.getKey());
-                    item.setEffect1Value(entry.getValue());
+                    item.setEffect1(key);
+                    item.setEffect1Value(value);
                 }
             }
             if (item.getEffectValue() != null && item.getEffect() == Effect.ADD_CLICK_POINT_AWARD && item.getEffectValue().longValue() > 4) {
@@ -101,27 +112,6 @@ public class FuseItems {
                     case ADD_PER_DEF:
                         if (item.getEffectValue().longValue() > 50) {
                             item.setEffectValue(50);
-                        }
-                        break;
-                    case ADD_STR:
-                        if (MazeContents.hero != null) {
-                            if (item.getEffectValue().longValue() > MazeContents.hero.getStrength() / 1000) {
-                                item.setEffectValue(MazeContents.hero.getStrength() / 10001);
-                            }
-                        }
-                        break;
-                    case ADD_AGI:
-                        if (MazeContents.hero != null) {
-                            if (item.getEffectValue().longValue() > MazeContents.hero.getAgility() / 1000) {
-                                item.setEffectValue(MazeContents.hero.getAgility() / 10001);
-                            }
-                        }
-                        break;
-                    case ADD_POWER:
-                        if (MazeContents.hero != null) {
-                            if (item.getEffectValue().longValue() > MazeContents.hero.getPower() / 500) {
-                                item.setEffectValue(MazeContents.hero.getPower() / 5001);
-                            }
                         }
                         break;
                     case ADD_CLICK_AWARD:

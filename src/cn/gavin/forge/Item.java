@@ -10,13 +10,13 @@ import java.util.UUID;
 
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.utils.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
@@ -115,6 +115,9 @@ public class Item implements Comparator<Item> {
     }
 
     public static Item buildItem(Hero hero, Maze maze, Monster monster) {
+        if (1000 < getItemCount()) {
+            return null;
+        }
         ItemName name = null;
         for (ItemName in : monster.getItems()) {
             if (in.perform(hero, monster)) {
@@ -145,8 +148,17 @@ public class Item implements Comparator<Item> {
         return item;
     }
 
-    public boolean idEqual(Item item){
-        return StringUtils.isNotEmpty(id) && item!=null && id.equals(item.id);
+    public static int getItemCount() {
+        try {
+            return DBHelper.getDbHelper().excuseSOL("SELECT count(*) FROM item").getInt(0);
+        } catch (Exception e) {
+            LogHelper.logException(e);
+            return 0;
+        }
+    }
+
+    public boolean idEqual(Item item) {
+        return StringUtils.isNotEmpty(id) && item != null && id.equals(item.id);
     }
 
     public static ArrayList<Item> loadItems(SQLiteDatabase db) {
@@ -175,8 +187,8 @@ public class Item implements Comparator<Item> {
                             if (proVal.length > 1) {
                                 Effect e = Effect.valueOf(proVal[0]);
                                 Long value = StringUtils.toLong(proVal[1]);
-                                if(e == Effect.ADD_PER_ATK || e == Effect.ADD_PER_DEF || e == Effect.ADD_PER_UPPER_HP ){
-                                    if(value > 20) value = 20l;
+                                if (e == Effect.ADD_PER_ATK || e == Effect.ADD_PER_DEF || e == Effect.ADD_PER_UPPER_HP) {
+                                    if (value > 20) value = 20l;
                                 }
                                 if (item.getEffect() == null) {
                                     item.setEffect(e);

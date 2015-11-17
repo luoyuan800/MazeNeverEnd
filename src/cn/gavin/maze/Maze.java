@@ -101,7 +101,7 @@ public class Maze {
                             pet.setLev(level);
                             PetDB.save(pet);
                         }
-                    } else if (!"蛋".equals(pet.getType())) {
+                    } else if (!"蛋".equals(pet.getType()) && pet.getHp() > 0) {
                         if (pet.getSkill() != null) {
                             if (pet.getSkill() instanceof PetSkill) {
                                 ((PetSkill) pet.getSkill()).release(hero);

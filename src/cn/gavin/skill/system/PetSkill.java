@@ -164,7 +164,7 @@ public class PetSkill extends SkillLayout {
                 @Override
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
-                    builder.append("使用这个技能<b>击败<b>敌人的时候100%捕捉成功。<br>").append(iskll.getProbability()).append("%几率释放。");
+                    builder.append("使用这个技能<b>击败</b>敌人的时候100%捕捉成功。<br>").append(iskll.getProbability()).append("%几率释放。");
                     return builder.toString();
                 }
             });
@@ -408,7 +408,7 @@ public class PetSkill extends SkillLayout {
                     if(harm <= 0){
                         harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1) + 1;
                     }
-                    hero.addHp(harm);
+                    hero.addHp(-harm);
                     String harmMsg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了" + harm + "点伤害。";
                     String skillMsg = hero.getFormatName() + "使用了技能" + iskll.getName();
                     skill.addMessage(harmMsg);
