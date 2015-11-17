@@ -383,6 +383,8 @@ public class PetSimpleAdapter extends BaseAdapter {
                 source += "它不愿意离开你。";
             } else if (intimacy > 20000) {
                 source += "它黏在你身上甩不掉。";
+            } else {
+                source += "默默的看着你...";
             }
             source += "</font>";
             return source;
