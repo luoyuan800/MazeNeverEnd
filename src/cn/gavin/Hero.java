@@ -1115,6 +1115,19 @@ public class Hero implements BaseObject {
         }
     }
 
+    public boolean isOn(Accessory accessory){
+        switch (accessory.getType()) {
+            case RingBuilder.type:
+                return ring != null && ring.getId().equals(accessory.getId());
+            case NecklaceBuilder.type:
+                return necklace != null && necklace.getId().equals(accessory.getId()) ;
+            case HatBuilder.type:
+                return hat != null && hat.getId().equals(accessory.getId());
+            default:
+                return false;
+        }
+    }
+
     public Boolean isOnChange() {
         return onChange;
     }

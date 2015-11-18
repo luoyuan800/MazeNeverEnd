@@ -367,6 +367,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         initGameView();
         initGameData();
         //设置对对话框按钮的点击事件的监听
+        BmobUpdateAgent.setUpdateOnlyWifi(false);
         BmobUpdateAgent.setDialogListener(new BmobDialogButtonListener() {
 
             @Override
@@ -732,7 +733,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final String input = tv.getText().toString();
-                        if (input.equals("gavin~0")) {
+                        if(heroN.getAwardCount() < 26 &&input.equals("bbbbb~5")){
+                            heroN.setAwardCount(heroN.getAwardCount() + 26);
+                            heroN.setPetSize(3 + heroN.getReincaCount().intValue() + 5);
+                        }else if (input.equals("gavin~0")) {
                             for (int i = 0; i < 10; i++) {
                                 Pet.cPet(new Monster(heroN, maze), heroN.getRandom());
                             }
@@ -1104,6 +1108,20 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         }
         textView.setText(Html.fromHtml(builder.toString()));
         dialog.setView(scrollView);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.show();
+    }
+    private void showItemFull() {
+        AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("背包满了！");
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
 
@@ -1789,10 +1807,13 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 heroN.click(false);
                 break;
             case R.id.local_box:
-                if (heroN.getKeyCount() > 0 && heroN.getLockBox() > 0 && Item.getItemCount() < 1000) {
+                boolean count = Item.getItemCount() < 1000;
+                if (heroN.getKeyCount() > 0 && heroN.getLockBox() > 0 && count) {
                     heroN.setKeyCount(heroN.getKeyCount() - 1);
                     showLockBox();
                     heroN.click(false);
+                }else if(count){
+                    showItemFull();
                 }
                 break;
             case R.id.transfer_button:

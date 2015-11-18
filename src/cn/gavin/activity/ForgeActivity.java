@@ -186,7 +186,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         for (Accessory accessory : Accessory.loadAccessories(null)) {
-                            if ("#000000".equals(accessory.getColor())) {
+                            if ("#000000".equals(accessory.getColor()) && MazeContents.hero!=null && !MazeContents.hero.isOn(accessory)) {
                                 accessory.dismantle();
                             }
                         }

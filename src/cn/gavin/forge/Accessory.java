@@ -252,6 +252,7 @@ public class Accessory extends Equipment {
     }
 
     public boolean load() {
+        boolean result = false;
         try {
             if (id != null) {
                 Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM accessory WHERE id = '" + id + "'");
@@ -282,15 +283,15 @@ public class Accessory extends Equipment {
                     setAdditionEffects(addition);
                     setType(cursor.getInt(cursor.getColumnIndex("type")));
                     setId(cursor.getString(cursor.getColumnIndex("id")));
+                    result = true;
                 }
                 cursor.close();
             }
         } catch (Exception e) {
             LogHelper.logException(new Exception("Access error", e));
             DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM accessory WHERE id = '" + id + "'");
-            return false;
         }
-        return true;
+        return result;
     }
 
     public void setActive(boolean active) {

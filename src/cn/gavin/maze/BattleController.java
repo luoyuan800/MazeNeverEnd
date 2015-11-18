@@ -33,7 +33,7 @@ public class BattleController {
                     if (harm < 0) {
                         harm = random.nextLong(hero.getMaxMazeLev());
                     }
-                    String petMsg = pet.getFormatName() + "舍身救主，挡下了这次攻击伤害（<font color=\"red\">" + StringUtils.formatNumber(harm) + "</font>点)!";
+                    String petMsg = pet.getFormatName() + "舍身救主，挡下了一次攻击伤害（<font color=\"red\">" + StringUtils.formatNumber(harm) + "</font>点)!";
                     addMessage(context, petMsg);
                     monster.addBattleDesc(petMsg);
                     if (harm < 0) harm = 0;

@@ -26,6 +26,7 @@ import java.util.List;
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.ForgeActivity;
+import cn.gavin.log.LogHelper;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.forge.Item;
 import cn.gavin.forge.effect.Effect;
@@ -88,7 +89,7 @@ public class ItemDialog {
         listView.setAdapter(adapter);
         linearLayout.addView(listView);
         Button add = new Button(activity);
-        add.setText("一键随机添加材料");
+        add.setText("一键随机添加材料（慎用！）");
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,12 +138,12 @@ public class ItemDialog {
         clean.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog onpush = new AlertDialog.Builder(activity).create();
-                onpush.setTitle("确认清除材料？");
+                AlertDialog clean = new AlertDialog.Builder(activity).create();
+                clean.setTitle("确认清除材料？");
                 TextView textView = new TextView(activity);
                 textView.setText("属性为增加基本攻击、防御、HP并且数值低于迷宫层数*30的材料会被清除！");
-                onpush.setView(textView);
-                onpush.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                clean.setView(textView);
+                clean.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -170,16 +171,16 @@ public class ItemDialog {
                         dialog.dismiss();
                     }
                 });
-                onpush.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                clean.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
-                onpush.show();
+                clean.show();
             }
         });
-        linearLayout.addView(clean);
+        //linearLayout.addView(clean);
         itemDialog.setView(linearLayout);
         itemDialog.setTitle("材料列表");
         itemDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
@@ -199,6 +200,62 @@ public class ItemDialog {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 itemDialog.hide();
+            }
+        });
+        itemDialog.setButton(DialogInterface.BUTTON_NEUTRAL,"清除材料", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                AlertDialog onpush = new AlertDialog.Builder(activity).create();
+                onpush.setTitle("确认清除材料（慎）？");
+                TextView textView = new TextView(activity);
+                textView.setText("属性为增加基本攻击、防御、HP并且数值低于迷宫层数*40的材料会被清除！\n属性为增加敏捷、力量、体力，数值不是负数并且小于迷宫层数的将会被清除！\n多个属性的材料，只要有一个属性符合条件就会被清除！\n清除过程会有点卡，请耐心等待！");
+                onpush.setView(textView);
+                onpush.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            Hero hero = MazeContents.hero;
+                            if (hero != null) {
+                                for (Item item : Item.loadItems(null)) {
+                                    boolean delete = false;
+                                    Effect effect = item.getEffect();
+                                    if (effect == Effect.ADD_DEF || effect == Effect.ADD_ATK || effect == Effect.ADD_UPPER_HP) {
+                                        if (item.getEffectValue().longValue() > 0 && item.getEffectValue().longValue() < hero.getMaxMazeLev() * 40) {
+                                            delete = true;
+                                        }
+                                    } else if (effect == Effect.ADD_AGI || effect == Effect.ADD_POWER || effect == Effect.ADD_STR) {
+                                        if (item.getEffectValue().longValue() > 0 && item.getEffectValue().longValue() < hero.getMaxMazeLev()) {
+                                            delete = true;
+                                        }
+                                    }
+                                    if (item.getEffect1() != null) {
+                                        effect = item.getEffect1();
+                                        if ((effect == Effect.ADD_DEF || effect == Effect.ADD_ATK
+                                                || effect == Effect.ADD_UPPER_HP) && item.getEffect1Value().longValue() > 0 && item.getEffect1Value().longValue() < hero.getMaxMazeLev() * 40) {
+                                            delete = true;
+                                        } else if ((effect == Effect.ADD_AGI || effect == Effect.ADD_POWER || effect == Effect.ADD_STR) && (item.getEffect1Value().longValue() > 0 && item.getEffect1Value().longValue() < hero.getMaxMazeLev())) {
+                                            delete = true;
+                                        }
+                                    }
+                                    if (delete) {
+                                        item.delete(null);
+                                    }
+                                }
+                                adapter.refresh("");
+                            }
+                        }catch (Exception e){
+                            LogHelper.logException(e);
+                        }
+                        dialog.dismiss();
+                    }
+                });
+                onpush.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                onpush.show();
             }
         });
     }
