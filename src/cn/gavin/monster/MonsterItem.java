@@ -79,6 +79,9 @@ public class MonsterItem {
     }
 
     public String getMaxATKDesc() {
+        if(!StringUtils.isNotEmpty(maxATKDesc)){
+            loadDetail();
+        }
         return maxATKDesc;
     }
 
@@ -103,7 +106,21 @@ public class MonsterItem {
     }
 
     public String getMaxHPDesc() {
+        if(!StringUtils.isNotEmpty(maxHPDesc)){
+            loadDetail();
+        }
         return maxHPDesc;
+    }
+
+    private void loadDetail() {
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT max_hp_battle,max_atk_battle FROM monster WHERE name = '" + name + "'");
+        if (!cursor.isAfterLast()) {
+            String maxHPDesc = cursor.getString(cursor.getColumnIndex("max_hp_battle"));
+            setMaxHPDesc(StringUtils.isNotEmpty(maxHPDesc) && !"null".equalsIgnoreCase(maxHPDesc) ? maxHPDesc : "");
+            String maxAtkDesc = cursor.getString(cursor.getColumnIndex("max_atk_battle"));
+            setMaxATKDesc(StringUtils.isNotEmpty(maxAtkDesc) && !"null".equalsIgnoreCase(maxAtkDesc) ? maxAtkDesc : "");
+        }
+        cursor.close();
     }
 
     public void setMaxHPDesc(String maxHPDesc) {
@@ -194,6 +211,7 @@ public class MonsterItem {
         } else {
             setLoad(false);
         }
+        cursor.close();
     }
 
     public static List<MonsterItem> loadMonsterItems() {
@@ -223,10 +241,10 @@ public class MonsterItem {
             item.setMaxATKDefeat(StringUtils.isNotEmpty(maxAtkDefeat) && !"null".equalsIgnoreCase(maxAtkDefeat) ? Boolean.valueOf(maxAtkDefeat) : false);
             String maxAtkLev = cursor.getString(cursor.getColumnIndex("max_atk_lev"));
             item.setMaxATKLev(StringUtils.isNotEmpty(maxAtkLev) && !"null".equalsIgnoreCase(maxAtkLev) ? maxAtkLev : "");
-            String maxHPDesc = cursor.getString(cursor.getColumnIndex("max_hp_battle"));
-            item.setMaxHPDesc(StringUtils.isNotEmpty(maxHPDesc) && !"null".equalsIgnoreCase(maxHPDesc) ? maxHPDesc : "");
-            String maxAtkDesc = cursor.getString(cursor.getColumnIndex("max_atk_battle"));
-            item.setMaxATKDesc(StringUtils.isNotEmpty(maxAtkDesc) && !"null".equalsIgnoreCase(maxAtkDesc) ? maxAtkDesc : "");
+//            String maxHPDesc = cursor.getString(cursor.getColumnIndex("max_hp_battle"));
+//            item.setMaxHPDesc(StringUtils.isNotEmpty(maxHPDesc) && !"null".equalsIgnoreCase(maxHPDesc) ? maxHPDesc : "");
+//            String maxAtkDesc = cursor.getString(cursor.getColumnIndex("max_atk_battle"));
+//            item.setMaxATKDesc(StringUtils.isNotEmpty(maxAtkDesc) && !"null".equalsIgnoreCase(maxAtkDesc) ? maxAtkDesc : "");
             long defeat1 = cursor.getLong(cursor.getColumnIndex("defeat"));
             item.setDefeat(defeat1);
             long defeated1 = cursor.getLong(cursor.getColumnIndex("defeated"));
@@ -235,6 +253,7 @@ public class MonsterItem {
             list.add(item);
             cursor.moveToNext();
         }
+        cursor.close();
         return list;
     }
 

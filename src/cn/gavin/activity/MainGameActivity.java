@@ -3,42 +3,60 @@ package cn.gavin.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
+import android.os.*;
 import android.text.Html;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
+import cn.bmob.v3.listener.BmobDialogButtonListener;
+import cn.bmob.v3.update.BmobUpdateAgent;
+import cn.bmob.v3.update.UpdateStatus;
 import cn.gavin.*;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
-import cn.gavin.forge.Item;
+import cn.gavin.forge.*;
 import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.adapter.RecipeAdapter;
+import cn.gavin.forge.effect.Effect;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.log.LogHelper;
+import cn.gavin.maze.Maze;
+import cn.gavin.maze.MazeService;
+import cn.gavin.monster.Monster;
 import cn.gavin.monster.MonsterBook;
+import cn.gavin.monster.PalaceAdapt;
+import cn.gavin.palace.PalaceMonster;
+import cn.gavin.pet.Pet;
+import cn.gavin.pet.PetDB;
+import cn.gavin.pet.PetDialog;
+import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
+import cn.gavin.upload.CdKey;
 import cn.gavin.upload.Upload;
+import cn.gavin.utils.MazeContents;
+import cn.gavin.utils.StringUtils;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Random;
 
-public class MainGameActivity extends Activity implements OnClickListener, OnItemClickListener {
+public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener, OnItemClickListener, BaseContext {
     //Constants
     public static final String TAG = "MazeNeverEnd";
     public static final String APK_PATH = Environment.getExternalStorageDirectory() + "/maze";
@@ -46,7 +64,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private static final String PACKAGE_DOWNLOAD_URL = "http://7xk7ce.com1.z0.glb.clouddn.com/MazeNeverEnd.png";
 
     // 战斗刷新速度
-    private long refreshInfoSpeed = 600;
+    private long refreshInfoSpeed = 520;
     private Button uploadButton;
     private Button updateButton;
     private StringBuilder versionUpdateInfo;
@@ -125,11 +143,22 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private Button reincaenationButton;
     private Button upgradeHSwordButton;
     private Button upgradeHArmorButton;
+    private Button palaceButton;
+    private boolean isHidBattle;
+    private int palaceCount;
+    private boolean updatePalace;
+    private TextView petView;
+    private Button petDetail;
 
 
     //Get Function
     public long getRefreshInfoSpeed() {
         return refreshInfoSpeed;
+    }
+
+    @Override
+    public boolean isHideBattle() {
+        return isHidBattle;
     }
 
     public boolean isGameThreadRunning() {
@@ -167,6 +196,47 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         public void handleMessage(Message msg) {
             try {
                 switch (msg.what) {
+                    case 110:
+                        Toast.makeText(context, "--内购次数达到上限!--", Toast.LENGTH_LONG)
+                                .show();
+                        break;
+                    case 109:
+                        if (isHidBattle) {
+                            isHidBattle = false;
+                            mainInfoPlatform.removeAllViews();
+                        } else {
+                            isHidBattle = true;
+                            mainInfoPlatform.removeAllViews();
+                            TextView textView = new TextView(context);
+                            textView.setText("\n\n长按显示战斗信息\n\n欢迎进群：332406332 \n举报bug和提供您的建议！");
+                            mainInfoPlatform.addView(textView);
+                        }
+                        break;
+                    case 108:
+                        Toast.makeText(context, "--数据异常，上传失败!--", Toast.LENGTH_LONG)
+                                .show();
+                        Achievement.cribber.enable(heroN);
+                        break;
+                    case 107:
+                        showPalaceDetail();
+                        break;
+                    case 106:
+                        updatePalace = false;
+                        palaceCount = 0;
+                        break;
+                    case 203:
+                        palaceCount = msg.arg1;
+                        break;
+                    case 105:
+                        Toast.makeText(context, "--上传失败!" + msg.obj + "--", Toast.LENGTH_LONG)
+                                .show();
+                        uploading = false;
+                        break;
+                    case 104:
+                        MazeContents.lastUpload = heroN.getMaxMazeLev();
+                        Achievement.uploader.enable(heroN);
+                        uploading = false;
+                        break;
                     case 103:
                         saveButton.setEnabled(false);
                         saveButton.setText("正在存档");
@@ -183,16 +253,9 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         uploadButton.setEnabled(false);
                         uploadButton.setText("上传中");
                         uploading = true;
-                        new Thread(new Runnable() {
-                            public void run() {
-                                Upload upload = new Upload();
-                                if (upload.upload(heroN, alipay.getPayTime())) {
-                                    MazeContents.lastUpload = heroN.getMaxMazeLev();
-                                    uploading = false;
-                                    Achievement.uploader.enable(heroN);
-                                }
-                            }
-                        }).start();
+                        Upload upload = new Upload(context);
+                        heroN.setPay(MazeContents.payTime);
+                        upload.upload(heroN);
                         break;
                     case 201:
                         updateButton.setEnabled(false);
@@ -207,10 +270,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         heroN.addMaterial(100000);
                         heroN.addPoint(20);
                         alipay.addPayTime();
-                        if (alipay.getPayTime() == 50) {
+                        if (alipay.getPayTime() == 10) {
                             Achievement.crapGame.enable();
                         }
                         Achievement.richer.enable(heroN);
+                        showAwardPet();
                         break;
                     case 1:
                         if (pause) {
@@ -226,29 +290,31 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         break;
                     case 5:
                         clickCount.setText("点击\n" + heroN.getClick());
-                        heroPic.setBackgroundResource(R.drawable.h_2);
+                        heroPic.setBackgroundResource(R.drawable.h_4);
                         break;
                     case 10:
-                        Bundle bundle = msg.peekData();
-                        if (bundle != null && !bundle.isEmpty()) {
-                            String[] messages = bundle.getStringArray("msg");
-                            for (String str : messages) {
-                                if (str.matches(".*遇到了.*")) {
-                                    heroPic.setBackgroundResource(R.drawable.h_3);
-                                } else if (str.matches(".*击败了.*")) {
-                                    heroPic.setBackgroundResource(R.drawable.h_2);
-                                } else if (str.matches(".*被.*打败了.*")) {
-                                    heroPic.setBackgroundResource(R.drawable.h_1);
+                        if (!isHidBattle) {
+                            Bundle bundle = msg.peekData();
+                            if (bundle != null && !bundle.isEmpty()) {
+                                String[] messages = bundle.getStringArray("msg");
+                                for (String str : messages) {
+                                    if (str.matches(".*遇到了.*")) {
+                                        heroPic.setBackgroundResource(R.drawable.h_3);
+                                    } else if (str.matches(".*击败了.*")) {
+                                        heroPic.setBackgroundResource(R.drawable.h_2);
+                                    } else if (str.matches(".*被.*打败了.*")) {
+                                        heroPic.setBackgroundResource(R.drawable.h_1);
+                                    }
+                                    TextView oneKickInfo = new TextView(MainGameActivity.this);
+                                    // 将一次信息数据显示到页面中
+                                    oneKickInfo.setText(Html.fromHtml(str));
+                                    mainInfoPlatform.addView(oneKickInfo);
+                                    scrollToBottom(mainInfoSv, mainInfoPlatform);
                                 }
-                                TextView oneKickInfo = new TextView(MainGameActivity.this);
-                                // 将一次信息数据显示到页面中
-                                oneKickInfo.setText(Html.fromHtml(str));
-                                mainInfoPlatform.addView(oneKickInfo);
-                                scrollToBottom(mainInfoSv, mainInfoPlatform);
                             }
-                        }
-                        if (mainInfoPlatform.getChildCount() > fightInfoTotalCount) {
-                            mainInfoPlatform.removeViewAt(0);
+                            if (mainInfoPlatform.getChildCount() > fightInfoTotalCount) {
+                                mainInfoPlatform.removeViewAt(0);
+                            }
                         }
                         // mainInfoSv.fullScroll(ScrollView.FOCUS_DOWN);
                         break;
@@ -288,6 +354,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         });
     }
 
+    private final Intent service = new Intent(MazeService.ACTION);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -298,11 +366,58 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         Log.i(TAG, "start game~");
         initGameView();
         initGameData();
-        checkUpdate();
+        //设置对对话框按钮的点击事件的监听
+        BmobUpdateAgent.setUpdateOnlyWifi(false);
+        BmobUpdateAgent.setDialogListener(new BmobDialogButtonListener() {
+
+            @Override
+            public void onClick(int status) {
+                try {
+                    switch (status) {
+                        case UpdateStatus.Update:
+                            save();
+                            break;
+                        case UpdateStatus.NotNow:
+                            break;
+                        case UpdateStatus.Close://只有在强制更新状态下才会在更新对话框的右上方出现close按钮,如果用户不点击”立即更新“按钮，这时候开发者可做些操作，比如直接退出应用等
+                            exist();
+                            break;
+                    }
+                } catch (Exception e) {
+                    LogHelper.logException(e);
+                }
+            }
+        });
+        try {
+            BmobUpdateAgent.update(this);
+            PalaceMonster.getPalaceCount(context);
+        } catch (Exception e) {
+            LogHelper.logException(e);
+        }
+//        checkUpdate();
         gameThreadRunning = true;
-        gameThread = new GameThread();
-        gameThread.start();
+        service.setPackage(getPackageName());
+        startService(service);
+        bindService(service, connection, BIND_AUTO_CREATE);
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        save();
+        super.onSaveInstanceState(bundle);
+    }
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            load();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            save();
+        }
+    };
 
     private void initGameView() {
         buttonGroup = (ViewFlipper) findViewById(R.id.button_group_flipper);
@@ -311,12 +426,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         buttonGroup.addView(view, 0);
         view = inflater.inflate(R.layout.upgrade_buttons, (ViewGroup) this.findViewById(R.id.upgrade_buttons));
         buttonGroup.addView(view, 1);
-        view = inflater.inflate(R.layout.info_buttons, (ViewGroup) this.findViewById(R.id.info_buttons));
-        buttonGroup.addView(view, 2);
         view = inflater.inflate(R.layout.item_buttons, (ViewGroup) this.findViewById(R.id.item_buttons));
-        buttonGroup.addView(view, 3);
-        view = inflater.inflate(R.layout.buy_buttons, (ViewGroup) this.findViewById(R.id.buy_buttons));
-        buttonGroup.addView(view, 4);
+        buttonGroup.addView(view, 2);
         Button pre = (Button) findViewById(R.id.prev_button_system_button);
         pre.setOnClickListener(new OnClickListener() {
             @Override
@@ -334,14 +445,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        pause = false;
-    }
-
-    @Override
     protected void onDestroy() {
-        save();
         gameThreadRunning = false;
         dbHelper.close();
         super.onDestroy();
@@ -352,6 +456,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
                 showExitDialog();
+
                 return true;
 
             default:
@@ -381,14 +486,49 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     //Popup dialog
+    private void showPayDialog() {
+        AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("是否确认？");
+        TextView tv = new TextView(context);
+        tv.setText("注意：\n1.  感谢您的支持，无论您是想踩还是赞~\n" +
+                "2.  这个并不算是真正内购功能（虽然确实很像内购）\n" +
+                "3.  请适量使用。过多的锻造点数并不能加快您的游戏进度。\n" +
+                "4.  您会获得额外的10W点锻造点数和随机的能力点数。\n" +
+                "5.  您会随机获得一个低属性宠物。\n");
+        dialog.setView(tv);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        alipay.pay();
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.show();
+
+    }
+
     private void showReincarnationDialog() {
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("是否确认转生？");
         TextView tv = new TextView(context);
-        tv.setText("注意：\n1.  你会失去迷宫记录，技能等级，材料和能力点数\n" +
-                "2.  装备着的饰品会继承下来\n" +
-                "3.  转生后的基础属性会根据转生前的属性得到加强（基础属性影响人物的成长）\n" +
-                "4. 转生后，之前的角色会成为迷宫守护者。");
+        tv.setText("注意：\n1.  你会失去所有技能等级、技能点数。\n" +
+                "2.  所有材料会被清空。\n" +
+                "3.  装备着的饰品会继承下来，其他装备会被丢弃。\n" +
+                "4.  未分配的能力点数会被清空.\n" +
+                "5.  转生后的基础属性会根据转生前的属性得到加强（基础属性影响人物的成长）。\n" +
+                "6.  转生消耗的锻造点数会随着转生次数递增。");
         dialog.setView(tv);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
@@ -424,12 +564,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        save();
-                        if (skillPointGetDialog != null) {
-                            skillPointGetDialog.dismiss();
-                        }
-                        MainGameActivity.this.finish();
-                        System.exit(0);
+                        exist();
                     }
 
                 });
@@ -443,6 +578,16 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
                 });
         dialog.show();
+    }
+
+    private void exist() {
+        save();
+        if (skillPointGetDialog != null) {
+            skillPointGetDialog.dismiss();
+        }
+        this.finish();
+        this.stopService(service);
+        System.exit(0);
     }
 
     private TextView achievementDesc;
@@ -477,11 +622,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private void showGetSkillPointDialog() {
         if (skillPointGetDialog == null) {
             skillPointGetDialog = new Builder(this).create();
-            skillPointGetDialog.setTitle("300000材料转换1点技能点");
+            skillPointGetDialog.setTitle("88888锻造点数转换1点技能点");
             skillPointGetDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    heroN.addMaterial(-300000);
+                    heroN.addMaterial(-88888);
                     heroN.setSkillPoint(heroN.getSkillPoint() + 1);
                     handler.sendEmptyMessage(103);
                     skillPointGetDialog.hide();
@@ -496,7 +641,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             });
         }
         skillPointGetDialog.show();
-        if (heroN.getMaterial() > 300000) {
+        if (heroN.getMaterial() > 88888) {
             skillPointGetDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         } else {
             skillPointGetDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -508,11 +653,11 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     private void getLockBox() {
         if (getLockBoxDialog == null) {
             getLockBoxDialog = new Builder(this).create();
-            getLockBoxDialog.setTitle("32250换取一个带锁的宝箱");
+            getLockBoxDialog.setTitle("72250锻造点数换取一个带锁的宝箱");
             getLockBoxDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    heroN.addMaterial(-32250);
+                    heroN.addMaterial(-72250);
                     heroN.setLockBox(heroN.getLockBox() + 1);
                     handler.sendEmptyMessage(103);
                     getLockBoxDialog.hide();
@@ -527,7 +672,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             });
         }
         getLockBoxDialog.show();
-        if (heroN.getMaterial() >= 32250) {
+        if (heroN.getMaterial() >= 72250) {
             getLockBoxDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         } else {
             getLockBoxDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -535,16 +680,23 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private void showResetSkillPointDialog() {
+        final long resetSkillValue = 799988 + 69988 * heroN.getResetSkillCount();
         AlertDialog resetSkillPointDialog;
         resetSkillPointDialog = new Builder(this).create();
-        resetSkillPointDialog.setTitle("消耗1500000材料重置技能");
+        resetSkillPointDialog.setTitle("消耗" + resetSkillValue + "材料重置技能");
         resetSkillPointDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        heroN.addMaterial(-1500000);
+                        heroN.addMaterial(-resetSkillValue);
+                        heroN.setOnSkill(false);
+                        heroN.setOnChange(false);
+                        heroN.setSkillAdditionHp(0l);
+                        heroN.setSkillAdditionAtk(0l);
+                        heroN.setSkillAdditionDef(0l);
                         heroN.setSkillPoint(heroN.getSkillPoint() + SkillFactory.reset());
+                        heroN.setResetSkillCount(heroN.getResetSkillCount() + 1);
                         handler.sendEmptyMessage(103);
                         dialog.dismiss();
                     }
@@ -560,7 +712,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
                 });
         resetSkillPointDialog.show();
-        if (heroN.getMaterial() > 1500000) {
+        if (heroN.getMaterial() > resetSkillValue) {
             resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         } else {
             resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -580,28 +732,104 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (tv.getText().toString().equals("332406332") && heroN.getAwardCount() < 3) {
+                        final String input = tv.getText().toString();
+                        if(heroN.getAwardCount() < 26 &&input.equals("bbbbb~5")){
+                            heroN.setAwardCount(heroN.getAwardCount() + 26);
+                            heroN.setPetSize(3 + heroN.getReincaCount().intValue() + 5);
+                        }else if (input.equals("gavin~0")) {
+                            for (int i = 0; i < 10; i++) {
+                                Pet.cPet(new Monster(heroN, maze), heroN.getRandom());
+                            }
+                        } else if (heroN.getAwardCount() < 16 && input.equalsIgnoreCase("!@#$%^&*()")) {
+                            heroN.setAgility(0);
+                            heroN.setStrength(0);
+                            heroN.setPower(0);
+                            heroN.setAttackValue(10);
+                            heroN.setDefenseValue(10);
+                            heroN.setAwardCount(heroN.getAwardCount() + 16);
+                        } else if (input.startsWith("#")) {
+                            try {
+                                itembarContri.setBackgroundColor(Color.parseColor(input));
+                                heroN.setTitleColor(input);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else if (input.startsWith("~")) {
+                            showKeyDialog(input);
+                        } else if (input.equals("qx22222") && heroN.getAwardCount() <= 6) {
+                            Accessory hat = new Accessory();
+                            hat.setType(HatBuilder.type);
+                            hat.setName("沁玟之思念");
+                            hat.setElement(Element.金);
+                            hat.setColor("#FF8C00");
+                            EnumMap<Effect, Number> pro = new EnumMap<Effect, Number>(Effect.class);
+                            pro.put(Effect.ADD_PER_ATK, 500);
+                            pro.put(Effect.ADD_PER_DEF, 1000);
+                            pro.put(Effect.ADD_PER_UPPER_HP, 1000);
+                            hat.setEffects(pro);
+                            hat.save();
+                            Accessory ring = new Accessory();
+                            ring.setType(RingBuilder.type);
+                            ring.setName("沁玟之护守");
+                            ring.setElement(Element.水);
+                            ring.setColor("#FF8C00");
+                            pro = new EnumMap<Effect, Number>(Effect.class);
+                            pro.put(Effect.ADD_CLICK_AWARD, 10000);
+                            pro.put(Effect.ADD_PARRY, 20);
+                            ring.setEffects(pro);
+                            ring.save();
+                            Accessory neck = new Accessory();
+                            neck.setType(NecklaceBuilder.type);
+                            neck.setName("沁玟之永恒");
+                            neck.setElement(Element.火);
+                            neck.setColor("#FF8C00");
+                            pro = new EnumMap<Effect, Number>(Effect.class);
+                            pro.put(Effect.ADD_POWER, 300000);
+                            pro.put(Effect.ADD_AGI, 200000);
+                            pro.put(Effect.ADD_STR, 300000);
+                            neck.setEffects(pro);
+                            neck.save();
+                            heroN.setAwardCount(heroN.getAwardCount() + 6);
+                        } else if (input.equals("332406332") && heroN.getAwardCount() < 3) {
                             heroN.addMaterial(60000);
                             heroN.setAwardCount(heroN.getAwardCount() + 3);
-                        } else if (tv.getText().toString().equals("201509181447")) {
+                        } else if (input.equals("201509181447")) {
+                            heroN.setPetSize(heroN.getPetSize() + 10);
+                            heroN.setPetRate(0.001f);
                             heroN.addMaterial(10000000);
                             heroN.addPoint(100000);
-                            heroN.setAwardCount(heroN.getAwardCount() + 1);
-                        } else if (tv.getText().toString().equals("sp1.1c")) {
+                            heroN.setLockBox(heroN.getLockBox() + 1000);
+                            heroN.setKeyCount(heroN.getKeyCount() + 1000);
+                            heroN.setMaxMazeLev(heroN.getMaxMazeLev() + 101);
+                            maze.setLevel(99);
+                            Achievement.dragon.enable(heroN);
+                            SkillFactory.getSkill("虚无吞噬", heroN, skillDialog).setActive(true);
+                            DBHelper.getDbHelper().excuseSQLWithoutResult("UPDATE recipe set found = 'true'");
+                        } else if (input.equals("201509181447ac")) {
+                            for (Achievement achievement : Achievement.values()) {
+                                achievement.enable(heroN);
+                            }
+                        } else if (input.equals("sp1.1c")) {
                             if (heroN.getAwardCount() < 1) {
                                 heroN.setSkillPoint(heroN.getSkillPoint() + 3);
                                 heroN.setAwardCount(heroN.getAwardCount() + 1);
                             }
-                        } else if (tv.getText().toString().equals("forge1.2d") && heroN.getAwardCount() < 2) {
+                        } else if (input.equals("forge1.2d") && heroN.getAwardCount() < 2) {
                             Item item = Item.buildItem(heroN, ItemName.蛇骨);
-                            if (item != null) item.save();
+                            if (item != null) item.save(null);
                             item = Item.buildItem(heroN, ItemName.龙皮);
-                            if (item != null) item.save();
+                            if (item != null) item.save(null);
                             item = Item.buildItem(heroN, ItemName.青檀木);
-                            if (item != null) item.save();
+                            if (item != null) item.save(null);
                             heroN.setAwardCount(heroN.getAwardCount() + 2);
-                        } else {
-                            heroN.setName(tv.getText().toString().replaceAll("_", " "));
+                        } else if (input.equals("palace1.4.6") && heroN.getAwardCount() < 5) {
+                            heroN.setLockBox(heroN.getLockBox() + 10);
+                            heroN.setKeyCount(heroN.getKeyCount() + 10);
+                            heroN.setAwardCount(heroN.getAwardCount() + 6);
+                        } else if (StringUtils.isNotEmpty(input)) {
+                            String name = input.replaceAll("_", " ");
+                            name = input.replaceAll("'", "`");
+                            heroN.setName(name);
                         }
                         dialog.dismiss();
                     }
@@ -619,11 +847,61 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         dialog.show();
     }
 
+    private void showKeyDialog(String input) {
+        final ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle("正在校验兑换码");
+        progressDialog.show();
+        CdKey.checkKey(input, progressDialog);
+    }
+
+
+    private void showAwardPet() {
+        final Pet pet = new Pet();
+        int i = 24 + heroN.getRandom().nextInt(4);
+        if (i >= Monster.lastNames.length) {
+            i = Monster.lastNames.length - 1;
+        }
+        pet.setType(Monster.lastNames[i]);
+        pet.setAtk(heroN.getBaseAttackValue() / 105 + 1);
+        pet.setDef(heroN.getBaseDefense() / 205 + 1);
+        pet.setHp(heroN.getRealHP() / 1000 + 1);
+        if (heroN.getElement() != Element.无) {
+            pet.setElement(heroN.getElement());
+        } else {
+            pet.setElement(Element.values()[heroN.getRandom().nextInt(Element.values().length)]);
+        }
+        pet.setName("奖励的普通" + pet.getType());
+        pet.setSex(heroN.getRandom().nextInt(2));
+        pet.setLev(maze.getLev());
+        pet.setIntimacy(0l);
+        pet.setOwner(heroN.getName());
+        PetDB.save(pet);
+        AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("您获得了新宠物");
+        final TextView tv = new TextView(context);
+        StringBuilder builder = new StringBuilder("你获得了宠物<br>");
+        builder.append(pet.getFormatName()).append("<br>").append("hp:").append(pet.getHp()).append(" | ").append("atk:").append(pet.getAtk())
+                .append(" | def:").append(pet.getDef());
+        tv.setText(Html.fromHtml(builder.toString()));
+        dialog.setView(tv);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.show();
+    }
+
     private void showUpdate() {
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("有更新版本-" + updateVersion);
+        ScrollView scrollView = new ScrollView(this);
         final TextView tv = new TextView(context);
-        dialog.setView(tv);
+        scrollView.addView(tv);
+        dialog.setView(scrollView);
         tv.setText(versionUpdateInfo);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定升级",
                 new DialogInterface.OnClickListener() {
@@ -649,7 +927,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     private void showAccessory() {
         AlertDialog dialog = new Builder(this).create();
-        dialog.setTitle("物品列表");
+        dialog.setTitle("装备列表");
         LinearLayout linearLayout = new LinearLayout(this);
         ListView listView = new ListView(this);
         AccessoryAdapter accessoryAdapter = new AccessoryAdapter();
@@ -668,6 +946,139 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         dialog.show();
     }
 
+    private void showPalaceWarn() {
+        final AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("注意事项");
+        TextView textView = new TextView(this);
+        textView.setText(Html.fromHtml("0. 开启殿堂的大门需要3把钥匙+50W的锻造点数.<br>" +
+                "1. 只有以下技能可以在殿堂挑战中使用：<br>" +
+                "    <B>勇者之击、闪避、反弹、原能力、重击、魔王天赋、闪电、水波、多重攻击、欺诈游戏、虚无吞噬、龙爪、吐息、沙尘</B><br>" +
+                "2. 挑战过程中不能放入后台，否则会因为手机系统关闭后台线程导致挑战中止。<br>" +
+                "3. 因为很重要所以再说一遍，<font color=\"red\">不是所有的技能都可以在殿堂挑战中使用！</font><br>" +
+                "4. 请大家和谐友爱互助，不要因为被打败而懊恼和诅咒作者被美女揩油。<br>" +
+                "5. <font color=\"red\">作弊者</font>不允许进入殿堂！<br>" +
+                "6. <font color=\"red\">至少上传过一次角色信息</font>才可以进入殿堂！<br>" +
+                "7. 点击接受按钮表示你接受这些限制并且进入殿堂挑战.。"));
+        dialog.setView(textView);
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "不接受",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "接受",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.sendEmptyMessage(103);
+                        heroN.addMaterial(-500000);
+                        heroN.setKeyCount(heroN.getKeyCount() - 3);
+                        Intent intent = new Intent(context, PalaceActivity.class);
+                        startActivity(intent);
+                    }
+
+                });
+        dialog.show();
+        if (heroN.getKeyCount() >= 3 && heroN.getMaterial() >= 500000 && !Achievement.cribber.isEnable() && Achievement.uploader.isEnable()) {
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+        } else {
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+        }
+    }
+
+    private void showPalaceDetail() {
+        final AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("殿堂");
+
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "挑战殿堂",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showPalaceWarn();
+                    }
+
+                });
+
+        ListView listView = new ListView(this);
+        PalaceAdapt palaceAdapt = new PalaceAdapt();
+        listView.setAdapter(palaceAdapt);
+        dialog.setView(listView);
+        dialog.show();
+//        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+    }
+
+    private void showPalace() {
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT count(*) FROM palace");
+
+        if (palaceCount == 0 || cursor.getLong(0) == palaceCount) {
+            handler.sendEmptyMessage(107);
+        } else {
+            AlertDialog updateAlert = new Builder(this).create();
+            updateAlert.setTitle("殿堂更新了，是否下载数据？");
+            updateAlert.setButton(DialogInterface.BUTTON_NEGATIVE, "不更新",
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            handler.sendEmptyMessage(107);
+                        }
+
+                    });
+            updateAlert.setButton(DialogInterface.BUTTON_POSITIVE, "更新殿堂",
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            updatePalace = true;
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    PalaceMonster.updatePalace(context);
+                                }
+                            }.start();
+
+                            final ProgressDialog progressDialog = new ProgressDialog(context);
+                            progressDialog.setTitle("正在更新殿堂数据");
+                            progressDialog.show();
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    int count = 0;
+                                    while (updatePalace && count < 100000) {
+                                        try {
+                                            Thread.sleep(refreshInfoSpeed);
+                                        } catch (InterruptedException e) {
+                                            Thread.currentThread().interrupt();
+                                            e.printStackTrace();
+                                        }
+                                        count++;
+                                    }
+                                    progressDialog.dismiss();
+                                    handler.sendEmptyMessage(107);
+                                }
+                            }.start();
+                        }
+                    });
+            updateAlert.show();
+        }
+    }
+
     private void showLockBox() {
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("开启宝箱");
@@ -678,25 +1089,39 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         StringBuilder builder = new StringBuilder("开宝箱获得的材料:<br>------<br>");
         ItemName itemName = ItemName.values()[heroN.getRandom().nextInt(ItemName.values().length)];
         Item item = Item.buildItem(heroN, itemName);
-        item.save();
+        item.save(null);
         builder.append(item.toString());
         builder.append("<br>").append("-------<br>");
         if (heroN.getRandom().nextBoolean()) {
             itemName = ItemName.values()[heroN.getRandom().nextInt(ItemName.values().length)];
             item = Item.buildItem(heroN, itemName);
-            item.save();
+            item.save(null);
             builder.append(item.toString());
             builder.append("<br>").append("-------<br>");
         }
         if (heroN.getRandom().nextBoolean()) {
             itemName = ItemName.values()[heroN.getRandom().nextInt(ItemName.values().length)];
             item = Item.buildItem(heroN, itemName);
-            item.save();
+            item.save(null);
             builder.append(item.toString());
             builder.append("<br>").append("-------<br>");
         }
         textView.setText(Html.fromHtml(builder.toString()));
         dialog.setView(scrollView);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                });
+        dialog.show();
+    }
+    private void showItemFull() {
+        AlertDialog dialog = new Builder(this).create();
+        dialog.setTitle("背包满了！");
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
 
@@ -848,14 +1273,23 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
 
     private void showUpload() {
         final AlertDialog dialog = new Builder(this).create();
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
         TextView info = new TextView(this);
         info.setText("上传勇者角色信息到服务器，下个版本您的角色将会作为迷宫的守护者拦截各个挑战的勇者。\n" +
-                "上传成功后，下一次上传必须是再前进100层迷宫之后。");
-        dialog.setView(info);
+                "上传成功后，下一次上传必须是再前进100层迷宫之后。\n输入您的口号：\n");
+        linearLayout.addView(info);
+        final EditText textView = new EditText(this);
+        textView.setText("遇見了吾，你將止步於此！");
+        linearLayout.addView(textView);
+        dialog.setView(linearLayout);
         dialog.setTitle("上传角色信息");
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                String hello = textView.getText().toString();
+                hello = hello.replaceAll("'", "`");
+                heroN.setHello(hello);
                 handler.sendEmptyMessage(101);
                 dialog.dismiss();
             }
@@ -887,17 +1321,23 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         // 左侧战斗信息
         mainInfoSv = (ScrollView) findViewById(R.id.main_info_sv);
         mainInfoPlatform = (LinearLayout) findViewById(R.id.main_info_ll);
+        mainInfoPlatform.setOnLongClickListener(this);
         // ---- ---- 标题（人物名称 | 最深迷宫数)
         itembarContri = (TextView) findViewById(R.id.character_itembar_contribute);
         itembarContri.setOnClickListener(this);
+        try {
+            itembarContri.setBackgroundColor(Color.parseColor(heroN.getTitleColor()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // ---- ---- 属性
         mainContriHp = (TextView) findViewById(R.id.main_contri_hp);
         mainContriAtt = (TextView) findViewById(R.id.main_contri_att);
         mainContriDef = (TextView) findViewById(R.id.main_contri_def);
         swordLev = (TextView) findViewById(R.id.main_contri_level);
         armorLev = (TextView) findViewById(R.id.main_armor_level);
-        heroPointValue = (TextView) findViewById(R.id.main_contri_needexp);
-        mainContriCurMaterial = (TextView) findViewById(R.id.main_contri_currentexp);
+        heroPointValue = (TextView) findViewById(R.id.hero_points);
+        mainContriCurMaterial = (TextView) findViewById(R.id.hero_material_count);
         addstr = (Button) findViewById(R.id.main_contri_add_str);
         addstr.setOnClickListener(this);
         addagi = (Button) findViewById(R.id.main_contri_add_agi);
@@ -910,9 +1350,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         upArmor.setOnClickListener(this);
         heroPic = (Button) findViewById(R.id.hero_pic);
         heroPic.setOnClickListener(this);
-        heroPic.setBackgroundResource(R.drawable.h_1);
-        heroPic.setTextColor(getResources().getColor(R.color.red));
-        heroPic.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
         pauseButton = (Button) findViewById(R.id.pause_button);
         pauseButton.setOnClickListener(this);
         clickCount = (TextView) findViewById(R.id.hero_pic_click_count);
@@ -930,7 +1367,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         updateButton = (Button) findViewById(R.id.update_button);
         uploadButton.setOnClickListener(this);
         updateButton.setOnClickListener(this);
-        updateButton.setEnabled(false);
         skillsButton = (Button) findViewById(R.id.skill_button);
         skillsButton.setOnClickListener(this);
         saveButton = (Button) findViewById(R.id.save_button);
@@ -964,7 +1400,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         hatTextView.setOnClickListener(this);
         recipeButton = (Button) findViewById(R.id.forge_recipe_button);
         recipeButton.setOnClickListener(this);
-        cleanButton = (Button) findViewById(R.id.clean_data_button);
+        cleanButton = (Button) findViewById(R.id.transfer_button);
         cleanButton.setOnClickListener(this);
         buyLockBoxButton = (Button) findViewById(R.id.lock_box_get_button);
         buyLockBoxButton.setOnClickListener(this);
@@ -976,18 +1412,30 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         upgradeHArmorButton.setOnClickListener(this);
         upgradeHSwordButton = (Button) findViewById(R.id.up_h_sword);
         upgradeHSwordButton.setOnClickListener(this);
+        palaceButton = (Button) findViewById(R.id.palace_button);
+        palaceButton.setOnClickListener(this);
+        petView = (TextView) findViewById(R.id.pet_pic);
+        petView.setOnClickListener(this);
+        petDetail = (Button) findViewById(R.id.pet_detail_button);
+        petDetail.setOnClickListener(this);
         refresh();
     }
 
     private synchronized void refresh() {
+        if (pause) {
+            pauseButton.setText("继续");
+        } else {
+            pauseButton.setText("暂停");
+        }
         clickCount.setText("点击\n" + heroN.getClick());
-        mainContriHp.setText(heroN.getHp() + "/" + heroN.getUpperHp());
-        mainContriAtt.setText(heroN.getUpperAtk() + "");
-        mainContriDef.setText(heroN.getUpperDef() + "");
+        mainContriHp.setText(StringUtils.formatNumber(heroN.getHp()) + "/" +
+                StringUtils.formatNumber(heroN.getUpperHp()));
+        mainContriAtt.setText(StringUtils.formatNumber(heroN.getUpperAtk()));
+        mainContriDef.setText(StringUtils.formatNumber(heroN.getUpperDef()));
         swordLev.setText(heroN.getSword() + "+" + heroN.getSwordLev());
         armorLev.setText(heroN.getArmor() + "+" + heroN.getArmorLev());
-        mainContriCurMaterial.setText(heroN.getMaterial() + "");
-        heroPointValue.setText(heroN.getPoint() + "");
+        mainContriCurMaterial.setText(StringUtils.formatNumber(heroN.getMaterial()));
+        heroPointValue.setText(StringUtils.formatNumber(heroN.getPoint()));
         if (heroN.getMaterial() >= 100 + heroN.getSwordLev()) {
             upSword.setEnabled(true);
             if (heroN.getMaterial() > 10 * (100 + heroN.getSwordLev())) {
@@ -999,13 +1447,14 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             upSword.setEnabled(false);
             upTSwordButton.setEnabled(false);
         }
-        if(heroN.getMaterial() > 100 * (80 + heroN.getArmorLev())){
+        if (heroN.getMaterial() > 100 * (80 + heroN.getArmorLev())) {
             upgradeHArmorButton.setEnabled(true);
-        }else{
+        } else {
             upgradeHArmorButton.setEnabled(false);
-        }if(heroN.getMaterial() > 100 * (100 + heroN.getSwordLev())){
+        }
+        if (heroN.getMaterial() > 100 * (100 + heroN.getSwordLev())) {
             upgradeHSwordButton.setEnabled(true);
-        }else{
+        } else {
             upgradeHSwordButton.setEnabled(false);
         }
         if (heroN.getMaterial() >= 80 + heroN.getArmorLev()) {
@@ -1034,8 +1483,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             addNStreButton.setEnabled(false);
             addNAgiButton.setEnabled(false);
         }
-        itembarContri.setText(heroN.getName() + "\n迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
-        heroPic.setText(heroN.getSword() + "\n\n\n " + heroN.getArmor());
+        itembarContri.setText(heroN.getName() + (heroN.getReincaCount() != 0 ? ("(" + heroN.getReincaCount() + ")") : "") +
+                "\n迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
         if (heroN.getFirstSkill() != null) {
             firstSkillButton.setText(heroN.getFirstSkill().getDisplayName());
             firstSkillButton.setEnabled(true);
@@ -1067,8 +1516,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
             }
         }
 
-        lockBoxCount.setText("X " + heroN.getLockBox());
-        keyCount.setText("X " + heroN.getKeyCount());
+        lockBoxCount.setText("" + heroN.getLockBox());
+        keyCount.setText("" + heroN.getKeyCount());
         if (heroN.getRing() != null) {
             ringTextView.setText(Html.fromHtml(heroN.getRing().getFormatName()));
         } else {
@@ -1084,6 +1533,15 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         } else {
             hatTextView.setText("未装备");
         }
+        StringBuilder builder = new StringBuilder();
+        for (Pet pet : heroN.getPets()) {
+            if (!pet.getType().equals("蛋")) {
+                builder.append(pet.getType()).append(pet.getSex() == 0 ? "♂" : "♀").append("<br>");
+            } else {
+                builder.append(pet.getType()).append("<br>");
+            }
+        }
+        petView.setText(Html.fromHtml(builder.toString()));
     }
 
     private long saveTime = 0;
@@ -1140,6 +1598,27 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         this.pause = pause;
     }
 
+    public void startMaze() {
+        new GameThread().start();
+    }
+
+    public void stopMaze() {
+        gameThreadRunning = false;
+        save();
+    }
+
+    public int getPalaceCount() {
+        return palaceCount;
+    }
+
+    public void setPalaceCount(int palaceCount) {
+        this.palaceCount = palaceCount;
+    }
+
+    public void setHidBattle(boolean isHidBattle) {
+        this.isHidBattle = isHidBattle;
+    }
+
     private class GameThread extends Thread {
 
         @Override
@@ -1153,14 +1632,14 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                         e.printStackTrace();
                     }
                 }
-//                if (!pause) {
-//                    saveTime += refreshInfoSpeed;
-//                    if (saveTime >= refreshInfoSpeed * 300)
-//                        handler.sendEmptyMessage(103);
-//                }
+                if (!pause) {
+                    saveTime += refreshInfoSpeed;
+                    if (saveTime >= refreshInfoSpeed * 300)
+                        save();
+                }
             } catch (Exception exp) {
                 Log.e(TAG, "MainGameActivity.GameThread", exp);
-                LogHelper.writeLog();
+                LogHelper.logException(exp);
             }
         }
     }
@@ -1171,7 +1650,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 maze.move(context);
             } catch (Exception e) {
                 Log.e(TAG, "MainGameActivity.GameThread", e);
-                LogHelper.writeLog();
+                LogHelper.logException(e);
                 throw new RuntimeException(e);
             }
         }
@@ -1213,6 +1692,7 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     e.printStackTrace();
                     handler.sendEmptyMessage(201);
                 }
+                PalaceMonster.getPalaceCount(context);
             }
         }).start();
 
@@ -1278,16 +1758,42 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.main_info_ll:
+                handler.sendEmptyMessage(109);
+                break;
+        }
+        return false;
+    }
+
+
+    @Override
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.pet_detail_button:
+                saveHelper.savePet();
+                new PetDialog(context).show(heroN);
+                break;
+            case R.id.pet_pic:
+                for (Pet pet : heroN.getPets()) {
+                    pet.click();
+                }
+                heroN.click(false);
+                break;
+            case R.id.palace_button:
+                showPalace();
+                break;
             case R.id.up_h_armor:
                 heroN.upgradeArmor(100);
                 handler.sendEmptyMessage(0);
+                heroN.click(false);
                 break;
             case R.id.up_h_sword:
                 heroN.upgradeSword(100);
                 handler.sendEmptyMessage(0);
+                heroN.click(false);
                 break;
             case R.id.rebirth_button:
                 showReincarnationDialog();
@@ -1298,14 +1804,19 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 break;
             case R.id.lock_box_get_button:
                 getLockBox();
+                heroN.click(false);
                 break;
             case R.id.local_box:
-                if (heroN.getKeyCount() > 0 && heroN.getLockBox() > 0) {
+                boolean count = Item.getItemCount() < 1000;
+                if (heroN.getKeyCount() > 0 && heroN.getLockBox() > 0 && count) {
                     heroN.setKeyCount(heroN.getKeyCount() - 1);
                     showLockBox();
+                    heroN.click(false);
+                }else if(count){
+                    showItemFull();
                 }
                 break;
-            case R.id.clean_data_button:
+            case R.id.transfer_button:
                 showCleanDialog();
                 break;
             case R.id.ring_view:
@@ -1371,7 +1882,8 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 skillDialog.show(heroN);
                 break;
             case R.id.update_button:
-                showDownload();
+                BmobUpdateAgent.forceUpdate(context);
+//                showUpdate();
                 break;
             case R.id.upload_button:
                 showUpload();
@@ -1381,24 +1893,21 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                     heroN.getFirstSkill().addCount();
                 }
                 handler.sendEmptyMessage(0);
-                heroN.click(false);
                 break;
             case R.id.secondary_skill:
                 if (heroN.getSecondSkill() != null) {
                     heroN.getSecondSkill().addCount();
                 }
                 handler.sendEmptyMessage(0);
-                heroN.click(false);
                 break;
             case R.id.third_skill:
                 if (heroN.getThirdSkill() != null) {
                     heroN.getThirdSkill().addCount();
                 }
                 handler.sendEmptyMessage(0);
-                heroN.click(false);
                 break;
             case R.id.buy_button:
-                alipay.pay();
+                showPayDialog();
                 heroN.click(false);
                 break;
             case R.id.character_itembar_contribute:
@@ -1451,7 +1960,6 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
         }
     }
 
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -1462,9 +1970,18 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
     }
 
     private void load() {
+        if (MazeContents.hero == null) {
+            if (heroN == null) {
+                LoadHelper loadHelper = new LoadHelper(this);
+                loadHelper.loadHero();
+                DBHelper.init(MainGameActivity.this);
+                MazeContents.skillDialog = new SkillDialog();
+                loadHelper.loadHero();
+                loadHelper.loadSkill(MazeContents.hero, MazeContents.skillDialog);
+            }
+        }
         heroN = MazeContents.hero;
         maze = MazeContents.maze;
-        //saveHelper.loadHero();
     }
 
     public static class AchievementList {
@@ -1515,61 +2032,82 @@ public class MainGameActivity extends Activity implements OnClickListener, OnIte
                 convertView = View.inflate(MainGameActivity.this,
                         R.layout.achievement_list_item, null);
                 holder.name = (Button) convertView.findViewById(R.id.achieve_name);
-                holder.name.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        achievementDesc.setText(getItem(position).a0.getDesc());
-                    }
-                });
+
                 holder.name1 = (Button) convertView.findViewById(R.id.achieve_name_1);
-                holder.name1.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        achievementDesc.setText(getItem(position).a1.getDesc());
-                    }
-                });
+
                 holder.name2 = (Button) convertView.findViewById(R.id.achieve_name_2);
-                holder.name2.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        achievementDesc.setText(getItem(position).a2.getDesc());
-                    }
-                });
+
                 holder.name3 = (Button) convertView.findViewById(R.id.achieve_name_3);
-                holder.name3.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        achievementDesc.setText(getItem(position).a3.getDesc());
-                    }
-                });
+
                 convertView.setTag(holder);
             } else {
                 holder = (AchievementViewHolder) convertView.getTag();
             }
-            AchievementList item = getItem(position);
+            final AchievementList item = getItem(position);
             holder.name.setText(item.a0.getName());
+            holder.name.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (item.a0.isEnable()) {
+                        achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a0.getName() + "</b> : " + item.a0.getDesc() + "</font>"));
+                    } else {
+                        achievementDesc.setText(Html.fromHtml("<b>" + item.a0.getName() + "</b> : " + item.a0.getUnlockDesc() + "。效果：？？？"));
+                    }
+                }
+            });
             if (!item.a0.isEnable()) {
-                holder.name.setEnabled(false);
+                holder.name.setTextColor(convertView.getResources().getColor(R.color.disable));
             } else {
-                holder.name.setEnabled(true);
+                holder.name.setTextColor(convertView.getResources().getColor(R.color.onUse));
             }
             holder.name1.setText(item.a1.getName());
+            holder.name1.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (item.a1.isEnable()) {
+                        achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a1.getName() + "</b> : " + item.a1.getDesc() + "</font>"));
+                    } else {
+                        achievementDesc.setText(Html.fromHtml("<b>" + item.a1.getName() + "</b> : " + item.a1.getUnlockDesc() + "。效果：？？？"));
+                    }
+                }
+            });
             if (!item.a1.isEnable()) {
-                holder.name1.setEnabled(false);
+                holder.name1.setTextColor(convertView.getResources().getColor(R.color.disable));
             } else {
-                holder.name1.setEnabled(true);
+                holder.name1.setTextColor(convertView.getResources().getColor(R.color.onUse));
             }
             holder.name2.setText(item.a2.getName());
+            holder.name2.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (item.a2.isEnable()) {
+                        achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a2.getName() + "</b> : " + getItem(position).a2.getDesc() + "</font>"));
+                    } else {
+                        achievementDesc.setText(Html.fromHtml("<b>" + item.a2.getName() + "</b> : " + item.a2.getUnlockDesc() + "。效果：？？？"));
+                    }
+                }
+            });
             if (!item.a2.isEnable()) {
-                holder.name2.setEnabled(false);
+                holder.name2.setTextColor(convertView.getResources().getColor(R.color.disable));
             } else {
-                holder.name2.setEnabled(true);
+                holder.name2.setTextColor(convertView.getResources().getColor(R.color.onUse));
             }
             holder.name3.setText(item.a3.getName());
+            holder.name3.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (item.a3.isEnable()) {
+                        achievementDesc.setText(Html.fromHtml("<font color=\"blue\"><b>" + item.a3.getName() + "</b> : " + getItem(position).a3.getDesc() + "</font>"));
+                    } else {
+                        achievementDesc.setText(Html.fromHtml("<b>" + item.a3.getName() + "</b> : " + item.a3.getUnlockDesc() + "。效果：？？？"));
+                    }
+                }
+            });
             if (!item.a3.isEnable()) {
-                holder.name3.setEnabled(false);
+                holder.name3.setTextColor(convertView.getResources().getColor(R.color.disable));
+
             } else {
-                holder.name3.setEnabled(true);
+                holder.name3.setTextColor(convertView.getResources().getColor(R.color.onUse));
             }
             return convertView;
         }

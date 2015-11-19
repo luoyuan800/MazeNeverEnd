@@ -17,6 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:focusableInTouchMode="false"
             android:alpha="0.5"
             android:text="&lt;"
             android:textColor="#0dc2fb" />
@@ -35,6 +36,7 @@
             android:id="@+id/next_forge_system_button"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
+            android:focusableInTouchMode="false"
             android:layout_gravity="right"
             android:alpha="0.5"
             android:text="&gt;"
@@ -53,6 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:focusableInTouchMode="false"
             android:layout_weight="1"
             android:gravity="center" />
 
@@ -61,6 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:focusableInTouchMode="false"
             android:layout_weight="1"
             android:gravity="center" />
     </LinearLayout>
@@ -77,6 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:focusableInTouchMode="false"
             android:layout_weight="1"
             android:gravity="center" />
 
@@ -85,6 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:focusableInTouchMode="false"
             android:layout_weight="1"
             android:gravity="center" />
 
@@ -93,6 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:focusableInTouchMode="false"
             android:layout_weight="1"
             android:gravity="center" />
     </LinearLayout>
@@ -108,6 +115,7 @@
             android:id="@+id/forge_conform_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:focusableInTouchMode="false"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="center"
@@ -118,18 +126,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:focusableInTouchMode="false"
             android:layout_weight="1"
             android:gravity="center"
             android:text="打造" />
 
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="随机打造"
+                android:id="@+id/button" android:layout_gravity="center_vertical" android:enabled="false"/>
         <Button
             android:id="@+id/forge_clean_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
+            android:focusableInTouchMode="false"
             android:gravity="center"
             android:text="清空" />
+        <Button
+            android:id="@+id/forge_dismantle_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:focusableInTouchMode="false"
+            android:gravity="center"
+            android:text="拆解装备" />
+
     </LinearLayout>
 
     <TextView
@@ -137,6 +162,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:text="单击上面的五个材料框选择材料。长按材料可以在这里显示材料属性。校验按钮可以检查已经选择的材料可能打造出来的装备。"
         android:ems="10" />
 
 </LinearLayout>

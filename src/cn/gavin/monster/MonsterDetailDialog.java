@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import cn.gavin.R;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 luoyuan.
@@ -68,12 +69,12 @@ public class MonsterDetailDialog implements View.OnClickListener {
         maxAtkNameText.setText(Html.fromHtml(monster.getMaxATKName()));
         maxAtkHpText.setText("HP：" + monster.getMaxATKHP());
         maxAtkAtkText.setText("ATK：" + monster.getMaxATKATK());
-        maxAtkLvText.setText("层数：" + monster.getMaxATKLev());
+        maxAtkLvText.setText("层数：" + (monster.getMaxATKName().contains("殿堂") ? "殿堂_":"") +monster.getMaxATKLev());
         maxAtkDescText.setText("结果：" +(monster.isMaxATKDefeat()?"轻松击败！\n(点击查看）" : "被虐得满地找牙！\n(点击查看)"));
         maxHpNameText.setText(Html.fromHtml(monster.getMaxHPName()));
         maxHpHpText.setText("HP：" + monster.getMaxHPHP());
         maxHpAtkText.setText("ATK：" +monster.getMaxHPATK());
-        maxHpLvText.setText("层数：" +monster.getMaxHPLev());
+        maxHpLvText.setText("层数：" +(monster.getMaxHPName().contains("殿堂") ? "殿堂_":"") + monster.getMaxHPLev());
         maxHpDescText.setText("结果：" + (monster.isMaxHPDefeat()?"轻松击败！\n(点击查看）" : "被虐得满地找牙！\n(点击查看)"));
         killCountText.setText("击败次数：" + monster.getDefeat());
         killedCountText.setText("被狙杀次数：" + monster.getDefeated());
@@ -99,10 +100,18 @@ public class MonsterDetailDialog implements View.OnClickListener {
         TextView textView = new TextView(context);
         switch (view.getId()){
             case R.id.max_atk_desc:
-                textView.setText(Html.fromHtml(monster.getMaxATKDesc()));
+                String atkDesc = monster.getMaxATKDesc();
+                if(StringUtils.split(atkDesc, "<br>").length > 100){
+                    atkDesc = "战斗时间过长，记录无法显示！";
+                }
+                textView.setText(Html.fromHtml(atkDesc));
                 break;
             case R.id.max_hp_desc:
-                textView.setText(Html.fromHtml(monster.getMaxHPDesc()));
+                String maxHPDesc = monster.getMaxHPDesc();
+                if(StringUtils.split(maxHPDesc, "<br>").length > 100){
+                    maxHPDesc = "战斗时间过长，记录无法显示！";
+                }
+                textView.setText(Html.fromHtml(maxHPDesc));
                 break;
         }
         scrollView.addView(textView);

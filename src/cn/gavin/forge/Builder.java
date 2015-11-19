@@ -1,12 +1,22 @@
 package cn.gavin.forge;
 
 import android.database.Cursor;
-import cn.gavin.activity.MazeContents;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import cn.gavin.Element;
+import cn.gavin.activity.MainGameActivity;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
-
-import java.util.*;
 
 /**
  * Copyright 2015 gluo.
@@ -19,22 +29,31 @@ public abstract class Builder {
     public Accessory a2;
     public List<Item> items;
 
+    public abstract boolean isEnough();
+
     public Accessory build(List<Item> items) {
         if (this.items != items || !items.containsAll(this.items)) {
             detect(items);
         }
-        int p = random.nextInt(100);
-        if (a1 != null && p < a1.getPro()) {
-            build(a1, false);
-            return a1;
-        } else if (a2 != null && p < a2.getPro()) {
-            build(a2, false);
-            return a2;
+        if (isEnough()) {
+            int p = random.nextInt(100);
+            if(MazeContents.hero!=null){
+                p -= random.nextLong(MazeContents.hero.getStrength()/1000000 + 2);
+            }
+            if (a1 != null && p < a1.getPro()) {
+                build(a1, false);
+                return a1;
+            } else if (a2 != null && p < a2.getPro()) {
+                build(a2, false);
+                return a2;
+            } else {
+                Accessory accessory = new Accessory();
+                buildName(accessory);
+                build(accessory, true);
+                return accessory;
+            }
         } else {
-            Accessory accessory = new Accessory();
-            buildName(accessory);
-            build(accessory, true);
-            return accessory;
+            return null;
         }
     }
 
@@ -46,6 +65,12 @@ public abstract class Builder {
         if (names.contains("黑") && names.contains("白")) {
             names.clear();
             names.add("无常");
+            Map<Effect, Number> addition = accessory.getAdditionEffects();
+            if (addition == null) {
+                addition = new EnumMap<Effect, Number>(Effect.class);
+                accessory.setAdditionEffects(addition);
+            }
+            addition.put(Effect.ADD_UPPER_HP, 51119);
         } else if (names.containsAll(Arrays.asList("蛇", "鼠"))) {
             names.clear();
             names.add("风语");
@@ -55,9 +80,22 @@ public abstract class Builder {
         } else if (names.containsAll(Arrays.asList("黑", "硝"))) {
             names.clear();
             names.add("火神");
-        } else if(names.containsAll(Arrays.asList("龙", "凤","虎","牛"))){
+            Map<Effect, Number> addition = accessory.getAdditionEffects();
+            if (addition == null) {
+                addition = new EnumMap<Effect, Number>(Effect.class);
+                accessory.setAdditionEffects(addition);
+            }
+            addition.put(Effect.ADD_ATK, 20009);
+        } else if (names.containsAll(Arrays.asList("龙", "凤", "虎", "牛"))) {
             names.clear();
             names.add("小田螺の");
+            accessory.setColor("#C71585");
+            Map<Effect, Number> addition = accessory.getAdditionEffects();
+            if (addition == null) {
+                addition = new EnumMap<Effect, Number>(Effect.class);
+                accessory.setAdditionEffects(addition);
+            }
+            addition.put(Effect.ADD_DODGE_RATE, 29);
         }
         StringBuilder b = new StringBuilder();
         for (String s : names) {
@@ -83,22 +121,32 @@ public abstract class Builder {
         String name = b.toString();
         name = name.replaceAll("硝", "火");
         name = name.replaceAll("食", "宏");
+        name = name.replaceAll("精", "魔");
+        name = name.replaceAll("原", "神");
+        name = name.replace("牛蛇", "鬼");
+        name = name.replace("蛇牛", "魂");
+        name = name.replace("鼠牛", "天煞");
+        name = name.replace("牛鼠", "地煞");
         if (name.startsWith("龟")) {
             name = name.replaceAll("龟", "寿");
         }
         accessory.setName(name);
         accessory.setItems(items);
+
     }
 
     private void build(Accessory accessory, boolean detectSave) {
         Map<Effect, Number> effectNumberMap = accessory.getEffects();
-        if (effectNumberMap == null) effectNumberMap = new EnumMap<Effect, Number>(Effect.class);
+        if (effectNumberMap == null) {
+            effectNumberMap = new EnumMap<Effect, Number>(Effect.class);
+        }
+        Map<Effect, Number> constantEffectMap = new EnumMap<Effect, Number>(effectNumberMap);
         for (Item item : items) {
             Effect effect = item.getEffect();
             if (effect != null) {
                 Number number = effectNumberMap.get(effect);
                 if (number != null) {
-                    effectNumberMap.put(effect, number.longValue() + random.nextLong((number.longValue() + item.getEffectValue().longValue()) / 3 + 1));
+                    effectNumberMap.put(effect, number.longValue() + random.nextLong((number.longValue() + item.getEffectValue().longValue()) / 2 + 1));
                 } else {
                     effectNumberMap.put(effect, item.getEffectValue().longValue());
                 }
@@ -106,19 +154,28 @@ public abstract class Builder {
             Effect effect1 = item.getEffect1();
             if (effect1 != null) {
                 Number number = effectNumberMap.get(effect1);
-                if (number != null) {
+                if (number != null && number.longValue() != 0) {
                     effectNumberMap.put(effect1, number.longValue() + random.nextLong((number.longValue() + item.getEffect1Value().longValue()) / 2 + 1));
                 } else {
                     effectNumberMap.put(effect1, item.getEffect1Value().longValue());
                 }
             }
         }
-        accessory.setEffects(effectNumberMap);
+        EnumMap<Effect, Number> affectEffects = new EnumMap<Effect, Number>(Effect.class);
+
+        for (EnumMap.Entry<Effect, Number> entry : effectNumberMap.entrySet()) {
+            if (affectEffects.size() > 0 && !constantEffectMap.containsKey(entry.getKey())) {
+                if (random.nextBoolean()) affectEffects.put(entry.getKey(), entry.getValue());
+            } else {
+                affectEffects.put(entry.getKey(), entry.getValue());
+            }
+        }
+        accessory.setEffects(affectEffects);
         detectColor(accessory, detectSave);
         detectElement(accessory);
         accessory.setType(getType());
         for (Item item : items) {
-            item.delete();
+            item.delete(null);
         }
         accessory.setItems(items);
         accessory.save();
@@ -131,6 +188,7 @@ public abstract class Builder {
         }
         color = "#000000";
         Map<Effect, Number> effectNumberMap = accessory.getEffects();
+        boolean save = false;
         for (Effect effect : effectNumberMap.keySet()) {
             switch (effect) {
                 case ADD_ATK:
@@ -138,51 +196,58 @@ public abstract class Builder {
                 case ADD_UPPER_HP:
                     long l = effectNumberMap.get(effect).longValue();
                     if (l > 10000) {
-                        color = "#0000FF";
+                        color = "#556B2F";
                     }
                     if (l > 100000) {
                         color = "#9932CC";
                     }
-                    if (l > 10000000) {
+                    if (l > 500000) {
                         color = "#B8860B";
 
+                        save = true;
                     }
                     if (l > MazeContents.hero.getBaseDefense()) {
-                        color = "#8B008B";
+                        color = "#9932CC";
                     }
+
                     break;
                 case ADD_AGI:
                 case ADD_STR:
                 case ADD_POWER:
                     long sml = effectNumberMap.get(effect).longValue();
+                    if (sml > 1000) {
+                        color = "#556B2F";
+                    }
                     if (sml > 5000) {
                         color = "#0000FF";
                     }
-                    if (sml > 10000) {
+                    if (sml > 8000) {
                         color = "#9932CC";
+                        save = true;
                     }
-                    if (sml > 100000) {
-                        color = "#B8860B";
-                    }
+
                     break;
                 case ADD_CLICK_AWARD:
                     long cw = effectNumberMap.get(effect).longValue();
-                    if (cw > 20) {
-                        color = "#0000FF";
-                    }
                     if (cw > 100) {
-                        color = "#9932CC";
+                        color = "#556B2F";
                     }
                     if (cw > 1000) {
-                        color = "#9400D3";
+                        color = "#0000FF";
+                        save = true;
                     }
+                    if (cw > 5000) {
+                        color = "#9932CC";
+                        save = true;
+                    }
+
                     break;
                 default:
                     color = "#000000";
             }
         }
         accessory.setColor(color);
-        if (!color.equalsIgnoreCase("#000000") && detectSave) {
+        if (!color.equalsIgnoreCase("#000000") && detectSave && save) {
             accessory.setSave(true);
         }
     }
@@ -213,8 +278,10 @@ public abstract class Builder {
                 break;
             case ADD_UPPER_HP:
             case ADD_AGI:
+                accessory.setElement(Element.火);
+                break;
             case ADD_CLICK_AWARD:
-                accessory.setElement(Element.木);
+                accessory.setElement(Element.土);
                 break;
             default:
                 accessory.setElement(Element.values()[random.nextInt(Element.values().length)]);
@@ -225,94 +292,136 @@ public abstract class Builder {
         a1 = null;
         a2 = null;
         this.items = items;
-        Cursor cursor = queryRecipe();
-        while (!cursor.isAfterLast()) {
-            float pro = 0.0f;
-            Set<String> recipeItemSet = new HashSet<String>(5);
-            for (String name : StringUtils.split(cursor.getString(cursor.getColumnIndex("items")), "-")) {
-                recipeItemSet.add(name.trim());
-            }
-            int p = 85 / recipeItemSet.size();
-            Set<String> itemNames = new HashSet<String>(items.size());
-            for (Item item : items) {
-                itemNames.add(item.getName().name());
-            }
-            for (String name : itemNames) {
-                if (recipeItemSet.contains(name)) {
-                    pro += p;
-                }
-            }
-            Map<Effect, Number> baseEffectsMap = new EnumMap<Effect, Number>(Effect.class);
-            for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
-                String[] keyValue = StringUtils.split(str, ":");
-                if (keyValue.length > 1) {
-                    baseEffectsMap.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
-                }
-            }
-            Map<Effect, Number> additionEffectsMap = new EnumMap<Effect, Number>(Effect.class);
-            for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")) {
-                String[] keyValue = StringUtils.split(str, ":");
-                if (keyValue.length > 1) {
-                    additionEffectsMap.put(Effect.valueOf(keyValue[0].trim()), Long.parseLong(keyValue[1]));
-                }
-            }
-            if (a1 == null || a1.getPro() < pro) {
-                a1 = new Accessory();
-                a1.setPro(pro);
-                a1.setName(cursor.getString(cursor.getColumnIndex("name")));
-                a1.setColor(cursor.getString(cursor.getColumnIndex("color")));
-                a1.setAdditionEffects(additionEffectsMap);
-                a1.setEffects(baseEffectsMap);
-            } else if (a2 == null || a2.getPro() < pro) {
-                a2 = new Accessory();
-                a2.setPro(pro);
-                a2.setName(cursor.getString(cursor.getColumnIndex("name")));
-                a2.setColor(cursor.getString(cursor.getColumnIndex("color")));
-                a2.setAdditionEffects(additionEffectsMap);
-                a2.setEffects(baseEffectsMap);
-            }
-            cursor.moveToNext();
-        }
-        if (a1 != null && a2 != null) {
-            if ((a1.getPro() + a2.getPro()) >= 100) {
-                if (a1.getPro() >= a2.getPro()) {
-                    a2.setPro((100 - a1.getPro()) / 2);
-                } else {
-                    a1.setPro((100 - a2.getPro()) / 2);
-                }
-            }
-            if (a1.getPro() > 100) {
-                a1.setPro(100);
-                a2 = null;
-            } else if (a2.getPro() > 100) {
-                a2.setPro(100);
-                a1 = null;
-            }
-        }
         StringBuilder builder = new StringBuilder();
-        if (a1 != null && a1.getPro() > 0) {
-            builder.append("<font color=\"").append(a1.getColor()).append("\">");
-            builder.append(a1.getName()).append(" : ").append(a1.getPro()).append("%</font>");
+        try {
+            Cursor cursor = queryRecipe();
+            while (!cursor.isAfterLast()) {
+                float pro = 0.0f;
+                ArrayList<String> recipeItemList = new ArrayList<String>(5);
+                for (String name : StringUtils.split(cursor.getString(cursor.getColumnIndex("items")), "-")) {
+                    recipeItemList.add(name.trim());
+                }
+                float p = 100 / (recipeItemList.size() * 3);
+                ArrayList<String> itemNames = new ArrayList<String>(items.size());
+                for (Item item : items) {
+                    itemNames.add(item.getName().name());
+                }
+                boolean isUser = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("user")));
+                String color = cursor.getString(cursor.getColumnIndex("color"));
+                if (itemNames.size() == recipeItemList.size()) {
+                    for (int i = 0; i < itemNames.size(); i++) {
+                        if (recipeItemList.get(i).equalsIgnoreCase(itemNames.get(i))) {
+                            pro += p * 2;
+                        } else {
+                            pro -= p;
+                        }
+                    }
+                }
+                for (String name : itemNames) {
+                    if (recipeItemList.contains(name)) {
+                        pro += p;
+                        recipeItemList.remove(recipeItemList.indexOf(name));
+                    }
+                }
+                Map<Effect, Number> baseEffectsMap = new EnumMap<Effect, Number>(Effect.class);
+                for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("base")), "-")) {
+                    String[] keyValue = StringUtils.split(str, ":");
+                    if (keyValue.length > 1) {
+                        baseEffectsMap.put(Effect.valueOf(keyValue[0].trim()), StringUtils.toLong(keyValue[1]));
+                    }
+                }
+                Map<Effect, Number> additionEffectsMap = new EnumMap<Effect, Number>(Effect.class);
+                for (String str : StringUtils.split(cursor.getString(cursor.getColumnIndex("addition")), "-")) {
+                    String[] keyValue = StringUtils.split(str, ":");
+                    if (keyValue.length > 1) {
+                        additionEffectsMap.put(Effect.valueOf(keyValue[0].trim()), StringUtils.toLong(keyValue[1]));
+                    }
+                }
+                if (pro < 0) pro = 0;
+                if (a1 == null || a1.getPro() < pro) {
+                    a1 = new Accessory();
+                    if (isUser) {
+                        pro /= 2;
+                    }
+                    a1.setPro(pro);
+                    a1.setName(cursor.getString(cursor.getColumnIndex("name")));
+                    a1.setColor(color);
+                    a1.setAdditionEffects(additionEffectsMap);
+                    a1.setEffects(baseEffectsMap);
+                } else if (a2 == null || a2.getPro() < pro) {
+                    a2 = new Accessory();
+                    if (isUser) {
+                        pro /= 2;
+                    }
+                    a2.setPro(pro);
+                    a2.setName(cursor.getString(cursor.getColumnIndex("name")));
+                    a2.setColor(color);
+                    a2.setAdditionEffects(additionEffectsMap);
+                    a2.setEffects(baseEffectsMap);
+                }
+                cursor.moveToNext();
+            }
+            if (a1 != null && a2 != null) {
+                if ("#FF8C00".equalsIgnoreCase(a1.getColor())) {
+                    a1.setPro(a1.getPro() / 2);
+                }
+                if ("#FF8C00".equalsIgnoreCase(a2.getColor())) {
+                    a2.setPro(a2.getPro() / 2);
+                }
+                if ((a1.getPro() + a2.getPro()) >= 100) {
+                    if (a1.getPro() >= a2.getPro()) {
+                        a2.setPro((100 - a1.getPro()) / 2);
+                    } else {
+                        a1.setPro((100 - a2.getPro()) / 2);
+                    }
+                }
+                if (a1.getPro() > 100) {
+                    a1.setPro(100);
+                    a2 = null;
+                } else if (a2.getPro() > 100) {
+                    a2.setPro(100);
+                    a1 = null;
+                }
+            }
+            if (a1 != null && a1.getPro() > 0) {
+                builder.append("<font color=\"").append(a1.getColor()).append("\">");
+                builder.append(a1.getName()).append(" : ").append(a1.getPro()).append("%</font>");
+            }
+            if (a2 != null && a2.getPro() > 0) {
+                builder.append("<br>").append("<font color=\"").append(a2.getColor()).append("\">");
+                builder.append(a2.getName()).append(" : ").append(a2.getPro()).append("%</font>");
+            }
+            float normalP = 100.0f;
+            if (a1 != null && a2 != null && (a1.getPro() + a2.getPro()) < 100) {
+                normalP = 100 - a1.getPro() - a2.getPro();
+            } else if (a2 == null && a1 != null) {
+                normalP = 100 - a1.getPro();
+            } else if (a1 == null && a2 != null) {
+                normalP = 100 - a2.getPro();
+            }
+            if (normalP > 0) {
+                builder.append("<br>").append("??? : ").append(normalP);
+            }
+        } catch (
+                Exception e
+                )
+
+        {
+            e.printStackTrace();
+            Log.e(MainGameActivity.TAG, "build_detect", e);
         }
-        if (a2 != null && a2.getPro() > 0) {
-            builder.append("<br>").append("<font color=\"").append(a2.getColor()).append("\">");
-            builder.append(a2.getName()).append(" : ").append(a2.getPro()).append("%</font>");
-        }
-        float normalP = 100.0f;
-        if (a1 != null && a2 != null && (a1.getPro() + a2.getPro()) < 100) {
-            normalP = 100 - a1.getPro() - a2.getPro();
-        } else if (a2 == null && a1 != null) {
-            normalP = 100 - a1.getPro();
-        } else if (a1 == null && a2 != null) {
-            normalP = 100 - a2.getPro();
-        }
-        if (normalP > 0) {
-            builder.append("<br>").append("??? : ").append(normalP);
-        }
+
         return builder.toString();
     }
 
     public abstract int getType();
 
     public abstract Cursor queryRecipe();
+
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public abstract String notEnough();
 }

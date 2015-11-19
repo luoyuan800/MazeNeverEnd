@@ -5,26 +5,18 @@ import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.*;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
-
-import java.util.List;
-
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.skill.system.BaseSkill;
-import cn.gavin.skill.system.EvilSkill;
-import cn.gavin.skill.system.LongSkill;
+import cn.gavin.skill.system.*;
 import cn.gavin.skill.type.PropertySkill;
+
+import java.util.List;
 
 /**
  * Created by luoyuan on 9/12/15.
@@ -44,7 +36,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         this.context = context;
     }
 
-    public SkillDialog(){
+    public SkillDialog() {
 
     }
 
@@ -84,20 +76,34 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         View view = inflater.inflate(R.layout.skill_dialog, (ViewGroup) context.findViewById(R.id.skill_dialog));
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.skill_dialog);
         viewFlipper = new ViewFlipper(context);
+
         BaseSkill baseSkill = new BaseSkill(context);
         baseSkill.init(this);
 
         EvilSkill evilSkill = new EvilSkill(context);
         evilSkill.init(this);
+
+        SwindlerSkill swindlerSkill = new SwindlerSkill(context);
+        swindlerSkill.init(this);
+
+        LongSkill longSkill = new LongSkill(context);
+        longSkill.init(this);
+
+        PetSkill petSkill = new PetSkill(context);
+        petSkill.init(this);
+
         viewFlipper.addView(baseSkill);
         viewFlipper.addView(evilSkill);
+        viewFlipper.addView(swindlerSkill);
+        viewFlipper.addView(longSkill);
+        viewFlipper.addView(petSkill);
         linearLayout.addView(viewFlipper);
         detector = new GestureDetector(context, this);
         alertDialog.setView(view);
         skillDesc = (TextView) view.findViewById(R.id.skill_description);
         skillPoint = (TextView) view.findViewById(R.id.skill_point);
         sillNameText = (TextView) view.findViewById(R.id.skill_system_name);
-        sillNameText.setText(systemNames[0]);
+        sillNameText.setText("勇者");
         viewFlipper.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -109,7 +115,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
             @Override
             public void onClick(View view) {
                 viewFlipper.showPrevious();
-                sillNameText.setText(getPrevSystemName());
+                changeSkillSystem();
             }
         });
         Button next = (Button) view.findViewById(R.id.next_skill_system_button);
@@ -117,14 +123,33 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
             @Override
             public void onClick(View view) {
                 viewFlipper.showNext();
-                sillNameText.setText(getNextSystemName());
+                changeSkillSystem();
             }
         });
         isInit = true;
     }
 
+    private void changeSkillSystem() {
+        if(viewFlipper.getCurrentView() instanceof LongSkill){
+            sillNameText.setText("龙裔");
+        }
+        if(viewFlipper.getCurrentView() instanceof BaseSkill){
+            sillNameText.setText("勇者");
+        }
+        if(viewFlipper.getCurrentView() instanceof EvilSkill){
+            sillNameText.setText("魔王");
+        }
+        if(viewFlipper.getCurrentView() instanceof SwindlerSkill){
+            sillNameText.setText("欺诈师");
+        }
+        if(viewFlipper.getCurrentView() instanceof PetSkill){
+            sillNameText.setText("宠物大师");
+        }
+        skillDesc.setText("");
+    }
+
     int index = 0;
-    String[] systemNames = {"勇者技能", "魔王技能"};
+    String[] systemNames = {"勇者技能", "魔王技能", "欺诈师技能", "龙裔技能"};
 
     private String getNextSystemName() {
         if (index >= systemNames.length - 1) {
@@ -133,6 +158,28 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
             index++;
         }
         return systemNames[index];
+    }
+
+    private void setBak() {
+        switch (index) {
+            case 3:
+                final View view = viewFlipper.getCurrentView();
+                if (view != null) {
+                    view.setBackgroundResource(R.drawable.long_bak);
+                    new Thread(){
+                        public void run(){
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            view.setBackgroundResource(android.R.color.background_light);
+
+                        }
+                    }.start();
+                }
+                break;
+        }
     }
 
     private String getPrevSystemName() {

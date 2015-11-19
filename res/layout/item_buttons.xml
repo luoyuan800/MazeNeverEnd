@@ -14,7 +14,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="fill_horizontal"
                 android:layout_weight="1"
-                android:text="@string/skill_label"
+            android:focusableInTouchMode="false"
+            android:text="@string/skill_label"
                 android:textSize="12sp"/>
         <Button
                 android:id="@+id/monster_button"
@@ -22,7 +23,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="fill_horizontal"
                 android:layout_weight="1"
-                android:text="怪物"
+            android:focusableInTouchMode="false"
+            android:text="怪物"
                 android:textSize="12sp"/>
 
         <Button
@@ -31,7 +33,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="fill_horizontal"
                 android:layout_weight="1"
-                android:text="成就"
+            android:focusableInTouchMode="false"
+            android:text="成就"
                 android:textSize="12sp"/>
 
     </LinearLayout>
@@ -47,7 +50,8 @@
                 android:layout_gravity="fill_horizontal"
                 android:layout_weight="1"
                 android:enabled="true"
-                android:text="打造"
+            android:focusableInTouchMode="false"
+            android:text="打造"
                 android:textSize="12sp"/>
         <Button
                 android:id="@+id/forge_recipe_button"
@@ -55,7 +59,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="fill_horizontal"
                 android:layout_weight="1"
-                android:text="配方"
+            android:focusableInTouchMode="false"
+            android:text="配方"
                 android:textSize="12sp"/>
         <Button
                 android:id="@+id/accessory_button"
@@ -63,9 +68,69 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="fill_horizontal"
                 android:layout_weight="1"
-                android:text="物品"
+            android:focusableInTouchMode="false"
+            android:text="装备"
                 android:textSize="12sp"/>
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/issue_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_horizontal"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:focusableInTouchMode="false"
+            android:text="换宠"
+            android:textSize="12sp"/>
+
+        <Button
+            android:id="@+id/palace_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_horizontal"
+            android:layout_weight="1"
+            android:focusableInTouchMode="false"
+            android:text="殿堂"
+            android:textSize="12sp"/>
+        <Button
+            android:id="@+id/pet_detail_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_horizontal"
+            android:layout_weight="1"
+            android:focusableInTouchMode="false"
+            android:text="宠物"
+            android:textSize="12sp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/help_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_horizontal"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:focusableInTouchMode="false"
+            android:text="帮助"
+            android:textSize="12sp"/>
+        <Button
+            android:id="@+id/update_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_horizontal"
+            android:focusableInTouchMode="false"
+            android:layout_weight="1"
+            android:text="检查更新"
+            android:textSize="12sp"/>
+    </LinearLayout>
 </LinearLayout>

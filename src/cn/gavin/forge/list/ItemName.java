@@ -41,6 +41,7 @@ public enum ItemName {
     白云石(ItemName.石头),
     龙筋(ItemName.筋),
     蛇筋(ItemName.筋),
+    蛟筋(ItemName.筋),
     虎筋(ItemName.筋),
     牛筋(ItemName.筋),
     鼠筋(ItemName.筋),
@@ -51,8 +52,7 @@ public enum ItemName {
     龙骨(ItemName.骨头),
     虎骨(ItemName.骨头),
     鼠骨(ItemName.骨头),
-    牛骨(ItemName.骨头),
-    EMPTY(ItemName.筋);
+    牛骨(ItemName.骨头);
     private int type;
 
     private ItemName(int type) {
@@ -61,11 +61,11 @@ public enum ItemName {
 
     public boolean perform(Hero hero, Monster monster) {
         Random random = hero.getRandom();
-        if (random.nextInt(1000) < 13) {
+        if (random.nextInt(1000) < 15) {
             if (monster.getMaterial() < 1000) {
-                return random.nextLong(hero.getAgility() + monster.getAtk() + 1) - 1000 > random.nextLong(monster.getMaxHP() + hero.getAttackValue() + 1) + 1000;
+               return random.nextLong(hero.getAgility() + monster.getAtk() + 1) - 49997 > random.nextLong(monster.getMaxHP() + hero.getAttackValue() + 1) + 9999;
             } else {
-                return random.nextLong(Math.abs(monster.getAtk() - hero.getAttackValue()) + 1) - 100000 > random.nextLong(Math.abs(hero.getHp() - monster.getMaxHP()) + 1) + 2000;
+                return random.nextLong(Math.abs(monster.getAtk() - hero.getAttackValue()) + 1) - 10000 > random.nextLong(Math.abs(hero.getHp() - monster.getMaxHP()) + 1) + 1991;
             }
         } else {
             return false;
@@ -74,11 +74,11 @@ public enum ItemName {
 
     public static final int 木材 = 0, 皮毛 = 1, 石头 = 2, 骨头 = 3, 筋 = 4;
 
-    private int getType() {
+    public int getType() {
         return type;
     }
 
-    public static ItemName valueOfName(String name) {
+    public static ItemName valueOfName(String name) throws Exception {
         if (StringUtils.isNotEmpty(name)) {
             for (ItemName itemName : values()) {
                 if (itemName.name().equalsIgnoreCase(name.trim())) {
@@ -86,6 +86,6 @@ public enum ItemName {
                 }
             }
         }
-        return null;
+        throw new Exception("NotSuchName :" + name);
     }
 }

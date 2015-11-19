@@ -9,9 +9,9 @@
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="D"
+            android:text="龙裔"
             android:gravity="center"
-            android:id="@+id/base_skill_r_button" android:layout_gravity="center"
+            android:id="@+id/long_skill_ly_button" android:layout_gravity="center"
             android:typeface="serif"
             android:textStyle="bold|italic"
             android:textColor="@color/disable"/>
@@ -27,69 +27,26 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="E"
+                android:text="咆哮"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/base_skill_s_button" android:layout_gravity="center|top" android:textColor="@color/un_active"/>
+                android:id="@+id/long_skill_px_button" android:layout_gravity="center|top" android:textColor="@color/un_active"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="A"
+                android:text="龙爪"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/skill_base_t_button" android:layout_gravity="center|top"
+                android:id="@+id/long_skill_lz_button" android:layout_gravity="center|top"
                 android:textColor="@color/active"/>
     </LinearLayout>
     <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/image2" android:layout_gravity="right|top"
-                android:src="@drawable/line_2_right" android:adjustViewBounds="false" android:layout_weight="1"
-                />
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/image3" android:layout_gravity="center|top"
-                android:src="@drawable/line_2_left" android:adjustViewBounds="false"/>
-    </LinearLayout>
-    <LinearLayout
-            android:layout_width="fill_parent"
             android:layout_height="wrap_content" android:layout_gravity="center">
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="U"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:typeface="serif"
-                android:textStyle="bold|italic"
-                android:id="@+id/skill_base_f_button" android:layout_gravity="center|top" android:textColor="@color/onUse"/>
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="B"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:typeface="serif"
-                android:textStyle="bold|italic"
-                android:id="@+id/skill_base_j_button" android:layout_gravity="center|top"/>
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="C"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:typeface="serif"
-                android:textStyle="bold|italic"
-                android:id="@+id/skill_base_d_button" android:layout_gravity="center|top" android:singleLine="false"/>
     </LinearLayout>
 
     <LinearLayout
@@ -105,12 +62,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|top"
-                android:src="@drawable/line_1_center" android:layout_weight="1"
-                android:adjustViewBounds="false"/>
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|top"
                 android:src="@drawable/line_1_center" android:layout_weight="1"/>
     </LinearLayout>
     <LinearLayout
@@ -119,30 +70,21 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="龙铠"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button8" android:layout_gravity="center|top"/>
+                android:id="@+id/long_skill_lk_button" android:layout_gravity="center|top"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="吐息"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button9" android:layout_gravity="center|top"/>
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Button"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:typeface="serif"
-                android:textStyle="bold|italic"
-                android:id="@+id/button10" android:layout_gravity="center|top"/>
+                android:id="@+id/long_skill_tx_button" android:layout_gravity="center|top"/>
     </LinearLayout>
     <LinearLayout
             android:layout_width="fill_parent"
@@ -156,12 +98,6 @@
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageView5" android:layout_gravity="center|top"
-                android:src="@drawable/line_1_center" android:layout_weight="1"
-                android:adjustViewBounds="false"/>
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/imageView6" android:layout_gravity="center|top"
                 android:src="@drawable/line_1_center" android:layout_weight="1"/>
     </LinearLayout>
@@ -171,81 +107,21 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="觉醒"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button11" android:layout_gravity="center|top"/>
+                android:id="@+id/long_skill_jx_button" android:layout_gravity="center|top"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="沙尘"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:id="@+id/button12" android:layout_gravity="center|top"/>
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Button"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:typeface="serif"
-                android:textStyle="bold|italic"
-                android:id="@+id/button13" android:layout_gravity="center|top"/>
+                android:id="@+id/long_skill_sc_button" android:layout_gravity="center|top"/>
     </LinearLayout>
-    <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:layout_gravity="center">
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/line_1_center"
-                android:id="@+id/imageView7" android:layout_gravity="left|top"
-                android:layout_weight="1" android:adjustViewBounds="false"/>
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageView8" android:layout_gravity="center|top"
-                android:src="@drawable/line_1_center" android:layout_weight="1"
-                android:adjustViewBounds="false"/>
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageView9" android:layout_gravity="center|top"
-                android:src="@drawable/line_1_center" android:layout_weight="1"/>
-    </LinearLayout>
-    <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:layout_gravity="center">
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Button"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:typeface="serif"
-                android:textStyle="bold|italic"
-                android:id="@+id/button14" android:layout_gravity="center|top"/>
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Button"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:typeface="serif"
-                android:textStyle="bold|italic"
-                android:id="@+id/button15" android:layout_gravity="center|top"/>
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Button"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:typeface="serif"
-                android:textStyle="bold|italic"
-                android:id="@+id/button16" android:layout_gravity="center|top"/>
-    </LinearLayout>
+
 </LinearLayout>

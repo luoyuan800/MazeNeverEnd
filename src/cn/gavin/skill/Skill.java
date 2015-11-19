@@ -1,17 +1,18 @@
 package cn.gavin.skill;
 
 import android.database.Cursor;
+import android.util.Log;
 import android.widget.Button;
-
 import cn.gavin.Hero;
-import cn.gavin.Maze;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
+import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.expression.DescExpression;
 import cn.gavin.skill.expression.EnableExpression;
 import cn.gavin.skill.expression.UseExpression;
+import cn.gavin.utils.StringUtils;
 
 /**
  * luoyuan on 9/12/15.
@@ -41,7 +42,7 @@ public abstract class Skill {
     }
 
     public boolean isEnable() {
-        return isActive() || enableExpression.isEnable(hero, maze, MainGameActivity.context, this);
+        return isActive() || (hero.getSkillPoint() > 0&&enableExpression.isEnable(hero, maze, MainGameActivity.context, this));
     }
 
     public void setEnableExpression(EnableExpression exp) {
@@ -108,7 +109,7 @@ public abstract class Skill {
 
     public void refresh() {
         if (skillButton != null) {
-            if(!skillButton.hasOnClickListeners()) {
+            if (!skillButton.hasOnClickListeners()) {
                 skillButton.setOnClickListener(skillDialog.getClickListener(this));
                 skillButton.setOnLongClickListener(skillDialog.getLongClickListener(this));
             }
@@ -158,10 +159,10 @@ public abstract class Skill {
         String str = String.valueOf(num);
         long result = 0;
         for (int i = 0; i < str.length(); i++) {
-            result += Integer.parseInt(str.charAt(i) + "");
+            result += StringUtils.toInt(str.charAt(i) + "");
         }
-        if(result > 50){
-            result = hero.getRandom().nextInt(50);
+        if (result > 30) {
+            result = hero.getRandom().nextInt(30);
         }
         return result;
     }
@@ -178,16 +179,19 @@ public abstract class Skill {
         return name + "\n" + count;
     }
 
+    private long latestClick = 0;
+
     public void addCount() {
-        if(this.count < Long.MAX_VALUE - 1000) {
-            this.count++;
-            if (count % 1005 == 0) {
-                levelUp();
+            if (this.count < Long.MAX_VALUE - 1000) {
+                this.count++;
+                hero.click(false);
+                if (count % 1005 == 0) {
+                    levelUp();
+                }
+                if (count % 7000 == 0 && hero.getRandom().nextLong(hero.getSkillPoint()) < 3) {
+                    hero.setSkillPoint(hero.getSkillPoint() + 1);
+                }
             }
-            if (count % 6000 == 0) {
-                hero.setSkillPoint(hero.getSkillPoint() + 1);
-            }
-        }
     }
 
     protected void levelUp() {
@@ -222,20 +226,27 @@ public abstract class Skill {
             sql = String.format("update skill set is_active = '%s', is_on_use = '%s', probability = '%s', count = '%s' where name = '%s'",
                     isActive(), isOnUsed(), getProbability(), getCount(), getName());
         }
+        cursor.close();
         helper.excuseSQLWithoutResult(sql);
     }
 
     public boolean load() {
-        DBHelper helper = DBHelper.getDbHelper();
-        String sql = String.format("select * from skill where name='%s'",
-                getName());
-        Cursor cursor = helper.excuseSOL(sql);
-        if (!cursor.isAfterLast()) {
-            setOnUsed(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_on_use"))));
-            active = (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_active"))));
-            setProbability(Float.parseFloat(cursor.getString(cursor.getColumnIndex("probability"))));
-            count = (Long.parseLong(cursor.getString(cursor.getColumnIndex("count"))));
-            return true;
+        try {
+            DBHelper helper = DBHelper.getDbHelper();
+            String sql = String.format("select * from skill where name='%s'",
+                    getName());
+            Cursor cursor = helper.excuseSOL(sql);
+            if (!cursor.isAfterLast()) {
+                setOnUsed(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_on_use"))));
+                active = (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_active"))));
+                setProbability(StringUtils.toFloat(cursor.getString(cursor.getColumnIndex("probability"))));
+                count = (StringUtils.toLong(cursor.getString(cursor.getColumnIndex("count"))));
+                return true;
+            }
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(MainGameActivity.TAG, "loadSkill", e);
         }
         return false;
     }
@@ -249,11 +260,15 @@ public abstract class Skill {
         this.levelUp = levelUp;
     }
 
-    public String format(String desc){
+    public String format(String desc) {
         return "<i>" + desc + "</i>";
     }
 
-    protected void addMessage(String msg){
+    public void addMessage(String msg) {
         MainGameActivity.context.addMessage(format(msg));
+    }
+
+    public boolean equal(Skill skill){
+        return skill != null && name.equalsIgnoreCase(skill.getName());
     }
 }

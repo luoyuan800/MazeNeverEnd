@@ -1,4 +1,3 @@
-
 package cn.gavin.activity;
 
 import android.app.Activity;
@@ -14,24 +13,26 @@ import android.widget.Button;
 
 import com.bmob.pay.tool.BmobPay;
 
-import cn.gavin.Hero;
-import cn.gavin.Maze;
+import cn.bmob.v3.Bmob;
 import cn.gavin.R;
 import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;
-import cn.gavin.monster.MonsterBook;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.skill.SkillDialog;
+import cn.gavin.utils.MazeContents;
 
 public class MainMenuActivity extends Activity implements OnClickListener {
-public MainMenuActivity context;
+    public MainMenuActivity context;
 
     private Button menuStart;
 
 
-    private final Handler handler = new Handler(){
-        public void handleMessage(Message msg){
-            switch (msg.what){
+    private final Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 3:
+                    menuStart.setText("加载存档");
+                    break;
                 case 2:
                     menuStart.setText("加载技能");
                     break;
@@ -49,19 +50,27 @@ public MainMenuActivity context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //这是为了应用程序安装完后直接打开，按home键退出后，再次打开程序出现的BUG
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+            //结束你的activity
+            this.finish();
+            return;
+        }
         context = this;
         setContentView(R.layout.activity_main_menu);
+        Bmob.initialize(this, "4de7673ec85955af7568cfa1494c6498");
         BmobPay.init(MainMenuActivity.this, "4de7673ec85955af7568cfa1494c6498");
         menuStart = (Button) findViewById(R.id.menu_start);
         menuStart.setOnClickListener(this);
         menuStart.setEnabled(false);
-        menuStart.setText("加载存档");
+        menuStart.setText("加载数据");
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     DBHelper.init(MainMenuActivity.this);
                     MazeContents.skillDialog = new SkillDialog();
+                    handler.sendEmptyMessage(3);
                     LoadHelper saveHelper = new LoadHelper(context);
                     saveHelper.loadHero();
                     handler.sendEmptyMessage(2);
@@ -69,9 +78,9 @@ public MainMenuActivity context;
                     handler.sendEmptyMessage(1);
                     //MonsterBook.init(context);
                     handler.sendEmptyMessage(0);
-                }catch(Exception exp){
+                } catch (Exception exp) {
                     Log.e(MainGameActivity.TAG, "Init", exp);
-                    LogHelper.writeLog();
+                    LogHelper.logException(exp);
                     throw new RuntimeException(exp);
                 }
             }

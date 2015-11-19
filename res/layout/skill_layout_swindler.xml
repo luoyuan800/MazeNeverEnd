@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" android:layout_gravity="left|center_vertical"
+    android:gravity="center|fill">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="欺诈游戏"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:typeface="serif"
+            android:textStyle="bold|italic"
+            android:id="@+id/skill_swindler_qg_button" android:layout_gravity="center|top"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center|top"
+            android:src="@drawable/line_2_center" android:adjustViewBounds="false"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:layout_gravity="center_horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="点攻"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:typeface="serif"
+            android:textStyle="bold|italic"
+            android:id="@+id/skill_swindler_dg_button" android:layout_gravity="center|top" android:textColor="@color/un_active"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="点防"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:typeface="serif"
+            android:textStyle="bold|italic"
+            android:id="@+id/skill_swindler_df_button" android:layout_gravity="center|top"
+            android:textColor="@color/active"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center|top"
+            android:src="@drawable/line_2_center_down" android:adjustViewBounds="false"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="欺诈师"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:typeface="serif"
+            android:textStyle="bold|italic"
+            android:id="@+id/skill_swindler_qzs_button" android:layout_gravity="center|top"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center|top"
+            android:src="@drawable/line_2_center" android:adjustViewBounds="false"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="浮生百刃"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:typeface="serif"
+            android:textStyle="bold|italic"
+            android:id="@+id/skill_swindler_f_button" android:layout_gravity="center|top"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="虚无吞噬"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:typeface="serif"
+            android:textStyle="bold|italic"
+            android:id="@+id/skill_swindler_x_button" android:layout_gravity="center|top"/>
+    </LinearLayout>
+</LinearLayout>

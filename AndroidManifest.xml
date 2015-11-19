@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.gavin"
-    android:versionCode="1"
-    android:versionName="1.2.1" >
+    android:versionCode="169"
+    android:versionName="1.6.9">
 
     <uses-sdk
-        android:minSdkVersion="17"
-        android:targetSdkVersion="21" />
+        android:minSdkVersion="15"
+        android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -19,12 +19,13 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainMenuActivity"
-            android:label="@string/app_name" >
+            android:alwaysRetainTaskState="true"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,20 +33,30 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.MainGameActivity"/>
-        <activity android:name=".activity.ForgeActivity"/>
+        <activity android:name=".activity.ForgeActivity" />
+        <activity android:name=".activity.PalaceActivity" />
+
+        <service android:name=".maze.MazeService">
+            <intent-filter>
+                <action android:name="cn.gavin.maze.MazeService" />
+            </intent-filter>
+        </service>
         <!-- bmob pay sdk activity begin ,please put below code into application tag -->
         <activity
-                android:name="com.alipay.sdk.app.H5PayActivity"
-                android:configChanges="orientation|keyboardHidden|navigation"
-                android:exported="false"
-                android:screenOrientation="behind"
-                android:windowSoftInputMode="adjustResize|stateHidden" >
-        </activity>
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-                android:name="com.bmob.pay.tool.PayActivity"
-                android:screenOrientation="portrait"
-                android:theme="@android:style/Theme.Translucent" />
+            android:name="com.bmob.pay.tool.PayActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent" />
         <!-- bmob pay sdk activity end -->
+        <activity
+            android:name="cn.bmob.v3.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
     </application>
 
 

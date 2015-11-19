@@ -1,5 +1,7 @@
 package cn.gavin.upload;
 
+import android.os.Message;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,7 +9,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import cn.bmob.v3.listener.SaveListener;
 import cn.gavin.Hero;
+import cn.gavin.activity.MainGameActivity;
+import cn.gavin.utils.MazeContents;
+import cn.gavin.skill.Skill;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -15,6 +21,54 @@ import cn.gavin.utils.StringUtils;
  */
 public class Upload {
     private static String UPLOAD_URL = "http://mazeneverend.sinaapp.com";
+
+    private MainGameActivity context;
+    public Upload(MainGameActivity context){
+        this.context = context;
+    }
+
+    public boolean upload(final Hero hero){
+        new Thread(){
+            public void run(){
+                boolean check = MazeContents.checkCheat(hero);
+                if(check) {
+                    PalaceObject object = new PalaceObject();
+                    object.setHello(hero.getHello());
+                    object.setAtk(hero.getUpperAtk().toString());
+                    object.setDef(hero.getUpperDef().toString());
+                    object.setHitRate(hero.getHitRate().toString());
+                    object.setHp(hero.getUpperHp().toString());
+                    object.setName(hero.getName());
+                    object.setParry(hero.getParry().toString());
+                    object.setSkill(hero.getFirstSkill() != null ? hero.getFirstSkill().getName() + "_" + hero.getFirstSkill().getCount() : "");
+                    object.setSkill1(hero.getSecondSkill() != null ? hero.getSecondSkill().getName() + "_" + hero.getSecondSkill().getCount() : "");
+                    object.setSkill2(hero.getThirdSkill() != null ? hero.getThirdSkill().getName() + "_" + hero.getThirdSkill().getCount() : "");
+                    object.setPay(hero.getPay().toString());
+                    object.setLev(hero.getMaxMazeLev());
+                    object.setElement(hero.getElement().name());
+                    object.setReCount(hero.getReincaCount());
+                    object.save(context, new SaveListener() {
+                        @Override
+                        public void onSuccess() {
+                            context.getHandler().sendEmptyMessage(104);
+                        }
+
+                        @Override
+                        public void onFailure(int i, String s) {
+                            Message message = new Message();
+                            message.what = 105;
+                            message.obj = s;
+                            context.getHandler().sendMessage(message);
+                        }
+                    });
+                }else{
+                    context.getHandler().sendEmptyMessage(108);
+                }
+            }
+        }.start();
+
+        return true;
+    }
 
     public boolean upload(Hero hero, long pay) {
         try {
@@ -47,7 +101,10 @@ public class Upload {
         builder.append("&atk=").append(hero.getUpperAtk());
         builder.append("&mazeLev=").append(hero.getMaxMazeLev());
         builder.append("&pay=").append(pay);
-        builder.append("&skill=").append(hero.getFirstSkill());
+        Skill skill = hero.getFirstSkill();
+        if(skill!=null){
+            builder.append("&skill=").append(StringUtils.toHexString(skill.getName())).append("_").append(skill.getCount());
+        }
         return builder.toString();
     }
 

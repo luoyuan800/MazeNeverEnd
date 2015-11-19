@@ -4,6 +4,19 @@ package cn.gavin.utils;
  * Created by gluo on 9/8/2015.
  */
 public class StringUtils {
+    public static String formatNumber(long num){
+        Double value = 0d;
+        if(num > 100000000){
+            value = num/100000000d;
+            return String.format("%.5f", value) + "亿";
+        }
+        if(num > 10000){
+            value = num/10000d;
+            return String.format("%.3f", value) + "万";
+        }
+        return num + "";
+    }
+
     public static String toHexString(String s) {
         String str = "";
         for (int i = 0; i < s.length(); i++) {
@@ -38,18 +51,55 @@ public class StringUtils {
     }
 
     public static boolean isNotEmpty(String countStr) {
-        return countStr !=null && !countStr.trim().isEmpty();
+        return countStr !=null && !countStr.trim().isEmpty() && !"null".equalsIgnoreCase(countStr);
     }
 
     public static String[] split(String str,String regularExpression){
         if(isNotEmpty(str)){
             return str.split(regularExpression);
         }else{
-            return new String[]{};
+            return new String[]{""};
+        }
+    }
+
+    public static Long toLong(String number){
+        try {
+            number = number.replaceFirst("~","-");
+            return Long.parseLong(number);
+        }catch (Exception e){
+            try {
+                return Double.valueOf(number).longValue();
+            }catch (Exception e1){
+                return 1l;
+            }
+        }
+    }
+
+    public static Float toFloat(String number){
+        try {
+            return Float.parseFloat(number);
+        }catch (Exception e){
+            try {
+                return Double.valueOf(number).floatValue();
+            }catch (Exception e1){
+                return 0.1f;
+            }
         }
     }
 
     public static void main(String...args){
         System.out.print(toStringHex("0x6c81739f"));
+    }
+
+    public static Integer toInt(String type) {
+        try {
+            return Integer.parseInt(type);
+        }catch (Exception e){
+            try {
+                return Double.valueOf(type).intValue();
+            }catch (Exception exp){
+                return 1;
+            }
+        }
     }
 }

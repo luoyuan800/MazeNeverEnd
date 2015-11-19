@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:layout_gravity="left|center_vertical"
+        android:gravity="fill">
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="驯兽师"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/pet_skill_xss_button" android:layout_gravity="center|top" android:textColor="@color/un_active"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="培育家"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/pet_skill_pyj_button" android:layout_gravity="center|top"
+                android:textColor="@color/active"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/line_1_center"
+                android:layout_gravity="left|top"
+                android:layout_weight="1" android:adjustViewBounds="false"/>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:src="@drawable/line_1_center" android:layout_weight="1"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="捕捉术"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/pet_skill_bzs_button" android:layout_gravity="center|top"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="催化剂"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/pet_skill_chj_button" android:layout_gravity="center|top"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/line_1_center"
+                android:id="@+id/imageView4" android:layout_gravity="left|top"
+                android:layout_weight="1" android:adjustViewBounds="false"/>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView6" android:layout_gravity="center|top"
+                android:src="@drawable/line_1_center" android:layout_weight="1"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="霸气"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/pet_skill_bq_button" android:layout_gravity="center|top"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="爱心"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:id="@+id/pet_skill_ax_button" android:layout_gravity="center|top"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+                  android:layout_gravity="center" android:id="@+id/linearLayout">
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                   android:src="@drawable/line_1_center" android:id="@+id/imageView"
+                   android:layout_gravity="left|top" android:layout_weight="1" android:adjustViewBounds="false"/>
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                   android:id="@+id/imageView2" android:layout_gravity="center|top"
+                   android:src="@drawable/line_1_center" android:layout_weight="1"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+                  android:layout_gravity="center" android:id="@+id/linearLayout2">
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="群殴"
+                android:layout_weight="1" android:gravity="center" android:typeface="serif"
+                android:textStyle="bold|italic" android:id="@+id/pet_skill_qo_button"
+                android:layout_gravity="center|top"/>
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="反击"
+                android:layout_weight="1" android:gravity="center" android:typeface="serif"
+                android:textStyle="bold|italic" android:id="@+id/pet_skill_fj_button"
+                android:layout_gravity="center|top"/>
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+                  android:layout_gravity="center" android:id="@+id/linearLayout">
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                   android:src="@drawable/line_1_center" android:id="@+id/imageView"
+                   android:layout_gravity="left|top" android:layout_weight="1" android:adjustViewBounds="false"/>
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                   android:id="@+id/imageView2" android:layout_gravity="center|top"
+                   android:src="@drawable/line_1_center" android:layout_weight="1"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+                  android:layout_gravity="center" android:id="@+id/linearLayout2">
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="神赋"
+                android:layout_weight="1" android:gravity="center" android:typeface="serif"
+                android:textStyle="bold|italic" android:id="@+id/pet_skill_sf_button"
+                android:layout_gravity="center|top"/>
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="恩赐"
+                android:layout_weight="1" android:gravity="center" android:typeface="serif"
+                android:textStyle="bold|italic" android:id="@+id/pet_skill_ec_button"
+                android:layout_gravity="center|top" android:singleLine="false"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+                  android:layout_gravity="center" android:id="@+id/linearLayout">
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                   android:id="@+id/imageView2" android:layout_gravity="center|top"
+                   android:src="@drawable/line_2_center_down" android:layout_weight="1"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+                  android:layout_gravity="center" android:id="@+id/linearLayout2">
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="宠物大师"
+                android:layout_weight="1" android:gravity="center" android:typeface="serif"
+                android:textStyle="bold|italic" android:id="@+id/pet_skill_cwds_button"
+                android:layout_gravity="center|top" android:singleLine="false"/>
+    </LinearLayout>
+</LinearLayout>

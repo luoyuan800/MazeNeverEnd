@@ -1,5 +1,6 @@
 package cn.gavin.save;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -7,20 +8,26 @@ import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
+import java.util.Map;
 
 import cn.gavin.Achievement;
 import cn.gavin.Armor;
+import cn.gavin.Element;
 import cn.gavin.Hero;
-import cn.gavin.Maze;
 import cn.gavin.Sword;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MainMenuActivity;
-import cn.gavin.activity.MazeContents;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
+import cn.gavin.forge.effect.Effect;
 import cn.gavin.log.LogHelper;
+import cn.gavin.maze.Maze;
+import cn.gavin.pet.Pet;
+import cn.gavin.pet.PetDB;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 gluo.
@@ -28,12 +35,47 @@ import cn.gavin.skill.SkillFactory;
  * Created by gluo on 9/16/2015.
  */
 public class LoadHelper {
-    private MainMenuActivity context;
+    private Activity context;
 
     public LoadHelper(MainMenuActivity activity) {
         context = activity;
     }
 
+    public LoadHelper(MainGameActivity activity) {
+        context = activity;
+    }
+
+    public void loadValue(Hero hero) {
+        SharedPreferences preferences = context.getSharedPreferences("preValueForHat", Context.MODE_PRIVATE);
+        boolean save = preferences.getBoolean("exist", false);
+        if (save) {
+            for (Map.Entry<String, ?> entry : preferences.getAll().entrySet()) {
+                if (!entry.getKey().equalsIgnoreCase("exist")) {
+                    hero.preValueForHat.put(Effect.valueOf(entry.getKey()), preferences.getLong(entry.getKey(), 0l));
+                }
+            }
+        }
+
+        preferences = context.getSharedPreferences("preValueForNet", Context.MODE_PRIVATE);
+        save = preferences.getBoolean("exist", false);
+        if (save) {
+            for (Map.Entry<String, ?> entry : preferences.getAll().entrySet()) {
+                if (!entry.getKey().equalsIgnoreCase("exist")) {
+                    hero.preValueForNek.put(Effect.valueOf(entry.getKey()), preferences.getLong(entry.getKey(), 0l));
+                }
+            }
+        }
+
+        preferences = context.getSharedPreferences("preValueForRing", Context.MODE_PRIVATE);
+        save = preferences.getBoolean("exist", false);
+        if (save) {
+            for (Map.Entry<String, ?> entry : preferences.getAll().entrySet()) {
+                if (!entry.getKey().equalsIgnoreCase("exist")) {
+                    hero.preValueForRing.put(Effect.valueOf(entry.getKey()), preferences.getLong(entry.getKey(), 0l));
+                }
+            }
+        }
+    }
 
     public void loadHero() {
         Hero heroN = new Hero("勇者");
@@ -41,7 +83,7 @@ public class LoadHelper {
         SharedPreferences preferences = context.getSharedPreferences("hero", Context.MODE_PRIVATE);
         heroN.setName(preferences.getString("name", "勇者"));
         heroN.setHp(preferences.getLong("hp", 20));
-        heroN.setUpperHp(preferences.getLong("upperHp", 10));
+        heroN.setUpperHp(preferences.getLong("upperHp", 20));
         heroN.setAttackValue(preferences.getLong("baseAttackValue", 10));
         heroN.setDefenseValue(preferences.getLong("baseDefense", 1));
         heroN.setClick(preferences.getLong("click", 0));
@@ -58,43 +100,73 @@ public class LoadHelper {
         heroN.setArmor(Armor.valueOf(preferences.getString("armorName", Armor.破布.name())));
         heroN.setDeathCount(preferences.getLong("death", 0));
         heroN.setSkillPoint(preferences.getLong("skillPoint", 1));
-        MazeContents.lastUpload = preferences.getLong("lastUploadLev", 0);
+        MazeContents.lastUpload = preferences.getLong("lastUploadLev", 1);
         maze.setLevel(preferences.getLong("currentMazeLev", 1));
         String ach = preferences.getString("achievement", "0");
         for (int i = 0; i < ach.length() && i < Achievement.values().length; i++) {
-            int enable = Integer.parseInt(ach.charAt(i) + "");
+            int enable = StringUtils.toInt(ach.charAt(i) + "");
             if (enable == 1) {
                 Achievement.values()[i].enable();
             }
         }
-        MazeContents.payTime = preferences.getLong("swordLev", 0);
+        MazeContents.payTime = preferences.getLong("payTime", 0);
         heroN.setAwardCount(preferences.getLong("awardCount", 0));
         heroN.setLockBox(preferences.getLong("lockBox", 1));
         heroN.setKeyCount(preferences.getLong("keyCount", 1));
         String ringId = preferences.getString("ring", null);
-        if (ringId != null) {
+        if (StringUtils.isNotEmpty(ringId)) {
             Accessory ring = new Accessory();
             ring.setId(ringId);
             if (ring.load())
                 heroN.setAccessory(ring);
         }
         String necklaceId = preferences.getString("necklace", null);
-        if (necklaceId != null) {
+        if (StringUtils.isNotEmpty(necklaceId)) {
             Accessory necklace = new Accessory();
             necklace.setId(necklaceId);
             if (necklace.load())
                 heroN.setAccessory(necklace);
         }
         String hatId = preferences.getString("hat", null);
-        if (hatId != null) {
+        if (StringUtils.isNotEmpty(hatId)) {
             Accessory hat = new Accessory();
             hat.setId(hatId);
             if (hat.load())
                 heroN.setAccessory(hat);
         }
         Achievement.linger.enable(heroN);
+        heroN.MAX_HP_RISE = preferences.getLong("MAX_HP_RISE", 5);
+        heroN.ATR_RISE = preferences.getLong("ATR_RISE", 2);
+        heroN.DEF_RISE = preferences.getLong("DEF_RISE", 1);
+        heroN.setReincaCount(preferences.getLong("reincaCount", 0));
+        heroN.setHitRate(preferences.getLong("hitRate", 0));
+        heroN.setParry(preferences.getFloat("parry", 0));
+        heroN.setDodgeRate(preferences.getFloat("dodgeRate", 0));
+        heroN.setClickPointAward(preferences.getLong("clickPointAward", 0));
+        heroN.setElement(Element.valueOf(preferences.getString("element", "无")));
+        heroN.setPetSize(preferences.getInt("pet_size", 3));
+        if(heroN.getPetSize() > 20) heroN.setPetSize(20);
+        heroN.setPetRate(preferences.getFloat("pet_rate", 1.0f));
+        heroN.setEggRate(preferences.getFloat("egg_rate", 200f));
+        heroN.setEggStep(preferences.getLong("egg_step", 1));
+        heroN.setResetSkillCount(preferences.getLong("reset_skill", 0));
+        String petIds = preferences.getString("pet_id", "");
+        String[] ids = StringUtils.split(petIds, "_");
+        for (String id : ids) {
+            if (StringUtils.isNotEmpty(id)) {
+                Pet pet = PetDB.load(id);
+                if (StringUtils.isNotEmpty(pet.getType())) {
+                    heroN.getPets().add(pet);
+                }
+            }
+        }
+        heroN.setTitleColor(preferences.getString("title_color", "#ff00acff"));
+        heroN.setOnSkill(false);
+        maze.setCsmgl(preferences.getInt("csm", 9987));
+        loadValue(heroN);
         MazeContents.hero = heroN;
         MazeContents.maze = maze;
+
     }
 
     private boolean loadOlderSaveFile(Hero heroN, Maze maze) {
@@ -164,10 +236,16 @@ public class LoadHelper {
 
     public void loadSkill(Hero hero, SkillDialog dialog) {
         String sql = "select name from skill";
-        Cursor cursor = DBHelper.getDbHelper().excuseSOL(sql);
-        while (!cursor.isAfterLast()) {
-            SkillFactory.getSkill(cursor.getString(cursor.getColumnIndex("name")), hero, dialog);
-            cursor.moveToNext();
+        try {
+            Cursor cursor = DBHelper.getDbHelper().excuseSOL(sql);
+            while (!cursor.isAfterLast()) {
+                SkillFactory.getSkill(cursor.getString(cursor.getColumnIndex("name")), hero, dialog);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(MainGameActivity.TAG, "loadSkills", e);
         }
     }
 

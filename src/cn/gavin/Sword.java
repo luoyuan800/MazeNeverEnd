@@ -5,8 +5,8 @@ package cn.gavin;
  */
 public enum Sword {
 
-    木剑(100, 5), 铁剑(200, 105), 铜剑(500, 1000), 银剑(1000,3000), 金剑(2000, 10000), 合金剑(4000,24000),
-    鱼肠剑(8000,55000), 水波剑(16000, 90000), 烈焰剑(32000,180000), 水焰剑(64000, 780000), 风烈剑(100000, 1000000);
+    木剑(100, 5), 铁剑(200, 90), 铜剑(500, 700), 银剑(1000,2000), 金剑(2000, 8000), 合金剑(4000,20000),
+    鱼肠剑(8000,50000), 水波剑(16000, 80000), 烈焰剑(32000,120000), 水焰剑(64000, 580000), 风烈剑(100000, 1500000);
     private long lev, base;
 
     private Sword(long lev, long base) {
@@ -21,9 +21,7 @@ public enum Sword {
         if (lev >= this.lev) {
             int index = ordinal();
             if (index < values().length - 1) {
-                Sword sword = values()[index + 1];
-                sword.base = hero.getRandom().nextLong(hero.getStrength()/1000) + sword.base;
-                return sword;
+                return values()[index + 1];
             }else{
                 Achievement.artifact.enable(null);
             }
