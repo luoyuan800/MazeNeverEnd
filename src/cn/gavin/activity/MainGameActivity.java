@@ -683,7 +683,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         final long resetSkillValue = 799988 + 69988 * heroN.getResetSkillCount();
         AlertDialog resetSkillPointDialog;
         resetSkillPointDialog = new Builder(this).create();
-        resetSkillPointDialog.setTitle("消耗" + resetSkillValue + "材料重置技能");
+        resetSkillPointDialog.setTitle("消耗" + resetSkillValue + "锻造点数重置技能");
         resetSkillPointDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
 
@@ -1812,7 +1812,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     heroN.setKeyCount(heroN.getKeyCount() - 1);
                     showLockBox();
                     heroN.click(false);
-                }else if(count){
+                }else if(!count){
                     showItemFull();
                 }
                 break;

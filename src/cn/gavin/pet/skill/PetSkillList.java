@@ -11,7 +11,7 @@ import cn.gavin.utils.MazeContents;
  * Created by gluo on 11/12/2015.
  */
 public enum PetSkillList {
-    GoldenSearcher("自动收集锻造点数"), QuickGrow("自动获取额外能力点"), HeroHit("勇者之击"), DragonBreath("吐息"), DragonClaw("龙爪"), Lightning("闪电"), MultiSkill("多重攻击"), SandStorm("沙尘"), SwindleGame("欺诈游戏");
+    Shaman("祭师"),QuickGrow("自动获取额外能力点"),GoldenSearcher("自动收集锻造点数"),  HeroHit("勇者之击"), DragonBreath("吐息"), DragonClaw("龙爪"), Lightning("闪电"), MultiSkill("多重攻击"), SandStorm("沙尘"), SwindleGame("欺诈游戏");
     private final String name;
 
     private PetSkillList(String name) {

@@ -89,6 +89,7 @@ public class Hero implements BaseObject {
     private String titleColor;
     private long resetSkillCount = 0;
     private String bakColor;
+    private String uuid;
 
     public Float getParry() {
         return parry;
@@ -1346,5 +1347,13 @@ public class Hero implements BaseObject {
 
     public void setBakColor(String bakColor) {
         this.bakColor = bakColor;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

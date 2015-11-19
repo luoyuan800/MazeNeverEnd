@@ -9,6 +9,7 @@ import android.util.Log;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.util.Map;
+import java.util.UUID;
 
 import cn.gavin.Achievement;
 import cn.gavin.Armor;
@@ -161,6 +162,7 @@ public class LoadHelper {
             }
         }
         heroN.setTitleColor(preferences.getString("title_color", "#ff00acff"));
+        heroN.setUuid(preferences.getString("uuid", UUID.randomUUID().toString()));
         heroN.setOnSkill(false);
         maze.setCsmgl(preferences.getInt("csm", 9987));
         loadValue(heroN);
