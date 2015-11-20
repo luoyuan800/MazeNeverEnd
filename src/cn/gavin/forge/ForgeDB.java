@@ -70,6 +70,7 @@ public class ForgeDB {
         upgradeTo1_4_7(database);
         upgradeTp1_5(database);
         upgradeTp1_6(database);
+        upgradeTp1_7(database);
     }
 
     public void upgradeTo1_3_2(SQLiteDatabase database) {
@@ -135,6 +136,22 @@ public class ForgeDB {
         sql = String.format(base, "(乐枫)蔚蓝项链", "龙筋-龙皮-青檀木-白云石-食人鸟毛", "ADD_AGI:30000-ADD_POWER:~5000", "ADD_PER_UPPER_HP:15", NecklaceBuilder.type, "#FF8C00");
         database.execSQL(sql);
         sql = String.format(base, "(乐枫)云戒", "龙骨-硝石-银矿石-龙须木-原石", "ADD_AGI:30000-ADD_POWER:~5000", "ADD_PER_UPPER_HP:15", RingBuilder.type, "#FF8C00");
+        database.execSQL(sql);
+    }
+
+    public void upgradeTp1_7(SQLiteDatabase database) {
+        String base = "REPLACE INTO recipe (name, items, base, addition, found, user, type, color) values ('%s', '%s','%s','%s','false','false','%s','%s')";
+
+        String sql = String.format(base, "左眼的漩涡", "龙皮-龙骨-龙须-龙须木-龙筋",
+                "ADD_HIT_RATE:57-ADD_DODGE_RATE:20-ADD_PARRY:37-ADD_ATK:700000", "ADD_PER_ATK:~10-ADD_PER_DEF：~10", HatBuilder.type, "#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base, "叶良辰的内裤", "龙皮-龙须-龙须-龙须-龙须", "ADD_HIT_RATE:51-ADD_DODGE_RATE:10", "ADD_PER_ATK:61-ADD_PARRY:90", HatBuilder.type, "#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base, "Soi●残缺(暴击)", "食人鸟毛-鼠筋-鼠筋-鼠筋-鼠筋", "ADD_ATK:~20000-ADD_DEF:~20000-ADD_UPPER_HP:~20000", "ADD_PER_UPPER_HP:~15-ADD_HIT_RATE:30-ADD_PARRY:30-ADD_DODGE_RATE:10-ADD_CLICK_AWARD:10-ADD_CLICK_POINT-AWARD:1", HatBuilder.type, "#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base, "Soi●残缺(格挡)", "鼠骨-鼠筋-鼠骨-鼠骨-鼠骨",  "ADD_ATK:~20000-ADD_DEF:~20000-ADD_UPPER_HP:~20000", "ADD_PER_UPPER_HP:~25-ADD_HIT_RATE:20-ADD_PARRY:30-ADD_DODGE_RATE:10-ADD_CLICK_AWARD:10-ADD_CLICK_POINT-AWARD:1", NecklaceBuilder.type, "#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base, "Soi●残缺(闪避)", "硝石-紫熏木-紫熏木-紫熏木-紫熏木",  "ADD_ATK:~20000-ADD_DEF:~20000-ADD_UPPER_HP:~20000", "ADD_PER_UPPER_HP:~35-ADD_HIT_RATE:20-ADD_PARRY:30-ADD_DODGE_RATE:20-ADD_CLICK_AWARD:10-ADD_CLICK_POINT-AWARD:1", RingBuilder.type, "#FF8C00");
         database.execSQL(sql);
 
     }

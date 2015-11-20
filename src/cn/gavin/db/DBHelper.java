@@ -29,7 +29,8 @@ public class DBHelper {
     private static int DB_VERSION_1_4 = 12;
     private static int DB_VERSION_1_4_8 = 14;
     private static int DB_VERSION_1_5 = 15;
-    private static int DB_VERSION = 16;
+    private static int DB_VERSION_1_6 = 16;
+    private static int DB_VERSION = 17;
 
     private Context context;
     private SQLiteDatabase database;
@@ -135,6 +136,16 @@ public class DBHelper {
         upgrade12_13(db, oldVersion);
         upgrade14_15(db, oldVersion);
         upgrade15_16(db);
+        upgrade16_17(db);
+    }
+
+    private void upgrade16_17(SQLiteDatabase db) {
+        try{
+            new ForgeDB().upgradeTp1_7(db);
+
+        }catch (Exception e){
+            LogHelper.logException(e);
+        }
     }
 
     private void upgrade15_16(SQLiteDatabase db){

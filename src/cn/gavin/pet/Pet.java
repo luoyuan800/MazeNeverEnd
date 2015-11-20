@@ -400,6 +400,10 @@ public class Pet extends Base {
             rate = 98;
         }
 
+        if(rate <= 0) {
+            rate = 0.01;
+        }
+
         double current = random.nextInt(100) + random.nextDouble();
         if (!f.getId().equals(m.getId()) && rate > current) {
             Pet egg = new Pet();
