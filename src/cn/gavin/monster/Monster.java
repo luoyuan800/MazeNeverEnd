@@ -106,9 +106,11 @@ public class Monster {
             }
             monster = buildDefaultDefender(maze, hero, random);
         }
-        monster.material = random.nextLong(maze.getLev() * monster.atk + 1) / 115 + 25;
+        if(monster.material == 0) {
+            monster.material = random.nextLong(maze.getLev() * monster.atk + 1) / 115 + 25;
+        }
         if (monster.material > 10000) {
-            monster.material = 3000 + random.nextLong(10000);
+            monster.material = 1000 + random.nextLong(10000);
         }
         monster.items = Arrays.asList(ItemName.原石, ItemName.铁矿石, ItemName.冷杉木,
                 ItemName.萤石, ItemName.蚁须, ItemName.龙须);
@@ -158,20 +160,20 @@ public class Monster {
         if(hp < 0){
             hp = hero.getUpperHp();
         }
-        if( maze.getLev() /10000 > 5){
+        if( maze.getLev() /10000 > 5 && random.nextLong(hero.getReincaCount()) < 3){
             if(random.nextBoolean()){
-                hp += hero.getUpperHp();
+                hp += hero.getUpperHp()/(hero.getReincaCount() + 1);
                 atk += random.nextLong((hero.getUpperAtk() + hero.getRealUHP())/2);
                 Monster monster = new Monster("心好累", "", "作者",
                         hp,
                         atk);
-                monster.setSilent(55);
+                monster.setSilent(55/(int)(hero.getReincaCount() + 1));
                 monster.petsub = 5;
                 return monster;
             }
         }else if(maze.getLev()/10000 >= 4){
-            if(random.nextBoolean()){
-                atk += random.nextLong((hero.getUpperAtk() + hero.getRealUHP()));
+            if(random.nextBoolean() && random.nextLong(hero.getReincaCount()) < 5){
+                atk += (random.nextLong((hero.getUpperAtk() + hero.getRealUHP())))/(hero.getReincaCount() + 1);
                 Monster monster = new Monster("愤怒", "", "作者",
                         hp,
                         atk);
@@ -180,16 +182,16 @@ public class Monster {
                 return monster;
             }
         }else if(maze.getLev() % 50000 == 0){
-            if(random.nextBoolean()){
+            if(random.nextBoolean()&& random.nextLong(hero.getReincaCount()) < 2){
                 //atk += random.nextLong((hero.getUpperAtk() + hero.getRealUHP()));
-                hp += (hero.getUpperHp() + hero.getUpperAtk() + hero.getUpperDef());
+                hp += (hero.getUpperHp() + hero.getUpperAtk() + hero.getUpperDef()) /(hero.getReincaCount() + 1);
                 if(!Achievement.richer.isEnable()){
                     atk *= 5;
                 }
                 Monster monster = new Monster("心灵脆弱", "", "作者",
                         hp,
                         atk);
-                monster.setSilent(99);
+                monster.setSilent(99/(int)(hero.getReincaCount() + 1));
                 monster.petsub = 60;
                 monster.material = -2222222;
                 return monster;

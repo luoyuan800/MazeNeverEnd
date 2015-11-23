@@ -41,6 +41,7 @@ public class Pet extends Base {
     private long def_rise = 5;
     private long hp_rise = 20;
     private String owner;
+    private String ownerId;
 
 
     public void click() {
@@ -514,5 +515,13 @@ public class Pet extends Base {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
     }
 }
