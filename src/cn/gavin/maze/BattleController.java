@@ -46,10 +46,13 @@ public class BattleController {
                     return false;
                 }
             }
+            boolean skillJump = false;
             if(skill!=null && monster.isSilent(random)){
                 addMessage(context, hero.getFormatName() + "想要使用技能" + skill.getName());
                 addMessage(context, monster.getFormatName() + "打断了" + hero.getFormatName() + "的技能");
-            }else if (skill != null) {
+                skillJump = true;
+            }
+            if (skill != null && !skillJump) {
                     isJump = skill.release(monster);
             } else if (monster.getName().contains("龙") && SkillFactory.getSkill("龙裔", hero, context.getSkillDialog()).isActive()) {
                 addMessage(context, hero.getFormatName() + "激发龙裔效果，免疫龙系怪物的伤害！");
@@ -114,27 +117,33 @@ public class BattleController {
         for (Pet pet : pets) {
             if (pet != null && pet.getHp() > 0 && !"蛋".equals(pet.getType())) {
                 if (pet.gon()) {
-                    NSkill petSkill = pet.getAtkSkill();
-                    long petHarm = 0;
-                    if (petSkill != null) {
-                        String petSkillMsg = pet.getFormatName() + "使用了技能" + petSkill.getName();
-                        addMessage(context, petSkillMsg);
-                        monster.addBattleDesc(petSkillMsg);
-                        Base target = new Base() {
-                        };
-                        target.setDef(0l);
-                        target.setAtk(monster.getAtk());
-                        target.setHp(monster.getHp());
-                        target.setElement(monster.getElement());
-                        petHarm = petSkill.getHarm(target);
-                    } else {
-                        petHarm = pet.getAtk();
+                    if(!monster.isPetSub(hero.getRandom())) {
+                        NSkill petSkill = pet.getAtkSkill();
+                        long petHarm = 0;
+                        if (petSkill != null) {
+                            String petSkillMsg = pet.getFormatName() + "使用了技能" + petSkill.getName();
+                            addMessage(context, petSkillMsg);
+                            monster.addBattleDesc(petSkillMsg);
+                            Base target = new Base() {
+                            };
+                            target.setDef(0l);
+                            target.setAtk(monster.getAtk());
+                            target.setHp(monster.getHp());
+                            target.setElement(monster.getElement());
+                            petHarm = petSkill.getHarm(target);
+                        } else {
+                            petHarm = pet.getAtk();
+                        }
+                        String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了"
+                                + StringUtils.formatNumber(petHarm) + "点伤害";
+                        monster.addHp(-petHarm);
+                        addMessage(context, petAtk);
+                        monster.addBattleDesc(petAtk);
+                    }else{
+                        String petsub = monster.getFormatName() + "吓得" + pet.getFormatName() + "不敢出手。";
+                        addMessage(context, petsub);
+                        monster.addBattleDesc(petsub);
                     }
-                    String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了"
-                            + StringUtils.formatNumber(petHarm) + "点伤害";
-                    monster.addHp(-petHarm);
-                    addMessage(context, petAtk);
-                    monster.addBattleDesc(petAtk);
                     break;
                 }
             }

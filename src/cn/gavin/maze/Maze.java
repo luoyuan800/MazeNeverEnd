@@ -270,8 +270,8 @@ public class Maze {
             }
             if (level > 50000) {
                 if (!Achievement.richer.isEnable()) {
-                    addMessage(MainGameActivity.context, "您不能再前进了，前面是付费玩家的地盘！");
-                    level--;
+                    addMessage(MainGameActivity.context, "您进入了奇怪的区域！");
+//                    level--;
                 }
             }
             if (PetDB.getPetCount(null) < hero.getPetSize() + 10) {

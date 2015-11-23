@@ -144,7 +144,11 @@ public class Pet extends Base {
             pet.setSex(random.nextInt(2));
             pet.setOwner(MazeContents.hero.getName());
             if((SkillFactory.getSkill("神赋", MazeContents.hero, null).isActive() && random.nextInt(100) < 30) || random.nextInt(5000) < 5){
-                NSkill petS = PetSkillList.values()[random.nextInt(PetSkillList.values().length)].getSkill(pet);
+                int sindex = random.nextInt(PetSkillList.values().length);
+                if(sindex == 0 || sindex == 1){
+                    sindex += random.nextInt(4);
+                }
+                NSkill petS = PetSkillList.values()[sindex].getSkill(pet);
                 if (petS instanceof PetSkill) {
                     pet.setSkill(petS);
                 } else {
@@ -394,6 +398,10 @@ public class Pet extends Base {
         }
         if (rate >= 100) {
             rate = 98;
+        }
+
+        if(rate <= 0) {
+            rate = 0.01;
         }
 
         double current = random.nextInt(100) + random.nextDouble();

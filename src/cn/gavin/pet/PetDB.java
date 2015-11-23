@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import cn.gavin.Element;
 import cn.gavin.db.DBHelper;
@@ -174,9 +175,9 @@ public class PetDB {
         }
     }
 
-    public static HashMap<String, Pet> petCatch = new HashMap<String, Pet>();
+    public static ConcurrentHashMap<String, Pet> petCatch = new ConcurrentHashMap<String, Pet>();
 
-    public static void save(){
+    public synchronized static void save(){
         for(Pet pet : petCatch.values()){
             pet.save();
         }

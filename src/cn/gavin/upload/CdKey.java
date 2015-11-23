@@ -178,11 +178,21 @@ public class CdKey extends BmobObject {
             }
             accessory.save();
         } else {
-            hero.addMaterial(material);
-            hero.setSkillPoint(hero.getSkillPoint() + skillPoint);
-            hero.addPoint(point);
-            hero.setLockBox(hero.getLockBox() + lockBox);
-            hero.setKeyCount(hero.getKeyCount() + key);
+            if(material!=null) {
+                hero.addMaterial(material);
+            }
+            if(skillPoint!=null) {
+                hero.setSkillPoint(hero.getSkillPoint() + skillPoint);
+            }
+            if(point!=null) {
+                hero.addPoint(point);
+            }
+            if(lockBox!=null) {
+                hero.setLockBox(hero.getLockBox() + lockBox);
+            }
+            if(key!=null) {
+                hero.setKeyCount(hero.getKeyCount() + key);
+            }
         }
         if (isOnce) {
             this.setIsUsed(true);
@@ -239,11 +249,17 @@ public class CdKey extends BmobObject {
             public void onSuccess(CdKey object) {
                 dialog.dismiss();
                 TextView view = new TextView(context);
-                if (object.perform(MazeContents.hero)) {
-                    view.setText(Html.fromHtml(object.toString()));
-                    succDialog.setView(view);
-                } else {
-                    view.setText("这个兑换码已经使用过了！");
+                try {
+                    if (object.perform(MazeContents.hero)) {
+                        view.setText(Html.fromHtml(object.toString()));
+                        succDialog.setView(view);
+                    } else {
+                        view.setText("这个兑换码已经使用过了！");
+                        succDialog.setView(view);
+                    }
+                }catch (Exception e){
+                    LogHelper.logException(e);
+                    view.setText(e.getMessage());
                     succDialog.setView(view);
                 }
                 succDialog.show();
@@ -253,7 +269,7 @@ public class CdKey extends BmobObject {
             public void onFailure(int code, String arg0) {
                 dialog.dismiss();
                 TextView view = new TextView(context);
-                view.setText("无此兑换码！");
+                view.setText("无此兑换码！" + code + "=" + arg0);
                 succDialog.setView(view);
                 succDialog.show();
             }

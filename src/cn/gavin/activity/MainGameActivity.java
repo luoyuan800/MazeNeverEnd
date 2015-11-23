@@ -40,6 +40,8 @@ import cn.gavin.palace.PalaceMonster;
 import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
 import cn.gavin.pet.PetDialog;
+import cn.gavin.pet.skill.PetSkillList;
+import cn.gavin.pet.skill.Shaman;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
@@ -376,6 +378,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     switch (status) {
                         case UpdateStatus.Update:
                             save();
+                            Achievement.updater.enable(heroN);
                             break;
                         case UpdateStatus.NotNow:
                             break;
@@ -494,7 +497,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 "2.  这个并不算是真正内购功能（虽然确实很像内购）\n" +
                 "3.  请适量使用。过多的锻造点数并不能加快您的游戏进度。\n" +
                 "4.  您会获得额外的10W点锻造点数和随机的能力点数。\n" +
-                "5.  您会随机获得一个低属性宠物。\n");
+                "5.  您会随机获得一个高属性宠物。\n");
         dialog.setView(tv);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
@@ -683,7 +686,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         final long resetSkillValue = 799988 + 69988 * heroN.getResetSkillCount();
         AlertDialog resetSkillPointDialog;
         resetSkillPointDialog = new Builder(this).create();
-        resetSkillPointDialog.setTitle("消耗" + resetSkillValue + "材料重置技能");
+        resetSkillPointDialog.setTitle("消耗" + resetSkillValue + "锻造点数重置技能");
         resetSkillPointDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
 
@@ -862,9 +865,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             i = Monster.lastNames.length - 1;
         }
         pet.setType(Monster.lastNames[i]);
-        pet.setAtk(heroN.getBaseAttackValue() / 105 + 1);
-        pet.setDef(heroN.getBaseDefense() / 205 + 1);
-        pet.setHp(heroN.getRealHP() / 1000 + 1);
+        pet.setAtk(heroN.getBaseAttackValue() *2 + 1);
+        pet.setDef(heroN.getBaseDefense() * 2 + 1);
+        pet.setHp(heroN.getRealHP()  + 1);
         if (heroN.getElement() != Element.无) {
             pet.setElement(heroN.getElement());
         } else {
@@ -872,6 +875,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         }
         pet.setName("奖励的普通" + pet.getType());
         pet.setSex(heroN.getRandom().nextInt(2));
+        pet.setSkill(PetSkillList.Shaman.getSkill(pet));
         pet.setLev(maze.getLev());
         pet.setIntimacy(0l);
         pet.setOwner(heroN.getName());
@@ -1812,7 +1816,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     heroN.setKeyCount(heroN.getKeyCount() - 1);
                     showLockBox();
                     heroN.click(false);
-                }else if(count){
+                }else if(!count){
                     showItemFull();
                 }
                 break;

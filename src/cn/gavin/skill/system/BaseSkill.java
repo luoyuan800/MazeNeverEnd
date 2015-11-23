@@ -481,7 +481,8 @@ public class BaseSkill extends SkillLayout {
                     String msg1 = skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害");
                     context.addMessage(msg1);
                     monster.addBattleSkillDesc(msg1);
-                    long turn = hero.getRandom().nextLong(Math.round(skill.getCount() / 200f) + 1) + 1;
+                    long turn = hero.getRandom().nextLong(Math.round(skill.getCount() / 2000f) + 1) + 1;
+                    if(turn > 20) turn = 20;
                     monster.setHold(true);
                     monster.setHoldTurn(turn);
                     String msg2 = skill.format(hero.getFormatName() + "触发了" + skill.getName() + "定住对方" + turn + "个回合");

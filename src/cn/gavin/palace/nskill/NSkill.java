@@ -5,6 +5,7 @@ import cn.gavin.palace.Base;
 import cn.gavin.pet.skill.GoldenSearcher;
 import cn.gavin.pet.skill.HealthSkill;
 import cn.gavin.pet.skill.QuickGrow;
+import cn.gavin.pet.skill.Shaman;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.utils.Random;
@@ -16,7 +17,7 @@ import cn.gavin.utils.Random;
  */
 public abstract class NSkill {
     long count;
-    Base me;
+    protected Base me;
     private float rate = 25;
     Random random = new Random();
     public boolean perform(){
@@ -28,50 +29,55 @@ public abstract class NSkill {
 
     public abstract long getHarm(Base target);
 
-    public static NSkill createSkillByName(String name, Base me, long count, Skill oSkill){
+    public static NSkill createSkillByName(String name, Base me, long count, Skill oSkill) {
         NSkill skill = null;
-        if(name.equals("重击")){
-            skill =  new HitSkill(me,count);
-        }else if(name.equals("多重攻击")){
+        if (name.equals("重击")) {
+            skill = new HitSkill(me, count);
+        } else if (name.equals("多重攻击")) {
             skill = new MultiSkill(me, count);
-        }else if(name.equals("闪避")){
+        } else if (name.equals("闪避")) {
             skill = new DodgeSkill(me, count);
-        }else if(name.equals("勇者之击")){
+        } else if (name.equals("勇者之击")) {
             skill = new HeroHit(me, count);
-            if(oSkill!=null){
-                ((HeroHit)skill).setBase(((AttackSkill)oSkill).getBaseHarm());
-                ((HeroHit)skill).setAddition(((AttackSkill) oSkill).getAdditionHarm());
+            if (oSkill != null) {
+                ((HeroHit) skill).setBase(((AttackSkill) oSkill).getBaseHarm());
+                ((HeroHit) skill).setAddition(((AttackSkill) oSkill).getAdditionHarm());
             }
-        }else if(name.equals("魔王天赋")){
+        } else if (name.equals("魔王天赋")) {
             skill = new EvilTalent(me, count);
-        }else if(name.equals("龙爪")){
+        } else if (name.equals("龙爪")) {
             skill = new DragonClaw(me, count);
-        }else if(name.equals("吐息")){
+        } else if (name.equals("吐息")) {
             skill = new DragonBreath(me, count);
-        }else if(name.equals("沙尘")){
+        } else if (name.equals("沙尘")) {
             skill = new SandStorm(me, count);
-        }else if(name.equals("欺诈游戏")){
+        } else if (name.equals("欺诈游戏")) {
             skill = new SwindleGame(me, count);
-        }else if(name.equals("闪电")){
+        } else if (name.equals("闪电")) {
             skill = new Lightning(me, count);
-            if(oSkill!=null){
-                ((Lightning)skill).setBase(((AttackSkill)oSkill).getBaseHarm());
-                ((Lightning)skill).setAddition(((AttackSkill)oSkill).getAdditionHarm());
+            if (oSkill != null) {
+                ((Lightning) skill).setBase(((AttackSkill) oSkill).getBaseHarm());
+                ((Lightning) skill).setAddition(((AttackSkill) oSkill).getAdditionHarm());
             }
-        }else if(name.equals("反弹")){
+        } else if (name.equals("反弹")) {
             skill = new ReboundSkill(me, count);
-        }else if(name.equals("水波")){
+        } else if (name.equals("水波")) {
             skill = new WaterWave(me, count);
-        }else if(name.equals("虚无吞噬")){
+        } else if (name.equals("虚无吞噬")) {
             skill = new SwallowSkill(me, count);
-        }else if(name.equals("原能力")){
+        } else if (name.equals("原能力")) {
             skill = new OriginalPower(me, count);
-        } else if(name.equals("治疗术")){
+        } else if (name.equals("治疗术")) {
             skill = new HealthSkill();
-        } else if(name.equals("自动获取额外能力点")){
+        } else if (name.equals("自动获取额外能力点")) {
             skill = new QuickGrow();
-        } else if(name.equals("自动收集锻造点数")){
+        } else if (name.equals("自动收集锻造点数")) {
             skill = new GoldenSearcher();
+        } else if (name.equals("祭师")) {
+            skill = new Shaman();
+        }
+        if (skill != null) {
+            skill.setMe(me);
         }
         return skill;
     }
@@ -106,5 +112,9 @@ public abstract class NSkill {
 
     public void setCount(long count) {
         this.count = count;
+    }
+
+    public void setMe(Base me) {
+        this.me = me;
     }
 }

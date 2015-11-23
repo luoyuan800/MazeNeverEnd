@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import cn.gavin.Achievement;
 import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
@@ -77,6 +78,11 @@ public class Monster {
     private long holdTurn = 0;
     private float silent;
     private long rate = 300;
+    private float petsub = 0f;
+
+    public boolean isPetSub(Random random){
+        return (random.nextInt(100) + random.nextFloat()) < petsub;
+    }
 
     public boolean isSilent(Random random) {
         return (random.nextInt(100) + random.nextFloat()) < silent;
@@ -151,6 +157,43 @@ public class Monster {
         }
         if(hp < 0){
             hp = hero.getUpperHp();
+        }
+        if( maze.getLev() /10000 > 5){
+            if(random.nextBoolean()){
+                hp += hero.getUpperHp();
+                atk += random.nextLong((hero.getUpperAtk() + hero.getRealUHP())/2);
+                Monster monster = new Monster("心好累", "", "作者",
+                        hp,
+                        atk);
+                monster.setSilent(55);
+                monster.petsub = 5;
+                return monster;
+            }
+        }else if(maze.getLev()/10000 >= 4){
+            if(random.nextBoolean()){
+                atk += random.nextLong((hero.getUpperAtk() + hero.getRealUHP()));
+                Monster monster = new Monster("愤怒", "", "作者",
+                        hp,
+                        atk);
+                monster.setSilent(20);
+                monster.petsub = 30;
+                return monster;
+            }
+        }else if(maze.getLev() % 50000 == 0){
+            if(random.nextBoolean()){
+                //atk += random.nextLong((hero.getUpperAtk() + hero.getRealUHP()));
+                hp += (hero.getUpperHp() + hero.getUpperAtk() + hero.getUpperDef());
+                if(!Achievement.richer.isEnable()){
+                    atk *= 5;
+                }
+                Monster monster = new Monster("心灵脆弱", "", "作者",
+                        hp,
+                        atk);
+                monster.setSilent(99);
+                monster.petsub = 60;
+                monster.material = -2222222;
+                return monster;
+            }
         }
         return new Monster("第" + maze.getLev() + "层", "守护", "者",
                 hp,

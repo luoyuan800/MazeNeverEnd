@@ -493,8 +493,8 @@ public class EvilSkill extends SkillLayout {
                         skill.setProbability(skill.getProbability() + 1.1f);
                     }
                     if(iskll.getAdditionHarm() < hero.getBaseAttackValue() * 100 && iskll.getAdditionHarm() < Integer.MAX_VALUE) {
-                        iskll.setBaseHarm(iskll.getBaseHarm() + 2000);
-                        iskll.setAdditionHarm(iskll.getAdditionHarm() * 2);
+                        iskll.setBaseHarm(iskll.getBaseHarm()*2 + 2000);
+                        iskll.setAdditionHarm(iskll.getAdditionHarm() * 2 + 4000);
                     }
                     return false;
                 }
