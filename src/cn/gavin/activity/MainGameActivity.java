@@ -151,6 +151,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private boolean updatePalace;
     private TextView petView;
     private Button petDetail;
+    private Button swapPetButton;
 
 
     //Get Function
@@ -392,7 +393,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             }
         });
         try {
-            BmobUpdateAgent.update(this);
+            //BmobUpdateAgent.update(this);
             PalaceMonster.getPalaceCount(context);
         } catch (Exception e) {
             LogHelper.logException(e);
@@ -443,6 +444,19 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             @Override
             public void onClick(View view) {
                 buttonGroup.showPrevious();
+            }
+        });
+        swapPetButton = (Button)findViewById(R.id.pet_swap_button);
+        swapPetButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try{
+                Intent intent = new Intent(context, SwapActivity.class);
+                startActivity(intent);
+                //overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+                }catch (Exception e){
+                    LogHelper.logException(e);
+                }
             }
         });
     }

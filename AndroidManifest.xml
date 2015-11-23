@@ -35,6 +35,7 @@
         <activity android:name=".activity.MainGameActivity"/>
         <activity android:name=".activity.ForgeActivity" />
         <activity android:name=".activity.PalaceActivity" />
+        <activity android:name=".activity.SwapActivity" />
 
         <service android:name=".maze.MazeService">
             <intent-filter>
