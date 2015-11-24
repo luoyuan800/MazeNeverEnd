@@ -524,4 +524,8 @@ public class Pet extends Base {
     public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
     }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
 }

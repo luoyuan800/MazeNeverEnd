@@ -107,10 +107,10 @@ public class Monster {
             monster = buildDefaultDefender(maze, hero, random);
         }
         if(monster.material == 0) {
-            monster.material = random.nextLong(maze.getLev() * monster.atk + 1) / 115 + 25;
+            monster.material = random.nextLong(maze.getLev() * monster.atk + 1) / 3115 + 55;
         }
-        if (monster.material > 10000) {
-            monster.material = 1000 + random.nextLong(10000);
+        if (monster.material > 5000) {
+            monster.material = 1000 + random.nextLong(5000);
         }
         monster.items = Arrays.asList(ItemName.原石, ItemName.铁矿石, ItemName.冷杉木,
                 ItemName.萤石, ItemName.蚁须, ItemName.龙须);
@@ -262,7 +262,10 @@ public class Monster {
         }
         long m1 = random.nextLong(hp + 1) / 180 + 5;
         long m2 = random.nextLong(atk + 1) / 409 + 10;
-        material = random.nextLong((m1 + m2) / 29 + 2) + 10 + random.nextLong(maze.getLev() * 9 + 1);
+        material = random.nextLong((m1 + m2) / 829 +1) + 20 + random.nextLong(maze.getLev() / 5 + 1);
+        if(material > 3000){
+            material = 300 + random.nextInt(3000);
+        }
         maxHP = hp;
         builder = new StringBuilder("第");
         builder.append(maze.getLev()).append("层").append("<br>------------");

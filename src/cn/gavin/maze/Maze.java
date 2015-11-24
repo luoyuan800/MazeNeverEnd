@@ -119,7 +119,10 @@ public class Maze {
 
                 addMessage(context, "-------------------");
             } else if (random.nextLong(850 + hunt) > 993 && random.nextLong(hero.getAgility()) > random.nextLong(6971)) {
-                long mate = random.nextLong(level * 300 + 1) + random.nextLong(hero.getAgility() / 1000 + 100) + 100;
+                long mate = random.nextLong(level * 30 + 1) + random.nextLong(hero.getAgility() / 10000 + 10) + 58;
+                if(mate > 10000){
+                    mate = 9000 + random.nextLong(mate -10000);
+                }
                 addMessage(context, hero.getFormatName() + "找到了一个宝箱， 获得了<font color=\"#FF8C00\">" + mate + "</font>锻造点数");
                 hero.addMaterial(mate);
                 addMessage(context, "-------------------");

@@ -3,8 +3,11 @@ package cn.gavin.pet.swop;
 import cn.bmob.v3.BmobObject;
 import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
+import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.pet.Pet;
+import cn.gavin.pet.skill.PetSkill;
 import cn.gavin.utils.MazeContents;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 gluo.
@@ -22,18 +25,26 @@ public class SwapPet extends BmobObject {
     private Long askDef;
     private Long askHp;
     private Integer askType;
+    private String askName;
+    private Integer askSex;
+//-----------------------------
+    private Long deathCount;
+    private String fName;
+    private String mName;
     private Long atk;
     private Long def;
     private Long hp;
     private Long atk_rise;
     private Long hp_rise;
     private Long def_rise;
+    private Integer sex;
     private String skill;
     private Integer type;
     private String color;
     private String name;
     private SwapPet changedPet;
     private Boolean acknowledge;
+    private String hello;
 
     public SwapPet buildSwapPet(Pet pet) {
         SwapPet swapPet = new SwapPet();
@@ -53,6 +64,10 @@ public class SwapPet extends BmobObject {
         swapPet.setOwnerId(pet.getOwnerId());
         swapPet.setOwnerName(pet.getOwner());
         swapPet.setId(pet.getId());
+        swapPet.setmName(pet.getmName());
+        swapPet.setfName(pet.getfName());
+        swapPet.setSex(pet.getSex());
+        swapPet.setDeathCount(pet.getDeathCount());
         return swapPet;
     }
 
@@ -234,5 +249,89 @@ public class SwapPet extends BmobObject {
 
     public void setAcknowledge(Boolean acknowledge) {
         this.acknowledge = acknowledge;
+    }
+
+    public String getAskName() {
+        return askName;
+    }
+
+    public void setAskName(String askName) {
+        this.askName = askName;
+    }
+
+    public String getHello() {
+        return hello;
+    }
+
+    public void setHello(String hello) {
+        this.hello = hello;
+    }
+
+    public Pet buildPet(){
+        Pet pet = new Pet();
+        pet.setType(Monster.lastNames[type]);
+        pet.setName(name);
+        pet.setHp_rise(hp_rise);
+        pet.setAtk_rise(atk_rise);
+        pet.setDef_rise(def_rise);
+        pet.setHp(hp);
+        pet.setAtk(atk);
+        pet.setDef(def);
+        pet.setColor(color);
+        String[] skillNameAndCount = StringUtils.split(skill, "_");
+        NSkill pSkill = NSkill.createSkillByName(skillNameAndCount[0],pet,StringUtils.toLong(skillNameAndCount[1]),null);
+        if(pSkill != null){
+            if(pSkill instanceof PetSkill){
+                pet.setSkill(pSkill);
+            }else{
+                pet.addSkill(pSkill);
+            }
+        }
+        pet.setSex(sex);
+        pet.setDeathCount(deathCount);
+        pet.setfName(fName);
+        pet.setmName(mName);
+        pet.save();
+        return pet;
+    }
+
+    public Integer getAskSex() {
+        return askSex;
+    }
+
+    public void setAskSex(Integer askSex) {
+        this.askSex = askSex;
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    public Long getDeathCount() {
+        return deathCount;
+    }
+
+    public void setDeathCount(Long deathCount) {
+        this.deathCount = deathCount;
+    }
+
+    public String getfName() {
+        return fName;
+    }
+
+    public void setfName(String fName) {
+        this.fName = fName;
+    }
+
+    public String getmName() {
+        return mName;
+    }
+
+    public void setmName(String mName) {
+        this.mName = mName;
     }
 }

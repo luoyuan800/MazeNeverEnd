@@ -82,7 +82,7 @@ public class SaveHelper {
         editor.putLong("baseDefense", heroN.getBaseDefense());
         editor.putLong("click", heroN.getClick());
         editor.putLong("point", heroN.getPoint());
-        editor.putLong("material", heroN.getMaterial());
+        editor.putLong("n_material", heroN.getMaterial());
         editor.putLong("swordLev", heroN.getSwordLev());
         editor.putLong("armorLev", heroN.getArmorLev());
         editor.putString("swordName", heroN.getSword());

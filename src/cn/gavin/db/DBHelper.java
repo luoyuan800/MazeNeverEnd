@@ -130,6 +130,9 @@ public class DBHelper {
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if(newVersion < oldVersion){
+            throw new RuntimeException("反向安装了低版本：" + oldVersion + "-->" + newVersion);
+        }
         upgrade8_9(db, oldVersion);
         upgrade10_11(db, oldVersion);
         upgrade11_12(db, oldVersion);
