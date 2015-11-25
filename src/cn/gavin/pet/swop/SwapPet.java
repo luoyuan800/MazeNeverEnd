@@ -39,7 +39,7 @@ public class SwapPet extends BmobObject {
     private Long def_rise;
     private Integer sex;
     private String skill;
-    private Integer type;
+    private Integer type;//不能用int，改成string
     private String color;
     private String name;
     private SwapPet changedPet;

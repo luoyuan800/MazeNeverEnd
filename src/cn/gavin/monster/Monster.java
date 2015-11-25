@@ -23,9 +23,10 @@ public class Monster {
     public final static String[] firstNames = {"普通", "怪异", "飞翔", "稀有", "发狂", "神奇", "神经", "传奇", "无敌"};
     private final static long[] firstAdditionHP = {15, 25, 400, 1000, 500, 2000, 10000, 70000, 70000};
     private final static long[] firstAdditionAtk = {3, 25, 100, 500, 2000, 2800, 4000, 10000, 20000};
-    private final static String[] secondNames = {"小", "中", "大", "大大", "红色", "绿色", "人面", "强壮", "无力", "红唇"};
-    private final static long[] secondAdditionHP = {15, 25, 100, 500, 1003, 2000, 6000, 10000, 1000000, 100};
-    private final static long[] secondAdditionAtk = {5, 10, 30, 100, 150, 500, 5500, 500, 1, 9000};
+    private final static String[] secondNames = {"小", "中", "大", "大大", "红色", "绿色", "人面", "强壮", "无力", "红唇","笨","鲁莽","暴力","胖"};
+    private final static long[] secondAdditionHP = {15, 25, 100, 500, 1003, 2000, 6000, 10000, 1000000, 100, 200000,50000,6000,2209380};
+    private final static long[] secondAdditionAtk = {5, 10, 30, 100, 150, 500, 5500, 500, 1, 9000, 10000, 30000,60000,1};
+    private final static long[] secondAdditionSilent = {0, 0, 0, 0, 0, 0, 0.5, 0.5, 0.1, 0.9, 1, 0,0,2};
     public final static String[] lastNames = {"蟑螂", "大蚯蚓", "异壳虫", "巨型飞蛾", "猪", "老鼠", "嗜血蚁",
             "老虎", "蛟", "变异蝎", "食人鸟", "丑蝙蝠", "蛇", "野牛", "龟", "三头蛇", "刺猬", "狼", "精灵",
             "僵尸", "凤凰", "龙", "骷髅", "作者", "熊", "朱厌", "陆吾", "山魁", "穷奇"};
