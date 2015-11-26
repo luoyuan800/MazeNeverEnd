@@ -146,6 +146,7 @@ public class SaveHelper {
         editor.putLong("reset_skill", heroN.getResetSkillCount());
         editor.putInt("csm", maze.getCsmgl());
         editor.putString("uuid", heroN.getUuid());
+        editor.putFloat("pet_abe", heroN.getPetAbe());
         editor.apply();
     }
 

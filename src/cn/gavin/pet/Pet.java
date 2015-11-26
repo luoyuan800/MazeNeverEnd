@@ -294,6 +294,10 @@ public class Pet extends Base {
         this.hp = getUHp();
     }
 
+    public void restoreHalf(){
+        this.hp = getUHp()/2;
+    }
+
     public void releasePet(Hero hero, MainGameActivity context) {
         hero.removePet(this);
         context.addMessage(getFormatName() + "对" + hero.getFormatName() + "说：拜拜……");
@@ -432,7 +436,7 @@ public class Pet extends Base {
             egg.setElement(Element.values()[random.nextInt(Element.values().length - 1)]);
             egg.setOwner(hero.getName());
             if (!f.getType().equals(m.getType())) {
-                if (random.nextInt(10000) + random.nextFloat() < 21.115) {
+                if (random.nextInt(10000) + random.nextFloat() < (31.115 + hero.getPetAbe())) {
                     String lastName = Monster.lastNames[random.nextInt(Monster.lastNames.length)];
                     egg.setName("变异的" + lastName);
                     if (lastName.equals("作者")) {
@@ -477,7 +481,6 @@ public class Pet extends Base {
                 }
             }
 
-            PetDB.save(egg);
             Achievement.egg.enable(hero);
             return egg;
         } else {

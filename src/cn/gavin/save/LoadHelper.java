@@ -174,6 +174,7 @@ public class LoadHelper {
         heroN.setTitleColor(preferences.getString("title_color", "#ff00acff"));
         heroN.setUuid(preferences.getString("uuid", UUID.randomUUID().toString()));
         heroN.setOnSkill(false);
+        heroN.setPetAbe(preferences.getFloat("pet_abe", 0));
         maze.setCsmgl(preferences.getInt("csm", 9987));
         loadValue(heroN);
         MazeContents.hero = heroN;

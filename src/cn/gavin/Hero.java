@@ -90,6 +90,7 @@ public class Hero implements BaseObject {
     private long resetSkillCount = 0;
     private String bakColor;
     private String uuid;
+    private float petAbe = 0;
 
     public Float getParry() {
         return parry;
@@ -822,63 +823,67 @@ public class Hero implements BaseObject {
     private void appendEffect(Accessory accessory) {
         EnumMap<Effect, Long> effectLongEnumMap = getAccessoryEffectMap(accessory);
         for (EnumMap.Entry<Effect, Long> effect : effectLongEnumMap.entrySet()) {
+            Long value = effect.getValue();
             switch (effect.getKey()) {
                 case ADD_DODGE_RATE:
-                    setDodgeRate(dodgeRate + effect.getValue());
+                    setDodgeRate(dodgeRate + value);
                     break;
                 case ADD_CLICK_POINT_AWARD:
-                    setClickPointAward(clickPointAward + effect.getValue());
+                    setClickPointAward(clickPointAward + value);
                     break;
                 case ADD_HIT_RATE:
-                    setHitRate(hitRate + effect.getValue());
+                    setHitRate(hitRate + value);
                     break;
                 case ADD_STR:
-                    addStrength(effect.getValue());
+                    addStrength(value);
                     break;
                 case ADD_UPPER_HP:
-                    addUpperHp(effect.getValue());
+                    addUpperHp(value);
                     break;
                 case ADD_DEF:
-                    addDefenseValue(effect.getValue());
+                    addDefenseValue(value);
                     break;
                 case ADD_ATK:
-                    addAttackValue(effect.getValue());
+                    addAttackValue(value);
                     break;
                 case ADD_AGI:
-                    addAgility(effect.getValue());
+                    addAgility(value);
                     break;
                 case ADD_POWER:
-                    addLife(effect.getValue());
+                    addLife(value);
                     break;
                 case ADD_CLICK_AWARD:
-                    addClickAward(effect.getValue());
+                    addClickAward(value);
                     break;
                 case ADD_PARRY:
-                    parry += effect.getValue();
+                    parry += value;
                     break;
                 case ADD_PER_ATK:
-                    Double atk = attackValue * effect.getValue() / 100d;
-                    if (Math.abs(atk) != atk) {
+                    Double atk = attackValue * value / 100d;
+                    if (atk < 0 && value > 0) {//如果计算出来的数值符号不相同，表明数据溢出了
                         atk = 0d;
                     }
                     putPerValue(accessory.getType(), effect.getKey(), atk.longValue());
                     addAttackValue(atk.longValue());
                     break;
                 case ADD_PER_DEF:
-                    Double def = defenseValue * effect.getValue() / 100d;
-                    if (Math.abs(def) != def) {
+                    Double def = defenseValue * value / 100d;
+                    if (def < 0 && value > 0) {
                         def = 0d;
                     }
                     putPerValue(accessory.getType(), effect.getKey(), def.longValue());
                     addDefenseValue(def.longValue());
                     break;
                 case ADD_PER_UPPER_HP:
-                    Double uHp = getRealUHP() * effect.getValue() / 100d;
-                    if (Math.abs(uHp) != uHp) {
+                    Double uHp = getRealUHP() * value / 100d;
+                    if (uHp < 0 && value > 0) {
                         uHp = 0d;
                     }
                     putPerValue(accessory.getType(), effect.getKey(), uHp.longValue());
                     addUpperHp(uHp.longValue());
+                    break;
+                case ADD_PET_ABE:
+                    setPetAbe(petAbe + value);
                     break;
             }
         }
@@ -935,6 +940,9 @@ public class Hero implements BaseObject {
                     Long uHp = getPerValue(accessory.getType(), effect.getKey());
 
                     addUpperHp(-uHp);
+                    break;
+                case ADD_PET_ABE:
+                    setPetAbe(petAbe - effect.getValue());
                     break;
             }
         }
@@ -1355,5 +1363,25 @@ public class Hero implements BaseObject {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public void restoreHalf() {
+        onChange = false;
+        onSkill = false;
+        this.hp = getUpperHp()/2;
+        for (Pet pet : getPets()) {
+            pet.restoreHalf();
+        }
+    }
+
+    public void setPetAbe(float petAbe) {
+        if(petAbe > 30){
+            petAbe = 30f;
+        }
+        this.petAbe = petAbe;
+    }
+
+    public float getPetAbe() {
+        return petAbe;
     }
 }

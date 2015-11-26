@@ -52,7 +52,6 @@ public class GoodManager {
             if(MazeContents.hero.getMaterial() >= good.getCost()){
                 MazeContents.hero.addMaterial(-good.getCost());
                 good.buy(1);
-                good.saveToDB(null);
                 return true;
             }
         }
@@ -66,7 +65,6 @@ public class GoodManager {
             if(MazeContents.hero.getMaterial() >= good.getCost() * count){
                 MazeContents.hero.addMaterial(-good.getCost() * count);
                 good.buy(count);
-                good.saveToDB(null);
                 return true;
             }
         }

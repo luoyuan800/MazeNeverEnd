@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import cn.bmob.v3.BmobObject;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.db.good.detail.LocalGood;
 import cn.gavin.utils.MazeContents;
 
 /**
@@ -14,12 +15,11 @@ import cn.gavin.utils.MazeContents;
 public class Good extends BmobObject {
     private String name;
     private String desc;
-    private String effect;
     private Integer sailCount;
     private Long cost;
-    private Long count;//For local use
-    public GoodEffect getGoodEffect(){
-        return GoodEffect.valueOf(effect);
+    private Boolean isLimited;
+    public LocalGood getGood(){
+        return null;
     }
 
     public String getName() {
@@ -36,29 +36,6 @@ public class Good extends BmobObject {
 
     public void setDesc(String desc) {
         this.desc = desc;
-    }
-
-    public String getEffect() {
-        return effect;
-    }
-
-    public void setEffect(String effect) {
-        this.effect = effect;
-    }
-
-    public void useGood(){
-        getGoodEffect().useGood();
-        count --;
-        saveToDB(null);
-    }
-
-    public void deleteFromDB(SQLiteDatabase database){
-
-    }
-
-    public void saveToDB(SQLiteDatabase database){
-
-
     }
 
     public Integer getSailCount() {
@@ -78,17 +55,19 @@ public class Good extends BmobObject {
     }
 
     public void buy(int i) {
-        this.setSailCount(sailCount + 1);
+        if(isLimited){
+            i = 1;
+        }
+        this.setSailCount(sailCount - i);
         this.update(MainGameActivity.context);
         //先查询出数据库中的个数，然后个数(count)加+i
-        count += i;
     }
 
-    public Long getCount() {
-        return count;
+    public Boolean getIsLimited() {
+        return isLimited;
     }
 
-    public void setCount(Long count) {
-        this.count = count;
+    public void setIsLimited(Boolean isLimited) {
+        this.isLimited = isLimited;
     }
 }

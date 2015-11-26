@@ -270,8 +270,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         showUpdate();
                         break;
                     case 100:
-                        heroN.addMaterial(100000);
-                        heroN.addPoint(20);
+                        heroN.addMaterial(5000000);
+                        heroN.addPoint(200);
                         alipay.addPayTime();
                         if (alipay.getPayTime() == 10) {
                             Achievement.crapGame.enable();
@@ -326,6 +326,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 super.handleMessage(msg);
             } catch (Exception exp) {
                 Log.e(TAG, "MainGameActivity.Handler", exp);
+                LogHelper.logException(exp);
             }
         }
 
