@@ -132,7 +132,7 @@ public class Accessory extends Equipment {
         id = UUID.randomUUID().toString();
         String sql = String.format("INSERT INTO accessory (id, name,base,addition,element,type,color) " +
                         "values ('%s', '%s', '%s','%s','%s','%s','%s')", id,
-                name, base.toString(), addition.toString(), element.name(), type, color);
+                name + (tag!=null? tag : ""), base.toString(), addition.toString(), element.name(), type, color);
         dbHelper.excuseSQLWithoutResult(sql);
         sql = String.format("SELECT name from recipe where name = '%s'", name);
         Cursor cursor = dbHelper.excuseSOL(sql);

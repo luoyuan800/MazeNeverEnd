@@ -21,6 +21,7 @@ import cn.gavin.skill.expression.UseExpression;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.PropertySkill;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Created by luoyuan on 9/13/15.
@@ -286,7 +287,7 @@ public class LongSkill extends SkillLayout {
                         monster.addBattleSkillDesc(msg);
                     }
                     monster.addHp(-harm);
-                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点金属性伤害。";
+                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点金属性伤害。";
                     iskll.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;
@@ -345,7 +346,7 @@ public class LongSkill extends SkillLayout {
                         monster.addBattleSkillDesc(msg);
                     }
                     monster.addHp(-harm);
-                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点火属性伤害。";
+                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点火属性伤害。";
                     iskll.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;
@@ -404,7 +405,7 @@ public class LongSkill extends SkillLayout {
                         monster.addBattleSkillDesc(msg);
                     }
                     monster.addHp(-harm);
-                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点土属性伤害。";
+                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点土属性伤害。";
                     iskll.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;

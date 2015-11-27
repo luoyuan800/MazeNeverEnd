@@ -1053,8 +1053,11 @@ public class Hero implements BaseObject {
                 clickAward = reincaCount + 1;
                 petSize = 3 + reincaCount.intValue() + 1;
                 if (petSize > 10) petSize = 10;
-                eggRate += 1;
-                petRate = 1;
+                eggRate = 300 + reincaCount;
+                petRate = 0.7f - reincaCount/25;
+                if(petRate < 0.01) petRate = 0.01f;
+                eggStep = 1 + reincaCount;
+                maxMazeLev = 1l;
                 DBHelper dbHelper = DBHelper.getDbHelper();
                 dbHelper.beginTransaction();
                 dbHelper.excuseSQLWithoutResult("DELETE FROM item");

@@ -129,7 +129,7 @@ public class Monster {
     }
 
     private static Monster buildDefaultDefender(Maze maze, Hero hero, Random random) {
-        long hp = (hero.getAttackValue() / 20) * (random.nextLong(maze.getLev() + 1)) + random.nextLong(hero.getUpperHp() + 1) + maze.getLev() * 100;
+        long hp = (hero.getAttackValue() / 20) * (random.nextLong(maze.getLev() + 1)) + random.nextLong(hero.getUpperHp() + 1) + maze.getLev() * 1000;
         long atk = (hero.getDefenseValue() + hero.getHp()) / 5 + maze.getLev() * 32 + random.nextLong(hero.getAttackValue() / 3 + maze.getLev() + 1);
         if (hp <= 0) hp = Integer.MAX_VALUE - 10;
         if (atk <= 0) hp = Integer.MAX_VALUE - 100;
@@ -280,6 +280,17 @@ public class Monster {
         if(maze.getLev() > 1000) {
             silent += firstAdditionSilent[first];
             silent += secondAdditionSilent[second];
+        }
+        if(maze.getLev() > 30000){
+            int addi = 10;
+            if(hero.getReincaCount() > 0){
+                addi /= (hero.getReincaCount() * 10);
+            }
+            if(addi < 1){
+                addi = 1;
+            }
+            hp *= addi;
+            atk *= addi;
         }
         formatName(hero);
     }

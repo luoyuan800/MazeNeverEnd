@@ -344,9 +344,9 @@ public class PetSimpleAdapter extends BaseAdapter {
             if (pet != null) {
                 String source = getIntimacyString();
                 leveText.setText(Html.fromHtml(source));
-                hpValue.setText(pet.getHp() + "/" + pet.getUHp());
-                atkValue.setText(pet.getMaxAtk() + "");
-                defValue.setText(pet.getMaxDef() + "");
+                hpValue.setText(StringUtils.formatNumber(pet.getHp()) + "/" + StringUtils.formatNumber(pet.getUHp()));
+                atkValue.setText(StringUtils.formatNumber(pet.getMaxAtk()));
+                defValue.setText(StringUtils.formatNumber(pet.getMaxDef()));
                 petOwner.setText(pet.getOwner());
                 Hero hero = MazeContents.hero;
                 if (hero.getPoint() < 1) {

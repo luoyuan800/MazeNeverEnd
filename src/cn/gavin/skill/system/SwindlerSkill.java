@@ -20,6 +20,7 @@ import cn.gavin.skill.expression.UseExpression;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.PropertySkill;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 luoyuan.
@@ -95,7 +96,7 @@ public class SwindlerSkill extends SkillLayout {
                     }
                     monster.addHp(-harm);
                     String msg = hero.getFormatName() + "使用了技能" + skill.getName() +
-                            "，对" + monster.getFormatName() + "造成了" + harm + "的伤害。";
+                            "，对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "的伤害。";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;
@@ -148,14 +149,14 @@ public class SwindlerSkill extends SkillLayout {
                     long reduce = hero.getClick() < hero.getBaseAttackValue() ?
                             (hero.getClick() + hero.getClickAward()) :
                             (hero.getRandom().nextLong(hero.getClick() + hero.getBaseDefense()));
-                    String smsg = hero.getFormatName() + "使用了技能" + skill.getName() + "提升了" + reduce + "点防御力";
+                    String smsg = hero.getFormatName() + "使用了技能" + skill.getName() + "提升了" + StringUtils.formatNumber(reduce) + "点防御力";
                     skill.addMessage(smsg);
                     monster.addBattleSkillDesc(smsg);
                     harm -= reduce;
                     if (harm < 0) harm = 0;
                     hero.addHp(-harm);
                     String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() +
-                            " 造成了" + harm + "的伤害。";
+                            " 造成了" + StringUtils.formatNumber(harm) + "的伤害。";
                     skill.addMessage(msg);
                     monster.addBattleDesc(msg);
                     return false;
@@ -219,7 +220,7 @@ public class SwindlerSkill extends SkillLayout {
                         if(harm < 0)harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1) + 1;
                         monster.addHp(-harm);
                         String msg = hero.getFormatName() + "攻击了" + monster.getFormatName() +
-                                " 造成了" + harm + "的伤害。";
+                                " 造成了" + StringUtils.formatNumber(harm) + "的伤害。";
                         skill.addMessage(msg);
                         monster.addBattleDesc(msg);
                     } else {
@@ -235,7 +236,7 @@ public class SwindlerSkill extends SkillLayout {
                         harm *= n;
                         hero.addHp(-harm);
                         String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() +
-                                " 造成了" + harm + "的伤害。";
+                                " 造成了" + StringUtils.formatNumber(harm) + "的伤害。";
                         skill.addMessage(msg);
                         monster.addBattleDesc(msg);
                     }
@@ -326,7 +327,7 @@ public class SwindlerSkill extends SkillLayout {
                     StringBuilder builder = new StringBuilder();
                     builder.append("无需技能点激活，每前进100层迷宫随机激活。<br>技能叠加的伤害数值在激活的时候随机生成。激活后每100层变换一次技能伤害值。<br>");
                     builder.append(skill.getProbability()).append("%的概率释放，造成").
-                            append(!skill.isActive() ? "????" : ((hero.getAttackValue() + iskll.getBaseHarm()) + " - " + (hero.getAttackValue() + iskll.getBaseHarm() + iskll.getAdditionHarm()))).
+                            append(!skill.isActive() ? "????" : (StringUtils.formatNumber((hero.getAttackValue() + iskll.getBaseHarm())) + " - " + StringUtils.formatNumber((hero.getAttackValue() + iskll.getBaseHarm() + iskll.getAdditionHarm())))).
                             append("的伤害。");
                     return builder.toString();
                 }
@@ -341,7 +342,7 @@ public class SwindlerSkill extends SkillLayout {
                     }
                     monster.addHp(-harm);
                     String msg = hero.getFormatName() + "使用了技能" + skill.getName() +
-                            "，对" + monster.getFormatName() + "造成了" + harm + "的伤害。";
+                            "，对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "的伤害。";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;
@@ -402,7 +403,7 @@ public class SwindlerSkill extends SkillLayout {
                     if (coinSide) {
                         long harm = hero.getAttackValue();
                         monster.addHp(-harm);
-                        msg = hero.getFormatName() + "进行了一次攻击，对" + monster.getFormatName() + "造成了" + harm + "的伤害。";
+                        msg = hero.getFormatName() + "进行了一次攻击，对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "的伤害。";
                         skill.addMessage(msg);
                         monster.addBattleDesc(msg);
                     }

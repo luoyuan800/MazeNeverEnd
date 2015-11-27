@@ -18,6 +18,7 @@ import cn.gavin.skill.expression.UseExpression;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.PropertySkill;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Created by luoyuan on 9/28/15.
@@ -166,7 +167,7 @@ public class EvilSkill extends SkillLayout {
                     String msg1 = monster.getFormatName() + "攻击了" + hero.getFormatName();
                     skill.addMessage(msg1);
                     monster.addBattleSkillDesc(msg1);
-                    String msg2 = hero.getFormatName() + "使用了技能" + skill.getName() + "将" + harm + "点伤害转化为生命";
+                    String msg2 = hero.getFormatName() + "使用了技能" + skill.getName() + "将" + StringUtils.formatNumber(harm) + "点伤害转化为生命";
                     skill.addMessage(msg2);
                     monster.addBattleSkillDesc(msg2);
                     Achievement.devils.enable(hero);
@@ -215,7 +216,7 @@ public class EvilSkill extends SkillLayout {
                             harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1) + 1;
                         }
                         hero.addHp(harm);
-                        String msg1 = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了<font color=\"red\">" + harm + "</font>点伤害。";
+                        String msg1 = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了<font color=\"red\">" + StringUtils.formatNumber(harm) + "</font>点伤害。";
                         skill.addMessage(msg1);
                         monster.addBattleSkillDesc(msg1);
                     }else {
@@ -463,8 +464,8 @@ public class EvilSkill extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
                     builder.append("从虚空中拉出一条闪电攻击敌人。<br>").append(skill.getProbability()).
-                            append("的概率释放。造成额外的").append(iskll.getBaseHarm()).append("-").
-                            append(iskll.getBaseHarm() + iskll.getAdditionHarm()).append("闪电伤害");
+                            append("的概率释放。造成额外的").append(StringUtils.formatNumber(iskll.getBaseHarm())).append("-").
+                            append(StringUtils.formatNumber(iskll.getBaseHarm() + iskll.getAdditionHarm())).append("闪电伤害");
                     return builder.toString();
                 }
             });
@@ -479,7 +480,7 @@ public class EvilSkill extends SkillLayout {
                     }
                     monster.addHp(-harm);
                     String msg = hero.getFormatName() + "使用了技能" + iskll.getName() + "，对" +
-                            monster.getFormatName() + "造成了" + harm + "的闪电伤害";
+                            monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "的闪电伤害";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;
@@ -531,7 +532,7 @@ public class EvilSkill extends SkillLayout {
                     if (harm <= 0) {
                         harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1);
                     }
-                    String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "的伤害。";
+                    String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "的伤害。";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     double v = harm * (iskll.getProbability()*2 + 50d) / 100d;
@@ -633,7 +634,7 @@ public class EvilSkill extends SkillLayout {
                         long harm = hero.getAttackValue();
                         monster.addHp(-harm);
                         String msg = hero.getFormatName() + "攻击了" +
-                                monster.getFormatName() + "造成了" + harm + "的伤害";
+                                monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "的伤害";
                         skill.addMessage(msg);
                         monster.addBattleSkillDesc(msg);
                     }else {
@@ -714,7 +715,7 @@ public class EvilSkill extends SkillLayout {
                     double harm = monster.getHp() * (iskll.getBaseHarm() / 100d);
                     monster.addHp(-(long) harm);
                     hero.addHp((long) harm);
-                    String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，吸收了" + monster.getFormatName() + "的" + (long)harm + "点生命值。";
+                    String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，吸收了" + monster.getFormatName() + "的" + StringUtils.formatNumber((long)harm) + "点生命值。";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     if(skill.getCount() == 10000){
@@ -772,7 +773,7 @@ public class EvilSkill extends SkillLayout {
                     }
                     monster.addHp(-l);
                     String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，对" +
-                            monster.getFormatName() + "进行了" + i + "次攻击，总共造成了" + l + "伤害。";
+                            monster.getFormatName() + "进行了" + i + "次攻击，总共造成了" + StringUtils.formatNumber(l) + "伤害。";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     Achievement.satan.enable(hero);

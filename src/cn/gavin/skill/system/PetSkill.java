@@ -22,6 +22,7 @@ import cn.gavin.skill.expression.UseExpression;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.PropertySkill;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 luoyuan.
@@ -173,7 +174,7 @@ public class PetSkill extends SkillLayout {
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = hero.getAttackValue();
                     monster.addHp(-harm);
-                    String msg = hero.getFormatName() + "" + monster.getFormatName() + "" + harm + "";
+                    String msg = hero.getFormatName() + "攻击了" + monster.getFormatName() + "造成" + StringUtils.formatNumber(harm) + "点伤害";
                     iskll.addMessage(msg);
                     monster.addBattleDesc(msg);
                     if (monster.getHp() <= 0) {
@@ -357,7 +358,7 @@ public class PetSkill extends SkillLayout {
                                     } else {
                                         petHarm = pet.getAtk();
                                     }
-                                    String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了" + petHarm + "点伤害";
+                                    String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了" + StringUtils.formatNumber(petHarm) + "点伤害";
                                     monster.addHp(-petHarm);
                                     iskll.addMessage(petAtk);
                                     monster.addBattleSkillDesc(petAtk);
@@ -409,7 +410,7 @@ public class PetSkill extends SkillLayout {
                         harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1) + 1;
                     }
                     hero.addHp(-harm);
-                    String harmMsg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了" + harm + "点伤害。";
+                    String harmMsg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了" + StringUtils.formatNumber(harm) + "点伤害。";
                     String skillMsg = hero.getFormatName() + "使用了技能" + iskll.getName();
                     skill.addMessage(harmMsg);
                     monster.addBattleSkillDesc(harmMsg);
@@ -435,7 +436,7 @@ public class PetSkill extends SkillLayout {
                                     } else {
                                         petHarm = pet.getAtk();
                                     }
-                                    String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了" + petHarm + "点伤害";
+                                    String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了" + StringUtils.formatNumber(petHarm) + "点伤害";
                                     monster.addHp(-petHarm);
                                     iskll.addMessage(petAtk);
                                     monster.addBattleSkillDesc(petAtk);
