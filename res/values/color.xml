@@ -8,4 +8,6 @@
     <color name="onUse">#d40210</color>
     <color name="un_active">#453e22</color>
     <color name="active">#da5f0a</color>
+    <color name="grey21">#363636</color>
+    <color name="gray">#DBDBDB</color>
 </resources>

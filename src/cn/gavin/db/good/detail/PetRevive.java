@@ -10,6 +10,11 @@ import cn.gavin.utils.MazeContents;
  * Created by gluo on 11/26/2015.
  */
 public class PetRevive extends UsableGood {
+    public static final int type = 6;
+
+    public int getType(){
+        return type;
+    }
     @Override
     public Object use() {
         Hero hero = MazeContents.hero;

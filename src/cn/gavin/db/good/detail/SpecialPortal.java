@@ -6,6 +6,11 @@ package cn.gavin.db.good.detail;
  * Created by gluo on 11/26/2015.
  */
 public class SpecialPortal extends UsableGood {
+    public static final int type = 9;
+
+    public int getType(){
+        return type;
+    }
     @Override
     public Object use() {
         return null;

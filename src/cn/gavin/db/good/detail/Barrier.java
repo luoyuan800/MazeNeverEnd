@@ -6,6 +6,11 @@ package cn.gavin.db.good.detail;
  * Created by gluo on 11/26/2015.
  */
 public class Barrier implements LocalGood {
+    public static final int type = 1;
+
+    public int getType(){
+        return type;
+    }
     private int count;
 
     @Override

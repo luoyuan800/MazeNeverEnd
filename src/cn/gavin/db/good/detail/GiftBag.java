@@ -8,6 +8,11 @@ import java.util.List;
  * Created by gluo on 11/26/2015.
  */
 public class GiftBag extends UsableGood {
+    public static final int type = 3;
+
+    public int getType(){
+        return type;
+    }
     private List<String> items;
     @Override
     public Object use() {

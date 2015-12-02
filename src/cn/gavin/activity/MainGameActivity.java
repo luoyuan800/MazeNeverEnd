@@ -41,7 +41,7 @@ import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
 import cn.gavin.pet.PetDialog;
 import cn.gavin.pet.skill.PetSkillList;
-import cn.gavin.pet.skill.Shaman;
+import cn.gavin.pet.swop.ui.SwapActivity;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
@@ -1901,6 +1901,27 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 skillDialog.show(heroN);
                 break;
             case R.id.update_button:
+                BmobUpdateAgent.setDialogListener(new BmobDialogButtonListener() {
+
+                    @Override
+                    public void onClick(int status) {
+                        try {
+                            switch (status) {
+                                case UpdateStatus.Update:
+                                    save();
+                                    Achievement.updater.enable(heroN);
+                                    break;
+                                case UpdateStatus.NotNow:
+                                    break;
+                                case UpdateStatus.Close://只有在强制更新状态下才会在更新对话框的右上方出现close按钮,如果用户不点击”立即更新“按钮，这时候开发者可做些操作，比如直接退出应用等
+                                    exist();
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            LogHelper.logException(e);
+                        }
+                    }
+                });
                 BmobUpdateAgent.forceUpdate(context);
 //                showUpdate();
                 break;

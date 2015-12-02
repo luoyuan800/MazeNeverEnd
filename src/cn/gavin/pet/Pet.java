@@ -85,6 +85,13 @@ public class Pet extends Base {
     }
 
     public void setSkill(NSkill skill) {
+        if(skill!=null){
+            if(skill instanceof PetSkill){
+                this.skill = skill;
+            }else{
+                addSkill(skill);
+            }
+        }
         this.skill = skill;
     }
 
@@ -423,6 +430,9 @@ public class Pet extends Base {
             egg.setIntimacy(1000l);
             egg.setType("蛋");
             egg.setDeathCount(255 - (f.getDeathCount() + m.getDeathCount()));
+            if(egg.getDeathCount() <= 0){
+                egg.setDeathCount(5);
+            }
             egg.setfName(f.getName());
             egg.setmName(m.getName());
             egg.setHp(f.getUHp() / 2 + random.nextLong(m.getHp()));

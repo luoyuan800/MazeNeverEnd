@@ -9,4 +9,6 @@ public interface LocalGood {
     String getName();
     int getCount();
     String toString();
+    int getType();
+    void setCount(int count);
 }

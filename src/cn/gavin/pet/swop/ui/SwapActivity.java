@@ -1,4 +1,4 @@
-package cn.gavin.activity;
+package cn.gavin.pet.swop.ui;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -22,6 +22,4 @@ public class SwapActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.swap_pet);
     }
-
-
 }

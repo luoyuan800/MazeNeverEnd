@@ -6,6 +6,11 @@ package cn.gavin.db.good.detail;
  * Created by gluo on 11/26/2015.
  */
 public class HalfSail implements LocalGood{
+    public static final int type = 4;
+
+    public int getType(){
+        return type;
+    }
     private int count;
     @Override
     public String getName() {

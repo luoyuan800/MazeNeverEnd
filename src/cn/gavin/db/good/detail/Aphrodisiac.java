@@ -6,6 +6,11 @@ package cn.gavin.db.good.detail;
  * Created by gluo on 11/26/2015.
  */
 public class Aphrodisiac extends UsableGood {
+    public static final int type = 0;
+
+    public int getType(){
+        return type;
+    }
     @Override
     public Object use() {
         return null;
@@ -13,7 +18,7 @@ public class Aphrodisiac extends UsableGood {
 
     @Override
     public String getName() {
-        return null;
+        return "奴隶";
     }
 
     public String toString(){

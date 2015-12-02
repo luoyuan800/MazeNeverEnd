@@ -21,19 +21,19 @@ import cn.gavin.utils.StringUtils;
  */
 public class Monster {
     public final static String[] firstNames = {"普通", "怪异", "飞翔", "稀有", "发狂", "神奇", "神经", "传奇", "无敌"};
-    private final static long[] firstAdditionHP = {15, 25, 400, 1000, 500, 2000, 10000, 70000, 70000};
-    private final static long[] firstAdditionAtk = {3, 25, 100, 500, 2000, 2800, 4000, 10000, 20000};
-    private final static float[] firstAdditionSilent = {0, 10, 0, 0, 0.1f, 0, 1, 1, 5};
-    private final static String[] secondNames = {"小", "中", "大", "大大", "红色", "绿色", "人面", "强壮", "无力", "红唇","笨","鲁莽","暴力","胖"};
-    private final static long[] secondAdditionHP = {15, 25, 100, 500, 1003, 2000, 6000, 10000, 1000000, 100, 200000,50000,6000,2209380};
-    private final static long[] secondAdditionAtk = {5, 10, 30, 100, 150, 500, 5500, 500, 1, 9000, 10000, 30000,60000,1};
-    private final static float[] secondAdditionSilent = {0, 0, 0, 0, 0, 0, 0.5f, 0.5f, 0.1f, 0.9f, 1, 0,0,2};
+    public final static long[] firstAdditionHP = {15, 25, 400, 1000, 500, 2000, 10000, 70000, 70000};
+    public final static long[] firstAdditionAtk = {3, 25, 100, 500, 2000, 2800, 4000, 10000, 20000};
+    public final static float[] firstAdditionSilent = {0, 10, 0, 0, 0.1f, 0, 1, 1, 5};
+    public final static String[] secondNames = {"小", "中", "大", "大大", "红色", "绿色", "人面", "强壮", "无力", "红唇","笨","鲁莽","暴力","胖"};
+    public final static long[] secondAdditionHP = {15, 25, 100, 500, 1003, 2000, 6000, 10000, 1000000, 100, 200000,50000,6000,2209380};
+    public final static long[] secondAdditionAtk = {5, 10, 30, 100, 150, 500, 5500, 500, 1, 9000, 10000, 30000,60000,1};
+    public final static float[] secondAdditionSilent = {0, 0, 0, 0, 0, 0, 0.5f, 0.5f, 0.1f, 0.9f, 1, 0,0,2};
     public final static String[] lastNames = {"蟑螂", "大蚯蚓", "异壳虫", "巨型飞蛾", "猪", "老鼠", "嗜血蚁",
             "老虎", "蛟", "变异蝎", "食人鸟", "丑蝙蝠", "蛇", "野牛", "龟", "三头蛇", "刺猬", "狼", "精灵",
             "僵尸", "凤凰", "龙", "骷髅", "作者", "熊", "朱厌", "陆吾", "山魁", "穷奇"};
-    private final static long[] baseHP = {8, 20, 55, 75, 95, 115, 400, 1000, 800, 520, 280, 350, 380,
+    public final static long[] baseHP = {8, 20, 55, 75, 95, 115, 400, 1000, 800, 520, 280, 350, 380,
             450, 530, 1000, 1500, 2300, 4000, 4500, 6000, 10000, 20000, 70000, 30000, 60000, 80000, 50000, 100000};
-    private final static long[] baseAtk = {1, 5, 15, 25, 35, 56, 100, 120, 305, 40, 60, 125, 200,
+    public final static long[] baseAtk = {1, 5, 15, 25, 35, 56, 100, 120, 305, 40, 60, 125, 200,
             450, 500, 700, 720, 1000, 1500, 2500, 300, 3400, 5000, 70000, 6000, 6500, 10000, 20000, 90000};
     private final static List[] itemNames = {
             Arrays.asList(ItemName.原石),
