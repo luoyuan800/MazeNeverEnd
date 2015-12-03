@@ -1387,4 +1387,13 @@ public class Hero implements BaseObject {
     public float getPetAbe() {
         return petAbe;
     }
+
+    public boolean petOnUsed(Pet pet){
+        for(Pet p: getPets()){
+            if(p.getId().equalsIgnoreCase(pet.getId())){
+                return true;
+            }
+        }
+        return false;
+    }
 }

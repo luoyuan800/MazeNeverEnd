@@ -42,12 +42,19 @@ import cn.gavin.utils.ui.LoadMoreListView;
 public class SwapDialog implements LoadMoreListView.OnRefreshLoadingMoreListener, View.OnClickListener{
     private LoadMoreListView listView;
     private PetSimpleViewAdapter adapter;
-    List<Pet> petList = PetDB.loadPet(null);
+    List<Pet> petList;
     int currentIndex = 0;
     private Context context;
     private AlertDialog dialog;
 
     public SwapDialog(Context context) {
+        petList = new ArrayList<Pet>();
+        List<Pet> allPets = PetDB.loadPet(null);
+        for(Pet p : allPets){
+            if(!MazeContents.hero.petOnUsed(p)){
+                petList.add(p);
+            }
+        }
         this.context = context;
         listView = new LoadMoreListView(context);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -150,7 +157,7 @@ public class SwapDialog implements LoadMoreListView.OnRefreshLoadingMoreListener
                             swapPet.setAskSex(1);
                         }
                         SwapManager swapManager = new SwapManager();
-                        swapManager.uploadPet(context,swapPet, pet);
+                        swapManager.uploadPet(context, swapPet, pet);
                         dialog.dismiss();
                         dismiss();
                     }
