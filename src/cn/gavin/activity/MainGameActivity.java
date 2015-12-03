@@ -41,7 +41,7 @@ import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
 import cn.gavin.pet.PetDialog;
 import cn.gavin.pet.skill.PetSkillList;
-import cn.gavin.pet.swop.ui.SwapActivity;
+import cn.gavin.pet.swop.ui.SwapDialog;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
@@ -452,9 +452,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             @Override
             public void onClick(View view) {
                 try{
-                Intent intent = new Intent(context, SwapActivity.class);
-                startActivity(intent);
-                //overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+                    SwapDialog swapDialog = new SwapDialog(context);
+                    swapDialog.show();
                 }catch (Exception e){
                     LogHelper.logException(e);
                 }

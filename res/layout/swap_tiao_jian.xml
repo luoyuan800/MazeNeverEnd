@@ -1,83 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent" android:background="#0567ff" android:baselineAligned="false">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0567ff"
+    android:baselineAligned="false"
+    android:orientation="vertical">
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="交换条件设定"
-            android:id="@+id/textView" android:layout_gravity="left|center_vertical"
-            android:textColor="@android:color/darker_gray" android:textStyle="bold" android:textSize="25sp"/>
+        android:id="@+id/pet_swap_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:text="交换条件设定"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
     <Space
-            android:layout_width="fill_parent"
-            android:layout_height="20px"
-            android:layout_gravity="left|center_vertical"/>
+        android:layout_width="fill_parent"
+        android:layout_height="20px"
+        android:layout_gravity="left|center_vertical" />
+
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="期望攻击力大于"
-            android:id="@+id/textView2" android:layout_gravity="left|center_vertical"/>
+        android:id="@+id/ask_atk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:text="期望攻击力大于"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
     <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="10"
-            android:id="@+id/editText" android:layout_gravity="center" android:text="12345"
-            android:textColor="@android:color/background_light" android:gravity="center_horizontal"/>
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:inputType="number"
+        android:text="0"
+        android:textColor="@android:color/background_light" />
+
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="期望防御力大于"
-            android:id="@+id/textView3" android:layout_gravity="left|center_vertical"/>
+        android:id="@+id/ask_def"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:text="期望防御力大于"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
     <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="numberSigned"
-            android:ems="10"
-            android:id="@+id/editText2" android:layout_gravity="center"
-            android:textColor="@android:color/background_light" android:text="123456"
-            android:gravity="center_horizontal"/>
+        android:id="@+id/editText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:inputType="numberSigned"
+        android:text="0"
+        android:textColor="@android:color/background_light" />
+
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="期望HP大于"
-            android:id="@+id/textView4" android:layout_gravity="left|center_vertical"/>
+        android:id="@+id/ask_hp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:text="期望HP大于"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
     <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="numberSigned"
-            android:ems="10"
-            android:id="@+id/editText3" android:layout_gravity="center"
-            android:textColor="@android:color/background_light" android:text="1234567"
-            android:gravity="center_horizontal"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="名字限定"
-            android:id="@+id/textView5" android:layout_gravity="left|center_vertical"/>
+        android:id="@+id/editText3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:inputType="numberSigned"
+        android:text="0"
+        android:textColor="@android:color/background_light" />
+
     <LinearLayout
-            android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:text="性别"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
         <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner" android:layout_weight="1"/>
+            android:id="@+id/ask_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:text="名字限定"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner2" android:layout_weight="1"/>
+            android:id="@+id/first_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
         <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner3" android:layout_weight="1"/>
+            android:id="@+id/second_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/last_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
     </LinearLayout>
 </LinearLayout>

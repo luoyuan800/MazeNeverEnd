@@ -1,14 +1,19 @@
 package cn.gavin.pet.swop.ui;
 
+import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.pet.Pet;
 import cn.gavin.utils.MazeContents;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 luoyuan.
@@ -16,90 +21,122 @@ import cn.gavin.utils.MazeContents;
  * Created by luoyuan on 12/2/15.
  */
 public class PetSimpleViewAdapter extends BaseAdapter {
+    private SwapDialog swapDialog;
+    public PetSimpleViewAdapter(SwapDialog swapDialog){
+        this.swapDialog = swapDialog;
+    }
+
+    private final ArrayList<Pet> pets = new ArrayList<Pet>();
+
+    public void addPets(Pet...pets){
+        for(Pet p : pets){
+            if(p!=null){
+                this.pets.add(p);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
-        return 0;
+        return pets.size();
     }
 
     @Override
     public Pet getItem(int i) {
-        return null;
+        /*int start = i * 4;
+        int end = start + 3;
+        if(end >= pets.size()){
+            end = pets.size() -1;
+        }
+        int size = end - start + 1;
+        Pet[] peta = new Pet[size];
+        if(size > 0){
+            for(int j = start, k = 0; j<= end; j++, k++){
+                peta[k] = pets.get(j);
+            }
+            return peta;
+        }
+        return new Pet[0];*/
+        return pets.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return i*4;
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int index, View view, ViewGroup viewGroup) {
         PetViewHolder holder;
         if(view == null){
-            holder = new PetViewHolder();
+            holder = new PetViewHolder(swapDialog);
+            view = holder.view;
+            view.setTag(holder);
+        }else{
+           holder = (PetViewHolder)view.getTag();
         }
+        Pet pet = getItem(index);
+        holder.updatePet(pet);
         return view;
     }
 
-    static class PetViewHolder {
+    static class PetViewHolder{
         private View view;
         private ImageView petImage;
         private TextView name;
-        private ImageView petImage1;
-        private TextView name1;
-        private ImageView petImage2;
-        private TextView name2;
-        private ImageView petImage3;
-        private TextView name3;
+        private TextView hp;
+        private TextView atk;
+        private TextView def;
+        private Pet pet;
+        private SwapDialog swapDialog;
 
-        private PetViewHolder() {
+        private PetViewHolder(SwapDialog dialog) {
+            this.swapDialog = dialog;
             view = View.inflate(MainGameActivity.context,
                     R.layout.pet_simple_view, null);
             if (view != null) {
                 petImage = (ImageView) view.findViewById(R.id.pet_image);
                 name = (TextView) view.findViewById(R.id.pet_name);
-                petImage1 = (ImageView) view.findViewById(R.id.pet_image_1);
-                name1 = (TextView) view.findViewById(R.id.pet_name_1);
-                petImage2 = (ImageView) view.findViewById(R.id.pet_image_2);
-                name2 = (TextView) view.findViewById(R.id.pet_name_2);
-                petImage3 = (ImageView) view.findViewById(R.id.pet_image_3);
-                name3 = (TextView) view.findViewById(R.id.pet_name_3);
+                hp = (TextView) view.findViewById(R.id.pet_hp);
+                atk = (TextView) view.findViewById(R.id.pet_atk);
+                def = (TextView) view.findViewById(R.id.pet_def);
+                view.setOnClickListener(swapDialog);
                 view.setTag(this);
             }
         }
 
         public void updatePet(final Pet... pets) {
-            if (pets.length > 0) {
-                name.setText(pets[0].getFormatName());
+            if (pets.length > 0 && pets[0]!=null) {
+                pet = pets[0];
+                name.setText(Html.fromHtml(pets[0].getFormatName()));
+                name.setVisibility(View.VISIBLE);
+                hp.setText("HP:" + StringUtils.formatNumber(pets[0].getUHp()));
+                hp.setVisibility(View.VISIBLE);
+                atk.setText("ATK:" + StringUtils.formatNumber(pets[0].getMaxAtk()));
+                atk.setVisibility(View.VISIBLE);
+                def.setText("DEF:" + StringUtils.formatNumber(pets[0].getMaxDef()));
+                def.setVisibility(View.VISIBLE);
                 petImage.setVisibility(View.VISIBLE);
-                petImage.setImageResource((MazeContents.getImageByName(pets[0].getName())));
+                petImage.setImageResource((MazeContents.getImageByName(pets[0].getType(), pets[0].getType())));
             } else {
+                pet = null;
                 name.setText("");
+                name.setVisibility(View.GONE);
+                hp.setVisibility(View.GONE);
+                atk.setVisibility(View.GONE);
+                def.setVisibility(View.GONE);
                 petImage.setVisibility(View.GONE);
             }
-            if (pets.length > 1) {
-                name1.setText(pets[1].getFormatName());
-                petImage1.setVisibility(View.VISIBLE);
-                petImage1.setImageResource((MazeContents.getImageByName(pets[1].getName())));
-            } else {
-                name1.setText("");
-                petImage1.setVisibility(View.GONE);
+            if("蛋".equals(pet.getType())){
+                hp.setVisibility(View.GONE);
+                atk.setVisibility(View.GONE);
+                def.setVisibility(View.GONE);
             }
-            if (pets.length > 2) {
-                name2.setText(pets[2].getFormatName());
-                petImage2.setVisibility(View.VISIBLE);
-                petImage2.setImageResource((MazeContents.getImageByName(pets[2].getName())));
-            } else {
-                name2.setText("");
-                petImage2.setVisibility(View.GONE);
-            }
-            if (pets.length > 3) {
-                name3.setText(pets[3].getFormatName());
-                petImage3.setVisibility(View.VISIBLE);
-                petImage3.setImageResource((MazeContents.getImageByName(pets[3].getName())));
-            } else {
-                name3.setText("");
-                petImage3.setVisibility(View.GONE);
-            }
+        }
+
+        public Pet getPet() {
+            return pet;
         }
     }
 }

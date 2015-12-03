@@ -24,6 +24,8 @@ public class PalaceObject extends BmobObject {
     private String hello;
     private String element;
     private Long reCount;
+    private Integer version;
+    private String uuid;
 
     public PalaceObject(){
         setTableName("uploader");
@@ -147,5 +149,21 @@ public class PalaceObject extends BmobObject {
 
     public void setReCount(Long reCount) {
         this.reCount = reCount;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

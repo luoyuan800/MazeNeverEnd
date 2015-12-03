@@ -1,6 +1,9 @@
 package cn.gavin.pet.swop;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +12,7 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.gavin.activity.MainGameActivity;
 import cn.gavin.monster.Monster;
 import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
@@ -70,15 +74,24 @@ public class SwapManager {
         this.finished = finished;
     }
 
-    public void uploadPet(Context context, SwapPet pet) {
+    public void uploadPet(Context context, SwapPet pet, final Pet petO) {
+        final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+        TextView uText = new TextView(context);
+        uText.setText("上传中(不能取消)...");
+        alertDialog.setView(uText);
+        alertDialog.show();
         pet.save(context, new SaveListener() {
             @Override
             public void onSuccess() {
+                petO.releasePet(MazeContents.hero, MainGameActivity.context);
+                alertDialog.dismiss();
                 finished(Collections.<SwapPet>emptyList());
             }
 
             @Override
             public void onFailure(int i, String s) {
+                alertDialog.dismiss();
+                Toast.makeText(MainGameActivity.context, "上传宠物失败，请检查网络后重试" + s, Toast.LENGTH_SHORT).show();
                 finished(null);
             }
         });

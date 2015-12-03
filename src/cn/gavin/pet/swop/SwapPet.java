@@ -46,7 +46,7 @@ public class SwapPet extends BmobObject {
     private Boolean acknowledge;
     private String hello;
 
-    public SwapPet buildSwapPet(Pet pet) {
+    public static SwapPet buildSwapPet(Pet pet) {
         SwapPet swapPet = new SwapPet();
         if (pet.getAllSkill() != null) {
             swapPet.setSkill(pet.getAllSkill().getName() + "_" + pet.getAllSkill().getCount());

@@ -404,7 +404,7 @@ public class PetSimpleAdapter extends BaseAdapter {
                 } else {
                     skillName.setText("无");
                 }
-                petPic.setImageResource(MazeContents.getImageByName(pet.getName()));
+                petPic.setImageResource(MazeContents.getImageByName(pet.getName(), pet.getType()));
                 petOwner.setText(pet.getOwner());
                 final Hero hero = MazeContents.hero;
                 if (hero.getPoint() < 1) {

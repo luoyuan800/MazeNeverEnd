@@ -100,7 +100,10 @@ public class MazeContents {
         return value;
     }
 
-    public static int getImageByName(String name) {
+    public static int getImageByName(String name, String type) {
+        if("蛋".equals(type)){
+            return R.drawable.egg;
+        }
         int index = Monster.getIndex(name);
         int image = R.drawable.h_4_s;
         switch (index) {
