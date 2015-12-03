@@ -151,6 +151,7 @@ public class Pet extends Base {
             pet.setIntimacy(0l);
             pet.setSex(random.nextInt(2));
             pet.setOwner(MazeContents.hero.getName());
+            pet.setOwnerId(MazeContents.hero.getUuid());
             if((SkillFactory.getSkill("神赋", MazeContents.hero, null).isActive() && random.nextInt(100) < 30) || random.nextInt(5000) < 5){
                 int sindex = random.nextInt(PetSkillList.values().length);
                 if(sindex == 0 || sindex == 1){
@@ -445,6 +446,7 @@ public class Pet extends Base {
             egg.setLev(lev);
             egg.setElement(Element.values()[random.nextInt(Element.values().length - 1)]);
             egg.setOwner(hero.getName());
+            egg.setOwnerId(hero.getUuid());
             if (!f.getType().equals(m.getType())) {
                 if (random.nextInt(10000) + random.nextFloat() < (31.115 + hero.getPetAbe())) {
                     String lastName = Monster.lastNames[random.nextInt(Monster.lastNames.length)];

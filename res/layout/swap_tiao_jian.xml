@@ -24,7 +24,6 @@
         android:layout_gravity="left|center_vertical" />
 
     <TextView
-        android:id="@+id/ask_atk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left|center_vertical"
@@ -32,7 +31,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/ask_atk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -43,7 +42,6 @@
         android:textColor="@android:color/background_light" />
 
     <TextView
-        android:id="@+id/ask_def"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left|center_vertical"
@@ -51,7 +49,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/ask_def"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -62,7 +60,6 @@
         android:textColor="@android:color/background_light" />
 
     <TextView
-        android:id="@+id/ask_hp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left|center_vertical"
@@ -70,7 +67,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/ask_hp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

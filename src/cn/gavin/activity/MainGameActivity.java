@@ -893,6 +893,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         pet.setLev(maze.getLev());
         pet.setIntimacy(0l);
         pet.setOwner(heroN.getName());
+        pet.setOwnerId(heroN.getUuid());
         PetDB.save(pet);
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("您获得了新宠物");
