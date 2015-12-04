@@ -58,6 +58,7 @@ public class Hero implements BaseObject {
     private Skill firstSkill;
     private Skill secondSkill;
     private Skill thirdSkill;
+    private Skill itemSkill;
     private Long awardCount = 1l;
     private Long lockBox = 0l;
     private Long keyCount = 0l;
@@ -529,7 +530,7 @@ public class Hero implements BaseObject {
     }
 
     public Skill useAttackSkill(Monster monster) {
-        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill);
+        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill, itemSkill);
         for (Skill skill : existSkill) {
             if (skill != null && skill instanceof AttackSkill && skill.perform()) {
                 return skill;
@@ -539,7 +540,7 @@ public class Hero implements BaseObject {
     }
 
     public Skill useDefendSkill(Monster monster) {
-        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill);
+        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill, itemSkill);
         for (Skill skill : existSkill) {
             if (skill != null && skill instanceof DefendSkill) {
                 if (skill.perform()) {
@@ -1395,5 +1396,16 @@ public class Hero implements BaseObject {
             }
         }
         return false;
+    }
+
+    public Skill getItemSkill() {
+        return itemSkill;
+    }
+
+    public void setItemSkill(Skill itemSkill) {
+        if(this.itemSkill !=null){
+            this.itemSkill.setOnUsed(false);
+        }
+        this.itemSkill = itemSkill;
     }
 }

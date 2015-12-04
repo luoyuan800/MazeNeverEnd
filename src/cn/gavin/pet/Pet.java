@@ -379,6 +379,9 @@ public class Pet extends Base {
     }
 
     public void setfName(String fName) {
+        if(!StringUtils.isNotEmpty(fName)){
+            fName = "未知";
+        }
         this.fName = fName;
     }
 
@@ -387,6 +390,9 @@ public class Pet extends Base {
     }
 
     public void setmName(String mName) {
+        if(!StringUtils.isNotEmpty(mName)){
+            mName = "未知";
+        }
         this.mName = mName;
     }
 
@@ -542,5 +548,9 @@ public class Pet extends Base {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public String getColor() {
+        return color;
     }
 }

@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 
 import cn.gavin.Hero;
@@ -267,4 +268,52 @@ public class Item implements Comparator<Item> {
         return lhs.getName().name().compareTo(rhs.getName().name());
     }
 
+    public String getEffectString() {
+        StringBuilder builder = new StringBuilder();
+        if (effect != null)
+            builder.append(effect.getName()).append(":").append(effectValue).append("<br>");
+        if (effect1 != null) builder.append(effect1.getName()).append(":").append(effect1Value);
+        return builder.toString();
+    }
+
+    public static List<Item> loadByLimit(int start, int size, String query){
+        String sql = "select * from item " + query + " order by name limit " + size + " offset " +  start;
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL(sql);
+        List<Item> items = new ArrayList<Item>(cursor.getCount());
+        while (!cursor.isAfterLast()) {
+            Item item = new Item();
+            item.id = cursor.getString(cursor.getColumnIndex("id"));
+            try {
+                ItemName name = ItemName.valueOfName(cursor.getString(cursor.getColumnIndex("name")));
+                item.setName(name);
+                String properties = cursor.getString(cursor.getColumnIndex("properties"));
+                if (StringUtils.isNotEmpty(properties)) {
+                    String[] props = properties.split("<br>");
+                    for (String pro : props) {
+                        String[] proVal = pro.split(":");
+                        if (proVal.length > 1) {
+                            Effect e = Effect.valueOf(proVal[0]);
+                            Long value = StringUtils.toLong(proVal[1]);
+                            if (e == Effect.ADD_PER_ATK || e == Effect.ADD_PER_DEF || e == Effect.ADD_PER_UPPER_HP) {
+                                if (value > 20) value = 20l;
+                            }
+                            if (item.getEffect() == null) {
+                                item.setEffect(e);
+                                item.setEffectValue(value);
+                            } else {
+                                item.setEffect1(e);
+                                item.setEffect1Value(value);
+                            }
+                        }
+                    }
+                }
+                items.add(item);
+            } catch (Exception e) {
+                item.delete(null);
+            }
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return items;
+    }
 }

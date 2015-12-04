@@ -1,4 +1,4 @@
-package cn.gavin.pet.swop.ui;
+package cn.gavin.pet.swop.ui.net;
 
 import android.text.Html;
 import android.view.View;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.pet.Pet;
+import cn.gavin.pet.swop.SwapPet;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
 
@@ -20,17 +20,18 @@ import cn.gavin.utils.StringUtils;
  * ALL RIGHTS RESERVED
  * Created by luoyuan on 12/2/15.
  */
-public class PetSimpleViewAdapter extends BaseAdapter {
-    private View.OnClickListener swapDialog;
-    public PetSimpleViewAdapter(View.OnClickListener swapDialog){
-        this.swapDialog = swapDialog;
+public class NetPetSimpleViewAdapter extends BaseAdapter {
+    private NetPetDialog netPetDialog;
+    private final ArrayList<SwapPet> pets = new ArrayList<SwapPet>();
+
+    public void clean(){
+        pets.clear();
+        notifyDataSetChanged();
     }
 
-    private final ArrayList<Pet> pets = new ArrayList<Pet>();
-
-    public void addPets(Pet...pets){
-        for(Pet p : pets){
-            if(p!=null){
+    public void addPets(SwapPet... pets) {
+        for (SwapPet p : pets) {
+            if (p != null) {
                 this.pets.add(p);
             }
         }
@@ -43,42 +44,49 @@ public class PetSimpleViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public Pet getItem(int i) {
+    public SwapPet getItem(int i) {
+
         return pets.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return i*4;
+        return i;
     }
 
     @Override
     public View getView(int index, View view, ViewGroup viewGroup) {
         PetViewHolder holder;
-        if(view == null){
-            holder = new PetViewHolder(swapDialog);
+        if (view == null) {
+            holder = new PetViewHolder(netPetDialog);
             view = holder.view;
             view.setTag(holder);
-        }else{
-           holder = (PetViewHolder)view.getTag();
+        } else {
+            holder = (PetViewHolder) view.getTag();
         }
-        Pet pet = getItem(index);
+        SwapPet pet = getItem(index);
         holder.updatePet(pet);
         return view;
     }
 
-    public static class PetViewHolder{
+    public NetPetDialog getNetPetDialog() {
+        return netPetDialog;
+    }
+
+    public void setNetPetDialog(NetPetDialog netPetDialog) {
+        this.netPetDialog = netPetDialog;
+    }
+
+    static class PetViewHolder {
         private View view;
         private ImageView petImage;
         private TextView name;
         private TextView hp;
         private TextView atk;
         private TextView def;
-        private Pet pet;
-        private View.OnClickListener swapDialog;
+        private SwapPet pet;
 
-        private PetViewHolder(View.OnClickListener dialog) {
-            this.swapDialog = dialog;
+        private PetViewHolder(View.OnClickListener listener) {
             view = View.inflate(MainGameActivity.context,
                     R.layout.pet_simple_view, null);
             if (view != null) {
@@ -87,26 +95,27 @@ public class PetSimpleViewAdapter extends BaseAdapter {
                 hp = (TextView) view.findViewById(R.id.pet_hp);
                 atk = (TextView) view.findViewById(R.id.pet_atk);
                 def = (TextView) view.findViewById(R.id.pet_def);
-                view.setOnClickListener(swapDialog);
                 view.setTag(this);
+                view.setOnClickListener(listener);
             }
         }
 
-        public void updatePet(final Pet... pets) {
-            if (pets.length > 0 && pets[0]!=null) {
-                pet = pets[0];
-                name.setText(Html.fromHtml(pets[0].getFormatName()));
+        public void updatePet(final SwapPet pet) {
+            this.pet = pet;
+            if (pet != null) {
+                name.setText(Html.fromHtml(pet.getFormateName()));
                 name.setVisibility(View.VISIBLE);
-                hp.setText("HP:" + StringUtils.formatNumber(pets[0].getUHp()));
+                hp.setText("HP:" + StringUtils.formatNumber(pet.getHp()));
                 hp.setVisibility(View.VISIBLE);
-                atk.setText("ATK:" + StringUtils.formatNumber(pets[0].getMaxAtk()));
+                atk.setText("ATK:" + StringUtils.formatNumber(pet.getAtk()));
                 atk.setVisibility(View.VISIBLE);
-                def.setText("DEF:" + StringUtils.formatNumber(pets[0].getMaxDef()));
+                def.setText("DEF:" + StringUtils.formatNumber(pet.getDef()));
                 def.setVisibility(View.VISIBLE);
                 petImage.setVisibility(View.VISIBLE);
-                petImage.setImageResource((MazeContents.getImageByName(pets[0].getType(), pets[0].getType())));
+                petImage.setImageResource((MazeContents.getImageByName(pet.getName(),
+                        pet.getType() == Integer.MAX_VALUE-1 ? "蛋" : "")));
             } else {
-                pet = null;
+                this.pet = null;
                 name.setText("");
                 name.setVisibility(View.GONE);
                 hp.setVisibility(View.GONE);
@@ -114,14 +123,14 @@ public class PetSimpleViewAdapter extends BaseAdapter {
                 def.setVisibility(View.GONE);
                 petImage.setVisibility(View.GONE);
             }
-            if("蛋".equals(pet.getType())){
+            if ((null == pet.getType()) || (Integer.MAX_VALUE-1 == pet.getType())) {
                 hp.setVisibility(View.GONE);
                 atk.setVisibility(View.GONE);
                 def.setVisibility(View.GONE);
             }
         }
 
-        public Pet getPet() {
+        public SwapPet getPet() {
             return pet;
         }
     }

@@ -52,7 +52,6 @@ public class SwapManager {
         BmobQuery<SwapPet> query = new BmobQuery<SwapPet>();
         query.setLimit(10);
         query.addWhereEqualTo("ownerId", MazeContents.hero.getUuid());
-        query.addWhereEqualTo("acknowledge", false);
         query.findObjects(context, new FindListener<SwapPet>() {
             @Override
             public void onSuccess(List<SwapPet> swapPets) {
@@ -124,7 +123,7 @@ public class SwapManager {
         if(pet.getAskSex()!=null){
             query.addWhereEqualTo("sex", pet.getAskSex());
         }
-
+        query.addWhereDoesNotExists("changedPet");
         query.findObjects(context, new FindListener<SwapPet>() {
             @Override
             public void onSuccess(List<SwapPet> swapPets) {
@@ -174,4 +173,9 @@ public class SwapManager {
         }
         return aPets;
     }
+
+    public void deleteFromNet(Context context, SwapPet pet){
+        pet.delete(context);
+    }
+
 }

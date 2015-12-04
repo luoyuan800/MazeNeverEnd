@@ -16,71 +16,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_gravity="end"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/pet_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAlignment="gravity"
+            android:layout_gravity="end"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/pet_hp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAlignment="gravity"
+            android:layout_gravity="end"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/pet_atk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAlignment="gravity"
+            android:layout_gravity="end"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/pet_def"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAlignment="gravity"
+            android:layout_gravity="end"
             android:textSize="12sp" />
     </LinearLayout>
-    <!--<Space
-            android:layout_width="25px"
-            android:layout_height="wrap_content"
-            />
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:clickable="true" android:background="@color/gray"
-            android:layout_weight="1">
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/pet_image_1" android:layout_gravity="left|center_vertical"/>
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:id="@+id/pet_name_1" android:layout_gravity="center"/>
-    </LinearLayout>
-    <Space android:layout_width="25px" android:layout_height="wrap_content" android:id="@+id/space"/>
-    <LinearLayout android:orientation="vertical" android:layout_width="wrap_content"
-                  android:layout_height="wrap_content" android:clickable="true"
-                  android:id="@+id/linearLayout">
-        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                   android:id="@+id/pet_image_2" android:layout_gravity="left|center_vertical"
-                />
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:textAppearance="?android:attr/textAppearanceSmall"
-                  android:id="@+id/pet_name_2" android:layout_gravity="center"/>
-    </LinearLayout>
-    <Space android:layout_width="25px" android:layout_height="wrap_content" android:id="@+id/space2"
-           android:layout_weight="1"/>
-    <LinearLayout android:orientation="vertical" android:layout_width="wrap_content"
-                  android:layout_height="wrap_content" android:clickable="true" android:id="@+id/linearLayout2"
-                  android:layout_weight="1" android:background="@color/gray">
-        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/pet_image_3"
-                   android:layout_gravity="left|center_vertical"/>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:textAppearance="?android:attr/textAppearanceSmall"
-                  android:id="@+id/pet_name_3" android:layout_gravity="center"/>
-    </LinearLayout>-->
+
 </LinearLayout>

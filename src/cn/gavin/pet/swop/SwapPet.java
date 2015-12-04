@@ -1,7 +1,7 @@
 package cn.gavin.pet.swop;
 
 import cn.bmob.v3.BmobObject;
-import cn.gavin.maze.Maze;
+import cn.gavin.Element;
 import cn.gavin.monster.Monster;
 import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.pet.Pet;
@@ -27,24 +27,26 @@ public class SwapPet extends BmobObject {
     private Integer askType;
     private String askName;
     private Integer askSex;
-//-----------------------------
+    //-----------------------------
     private Long deathCount;
     private String fName;
     private String mName;
-    private Long atk;
-    private Long def;
-    private Long hp;
-    private Long atk_rise;
-    private Long hp_rise;
-    private Long def_rise;
-    private Integer sex;
+    private Long atk = 0l;
+    private Long def = 0l;
+    private Long hp = 0l;
+    private Long atk_rise = 0l;
+    private Long hp_rise = 0l;
+    private Long def_rise = 0l;
+    private Integer sex = 0;
     private String skill;
-    private Integer type;//不能用int，改成string
+    private Integer type = 0;//不能用int，改成string
     private String color;
     private String name;
     private SwapPet changedPet;
-    private Boolean acknowledge;
+    private Boolean acknowledge = false;
     private String hello;
+    private String element;
+    private Long lev = 0l;
 
     public static SwapPet buildSwapPet(Pet pet) {
         SwapPet swapPet = new SwapPet();
@@ -63,11 +65,18 @@ public class SwapPet extends BmobObject {
         swapPet.setKeeperName(MazeContents.hero.getName());
         swapPet.setOwnerId(pet.getOwnerId());
         swapPet.setOwnerName(pet.getOwner());
+        if(!StringUtils.isNotEmpty(swapPet.getOwnerId())){
+            swapPet.setOwnerId(swapPet.getKeeperId());
+            swapPet.setOwnerName(swapPet.getKeeperName());
+        }
         swapPet.setId(pet.getId());
         swapPet.setmName(pet.getmName());
         swapPet.setfName(pet.getfName());
         swapPet.setSex(pet.getSex());
         swapPet.setDeathCount(pet.getDeathCount());
+        swapPet.setElement(pet.getElement().name());
+        swapPet.setColor(pet.getColor());
+        swapPet.setLev(pet.getLev());
         return swapPet;
     }
 
@@ -150,9 +159,6 @@ public class SwapPet extends BmobObject {
     public void setAskType(Integer askType) {
         this.askType = askType;
     }
-
-
-
 
 
     public Long getAtk() {
@@ -267,9 +273,13 @@ public class SwapPet extends BmobObject {
         this.hello = hello;
     }
 
-    public Pet buildPet(){
+    public Pet buildPet() {
         Pet pet = new Pet();
-        pet.setType(Monster.lastNames[type]);
+        if (type >= Monster.lastNames.length) {
+            pet.setType("蛋");
+        } else {
+            pet.setType(Monster.lastNames[type]);
+        }
         pet.setName(name);
         pet.setHp_rise(hp_rise);
         pet.setAtk_rise(atk_rise);
@@ -279,18 +289,24 @@ public class SwapPet extends BmobObject {
         pet.setDef(def);
         pet.setColor(color);
         String[] skillNameAndCount = StringUtils.split(skill, "_");
-        NSkill pSkill = NSkill.createSkillByName(skillNameAndCount[0],pet,StringUtils.toLong(skillNameAndCount[1]),null);
-        if(pSkill != null){
-            if(pSkill instanceof PetSkill){
-                pet.setSkill(pSkill);
-            }else{
-                pet.addSkill(pSkill);
+        if(skillNameAndCount.length > 1) {
+            NSkill pSkill = NSkill.createSkillByName(skillNameAndCount[0], pet, StringUtils.toLong(skillNameAndCount[1]), null);
+            if (pSkill != null) {
+                if (pSkill instanceof PetSkill) {
+                    pet.setSkill(pSkill);
+                } else {
+                    pet.addSkill(pSkill);
+                }
             }
         }
         pet.setSex(sex);
         pet.setDeathCount(deathCount);
         pet.setfName(fName);
         pet.setmName(mName);
+        pet.setElement(Element.valueOf(element));
+        pet.setOwner(ownerName);
+        pet.setOwnerId(ownerId);
+        pet.setLev(lev);
         pet.save();
         return pet;
     }
@@ -333,5 +349,29 @@ public class SwapPet extends BmobObject {
 
     public void setmName(String mName) {
         this.mName = mName;
+    }
+
+    public String getFormateName() {
+        if (type == Integer.MAX_VALUE - 1) {
+            return "蛋";
+        } else {
+            return "<font color=\"" + color + "\">" + getName() + (sex == 0 ? "♂" : "♀") + "</font>(" + getElement() + ")";
+        }
+    }
+
+    public String getElement() {
+        return element;
+    }
+
+    public void setElement(String element) {
+        this.element = element;
+    }
+
+    public void setLev(Long lev) {
+        this.lev = lev;
+    }
+
+    public Long getLev(){
+        return lev;
     }
 }

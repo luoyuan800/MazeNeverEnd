@@ -66,14 +66,14 @@
                 android:textSize="12sp" />
 
         <Button
-                android:id="@+id/transfer_button"
+                android:id="@+id/shop_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="fill_horizontal"
                 android:layout_weight="1"
             android:focusableInTouchMode="false"
             android:enabled="false"
-                android:text="传送"
+                android:text="商店"
                 android:textSize="10sp" />
     </LinearLayout>
     <LinearLayout

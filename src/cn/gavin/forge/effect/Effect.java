@@ -148,7 +148,13 @@ public enum Effect {
         public Number calculate(Hero hero, Monster monster) {
             return 0.02;
         }
-    }, "增加宠物变异几率");
+    }, "增加宠物变异几率"),
+    START_BURST(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            return 3;
+        }
+    }, "附带技能星爆<br>亮瞎敌人的双眼,敌人HP变成一个不大于当前HP的随机数。释放概率");
     private Calculate calculate;
     private String name;
 

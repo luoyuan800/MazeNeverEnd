@@ -41,7 +41,7 @@ import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
 import cn.gavin.pet.PetDialog;
 import cn.gavin.pet.skill.PetSkillList;
-import cn.gavin.pet.swop.ui.SwapDialog;
+import cn.gavin.pet.swop.ui.SwapPetMainDialog;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
@@ -138,7 +138,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private TextView necklaceTextView;
     private TextView hatTextView;
     private Button recipeButton;
-    private Button cleanButton;
+    private Button shopButton;
     private Button buyLockBoxButton;
     private Button monsterBookButton;
     private MonsterBook monsterBook;
@@ -452,8 +452,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             @Override
             public void onClick(View view) {
                 try{
-                    SwapDialog swapDialog = new SwapDialog(context);
-                    swapDialog.show();
+                    SwapPetMainDialog dialog = new SwapPetMainDialog();
                 }catch (Exception e){
                     LogHelper.logException(e);
                 }
@@ -1419,8 +1418,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         hatTextView.setOnClickListener(this);
         recipeButton = (Button) findViewById(R.id.forge_recipe_button);
         recipeButton.setOnClickListener(this);
-        cleanButton = (Button) findViewById(R.id.transfer_button);
-        cleanButton.setOnClickListener(this);
+        shopButton = (Button) findViewById(R.id.shop_button);
+        shopButton.setOnClickListener(this);
         buyLockBoxButton = (Button) findViewById(R.id.lock_box_get_button);
         buyLockBoxButton.setOnClickListener(this);
         monsterBookButton = (Button) findViewById(R.id.monster_button);
@@ -1835,7 +1834,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     showItemFull();
                 }
                 break;
-            case R.id.transfer_button:
+            case R.id.shop_button:
                 showCleanDialog();
                 break;
             case R.id.ring_view:

@@ -31,11 +31,11 @@ public abstract class Builder {
 
     public abstract boolean isEnough();
 
-    public Accessory build(List<Item> items) {
+    public Accessory build(List<Item> items, boolean isCheck) {
         if (this.items != items || !items.containsAll(this.items)) {
             detect(items);
         }
-        if (isEnough()) {
+        if (!isCheck || isEnough()) {
             int p = random.nextInt(100);
             if(MazeContents.hero!=null){
                 p -= random.nextLong(MazeContents.hero.getStrength()/1000000 + 2);
