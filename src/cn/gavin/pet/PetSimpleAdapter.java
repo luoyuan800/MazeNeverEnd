@@ -395,9 +395,9 @@ public class PetSimpleAdapter extends BaseAdapter {
             if (pet != null) {
                 nameValue.setText(Html.fromHtml(pet.getFormatName()));
                 leveText.setText(Html.fromHtml(getIntimacyString()));
-                hpValue.setText(pet.getHp() + "/" + pet.getUHp());
-                atkValue.setText(pet.getMaxAtk() + "");
-                defValue.setText(pet.getMaxDef() + "");
+                hpValue.setText(StringUtils.formatNumber(pet.getHp()) + "/" + StringUtils.formatNumber(pet.getUHp()));
+                atkValue.setText(StringUtils.formatNumber(pet.getMaxAtk()));
+                defValue.setText(StringUtils.formatNumber(pet.getMaxDef()));
                 NSkill skill = pet.getAllSkill();
                 if (skill != null) {
                     skillName.setText(skill.getName());

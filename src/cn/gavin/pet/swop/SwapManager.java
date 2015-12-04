@@ -145,7 +145,7 @@ public class SwapManager {
     public List<Pet> myAvailablePets(SwapPet swapPet){
         List<Pet> aPets = new ArrayList<Pet>();
         for(Pet p : PetDB.loadPet(null)){
-            boolean fix = true;
+            boolean fix = MazeContents.hero.petOnUsed(p);
             if(swapPet.getAskSex()!=null){
                 fix =  fix && p.getSex() == swapPet.getSex();
             }
