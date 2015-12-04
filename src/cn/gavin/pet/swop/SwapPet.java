@@ -307,7 +307,6 @@ public class SwapPet extends BmobObject {
         pet.setOwner(ownerName);
         pet.setOwnerId(ownerId);
         pet.setLev(lev);
-        pet.save();
         return pet;
     }
 

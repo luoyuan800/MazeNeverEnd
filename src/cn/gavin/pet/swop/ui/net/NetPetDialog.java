@@ -53,45 +53,50 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
     SwapPet netPet;
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    show();
-                    break;
-                case 1:
-                    Button button = (Button) dialog.findViewById(R.id.net_query_button);
-                    button.setEnabled(false);
-                    button.setText("查询中");
-                    loadMore();
-                    break;
-                case 2:
-                    slidingMenu.closeMenu();
-                    break;
-                case 3:
-                    Button button3 = (Button) dialog.findViewById(R.id.net_query_button);
-                    button3.setEnabled(true);
-                    button3.setText("查询");
-                    slidingMenu.closeMenu();
-                    break;
-                case 4:
-                    loadMoeResult();
-                    break;
-                case 5:
-                    Pet pet = (Pet) msg.obj;
-                    AlertDialog newPetDialog = PetInfoDialogBuilder.build(pet,context,"照顾好:" + pet.getFormatName());
-                    newPetDialog.show();
-                    break;
-                case 6:
-                    AlertDialog err = new AlertDialog.Builder(context).create();
-                    err.setMessage("连接失败，请确认网络正常后重试！");
-                    err.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    err.show();
+            try {
+                switch (msg.what) {
+                    case 0:
+                        show();
+                        break;
+                    case 1:
+                        Button button = (Button) dialog.findViewById(R.id.net_query_button);
+                        button.setEnabled(false);
+                        button.setText("查询中");
+                        loadMore();
+                        break;
+                    case 2:
+                        slidingMenu.closeMenu();
+                        break;
+                    case 3:
+                        Button button3 = (Button) dialog.findViewById(R.id.net_query_button);
+                        button3.setEnabled(true);
+                        button3.setText("查询");
+                        slidingMenu.closeMenu();
+                        break;
+                    case 4:
+                        loadMoeResult();
+                        break;
+                    case 5:
+                        Pet pet = (Pet) msg.obj;
+                        AlertDialog newPetDialog = PetInfoDialogBuilder.build(pet, context, "照顾好:" + pet.getFormatName());
+                        newPetDialog.show();
+                        break;
+                    case 6:
+                        AlertDialog err = new AlertDialog.Builder(context).create();
+                        err.setMessage("连接失败，请确认网络正常后重试！");
+                        err.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        err.show();
+                }
+                super.handleMessage(msg);
+            }catch (Exception e){
+                LogHelper.logException(e);
+                e.printStackTrace();
             }
-            super.handleMessage(msg);
         }
     };
 
@@ -227,96 +232,101 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.open_menu:
-            case R.id.switch_menu:
-                if (slidingMenu != null) {
-                    slidingMenu.toggle();
-                }
-                break;
-            case R.id.net_query_button:
-                try {
-                    SwapPet swapPet = query;
-                    Spinner fs = (Spinner) dialog.findViewById(R.id.first_name);
-                    Spinner ss = (Spinner) dialog.findViewById(R.id.second_name);
-                    Spinner ls = (Spinner) dialog.findViewById(R.id.last_name);
-                    String first = (String) fs.getSelectedItem();
-                    String second = (String) ss.getSelectedItem();
-                    String last = (String) ls.getSelectedItem();
-                    String askName = "";
-                    if (first != null && !"无".equals(first)) {
-                        askName += (first + "的");
+        try {
+            switch (v.getId()) {
+                case R.id.open_menu:
+                case R.id.switch_menu:
+                    if (slidingMenu != null) {
+                        slidingMenu.toggle();
                     }
-                    if (second != null && !"无".equals(second)) {
-                        askName += second;
-                    }
-                    if (last != null && !"无".equals(last)) {
-                        swapPet.setAskType(Monster.getIndex(last));
-                    }
-                    if (StringUtils.isNotEmpty(askName)) {
-                        swapPet.setAskName(askName);
-                    }
-                    TextView askAtk = (TextView) dialog.findViewById(R.id.ask_atk);
-                    swapPet.setAskAtk(StringUtils.toLong(askAtk.getText().toString()));
-                    TextView askDef = (TextView) dialog.findViewById(R.id.ask_def);
-                    swapPet.setAskDef(StringUtils.toLong(askDef.getText().toString()));
-                    TextView askHp = (TextView) dialog.findViewById(R.id.ask_hp);
-                    swapPet.setAskHp(StringUtils.toLong(askHp.getText().toString()));
-                    Spinner sexs = (Spinner) dialog.findViewById(R.id.ask_sex);
-                    if ("♂".equals(sexs.getSelectedItem())) {
-                        swapPet.setAskSex(0);
-                    } else if ("♀".equals(sexs.getSelectedItem())) {
-                        swapPet.setAskSex(1);
-                    }
-                    adapter.clean();
-                    page = 0;
-                    handler.sendEmptyMessage(1);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    LogHelper.logException(e);
-                }
-                break;
-            default:
-                if (v.getTag() != null && v.getTag() instanceof NetPetSimpleViewAdapter.PetViewHolder) {
-                    NetPetSimpleViewAdapter.PetViewHolder petViewHolder = (NetPetSimpleViewAdapter.PetViewHolder) v.getTag();
-                    netPet = petViewHolder.getPet();
-                    List<Pet> myPets = swapManager.myAvailablePets(netPet);
-                    AlertDialog myPetDialog = new AlertDialog.Builder(context).create();
-                    if (!myPets.isEmpty()) {
-                        PetSimpleViewAdapter petSimpleViewAdapter = new PetSimpleViewAdapter(this);
-                        petSimpleViewAdapter.addPets(myPets.toArray(new Pet[myPets.size()]));
-                        LoadMoreListView loadMoreListView = new LoadMoreListView(context);
-                        loadMoreListView.setAdapter(petSimpleViewAdapter);
-                        loadMoreListView.onLoadMoreComplete(true);
-                        myPetDialog.setView(loadMoreListView);
-                    } else {
-                        TextView textView = new TextView(context);
-                        textView.setText("对不起！您没有符合对方要求的宠物。");
-                        myPetDialog.setView(textView);
-                    }
-                    myPetDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
+                    break;
+                case R.id.net_query_button:
+                    try {
+                        SwapPet swapPet = query;
+                        Spinner fs = (Spinner) dialog.findViewById(R.id.first_name);
+                        Spinner ss = (Spinner) dialog.findViewById(R.id.second_name);
+                        Spinner ls = (Spinner) dialog.findViewById(R.id.last_name);
+                        String first = (String) fs.getSelectedItem();
+                        String second = (String) ss.getSelectedItem();
+                        String last = (String) ls.getSelectedItem();
+                        String askName = "";
+                        if (first != null && !"无".equals(first)) {
+                            askName += (first + "的");
                         }
-                    });
-                    myPetDialog.show();
-                } else if (v.getTag() != null && v.getTag() instanceof PetSimpleViewAdapter.PetViewHolder && netPet != null) {
-                    Pet myPet = ((PetSimpleViewAdapter.PetViewHolder) v.getTag()).getPet();
-                    SwapPet mySwapPet = SwapPet.buildSwapPet(myPet);
-                    Pet netSwapPet = netPet.buildPet();
-                    netPet.setChangedPet(mySwapPet);
-                    netPet.setKeeperId(MazeContents.hero.getUuid());
-                    netPet.setKeeperName(MazeContents.hero.getName());
-                    mySwapPet.setChangedPet(netPet);
-                    swapManager.uploadPet(context, mySwapPet, myPet);
-                    swapManager.acknowledge(context, netPet);
-                    netSwapPet.save();
-                    Message message = new Message();
-                    message.what = 5;
-                    message.obj = netSwapPet;
-                    handler.sendMessage(message);
-                }
+                        if (second != null && !"无".equals(second)) {
+                            askName += second;
+                        }
+                        if (last != null && !"无".equals(last)) {
+                            swapPet.setAskType(Monster.getIndex(last));
+                        }
+                        if (StringUtils.isNotEmpty(askName)) {
+                            swapPet.setAskName(askName);
+                        }
+                        TextView askAtk = (TextView) dialog.findViewById(R.id.ask_atk);
+                        swapPet.setAskAtk(StringUtils.toLong(askAtk.getText().toString()));
+                        TextView askDef = (TextView) dialog.findViewById(R.id.ask_def);
+                        swapPet.setAskDef(StringUtils.toLong(askDef.getText().toString()));
+                        TextView askHp = (TextView) dialog.findViewById(R.id.ask_hp);
+                        swapPet.setAskHp(StringUtils.toLong(askHp.getText().toString()));
+                        Spinner sexs = (Spinner) dialog.findViewById(R.id.ask_sex);
+                        if ("♂".equals(sexs.getSelectedItem())) {
+                            swapPet.setAskSex(0);
+                        } else if ("♀".equals(sexs.getSelectedItem())) {
+                            swapPet.setAskSex(1);
+                        }
+                        adapter.clean();
+                        page = 0;
+                        handler.sendEmptyMessage(1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        LogHelper.logException(e);
+                    }
+                    break;
+                default:
+                    if (v.getTag() != null && v.getTag() instanceof NetPetSimpleViewAdapter.PetViewHolder) {
+                        NetPetSimpleViewAdapter.PetViewHolder petViewHolder = (NetPetSimpleViewAdapter.PetViewHolder) v.getTag();
+                        netPet = petViewHolder.getPet();
+                        List<Pet> myPets = swapManager.myAvailablePets(netPet);
+                        AlertDialog myPetDialog = new AlertDialog.Builder(context).create();
+                        if (!myPets.isEmpty()) {
+                            PetSimpleViewAdapter petSimpleViewAdapter = new PetSimpleViewAdapter(this);
+                            petSimpleViewAdapter.addPets(myPets.toArray(new Pet[myPets.size()]));
+                            LoadMoreListView loadMoreListView = new LoadMoreListView(context);
+                            loadMoreListView.setAdapter(petSimpleViewAdapter);
+                            loadMoreListView.onLoadMoreComplete(true);
+                            myPetDialog.setView(loadMoreListView);
+                        } else {
+                            TextView textView = new TextView(context);
+                            textView.setText("对不起！您没有符合对方要求的宠物。");
+                            myPetDialog.setView(textView);
+                        }
+                        myPetDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        myPetDialog.show();
+                    } else if (v.getTag() != null && v.getTag() instanceof PetSimpleViewAdapter.PetViewHolder && netPet != null) {
+                        Pet myPet = ((PetSimpleViewAdapter.PetViewHolder) v.getTag()).getPet();
+                        SwapPet mySwapPet = SwapPet.buildSwapPet(myPet);
+                        Pet netSwapPet = netPet.buildPet();
+                        netPet.setChangedPet(mySwapPet);
+                        netPet.setKeeperId(MazeContents.hero.getUuid());
+                        netPet.setKeeperName(MazeContents.hero.getName());
+                        mySwapPet.setChangedPet(netPet);
+                        swapManager.uploadPet(context, mySwapPet, myPet);
+                        swapManager.acknowledge(context, netPet);
+                        netSwapPet.save();
+                        Message message = new Message();
+                        message.what = 5;
+                        message.obj = netSwapPet;
+                        handler.sendMessage(message);
+                    }
+            }
+        }catch (Exception e){
+            LogHelper.logException(e);
+            e.printStackTrace();
         }
     }
 }

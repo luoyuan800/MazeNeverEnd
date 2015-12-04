@@ -13,6 +13,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.log.LogHelper;
 import cn.gavin.monster.Monster;
 import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
@@ -74,26 +75,31 @@ public class SwapManager {
     }
 
     public void uploadPet(Context context, SwapPet pet, final Pet petO) {
-        final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-        TextView uText = new TextView(context);
-        uText.setText("上传中(不能取消)...");
-        alertDialog.setView(uText);
-        alertDialog.show();
-        pet.save(context, new SaveListener() {
-            @Override
-            public void onSuccess() {
-                petO.releasePet(MazeContents.hero, MainGameActivity.context);
-                alertDialog.dismiss();
-                finished(Collections.<SwapPet>emptyList());
-            }
+        try {
+            final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+            TextView uText = new TextView(context);
+            uText.setText("上传中(不能取消)...");
+            alertDialog.setView(uText);
+            alertDialog.show();
+            pet.save(context, new SaveListener() {
+                @Override
+                public void onSuccess() {
+                    petO.releasePet(MazeContents.hero, MainGameActivity.context);
+                    alertDialog.dismiss();
+                    finished(Collections.<SwapPet>emptyList());
+                }
 
-            @Override
-            public void onFailure(int i, String s) {
-                alertDialog.dismiss();
-                Toast.makeText(MainGameActivity.context, "上传宠物失败，请检查网络后重试" + s, Toast.LENGTH_SHORT).show();
-                finished(null);
-            }
-        });
+                @Override
+                public void onFailure(int i, String s) {
+                    alertDialog.dismiss();
+                    Toast.makeText(MainGameActivity.context, "上传宠物失败，请检查网络后重试" + s, Toast.LENGTH_SHORT).show();
+                    finished(null);
+                }
+            });
+        }catch (Exception e){
+            LogHelper.logException(e);
+            e.printStackTrace();
+        }
     }
 
     public void searchPet(Context context, SwapPet pet, int page){
@@ -145,7 +151,7 @@ public class SwapManager {
     public List<Pet> myAvailablePets(SwapPet swapPet){
         List<Pet> aPets = new ArrayList<Pet>();
         for(Pet p : PetDB.loadPet(null)){
-            boolean fix = MazeContents.hero.petOnUsed(p);
+            boolean fix = !MazeContents.hero.petOnUsed(p);
             if(swapPet.getAskSex()!=null){
                 fix =  fix && p.getSex() == swapPet.getSex();
             }
