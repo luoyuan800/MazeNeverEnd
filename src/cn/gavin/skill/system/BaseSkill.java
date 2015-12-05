@@ -48,81 +48,97 @@ public class BaseSkill extends SkillLayout {
         Button button = (Button) view.findViewById(R.id.base_skill_r_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
         skill = SkillFactory.getSkill("闪避", hero);
         button = (Button) view.findViewById(R.id.base_skill_s_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
         skill = SkillFactory.getSkill("铁拳", hero);
         button = (Button) view.findViewById(R.id.skill_base_t_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
         skill = SkillFactory.getSkill("反弹", hero);
         button = (Button) view.findViewById(R.id.skill_base_f_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
         skill = SkillFactory.getSkill("巨大化", hero);
         button = (Button) view.findViewById(R.id.skill_base_j_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
         skill = SkillFactory.getSkill("定身", hero);
         button = (Button) view.findViewById(R.id.skill_base_d_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
         skill = SkillFactory.getSkill("超能量", hero);
         button = (Button) view.findViewById(R.id.skill_base_c_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
         skill = SkillFactory.getSkill("瞬间移动", hero);
         button = (Button) view.findViewById(R.id.skill_base_sy_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
         skill = SkillFactory.getSkill("斩击", hero);
         button = (Button) view.findViewById(R.id.skill_base_zj_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
         skill = SkillFactory.getSkill("裂空剑", hero);
         button = (Button) view.findViewById(R.id.skill_base_lkj_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
         skill = SkillFactory.getSkill("传送", hero);
         button = (Button) view.findViewById(R.id.skill_base_cs_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
         skill = SkillFactory.getSkill("错位", hero);
         button = (Button) view.findViewById(R.id.skill_base_cw_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
         skill = SkillFactory.getSkill("原能力", hero);
         button = (Button) view.findViewById(R.id.skill_base_ynl_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
         skill = SkillFactory.getSkill("寻宝", hero);
         button = (Button) view.findViewById(R.id.skill_base_xb_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
         skill = SkillFactory.getSkill("超防御", hero);
         button = (Button) view.findViewById(R.id.skill_base_cfy_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
         skill = SkillFactory.getSkill("重击", hero);
         button = (Button) view.findViewById(R.id.skill_base_hit_button);
         button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
     }
 
     public static Skill getSkill(String name, Hero hero) {
