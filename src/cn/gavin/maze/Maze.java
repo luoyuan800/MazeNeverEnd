@@ -149,7 +149,7 @@ public class Maze {
                 mazeLevelDetect();
                 addMessage(context, "-------------------");
             } else if (random.nextBoolean()) {
-                Skill skill1 = SkillFactory.getSkill("隐身", hero, context.getSkillDialog());
+                Skill skill1 = SkillFactory.getSkill("隐身", hero);
                 if (skill1.isActive() && skill1.perform()) {
                     continue;
                 }
@@ -319,7 +319,7 @@ public class Maze {
 //                    level--;
                 }
             }
-            if (PetDB.getPetCount(null) < hero.getPetSize() + 10) {
+            if (PetDB.getPetCount(null) < hero.getPetSize() + 30) {
                 Pet f = null;
                 Pet m = null;
                 List<Pet> pets = hero.getPets();
@@ -361,9 +361,9 @@ public class Maze {
 
             }
             if (level != 0 && level % 100 == 0) {
-                Skill fSkill = SkillFactory.getSkill("浮生百刃", hero, MainGameActivity.context.getSkillDialog());
-                Skill xSkill = SkillFactory.getSkill("虚无吞噬", hero, MainGameActivity.context.getSkillDialog());
-                boolean qzs = SkillFactory.getSkill("欺诈师", hero, MainGameActivity.context.getSkillDialog()).isActive();
+                Skill fSkill = SkillFactory.getSkill("浮生百刃", hero);
+                Skill xSkill = SkillFactory.getSkill("虚无吞噬", hero);
+                boolean qzs = SkillFactory.getSkill("欺诈师", hero).isActive();
                 if (qzs && (random.nextLong(hero.getMaxMazeLev() + 1000) > 1100)) {
                     fSkill.setActive(true);
                 }

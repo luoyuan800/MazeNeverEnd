@@ -1403,7 +1403,7 @@ public class Hero implements BaseObject {
     }
 
     public void setItemSkill(Skill itemSkill) {
-        if(this.itemSkill !=null){
+        if(this.itemSkill !=null  && !this.itemSkill.equal(itemSkill)){
             this.itemSkill.setOnUsed(false);
         }
         this.itemSkill = itemSkill;

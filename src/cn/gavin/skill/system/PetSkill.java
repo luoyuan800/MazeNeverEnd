@@ -38,43 +38,43 @@ public class PetSkill extends SkillLayout {
         this.context = context;
     }
 
-    public void init(SkillDialog dialog) {
-        Skill skill = SkillFactory.getSkill("驯兽师", hero, dialog);
+    public void init() {
+        Skill skill = SkillFactory.getSkill("驯兽师", hero);
         Button button = (Button) view.findViewById(R.id.pet_skill_xss_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("培育家", hero, dialog);
+        skill = SkillFactory.getSkill("培育家", hero);
         button = (Button) view.findViewById(R.id.pet_skill_pyj_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("捕捉术", hero, dialog);
+        skill = SkillFactory.getSkill("捕捉术", hero);
         button = (Button) view.findViewById(R.id.pet_skill_bzs_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("催化剂", hero, dialog);
+        skill = SkillFactory.getSkill("催化剂", hero);
         button = (Button) view.findViewById(R.id.pet_skill_chj_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("霸气", hero, dialog);
+        skill = SkillFactory.getSkill("霸气", hero);
         button = (Button) view.findViewById(R.id.pet_skill_bq_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("爱心", hero, dialog);
+        skill = SkillFactory.getSkill("爱心", hero);
         button = (Button) view.findViewById(R.id.pet_skill_ax_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("群殴", hero, dialog);
+        skill = SkillFactory.getSkill("群殴", hero);
         button = (Button) view.findViewById(R.id.pet_skill_qo_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("反击", hero, dialog);
+        skill = SkillFactory.getSkill("反击", hero);
         button = (Button) view.findViewById(R.id.pet_skill_fj_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("神赋", hero, dialog);
+        skill = SkillFactory.getSkill("神赋", hero);
         button = (Button) view.findViewById(R.id.pet_skill_sf_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("恩赐", hero, dialog);
+        skill = SkillFactory.getSkill("恩赐", hero);
         button = (Button) view.findViewById(R.id.pet_skill_ec_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("宠物大师", hero, dialog);
+        skill = SkillFactory.getSkill("宠物大师", hero);
         button = (Button) view.findViewById(R.id.pet_skill_cwds_button);
         skill.setSkillButton(button);
     }
 
-    public static Skill getSkill(String name, final Hero hero, final SkillDialog dialog) {
+    public static Skill getSkill(String name, final Hero hero) {
         Skill skill = null;
         if ("驯兽师".equalsIgnoreCase(name)) {
             final PropertySkill iskll = new PropertySkill();
@@ -84,7 +84,7 @@ public class PetSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return !SkillFactory.getSkill("培育家", hero, dialog).isActive() && Achievement.pet.isEnable();
+                    return !SkillFactory.getSkill("培育家", hero).isActive() && Achievement.pet.isEnable();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -121,7 +121,7 @@ public class PetSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return !SkillFactory.getSkill("驯兽师", hero, dialog).isActive() && Achievement.egg.isEnable();
+                    return !SkillFactory.getSkill("驯兽师", hero).isActive() && Achievement.egg.isEnable();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -135,7 +135,6 @@ public class PetSkill extends SkillLayout {
             skill.setRelease(new UseExpression() {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-
                     return false;
                 }
 
@@ -147,9 +146,7 @@ public class PetSkill extends SkillLayout {
                     return true;
                 }
             });
-            if (!skill.load()) {
-                iskll.setPetRate(200f);
-            }
+            iskll.setEggRate(200f);
         } else if ("捕捉术".equalsIgnoreCase(name)) {
             final AttackSkill iskll = new AttackSkill();
             skill = iskll;
@@ -158,7 +155,7 @@ public class PetSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("驯兽师", hero, dialog).isActive();
+                    return SkillFactory.getSkill("驯兽师", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -209,7 +206,7 @@ public class PetSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("培育家", hero, dialog).isActive();
+                    return SkillFactory.getSkill("培育家", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -246,7 +243,7 @@ public class PetSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("捕捉术", hero, dialog).isActive();
+                    return SkillFactory.getSkill("捕捉术", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -283,7 +280,7 @@ public class PetSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("催化剂", hero, dialog).isActive();
+                    return SkillFactory.getSkill("催化剂", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -320,7 +317,7 @@ public class PetSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("霸气", hero, dialog).isActive();
+                    return SkillFactory.getSkill("霸气", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -390,7 +387,7 @@ public class PetSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("爱心", hero, dialog).isActive();
+                    return SkillFactory.getSkill("爱心", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -468,7 +465,7 @@ public class PetSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("群殴", hero, dialog).isActive();
+                    return SkillFactory.getSkill("群殴", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -505,7 +502,7 @@ public class PetSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("反击", hero, dialog).isActive();
+                    return SkillFactory.getSkill("反击", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -542,7 +539,7 @@ public class PetSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("神赋", hero, dialog).isActive() || SkillFactory.getSkill("恩赐", hero, dialog).isActive();
+                    return SkillFactory.getSkill("神赋", hero).isActive() || SkillFactory.getSkill("恩赐", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {

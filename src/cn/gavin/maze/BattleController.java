@@ -54,7 +54,7 @@ public class BattleController {
             }
             if (skill != null && !skillJump) {
                     isJump = skill.release(monster);
-            } else if (monster.getName().contains("龙") && SkillFactory.getSkill("龙裔", hero, context.getSkillDialog()).isActive()) {
+            } else if (monster.getName().contains("龙") && SkillFactory.getSkill("龙裔", hero).isActive()) {
                 addMessage(context, hero.getFormatName() + "激发龙裔效果，免疫龙系怪物的伤害！");
             } else {
                 long harm = monster.getAtk() - hero.getDefenseValue();
@@ -76,11 +76,11 @@ public class BattleController {
                 }
 
                 if (harm >= hero.getHp()) {
-                    Skill sy = SkillFactory.getSkill("瞬间移动", hero, context.getSkillDialog());
+                    Skill sy = SkillFactory.getSkill("瞬间移动", hero);
                     if (sy.isActive() && sy.perform()) {
                         return sy.release(monster);
                     } else {
-                        sy = SkillFactory.getSkill("反杀", hero, context.getSkillDialog());
+                        sy = SkillFactory.getSkill("反杀", hero);
                         if (sy.isActive() && sy.perform()) {
                             return sy.release(monster);
                         }
@@ -276,7 +276,7 @@ public class BattleController {
             }
             isJump = true;
         } else if (hero.getHp() <= 0) {
-            Skill notDieSkill = SkillFactory.getSkill("不死之身", hero, context.getSkillDialog());
+            Skill notDieSkill = SkillFactory.getSkill("不死之身", hero);
             if (notDieSkill.isActive() && notDieSkill.perform()) {
                 isJump = notDieSkill.release(monster);
             } else {

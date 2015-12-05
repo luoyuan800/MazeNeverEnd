@@ -24,7 +24,6 @@ public abstract class Skill {
     protected boolean onUsed;
     private Button skillButton;
     private Hero hero;
-    private SkillDialog skillDialog;
     private float probability;
     private DescExpression description;
     private EnableExpression enableExpression;
@@ -42,7 +41,7 @@ public abstract class Skill {
     }
 
     public boolean isEnable() {
-        return isActive() || (hero.getSkillPoint() > 0&&enableExpression.isEnable(hero, maze, MainGameActivity.context, this));
+        return isActive() || (hero.getSkillPoint() > 0 && enableExpression.isEnable(hero, maze, MainGameActivity.context, this));
     }
 
     public void setEnableExpression(EnableExpression exp) {
@@ -98,8 +97,8 @@ public abstract class Skill {
     }
 
     public String toString() {
-        return String.format("<font color=\"red\">%s</font>(使用/点击次数:%s)<br>%s<br>长按%s", name, count, description(),
-                !isActive() ? "激活" : isOnUsed() ? "卸下" : "装备");
+        return String.format("<font color=\"red\">%s</font>(使用/点击次数:%s)<br>%s", name, count, description()
+                );
     }
 
     public void setSkillButton(Button button) {
@@ -109,10 +108,7 @@ public abstract class Skill {
 
     public void refresh() {
         if (skillButton != null) {
-            if (!skillButton.hasOnClickListeners()) {
-                skillButton.setOnClickListener(skillDialog.getClickListener(this));
-                skillButton.setOnLongClickListener(skillDialog.getLongClickListener(this));
-            }
+
             if (!isEnable()) {
                 skillButton.setTextColor(skillButton.getResources().getColor(R.color.disable));
             } else {
@@ -139,12 +135,7 @@ public abstract class Skill {
         this.hero = hero;
     }
 
-    public SkillDialog getSkillDialog() {
-        return skillDialog;
-    }
-
     public void setSkillDialog(SkillDialog skillDialog) {
-        this.skillDialog = skillDialog;
     }
 
     public float getProbability() {
@@ -182,16 +173,16 @@ public abstract class Skill {
     private long latestClick = 0;
 
     public void addCount() {
-            if (this.count < Long.MAX_VALUE - 1000) {
-                this.count++;
-                hero.click(false);
-                if (count % 1005 == 0) {
-                    levelUp();
-                }
-                if (count % 7000 == 0 && hero.getRandom().nextLong(hero.getSkillPoint()) < 3) {
-                    hero.setSkillPoint(hero.getSkillPoint() + 1);
-                }
+        if (this.count < Long.MAX_VALUE - 1000) {
+            this.count++;
+            hero.click(false);
+            if (count % 1005 == 0) {
+                levelUp();
             }
+            if (count % 7000 == 0 && hero.getRandom().nextLong(hero.getSkillPoint()) < 3) {
+                hero.setSkillPoint(hero.getSkillPoint() + 1);
+            }
+        }
     }
 
     protected void levelUp() {
@@ -268,7 +259,7 @@ public abstract class Skill {
         MainGameActivity.context.addMessage(format(msg));
     }
 
-    public boolean equal(Skill skill){
+    public boolean equal(Skill skill) {
         return skill != null && name.equalsIgnoreCase(skill.getName());
     }
 }

@@ -35,31 +35,31 @@ public class LongSkill extends SkillLayout {
         this.context = context;
     }
 
-    public void init(SkillDialog dialog) {
-        Skill skill = SkillFactory.getSkill("龙裔", hero, dialog);
+    public void init() {
+        Skill skill = SkillFactory.getSkill("龙裔", hero);
         Button button = (Button) view.findViewById(R.id.long_skill_ly_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("咆哮", hero, dialog);
+        skill = SkillFactory.getSkill("咆哮", hero);
         button = (Button) view.findViewById(R.id.long_skill_px_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("龙铠", hero, dialog);
+        skill = SkillFactory.getSkill("龙铠", hero);
         button = (Button) view.findViewById(R.id.long_skill_lk_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("觉醒", hero, dialog);
+        skill = SkillFactory.getSkill("觉醒", hero);
         button = (Button) view.findViewById(R.id.long_skill_jx_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("龙爪", hero, dialog);
+        skill = SkillFactory.getSkill("龙爪", hero);
         button = (Button) view.findViewById(R.id.long_skill_lz_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("吐息", hero, dialog);
+        skill = SkillFactory.getSkill("吐息", hero);
         button = (Button) view.findViewById(R.id.long_skill_tx_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("沙尘", hero, dialog);
+        skill = SkillFactory.getSkill("沙尘", hero);
         button = (Button) view.findViewById(R.id.long_skill_sc_button);
         skill.setSkillButton(button);
     }
 
-    public static Skill getSkill(String name, final Hero hero, final SkillDialog dialog) {
+    public static Skill getSkill(String name, final Hero hero) {
         Skill skill = null;
         if ("龙裔".equalsIgnoreCase(name)) {
             final PropertySkill iskll = new PropertySkill();
@@ -107,7 +107,7 @@ public class LongSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("龙裔", hero, dialog).isActive();
+                    return SkillFactory.getSkill("龙裔", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -152,7 +152,7 @@ public class LongSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("咆哮", hero, dialog).isActive();
+                    return SkillFactory.getSkill("咆哮", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -217,7 +217,7 @@ public class LongSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getPoint() > 6001 && SkillFactory.getSkill("龙铠", hero, dialog).isActive();
+                    return hero.getPoint() > 6001 && SkillFactory.getSkill("龙铠", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -255,7 +255,7 @@ public class LongSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("龙裔", hero, dialog).isActive();
+                    return SkillFactory.getSkill("龙裔", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -314,7 +314,7 @@ public class LongSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("龙爪", hero, dialog).isActive();
+                    return SkillFactory.getSkill("龙爪", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -373,7 +373,7 @@ public class LongSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("吐息", hero, dialog).isActive();
+                    return SkillFactory.getSkill("吐息", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {

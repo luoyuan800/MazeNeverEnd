@@ -9,20 +9,10 @@ import android.os.Message;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import android.widget.*;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.log.LogHelper;
-import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
 import cn.gavin.pet.Pet;
 import cn.gavin.pet.swop.SwapManager;
@@ -33,6 +23,10 @@ import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
 import cn.gavin.utils.ui.LoadMoreListView;
 import cn.gavin.utils.ui.SlidingMenu;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Copyright 2015 gluo.
@@ -51,6 +45,7 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
     int page = 1;
     SlidingMenu slidingMenu;
     SwapPet netPet;
+    List<DialogInterface> shouldCloseDialog = new ArrayList<DialogInterface>();
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             try {
@@ -80,10 +75,16 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                         Pet pet = (Pet) msg.obj;
                         AlertDialog newPetDialog = PetInfoDialogBuilder.build(pet, context, "照顾好:" + pet.getFormatName());
                         newPetDialog.show();
+                        for(DialogInterface dialogInterface : shouldCloseDialog){
+                            dialogInterface.dismiss();
+                        }
+                        adapter.clean();
+                        page = 0;
+                        handler.sendEmptyMessage(1);
                         break;
                     case 6:
                         AlertDialog err = new AlertDialog.Builder(context).create();
-                        err.setMessage("连接失败，请确认网络正常后重试！");
+                        err.setMessage("连接失败，请稍候后重试！");
                         err.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -93,7 +94,7 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                         err.show();
                 }
                 super.handleMessage(msg);
-            }catch (Exception e){
+            } catch (Exception e) {
                 LogHelper.logException(e);
                 e.printStackTrace();
             }
@@ -124,6 +125,7 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                 @Override
                 public void run() {
                     try {
+                        Thread.sleep(1000);
                         while (!swapManager.isFinished()) ;
                         progressDialog.dismiss();
                         pets = swapManager.getResult();
@@ -307,24 +309,46 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                             }
                         });
                         myPetDialog.show();
+                        shouldCloseDialog.add(myPetDialog);
                     } else if (v.getTag() != null && v.getTag() instanceof PetSimpleViewAdapter.PetViewHolder && netPet != null) {
                         Pet myPet = ((PetSimpleViewAdapter.PetViewHolder) v.getTag()).getPet();
-                        SwapPet mySwapPet = SwapPet.buildSwapPet(myPet);
-                        Pet netSwapPet = netPet.buildPet();
-                        netPet.setChangedPet(mySwapPet);
+                        final SwapPet mySwapPet = SwapPet.buildSwapPet(myPet);
+                        final Pet netSwapPet = netPet.buildPet();
+                        mySwapPet.setKeeperId(netPet.getKeeperId());
+                        mySwapPet.setKeeperName(netPet.getKeeperName());
                         netPet.setKeeperId(MazeContents.hero.getUuid());
                         netPet.setKeeperName(MazeContents.hero.getName());
                         mySwapPet.setChangedPet(netPet);
                         swapManager.uploadPet(context, mySwapPet, myPet);
-                        swapManager.acknowledge(context, netPet);
-                        netSwapPet.save();
-                        Message message = new Message();
-                        message.what = 5;
-                        message.obj = netSwapPet;
-                        handler.sendMessage(message);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Thread.sleep(1000);
+                                    while (!swapManager.isFinished()) ;
+                                    netPet.setChangedPet(mySwapPet);
+                                    SwapPet updatePet = new SwapPet();
+                                    updatePet.setObjectId(netPet.getObjectId());
+                                    updatePet.setKeeperId(netPet.getKeeperId());
+                                    updatePet.setKeeperName(netPet.getKeeperName());
+                                    SwapPet changedPet = new SwapPet();
+                                    changedPet.setObjectId(netPet.getChangedPet().getObjectId());
+                                    updatePet.setChangedPet(changedPet);
+                                    swapManager.acknowledge(context, updatePet);
+                                    netSwapPet.save();
+                                    Message message = new Message();
+                                    message.what = 5;
+                                    message.obj = netSwapPet;
+                                    handler.sendMessage(message);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    LogHelper.logException(e);
+                                }
+                            }
+                        }).start();
                     }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             LogHelper.logException(e);
             e.printStackTrace();
         }

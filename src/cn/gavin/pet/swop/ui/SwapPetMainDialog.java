@@ -21,6 +21,7 @@ import cn.gavin.pet.swop.SwapManager;
 import cn.gavin.pet.swop.SwapPet;
 import cn.gavin.pet.swop.ui.net.NetPetDialog;
 import cn.gavin.utils.MazeContents;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 gluo.
@@ -44,13 +45,18 @@ public class SwapPetMainDialog {
                             final Pet myPet = pet.buildPet();
                             if (pet.getChangedPet() != null) {
                                 SwapPet changePet = pet.getChangedPet();
-                                final Pet myChangePet = changePet.buildPet();
-                                mainDialog = PetInfoDialogBuilder.build(myChangePet, context, "有人和你交换了宠物,你得到了");
+                                String title;
+                                if(StringUtils.isNotEmpty(changePet.getName())){
+                                    title = "你用 " + changePet.getFormateName() + "换到了";
+                                }else{
+                                    title = "你获得了" + myPet.getFormatName();
+                                }
+                                mainDialog = PetInfoDialogBuilder.build(myPet, context, title);
                                 mainDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        myChangePet.save();
+                                        myPet.save();
                                         swapManager.acknowledge(context, pet);
                                         Toast.makeText(context, "--取回了" + pet.getName() + "，请好好照顾--", Toast.LENGTH_SHORT)
                                                 .show();
@@ -87,13 +93,14 @@ public class SwapPetMainDialog {
                                 }
                             });
                             View uploadView = view.findViewById(R.id.upload_my_pet);
-                            if(MazeContents.hero.getMaterial() < 200000){
+                            if(MazeContents.hero.getMaterial() < 500000){
                                 uploadView.setEnabled(false);
                             }else {
+                                uploadView.setEnabled(true);
                                 uploadView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        MazeContents.hero.addMaterial(200000);
+                                        MazeContents.hero.addMaterial(-500000);
                                         mainDialog.dismiss();
                                         SwapDialog swapDialog = new SwapDialog(context);
                                         swapDialog.show();
@@ -114,6 +121,7 @@ public class SwapPetMainDialog {
                         break;
                 }
             }catch (Exception e){
+                e.printStackTrace();
                 LogHelper.logException(e);
             }
         }
@@ -129,6 +137,12 @@ public class SwapPetMainDialog {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    LogHelper.logException(e);
+                    e.printStackTrace();
+                }
                 while (!swapManager.isFinished()) ;
                 handler.sendEmptyMessage(0);
             }

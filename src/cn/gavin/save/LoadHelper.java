@@ -252,7 +252,7 @@ public class LoadHelper {
         try {
             Cursor cursor = DBHelper.getDbHelper().excuseSOL(sql);
             while (!cursor.isAfterLast()) {
-                SkillFactory.getSkill(cursor.getString(cursor.getColumnIndex("name")), hero, dialog);
+                SkillFactory.getSkill(cursor.getString(cursor.getColumnIndex("name")), hero);
                 cursor.moveToNext();
             }
             cursor.close();

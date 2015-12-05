@@ -37,79 +37,95 @@ public class BaseSkill extends SkillLayout {
     public BaseSkill(Context context) {
         super(context);
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.skill_layout_base, (ViewGroup) this.findViewById(R.id.skill_dialog));
+        View view = inflater.inflate(R.layout.skill_layout_base, (ViewGroup) this.findViewById(R.id.base_skill_layout_root));
         this.addView(view);
         this.view = view;
         this.context = context;
     }
 
-    public void init(SkillDialog dialog) {
-        Skill skill = SkillFactory.getSkill("勇者之击", hero, dialog);
+    public void init() {
+        Skill skill = SkillFactory.getSkill("勇者之击", hero);
         Button button = (Button) view.findViewById(R.id.base_skill_r_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("闪避", hero, dialog);
+        skill = SkillFactory.getSkill("闪避", hero);
         button = (Button) view.findViewById(R.id.base_skill_s_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("铁拳", hero, dialog);
+        skill = SkillFactory.getSkill("铁拳", hero);
         button = (Button) view.findViewById(R.id.skill_base_t_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("反弹", hero, dialog);
+        skill = SkillFactory.getSkill("反弹", hero);
         button = (Button) view.findViewById(R.id.skill_base_f_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("巨大化", hero, dialog);
+        skill = SkillFactory.getSkill("巨大化", hero);
         button = (Button) view.findViewById(R.id.skill_base_j_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("定身", hero, dialog);
+        skill = SkillFactory.getSkill("定身", hero);
         button = (Button) view.findViewById(R.id.skill_base_d_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("超能量", hero, dialog);
+        skill = SkillFactory.getSkill("超能量", hero);
         button = (Button) view.findViewById(R.id.skill_base_c_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("瞬间移动", hero, dialog);
+        skill = SkillFactory.getSkill("瞬间移动", hero);
         button = (Button) view.findViewById(R.id.skill_base_sy_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("斩击", hero, dialog);
+        skill = SkillFactory.getSkill("斩击", hero);
         button = (Button) view.findViewById(R.id.skill_base_zj_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("裂空剑", hero, dialog);
+        skill = SkillFactory.getSkill("裂空剑", hero);
         button = (Button) view.findViewById(R.id.skill_base_lkj_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("传送", hero, dialog);
+        skill = SkillFactory.getSkill("传送", hero);
         button = (Button) view.findViewById(R.id.skill_base_cs_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("错位", hero, dialog);
+        skill = SkillFactory.getSkill("错位", hero);
         button = (Button) view.findViewById(R.id.skill_base_cw_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("原能力", hero, dialog);
+        skill = SkillFactory.getSkill("原能力", hero);
         button = (Button) view.findViewById(R.id.skill_base_ynl_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("寻宝", hero, dialog);
+        skill = SkillFactory.getSkill("寻宝", hero);
         button = (Button) view.findViewById(R.id.skill_base_xb_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("超防御", hero, dialog);
+        skill = SkillFactory.getSkill("超防御", hero);
         button = (Button) view.findViewById(R.id.skill_base_cfy_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("重击", hero, dialog);
+        skill = SkillFactory.getSkill("重击", hero);
         button = (Button) view.findViewById(R.id.skill_base_hit_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
     }
 
-    public static Skill getSkill(String name, Hero hero, final SkillDialog dialog) {
+    public static Skill getSkill(String name, Hero hero) {
         Skill skill = null;
         if (name.equals("勇者之击")) {
             AttackSkill attackSkill = new AttackSkill();
@@ -119,7 +135,7 @@ public class BaseSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (skill.isActive() || hero.getSkillPoint() > 0) && !SkillFactory.getSkill("魔王天赋", hero, dialog).isActive();
+                    return (skill.isActive() || hero.getSkillPoint() > 0) && !SkillFactory.getSkill("魔王天赋", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -186,7 +202,7 @@ public class BaseSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("勇者之击", hero, dialog).isActive();
+                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("勇者之击", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -232,7 +248,7 @@ public class BaseSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("超能量", hero, dialog).isActive();
+                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("超能量", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -277,7 +293,7 @@ public class BaseSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("勇者之击", hero, dialog).isActive();
+                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("勇者之击", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -338,7 +354,7 @@ public class BaseSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("闪避", hero, dialog).isActive();
+                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("闪避", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -392,7 +408,7 @@ public class BaseSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (skill.isActive() || hero.getSkillPoint() > 0) && (SkillFactory.getSkill("闪避", hero, dialog).isActive() || SkillFactory.getSkill("铁拳", hero, dialog).isActive());
+                    return (skill.isActive() || hero.getSkillPoint() > 0) && (SkillFactory.getSkill("闪避", hero).isActive() || SkillFactory.getSkill("铁拳", hero).isActive());
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -458,7 +474,7 @@ public class BaseSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (skill.isActive() || hero.getSkillPoint() > 0) && (SkillFactory.getSkill("铁拳", hero, dialog).isActive());
+                    return (skill.isActive() || hero.getSkillPoint() > 0) && (SkillFactory.getSkill("铁拳", hero).isActive());
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -513,9 +529,9 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && (SkillFactory.getSkill("反弹", hero, dialog).isActive() ||
-                            SkillFactory.getSkill("巨大化", hero, dialog).isActive() ||
-                            SkillFactory.getSkill("定身", hero, dialog).isActive());
+                            && (SkillFactory.getSkill("反弹", hero).isActive() ||
+                            SkillFactory.getSkill("巨大化", hero).isActive() ||
+                            SkillFactory.getSkill("定身", hero).isActive());
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -583,7 +599,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("超能量", hero, dialog).isActive();
+                            && SkillFactory.getSkill("超能量", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -636,7 +652,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("瞬间移动", hero, dialog).isActive();
+                            && SkillFactory.getSkill("瞬间移动", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -678,7 +694,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("超能量", hero, dialog).isActive() && (Sword.valueOf(hero.getSword()).ordinal() > Sword.金剑.ordinal());
+                            && SkillFactory.getSkill("超能量", hero).isActive() && (Sword.valueOf(hero.getSword()).ordinal() > Sword.金剑.ordinal());
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -732,7 +748,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("裂空剑", hero, dialog).isActive();
+                            && SkillFactory.getSkill("裂空剑", hero).isActive();
                 }
             });
             defendSkill.setDescription(new DescExpression() {
@@ -788,7 +804,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("原能力", hero, dialog).isActive();
+                            && SkillFactory.getSkill("原能力", hero).isActive();
                 }
             });
             iSkill.setDescription(new DescExpression() {
@@ -851,7 +867,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("传送", hero, dialog).isActive();
+                            && SkillFactory.getSkill("传送", hero).isActive();
                 }
             });
             iskll.setDescription(new DescExpression() {
@@ -888,7 +904,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("斩击", hero, dialog).isActive();
+                            && SkillFactory.getSkill("斩击", hero).isActive();
                 }
             });
             iskll.setDescription(new DescExpression() {
@@ -951,7 +967,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("错位", hero, dialog).isActive();
+                            && SkillFactory.getSkill("错位", hero).isActive();
                 }
             });
             iskll.setDescription(new DescExpression() {

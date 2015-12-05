@@ -37,33 +37,33 @@ public class SwindlerSkill extends SkillLayout {
         this.context = context;
     }
 
-    public void init(SkillDialog dialog) {
-        Skill skill = SkillFactory.getSkill("点攻", hero, dialog);
+    public void init() {
+        Skill skill = SkillFactory.getSkill("点攻", hero);
         Button button = (Button) view.findViewById(R.id.skill_swindler_dg_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("点防", hero, dialog);
+        skill = SkillFactory.getSkill("点防", hero);
         button = (Button) view.findViewById(R.id.skill_swindler_df_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("欺诈游戏", hero, dialog);
+        skill = SkillFactory.getSkill("欺诈游戏", hero);
         button = (Button) view.findViewById(R.id.skill_swindler_qg_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("欺诈师", hero, dialog);
+        skill = SkillFactory.getSkill("欺诈师", hero);
         button = (Button) view.findViewById(R.id.skill_swindler_qzs_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("浮生百刃", hero, dialog);
+        skill = SkillFactory.getSkill("浮生百刃", hero);
         button = (Button) view.findViewById(R.id.skill_swindler_f_button);
         skill.setSkillButton(button);
 
-        skill = SkillFactory.getSkill("虚无吞噬", hero, dialog);
+        skill = SkillFactory.getSkill("虚无吞噬", hero);
         button = (Button) view.findViewById(R.id.skill_swindler_x_button);
         skill.setSkillButton(button);
     }
 
-    public static Skill getSkill(String name, final Hero hero, final SkillDialog dialog) {
+    public static Skill getSkill(String name, final Hero hero) {
         Skill skill = null;
         if ("点攻".equalsIgnoreCase(name)) {
             final AttackSkill iskll = new AttackSkill();
@@ -73,7 +73,7 @@ public class SwindlerSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return  SkillFactory.getSkill("欺诈游戏", hero, dialog).isActive()&& Achievement.click50000.isEnable();
+                    return  SkillFactory.getSkill("欺诈游戏", hero).isActive()&& Achievement.click50000.isEnable();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -124,7 +124,7 @@ public class SwindlerSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("欺诈游戏", hero, dialog).isActive() && Achievement.click50000.isEnable();
+                    return SkillFactory.getSkill("欺诈游戏", hero).isActive() && Achievement.click50000.isEnable();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -207,7 +207,7 @@ public class SwindlerSkill extends SkillLayout {
                     String coin = hero.getFormatName() + "开启" + iskll.getName() + ",抛了一次硬币,结果为" + (coinSide ? "正" : "反");
                     skill.addMessage(coin);
                     monster.addBattleSkillDesc(coin);
-                    if (!coinSide && SkillFactory.getSkill("欺诈师", hero, dialog).isActive()) {
+                    if (!coinSide && SkillFactory.getSkill("欺诈师", hero).isActive()) {
                         coinSide = hero.getRandom().nextBoolean();
                         coin = "欺诈师" + hero.getFormatName() + "又抛了一次硬币,结果为" + (coinSide ? "正" : "反");
                         Achievement.swindler.enable(hero);
@@ -265,7 +265,7 @@ public class SwindlerSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("点攻", hero, dialog).isActive()||SkillFactory.getSkill("点防",hero,dialog).isActive();
+                    return SkillFactory.getSkill("点攻", hero).isActive()||SkillFactory.getSkill("点防",hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -393,7 +393,7 @@ public class SwindlerSkill extends SkillLayout {
                     String coin = hero.getFormatName() + "抛了一次硬币,结果为" + (coinSide ? "正" : "反");
                     skill.addMessage(coin);
                     monster.addBattleSkillDesc(coin);
-                    if (!coinSide && SkillFactory.getSkill("欺诈师", hero, dialog).isActive()) {
+                    if (!coinSide && SkillFactory.getSkill("欺诈师", hero).isActive()) {
                         coinSide = hero.getRandom().nextBoolean();
                         coin = "欺诈师" + hero.getFormatName() + "又抛了一次硬币,结果为" + (coinSide ? "正" : "反");
                         Achievement.swindler.enable(hero);

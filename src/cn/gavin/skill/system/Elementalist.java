@@ -2,7 +2,6 @@ package cn.gavin.skill.system;
 
 import android.content.Context;
 
-import cn.gavin.Achievement;
 import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
@@ -15,7 +14,6 @@ import cn.gavin.skill.expression.DescExpression;
 import cn.gavin.skill.expression.EnableExpression;
 import cn.gavin.skill.expression.UseExpression;
 import cn.gavin.skill.type.AttackSkill;
-import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.PropertySkill;
 
 /**
@@ -26,6 +24,11 @@ import cn.gavin.skill.type.PropertySkill;
 public class Elementalist extends SkillLayout {
     public Elementalist(Context context) {
         super(context);
+    }
+
+    @Override
+    public void init() {
+
     }
 
     public static Skill getSkill(String name, final Hero hero, final SkillDialog dialog) {
@@ -84,7 +87,7 @@ public class Elementalist extends SkillLayout {
             iskill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getElement() != Element.无 && SkillFactory.getSkill("元素变换", hero, dialog).isActive();
+                    return hero.getElement() != Element.无 && SkillFactory.getSkill("元素变换", hero).isActive();
                 }
             });
             iskill.setDescription(new DescExpression() {
@@ -127,7 +130,7 @@ public class Elementalist extends SkillLayout {
             iskill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getElement() != Element.无 && SkillFactory.getSkill("元素变换", hero, dialog).isActive();
+                    return hero.getElement() != Element.无 && SkillFactory.getSkill("元素变换", hero).isActive();
                 }
             });
             iskill.setDescription(new DescExpression() {
@@ -162,7 +165,7 @@ public class Elementalist extends SkillLayout {
             iskill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getElement() != Element.无 && SkillFactory.getSkill("", hero, dialog).isActive();
+                    return hero.getElement() != Element.无 && SkillFactory.getSkill("", hero).isActive();
                 }
             });
             iskill.setDescription(new DescExpression() {

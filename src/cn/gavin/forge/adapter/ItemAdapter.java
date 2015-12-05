@@ -120,6 +120,7 @@ public class ItemAdapter extends BaseAdapter implements LoadMoreListView.OnRefre
 
     public void refresh() {
         searchResult(Item.loadByLimit(0, 10, ""));
+        listView.onLoadMoreComplete(false);
     }
 
     class ItemViewHolder {

@@ -46,6 +46,7 @@ import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
+import cn.gavin.skill.type.SkillMainDialog;
 import cn.gavin.upload.CdKey;
 import cn.gavin.upload.Upload;
 import cn.gavin.utils.MazeContents;
@@ -509,7 +510,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         tv.setText("注意：\n1.  感谢您的支持，无论您是想踩还是赞~\n" +
                 "2.  这个并不算是真正内购功能（虽然确实很像内购）\n" +
                 "3.  请适量使用。过多的锻造点数并不能加快您的游戏进度。\n" +
-                "4.  您会获得额外的10W点锻造点数和随机的能力点数。\n" +
+                "4.  您会获得额外的500W点锻造点数和随机的能力点数。\n" +
                 "5.  您会随机获得一个高属性宠物。\n");
         dialog.setView(tv);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
@@ -819,7 +820,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             heroN.setMaxMazeLev(heroN.getMaxMazeLev() + 101);
                             maze.setLevel(99);
                             Achievement.dragon.enable(heroN);
-                            SkillFactory.getSkill("虚无吞噬", heroN, skillDialog).setActive(true);
+                            SkillFactory.getSkill("虚无吞噬", heroN).setActive(true);
                             DBHelper.getDbHelper().excuseSQLWithoutResult("UPDATE recipe set found = 'true'");
                         } else if (input.equals("201509181447ac")) {
                             for (Achievement achievement : Achievement.values()) {
@@ -873,9 +874,12 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
     private void showAwardPet() {
         final Pet pet = new Pet();
-        int i = 24 + heroN.getRandom().nextInt(4);
-        if (i >= Monster.lastNames.length) {
+        int i = 23 + heroN.getRandom().nextInt(10);
+        if (i >= Monster.lastNames.length ) {
             i = Monster.lastNames.length - 1;
+        }
+        if(i == 23){
+            i = 23 -1;
         }
         pet.setType(Monster.lastNames[i]);
         pet.setAtk(heroN.getBaseAttackValue() *2 + 1);
@@ -888,7 +892,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         }
         pet.setName("奖励的普通" + pet.getType());
         pet.setSex(heroN.getRandom().nextInt(2));
-        pet.setSkill(PetSkillList.Shaman.getSkill(pet));
+        pet.setSkill(PetSkillList.getRandomSkill(heroN.getRandom(),pet,0,8));
         pet.setLev(maze.getLev());
         pet.setIntimacy(0l);
         pet.setOwner(heroN.getName());
@@ -1078,6 +1082,12 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                                 @Override
                                 public void run() {
                                     int count = 0;
+                                    try {
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                        LogHelper.logException(e);
+                                        e.printStackTrace();
+                                    }
                                     while (updatePalace && count < 100000) {
                                         try {
                                             Thread.sleep(refreshInfoSpeed);
@@ -1894,10 +1904,12 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 handler.sendEmptyMessage(103);
                 break;
             case R.id.skill_button:
-                if (!skillDialog.isInit()) {
-                    skillDialog.init();
-                }
-                skillDialog.show(heroN);
+//                if (!skillDialog.isInit()) {
+//                    skillDialog.init();
+//                }
+//                skillDialog.show(heroN);
+                SkillMainDialog skillMainDialog = new SkillMainDialog();
+                skillMainDialog.show();
                 break;
             case R.id.update_button:
                 BmobUpdateAgent.setDialogListener(new BmobDialogButtonListener() {

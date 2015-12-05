@@ -1,6 +1,7 @@
 package cn.gavin.pet.swop;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.log.LogHelper;
 import cn.gavin.monster.Monster;
@@ -37,9 +39,22 @@ public class SwapManager {
         finished = true;
     }
 
-    public void acknowledge(Context context, SwapPet pet) {
+    public void acknowledge(final Context context, SwapPet pet) {
         pet.setAcknowledge(true);
-        pet.update(context);
+        pet.update(context,pet.getObjectId(),new UpdateListener() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(context, "--交换完成--", Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+
+                Toast.makeText(context, "--交换失败" + s + "--", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
     }
 
     /**
@@ -52,7 +67,9 @@ public class SwapManager {
         finished = false;
         BmobQuery<SwapPet> query = new BmobQuery<SwapPet>();
         query.setLimit(10);
-        query.addWhereEqualTo("ownerId", MazeContents.hero.getUuid());
+        query.addWhereEqualTo("keeperId", MazeContents.hero.getUuid());
+        query.addWhereEqualTo("acknowledge", false);
+        query.include("changedPet");
         query.findObjects(context, new FindListener<SwapPet>() {
             @Override
             public void onSuccess(List<SwapPet> swapPets) {
@@ -76,22 +93,23 @@ public class SwapManager {
 
     public void uploadPet(Context context, SwapPet pet, final Pet petO) {
         try {
-            final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-            TextView uText = new TextView(context);
-            uText.setText("上传中(不能取消)...");
-            alertDialog.setView(uText);
-            alertDialog.show();
+            finished = false;
+            final ProgressDialog progressDialog = new ProgressDialog(context);
+            progressDialog.setMessage("上传中(不能取消)...");
+            progressDialog.show();
             pet.save(context, new SaveListener() {
                 @Override
                 public void onSuccess() {
                     petO.releasePet(MazeContents.hero, MainGameActivity.context);
-                    alertDialog.dismiss();
+                    progressDialog.dismiss();
                     finished(Collections.<SwapPet>emptyList());
+                    Toast.makeText(MainGameActivity.context, (petO.getType().equals("蛋") ? "蛋" : petO.getName())
+                            + "已经上传", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onFailure(int i, String s) {
-                    alertDialog.dismiss();
+                    progressDialog.dismiss();
                     Toast.makeText(MainGameActivity.context, "上传宠物失败，请检查网络后重试" + s, Toast.LENGTH_SHORT).show();
                     finished(null);
                 }

@@ -154,7 +154,19 @@ public enum Effect {
         public Number calculate(Hero hero, Monster monster) {
             return 3;
         }
-    }, "附带技能星爆<br>亮瞎敌人的双眼,敌人HP变成一个不大于当前HP的随机数。释放概率");
+    }, "附带技能星爆<br>亮瞎敌人的双眼,敌人HP变成一个不大于当前HP的随机数。释放概率"),
+    ICE_BURST(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            return 3;
+        }
+    }, "附带技能冰爆<br>冻住敌人随机回合。释放概率"),
+    FEN_BURST(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            return 3;
+        }
+    }, "附带技能令风<br>秒杀土属性的敌人。释放概率");
     private Calculate calculate;
     private String name;
 
@@ -182,7 +194,7 @@ public enum Effect {
     }
 
     public static Effect randomEffect(Random random){
-        return Effect.values()[random.nextInt(values().length - 5)];
+        return Effect.values()[random.nextInt(values().length - 8)];
     }
 
 }

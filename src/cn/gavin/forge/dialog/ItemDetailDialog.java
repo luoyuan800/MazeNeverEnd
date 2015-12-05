@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import cn.gavin.Hero;
+import cn.gavin.activity.ForgeActivity;
 import cn.gavin.forge.Item;
 import cn.gavin.forge.adapter.ItemAdapter;
 import cn.gavin.forge.effect.Effect;
@@ -56,7 +57,31 @@ public class ItemDetailDialog {
         itemDialog.setButton(DialogInterface.BUTTON_POSITIVE, "随机添加", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                int count = adapter.getCount();
+                if(count > 5) count -= 4;
+                int i0 = MazeContents.hero.getRandom().nextInt(count);
+                Item item = adapter.getItem(i0);
+                Item item1 = null;
+                Item item2 = null;
+                Item item3 = null;
+                Item item4 = null;
+                int position = i0 + 1;
+                if(position < count){
+                    item1 = adapter.getItem(position);
+                    position = position + 1;
+                    if(position < count){
+                        item2 = adapter.getItem(position);
+                        position = position + 1;
+                        if(position < count){
+                            item3 = adapter.getItem(position);
+                            position = position + 1;
+                            if(position < count){
+                                item4 = adapter.getItem(position);
+                            }
+                        }
+                    }
+                }
+                ((ForgeActivity)activity).setItems(item,item1,item2,item3,item4);
                 itemDialog.hide();
             }
         });

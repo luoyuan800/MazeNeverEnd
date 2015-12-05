@@ -42,6 +42,6 @@
         android:layout_height="wrap_content"
         android:textColor="#ffe7d205"
         android:textAlignment="center"
-        android:text="找不到想要的宠物？\n上传自己的宠物等别人来交换吧！\n需要缴纳20W锻造点数作为保管费"/>
+        android:text="找不到想要的宠物？\n上传自己的宠物等别人来交换吧！\n需要缴纳50W锻造点数作为保管费"/>
     </LinearLayout>
 </LinearLayout>

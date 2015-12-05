@@ -47,7 +47,7 @@ public class PropertySkill extends Skill {
 
     public String toString() {
         return String.format("<font color=\"red\">%s</font><br>%s<br>被动技能%s", getName(), description(),
-                !isActive() ? "长按激活" : "已经激活（被动技能激活后无需装备就可以生效）");
+                !isActive() ? "" : "已经激活（被动技能激活后无需装备就可以生效）");
     }
 
     @Override

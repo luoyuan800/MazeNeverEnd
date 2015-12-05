@@ -447,7 +447,29 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
         return item.idEqual(item1) || item.idEqual(item2) || item.idEqual(item3) || item.idEqual(item4) || item.idEqual(item5);
     }
 
-    public int getWhat() {
-        return 0;
+    public void setItems(Item...items) {
+        if(items.length < 5){
+            return;
+        }
+        Message message = new Message();
+        message.what = R.id.forge_item_1;
+        message.obj = items[0];
+        handler.sendMessage(message);
+        message = new Message();
+        message.what = R.id.forge_item_2;
+        message.obj = items[1];
+        handler.sendMessage(message);
+        message = new Message();
+        message.what = R.id.forge_item_3;
+        message.obj = items[2];
+        handler.sendMessage(message);
+        message = new Message();
+        message.what = R.id.forge_item_4;
+        message.obj = items[3];
+        handler.sendMessage(message);
+        message = new Message();
+        message.what = R.id.forge_item_5;
+        message.obj = items[4];
+        handler.sendMessage(message);
     }
 }

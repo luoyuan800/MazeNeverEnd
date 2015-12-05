@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" android:background="@android:color/black"
+              android:baselineAligned="false" android:gravity="center_horizontal" android:id="@+id/skill_main_view_root">
+
+    <Space
+            android:layout_width="fill_parent"
+            android:layout_height="20px"
+            />
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="主职业"
+            android:id="@+id/textView" android:layout_gravity="center" android:textColor="@color/red"
+            android:textAlignment="center" android:textStyle="bold" android:textSize="35sp"/>
+    <Space
+            android:layout_width="20px"
+            android:layout_height="20px"
+            android:layout_gravity="center"/>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:orientation="horizontal">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="勇者"
+                android:id="@+id/base_skill" android:layout_weight="1" android:textStyle="bold" android:textSize="20sp"
+                android:textColor="#dab907" android:enabled="true"
+                />
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="魔王"
+                android:id="@+id/evil_skill" android:layout_weight="1" android:textSize="20sp" android:textStyle="bold"
+                android:textColor="#dab907" android:enabled="true"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="元素使(1.9)"
+                android:id="@+id/element_skill" android:layout_weight="1" android:textStyle="bold" android:textSize="20sp"
+                android:enabled="false" android:textColor="#dab907"/>
+    </LinearLayout>
+    <Space
+            android:layout_width="20px"
+            android:layout_height="20px"
+            />
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="5sp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/textView2" android:background="@color/grey21"/>
+    <Space
+            android:layout_width="fill_parent"
+            android:layout_height="30px"
+            />
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="副职业"
+            android:id="@+id/textView3" android:layout_gravity="center" android:textColor="@color/onUse"
+            android:textStyle="bold" android:textSize="35sp"/>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="龙裔"
+                android:id="@+id/long_skill" android:textColor="#0fb24e" android:layout_weight="1"
+                android:textSize="20sp"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="宠物大师"
+                android:id="@+id/pet_skill" android:textColor="#0fb24e" android:layout_weight="1"
+                android:textSize="20sp"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="欺诈师"
+                android:id="@+id/swindler_skill" android:textColor="#0fb24e" android:layout_weight="1"
+                android:textSize="20sp"/>
+    </LinearLayout>
+    <Space
+            android:layout_width="20px"
+            android:layout_height="20px"
+            android:layout_gravity="center"/>
+    <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView" android:src="@drawable/huoyan" android:background="@drawable/huoyan"/>
+</LinearLayout>
