@@ -65,8 +65,8 @@ public abstract class SkillLayout extends ScrollView {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             skill.setOnUsed(false);
-                            dialogInterface.dismiss();
                             refresh();
+                            dialogInterface.dismiss();
                         }
                     });
                 } else if (!skill.isActive()) {
@@ -74,8 +74,8 @@ public abstract class SkillLayout extends ScrollView {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             skill.setActive(true);
-                            dialogInterface.dismiss();
                             refresh();
+                            dialogInterface.dismiss();
                         }
                     });
                 }
