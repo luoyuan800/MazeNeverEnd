@@ -21,6 +21,7 @@ import java.util.List;
 /**
  * Created by luoyuan on 9/12/15.
  */
+@Deprecated
 public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
     private MainGameActivity context;
     private AlertDialog alertDialog;

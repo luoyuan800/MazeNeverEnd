@@ -35,4 +35,9 @@ public class SafetyRope implements LocalGood {
     public void setCount(int count) {
         this.count = count;
     }
+
+    @Override
+    public void setClass(String clazz) {
+
+    }
 }

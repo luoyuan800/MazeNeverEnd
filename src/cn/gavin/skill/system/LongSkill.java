@@ -13,7 +13,6 @@ import cn.gavin.maze.BattleController;
 import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.Skill;
-import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.skill.expression.DescExpression;
 import cn.gavin.skill.expression.EnableExpression;
@@ -39,24 +38,45 @@ public class LongSkill extends SkillLayout {
         Skill skill = SkillFactory.getSkill("龙裔", hero);
         Button button = (Button) view.findViewById(R.id.long_skill_ly_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("咆哮", hero);
         button = (Button) view.findViewById(R.id.long_skill_px_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("龙铠", hero);
         button = (Button) view.findViewById(R.id.long_skill_lk_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("觉醒", hero);
         button = (Button) view.findViewById(R.id.long_skill_jx_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("龙爪", hero);
         button = (Button) view.findViewById(R.id.long_skill_lz_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("吐息", hero);
         button = (Button) view.findViewById(R.id.long_skill_tx_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("沙尘", hero);
         button = (Button) view.findViewById(R.id.long_skill_sc_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
     }
 
     public static Skill getSkill(String name, final Hero hero) {

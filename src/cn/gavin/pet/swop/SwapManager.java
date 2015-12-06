@@ -14,6 +14,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
+import cn.gavin.Achievement;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.log.LogHelper;
 import cn.gavin.monster.Monster;
@@ -44,6 +45,7 @@ public class SwapManager {
         pet.update(context,pet.getObjectId(),new UpdateListener() {
             @Override
             public void onSuccess() {
+                Achievement.Changer.enable(MazeContents.hero);
                 Toast.makeText(context, "--交换完成--", Toast.LENGTH_SHORT)
                         .show();
             }
@@ -93,6 +95,10 @@ public class SwapManager {
 
     public void uploadPet(Context context, SwapPet pet, final Pet petO) {
         try {
+            if(!MazeContents.checkPet(petO)){
+                Toast.makeText(context, "宠物数据异常，无法上传！", Toast.LENGTH_SHORT).show();
+                return ;
+            }
             finished = false;
             final ProgressDialog progressDialog = new ProgressDialog(context);
             progressDialog.setMessage("上传中(不能取消)...");
@@ -105,6 +111,7 @@ public class SwapManager {
                     finished(Collections.<SwapPet>emptyList());
                     Toast.makeText(MainGameActivity.context, (petO.getType().equals("蛋") ? "蛋" : petO.getName())
                             + "已经上传", Toast.LENGTH_SHORT).show();
+                    Achievement.Searcher.enable(MazeContents.hero);
                 }
 
                 @Override

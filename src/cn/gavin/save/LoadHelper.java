@@ -28,6 +28,7 @@ import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
+import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -175,6 +176,7 @@ public class LoadHelper {
         heroN.setUuid(preferences.getString("uuid", UUID.randomUUID().toString()));
         heroN.setOnSkill(false);
         heroN.setPetAbe(preferences.getFloat("pet_abe", 0));
+        heroN.setmV(preferences.getBoolean("mv", new Random().nextBoolean()));
         maze.setCsmgl(preferences.getInt("csm", 9987));
         loadValue(heroN);
         MazeContents.hero = heroN;

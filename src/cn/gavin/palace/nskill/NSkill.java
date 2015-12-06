@@ -2,10 +2,7 @@ package cn.gavin.palace.nskill;
 
 import cn.gavin.Element;
 import cn.gavin.palace.Base;
-import cn.gavin.pet.skill.GoldenSearcher;
-import cn.gavin.pet.skill.HealthSkill;
-import cn.gavin.pet.skill.QuickGrow;
-import cn.gavin.pet.skill.Shaman;
+import cn.gavin.pet.skill.*;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.utils.Random;
@@ -75,6 +72,10 @@ public abstract class NSkill {
             skill = new GoldenSearcher();
         } else if (name.equals("祭师")) {
             skill = new Shaman();
+        }else if (name.equals("温暖")) {
+            skill = new Warmth();
+        }else if (name.equals("诱惑")) {
+            skill = new Tempt();
         }
         if (skill != null) {
             skill.setMe(me);

@@ -7,6 +7,7 @@ import cn.gavin.forge.effect.Effect;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
+import cn.gavin.pet.Pet;
 import cn.gavin.skill.SkillDialog;
 
 /**
@@ -238,5 +239,16 @@ public class MazeContents {
                 image = R.drawable.h_4_s;
         }
         return image;
+    }
+
+    public static boolean checkPet(Pet myPet) {
+        boolean check;
+        String name = myPet.getName();
+        int nameIndex = Monster.getIndex(name);
+        check = Monster.lastNames[nameIndex].equals(myPet.getType());
+        if(nameIndex >= Monster.lastNames.length){
+            check = name.contains("蛋");
+        }
+        return check;
     }
 }

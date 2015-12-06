@@ -92,7 +92,7 @@ public class Hero implements BaseObject {
     private String bakColor;
     private String uuid;
     private float petAbe = 0;
-
+    private boolean mV = false;
     public Float getParry() {
         return parry;
     }
@@ -499,7 +499,7 @@ public class Hero implements BaseObject {
                         }
                     }
                     if (clickAward > 500) {
-                        addMaterial(random.nextLong(clickAward) + 100);
+                        addMaterial(random.nextLong(clickAward / 500) + 500);
                     } else {
                         addMaterial(clickAward);
                     }
@@ -593,7 +593,7 @@ public class Hero implements BaseObject {
 
     public void addUpperHp(long hp) {
         if (this.upperHp + hp < Long.MAX_VALUE / 2 - 1000) {
-                this.upperHp += hp;
+            this.upperHp += hp;
             //addHp(hp);
         }
     }
@@ -1055,8 +1055,8 @@ public class Hero implements BaseObject {
                 petSize = 3 + reincaCount.intValue() + 1;
                 if (petSize > 10) petSize = 10;
                 eggRate = 300 + reincaCount;
-                petRate = 0.7f - reincaCount/25;
-                if(petRate < 0.01) petRate = 0.01f;
+                petRate = 0.7f - reincaCount / 25;
+                if (petRate < 0.01) petRate = 0.01f;
                 eggStep = 1 + reincaCount;
                 maxMazeLev = 1l;
                 DBHelper dbHelper = DBHelper.getDbHelper();
@@ -1128,12 +1128,12 @@ public class Hero implements BaseObject {
         }
     }
 
-    public boolean isOn(Accessory accessory){
+    public boolean isOn(Accessory accessory) {
         switch (accessory.getType()) {
             case RingBuilder.type:
                 return ring != null && ring.getId().equals(accessory.getId());
             case NecklaceBuilder.type:
-                return necklace != null && necklace.getId().equals(accessory.getId()) ;
+                return necklace != null && necklace.getId().equals(accessory.getId());
             case HatBuilder.type:
                 return hat != null && hat.getId().equals(accessory.getId());
             default:
@@ -1372,14 +1372,14 @@ public class Hero implements BaseObject {
     public void restoreHalf() {
         onChange = false;
         onSkill = false;
-        this.hp = getUpperHp()/2;
+        this.hp = getUpperHp() / 2;
         for (Pet pet : getPets()) {
             pet.restoreHalf();
         }
     }
 
     public void setPetAbe(float petAbe) {
-        if(petAbe > 30){
+        if (petAbe > 30) {
             petAbe = 30f;
         }
         this.petAbe = petAbe;
@@ -1389,9 +1389,9 @@ public class Hero implements BaseObject {
         return petAbe;
     }
 
-    public boolean petOnUsed(Pet pet){
-        for(Pet p: getPets()){
-            if(p.getId().equalsIgnoreCase(pet.getId())){
+    public boolean petOnUsed(Pet pet) {
+        for (Pet p : getPets()) {
+            if (p.getId().equalsIgnoreCase(pet.getId())) {
                 return true;
             }
         }
@@ -1403,9 +1403,17 @@ public class Hero implements BaseObject {
     }
 
     public void setItemSkill(Skill itemSkill) {
-        if(this.itemSkill !=null  && !this.itemSkill.equal(itemSkill)){
+        if (this.itemSkill != null && !this.itemSkill.equal(itemSkill)) {
             this.itemSkill.setOnUsed(false);
         }
         this.itemSkill = itemSkill;
+    }
+
+    public boolean ismV() {
+        return mV;
+    }
+
+    public void setmV(boolean mV) {
+        this.mV = mV;
     }
 }

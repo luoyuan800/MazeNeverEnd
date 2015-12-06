@@ -11,4 +11,5 @@ public interface LocalGood {
     String toString();
     int getType();
     void setCount(int count);
+    void setClass(String clazz);
 }

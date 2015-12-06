@@ -26,6 +26,11 @@ public class HalfSail implements LocalGood{
         this.count = count;
     }
 
+    @Override
+    public void setClass(String clazz) {
+
+    }
+
     public String toString(){
         return getName() + "<br>拥有这个物品可以在被击败时只掉到当前层数的一半，你和你宠物半血复活。<br>拥有数量：" + count;
     }

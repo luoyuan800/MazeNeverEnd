@@ -92,6 +92,7 @@ public class SaveHelper {
         editor.putLong("power", heroN.getPower());
         editor.putLong("agility", heroN.getAgility());
         editor.putLong("clickAward", heroN.getClickAward());
+        editor.putBoolean("mv", heroN.ismV());
         if (heroN.getRing() != null) {
             editor.putString("ring", heroN.getRing().getId());
         } else {

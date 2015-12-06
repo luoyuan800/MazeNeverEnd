@@ -312,6 +312,10 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                         shouldCloseDialog.add(myPetDialog);
                     } else if (v.getTag() != null && v.getTag() instanceof PetSimpleViewAdapter.PetViewHolder && netPet != null) {
                         Pet myPet = ((PetSimpleViewAdapter.PetViewHolder) v.getTag()).getPet();
+                        if(!MazeContents.checkPet(myPet)){
+                            Toast.makeText(context, "宠物数据异常，无法上传！", Toast.LENGTH_SHORT).show();
+                            return ;
+                        }
                         final SwapPet mySwapPet = SwapPet.buildSwapPet(myPet);
                         final Pet netSwapPet = netPet.buildPet();
                         mySwapPet.setKeeperId(netPet.getKeeperId());

@@ -10,6 +10,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import cn.gavin.Hero;
 import cn.gavin.skill.Skill;
+import cn.gavin.skill.type.LevelAble;
 import cn.gavin.skill.type.PropertySkill;
 import cn.gavin.utils.MazeContents;
 
@@ -79,12 +80,32 @@ public abstract class SkillLayout extends ScrollView {
                         }
                     });
                 }
-                dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "升级", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //todo
-                    }
-                });
+                if (skill instanceof LevelAble) {
+                    dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "升级", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(final DialogInterface dialogInterface, int i) {
+                            final long lev = skill.getCount()/1000;
+                            AlertDialog levDialog = new AlertDialog.Builder(context).create();
+                            levDialog.setMessage("消耗" + lev + "个技能点升级当前技能吗？");
+                            levDialog.setButton(DialogInterface.BUTTON_POSITIVE,"确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface levDialog, int i) {
+                                    hero.setSkillPoint(hero.getSkillPoint() - lev);
+                                    skill.levelUp();
+                                    dialogInterface.dismiss();
+                                    levDialog.dismiss();
+                                }
+                            });
+                            levDialog.setButton(DialogInterface.BUTTON_NEGATIVE,"取消",new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            levDialog.show();
+                        }
+                    });
+                }
                 dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -98,6 +119,15 @@ public abstract class SkillLayout extends ScrollView {
                         positive.setEnabled(true);
                     } else {
                         positive.setEnabled(false);
+                    }
+                }
+                Button neutral = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                long lev = skill.getCount()/1000;
+                if (neutral != null ) {
+                    if (skill.isEnable()&& hero.getSkillPoint() >= lev) {
+                        neutral.setEnabled(true);
+                    } else {
+                        neutral.setEnabled(false);
                     }
                 }
             }

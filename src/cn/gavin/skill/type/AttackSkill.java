@@ -10,7 +10,7 @@ import cn.gavin.utils.StringUtils;
 /**
  * Created by luoyuan on 9/13/15.
  */
-public class AttackSkill extends Skill {
+public class AttackSkill extends Skill implements LevelAble {
 
     private long baseHarm;
     private long additionHarm;

@@ -26,19 +26,19 @@ public class SkillFactory {
             Skill skill = skillMap.get(name);
             if (skill == null) {
                 skill = BaseSkill.getSkill(name, hero);
-                if (skill == null){
+                if (skill == null) {
                     skill = EvilSkill.getSkill(name, hero);
                 }
-                if(skill == null){
+                if (skill == null) {
                     skill = SwindlerSkill.getSkill(name, hero);
                 }
-                if(skill == null){
-                    skill = LongSkill.getSkill(name,hero);
+                if (skill == null) {
+                    skill = LongSkill.getSkill(name, hero);
                 }
-                if(skill == null){
+                if (skill == null) {
                     skill = PetSkill.getSkill(name, hero);
                 }
-                if (skill != null && hero!=null) {
+                if (skill != null && hero != null) {
                     skill.setPerform(new EnableExpression() {
                         @Override
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {

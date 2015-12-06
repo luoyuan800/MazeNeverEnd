@@ -185,7 +185,7 @@ public abstract class Skill {
         }
     }
 
-    protected void levelUp() {
+    public void levelUp() {
         levelUp.isEnable(hero, maze, MainGameActivity.context, this);
     }
 

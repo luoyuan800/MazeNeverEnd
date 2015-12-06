@@ -31,12 +31,12 @@ public class StoryHelper {
             return true;
         }
         final Random random = hero.getRandom();
-        boolean b = hero.getAgility() / 2000 > random.nextInt();
-        boolean a = Achievement.guider1.isEnable() ? random.nextInt(10000) > 8977 : random.nextInt(10000) < 35;
-        if (Achievement.story.isEnable() && hero.getKeyCount() > 10 && !Achievement.restriction.isEnable() && a) {
+        boolean b = hero.getAgility() / 1000 > random.nextInt();
+        boolean a = Achievement.guider1.isEnable() ? random.nextInt(10000) > 4977 : random.nextInt(10000) < 35;
+        if (Achievement.story.isEnable() && hero.getKeyCount() > 7 && !Achievement.restriction.isEnable() && a) {
             context.addMessage(String.format("%s找到了一扇上锁了的门，使用一把钥匙打开这扇门", hero.getFormatName()));
             hero.setKeyCount(hero.getKeyCount() - 1);
-            if (Achievement.guider1.isEnable() && !Achievement.guider2.isEnable() && b && hero.getKeyCount() >= 8 && random.nextInt(100) > 85 && context.getMaze().getLev()%4 == 0) {
+            if (Achievement.guider1.isEnable() && !Achievement.guider2.isEnable() && b && hero.getKeyCount() >= 6 && random.nextInt(100) > 85 && context.getMaze().getLev()%4 == 0) {
                 context.addMessage(hero.getFormatName() + "在门后面遇见了<font color=\"#FF0000\">袁酥兄</font><br>" +
                         "<font color=\"#FF0000\">袁酥兄</font>：孩子我们又见面了~<br>" +
                         "<font color=\"#FF0000\">袁酥兄</font>：这次就我就告诉你一些高等级的秘密<br>" +
@@ -56,7 +56,7 @@ public class StoryHelper {
                 hero.setKeyCount(hero.getKeyCount() - hero.getKeyCount()/2);
                 hero.setLockBox(hero.getLockBox() + 1);
                 return true;
-            } else if (context.getMaze().getLev()%95 == 0 && !Achievement.five.isEnable() && hero.getKeyCount() >= random.nextInt(5000)) {
+            } else if (context.getMaze().getLev()%95 == 0 && !Achievement.five.isEnable() && hero.getKeyCount() >= random.nextInt(50)) {
                 context.addMessage(hero.getFormatName() + "在门里面遇见了一个奇怪的男人♂<br>" +
                         "<font color=\"#FF0000\">某某人</font>：这位迷失的朋友，你好！我是<font color=\"#FF0000\">龙剑森</font>~<br>" +
                         "<font color=\"#FF0000\">龙剑森</font>：我是不小心进入到了这个迷宫中，从此和外面的时候隔离开来了。<br>" +
@@ -71,7 +71,7 @@ public class StoryHelper {
                 Achievement.five.enable(hero);
                 hero.setKeyCount(hero.getKeyCount() + 3);
                 return true;
-            } else if (context.getMaze().getLev()%121 == 0&&Achievement.five.isEnable() && !Achievement.reinforce.isEnable() && hero.getKeyCount() >= random.nextInt(1000)) {
+            } else if (context.getMaze().getLev()%121 == 0&&Achievement.five.isEnable() && !Achievement.reinforce.isEnable() && hero.getKeyCount() >= random.nextInt(10)) {
                 context.addMessage(hero.getFormatName() + "门里面遇见了<font color=\"#FF0000\">龙剑森</font><br>" +
                         "<font color=\"#FF0000\">龙剑森</font>：老朋友我们又见面了~<br>" +
                         "<font color=\"#FF0000\">龙剑森</font>：我在这迷宫中晃荡多年，对各种怪异早已经见怪不怪了。" +
@@ -85,7 +85,7 @@ public class StoryHelper {
                 Achievement.reinforce.enable(hero);
                 hero.setKeyCount(hero.getKeyCount() + 3);
                 return true;
-            } else if (context.getMaze().getLev()%221 == 0&&Achievement.five.isEnable() && Achievement.reinforce.isEnable() && !Achievement.restriction.isEnable() && hero.getKeyCount() >= random.nextInt(5000)) {
+            } else if (context.getMaze().getLev()%221 == 0&&Achievement.five.isEnable() && Achievement.reinforce.isEnable() && !Achievement.restriction.isEnable() && hero.getKeyCount() >= random.nextInt(50)) {
                 context.addMessage(hero.getFormatName() + "门里面遇见了<font color=\"#FF0000\">龙剑森</font><br>" +
                         "<font color=\"#FF0000\">龙剑森</font>：老朋友我们又见面了~<br>" +
                         "<font color=\"#FF0000\">龙剑森</font>：来，好久不见，可有想我呢？。" +
@@ -102,7 +102,7 @@ public class StoryHelper {
                 context.addMessage(hero.getFormatName() + "遇见了<font color=\"#FF0000\">小梅</font>，她红着脸递出了五把钥匙。");
                 hero.setKeyCount(hero.getKeyCount() + 5);
                 return false;
-            }else if(b && random.nextLong(hero.getKeyCount() + 1000) < random.nextInt(10)){
+            }else if(b && random.nextLong(hero.getKeyCount() + 1500) < random.nextInt(10)){
                 context.addMessage(hero.getFormatName() + "遇见了<font color=\"#FF0000\">雷二蛋</font>，他红着脸掏走了一把钥匙。");
                 hero.setKeyCount(hero.getKeyCount() - 1);
                 return false;

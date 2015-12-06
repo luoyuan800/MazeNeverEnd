@@ -7,6 +7,13 @@ package cn.gavin.db.good.detail;
  */
 public abstract class UsableGood implements LocalGood {
     protected int count;
+    protected String clazz;
+    public void setClass(String clazz){
+        this.clazz  = clazz;
+    }
+    public String getClazz(){
+        return clazz;
+    }
     public abstract Object use();
 
     @Override

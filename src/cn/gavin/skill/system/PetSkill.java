@@ -14,7 +14,6 @@ import cn.gavin.palace.Base;
 import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.pet.Pet;
 import cn.gavin.skill.Skill;
-import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.skill.expression.DescExpression;
 import cn.gavin.skill.expression.EnableExpression;
@@ -42,36 +41,69 @@ public class PetSkill extends SkillLayout {
         Skill skill = SkillFactory.getSkill("驯兽师", hero);
         Button button = (Button) view.findViewById(R.id.pet_skill_xss_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("培育家", hero);
         button = (Button) view.findViewById(R.id.pet_skill_pyj_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("捕捉术", hero);
         button = (Button) view.findViewById(R.id.pet_skill_bzs_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("催化剂", hero);
         button = (Button) view.findViewById(R.id.pet_skill_chj_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("霸气", hero);
         button = (Button) view.findViewById(R.id.pet_skill_bq_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("爱心", hero);
         button = (Button) view.findViewById(R.id.pet_skill_ax_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("群殴", hero);
         button = (Button) view.findViewById(R.id.pet_skill_qo_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("反击", hero);
         button = (Button) view.findViewById(R.id.pet_skill_fj_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("神赋", hero);
         button = (Button) view.findViewById(R.id.pet_skill_sf_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("恩赐", hero);
         button = (Button) view.findViewById(R.id.pet_skill_ec_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
         skill = SkillFactory.getSkill("宠物大师", hero);
         button = (Button) view.findViewById(R.id.pet_skill_cwds_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
     }
 
     public static Skill getSkill(String name, final Hero hero) {
@@ -177,7 +209,7 @@ public class PetSkill extends SkillLayout {
                     if (monster.getHp() <= 0) {
                         Pet pet = Pet.cPet(monster, hero.getRandom());
                         if (pet != null) {
-                           msg = hero.getFormatName() + "捕捉到了" + pet.getFormatName();
+                            msg = hero.getFormatName() + "捕捉到了" + pet.getFormatName();
                             iskll.addMessage(msg);
                             monster.addBattleSkillDesc(msg);
                         }
@@ -310,7 +342,7 @@ public class PetSkill extends SkillLayout {
 
             }
         } else if ("群殴".equalsIgnoreCase(name)) {
-            final  AttackSkill iskll = new AttackSkill();
+            final AttackSkill iskll = new AttackSkill();
             skill = iskll;
             skill.setName("群殴");
             skill.setHero(hero);
@@ -338,28 +370,28 @@ public class PetSkill extends SkillLayout {
                     if (hero.getPets().size() > 0) {
                         for (Pet pet : hero.getPets()) {
                             if (pet != null && pet.getHp() > 0 && !"蛋".equals(pet.getType())) {
-                                    NSkill petSkill = pet.getAtkSkill();
-                                    long petHarm = 0;
-                                    if (petSkill != null) {
-                                        String petSkillMsg = pet.getFormatName() + "使用了技能" + petSkill.getName();
-                                        iskll.addMessage( petSkillMsg);
-                                        monster.addBattleSkillDesc(petSkillMsg);
-                                        monster.addBattleDesc(petSkillMsg);
-                                        Base target = new Base() {
-                                        };
-                                        target.setDef(0l);
-                                        target.setAtk(monster.getAtk());
-                                        target.setHp(monster.getHp());
-                                        target.setElement(monster.getElement());
-                                        petHarm = petSkill.getHarm(target);
-                                    } else {
-                                        petHarm = pet.getAtk();
-                                    }
-                                    String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了" + StringUtils.formatNumber(petHarm) + "点伤害";
-                                    monster.addHp(-petHarm);
-                                    iskll.addMessage(petAtk);
-                                    monster.addBattleSkillDesc(petAtk);
-                                    monster.addBattleDesc(petAtk);
+                                NSkill petSkill = pet.getAtkSkill();
+                                long petHarm = 0;
+                                if (petSkill != null) {
+                                    String petSkillMsg = pet.getFormatName() + "使用了技能" + petSkill.getName();
+                                    iskll.addMessage(petSkillMsg);
+                                    monster.addBattleSkillDesc(petSkillMsg);
+                                    monster.addBattleDesc(petSkillMsg);
+                                    Base target = new Base() {
+                                    };
+                                    target.setDef(0l);
+                                    target.setAtk(monster.getAtk());
+                                    target.setHp(monster.getHp());
+                                    target.setElement(monster.getElement());
+                                    petHarm = petSkill.getHarm(target);
+                                } else {
+                                    petHarm = pet.getAtk();
+                                }
+                                String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了" + StringUtils.formatNumber(petHarm) + "点伤害";
+                                monster.addHp(-petHarm);
+                                iskll.addMessage(petAtk);
+                                monster.addBattleSkillDesc(petAtk);
+                                monster.addBattleDesc(petAtk);
                             }
                         }
                     }
@@ -370,16 +402,16 @@ public class PetSkill extends SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if(skill.getProbability() < 15){
+                    if (skill.getProbability() < 15) {
                         skill.setProbability(skill.getProbability() + 1);
                     }
                     return true;
                 }
             });
             if (!skill.load()) {
-                    skill.setProbability(1);
+                skill.setProbability(1);
             }
-        }else if ("反击".equalsIgnoreCase(name)) {
+        } else if ("反击".equalsIgnoreCase(name)) {
             final DefendSkill iskll = new DefendSkill();
             skill = iskll;
             skill.setName("反击");
@@ -403,7 +435,7 @@ public class PetSkill extends SkillLayout {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = monster.getAtk() - hero.getDefenseValue();
-                    if(harm <= 0){
+                    if (harm <= 0) {
                         harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1) + 1;
                     }
                     hero.addHp(-harm);
@@ -416,28 +448,28 @@ public class PetSkill extends SkillLayout {
                     if (hero.getPets().size() > 0) {
                         for (Pet pet : hero.getPets()) {
                             if (pet != null && pet.getHp() > 0 && !"蛋".equals(pet.getType())) {
-                                    NSkill petSkill = pet.getAtkSkill();
-                                    long petHarm = 0;
-                                    if (petSkill != null) {
-                                        String petSkillMsg = pet.getFormatName() + "使用了技能" + petSkill.getName();
-                                        iskll.addMessage( petSkillMsg);
-                                        monster.addBattleSkillDesc(petSkillMsg);
-                                        monster.addBattleDesc(petSkillMsg);
-                                        Base target = new Base() {
-                                        };
-                                        target.setDef(0l);
-                                        target.setAtk(monster.getAtk());
-                                        target.setHp(monster.getHp());
-                                        target.setElement(monster.getElement());
-                                        petHarm = petSkill.getHarm(target);
-                                    } else {
-                                        petHarm = pet.getAtk();
-                                    }
-                                    String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了" + StringUtils.formatNumber(petHarm) + "点伤害";
-                                    monster.addHp(-petHarm);
-                                    iskll.addMessage(petAtk);
-                                    monster.addBattleSkillDesc(petAtk);
-                                    monster.addBattleDesc(petAtk);
+                                NSkill petSkill = pet.getAtkSkill();
+                                long petHarm = 0;
+                                if (petSkill != null) {
+                                    String petSkillMsg = pet.getFormatName() + "使用了技能" + petSkill.getName();
+                                    iskll.addMessage(petSkillMsg);
+                                    monster.addBattleSkillDesc(petSkillMsg);
+                                    monster.addBattleDesc(petSkillMsg);
+                                    Base target = new Base() {
+                                    };
+                                    target.setDef(0l);
+                                    target.setAtk(monster.getAtk());
+                                    target.setHp(monster.getHp());
+                                    target.setElement(monster.getElement());
+                                    petHarm = petSkill.getHarm(target);
+                                } else {
+                                    petHarm = pet.getAtk();
+                                }
+                                String petAtk = pet.getFormatName() + "攻击了" + monster.getFormatName() + ",造成了" + StringUtils.formatNumber(petHarm) + "点伤害";
+                                monster.addHp(-petHarm);
+                                iskll.addMessage(petAtk);
+                                monster.addBattleSkillDesc(petAtk);
+                                monster.addBattleDesc(petAtk);
                             }
                         }
                     }
@@ -448,14 +480,14 @@ public class PetSkill extends SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if(skill.getProbability() < 15){
+                    if (skill.getProbability() < 15) {
                         skill.setProbability(skill.getProbability() + 1);
                     }
                     return true;
                 }
             });
             if (!skill.load()) {
-                    skill.setProbability(1);
+                skill.setProbability(1);
             }
         } else if ("神赋".equalsIgnoreCase(name)) {
             final PropertySkill iskll = new PropertySkill();
@@ -494,7 +526,7 @@ public class PetSkill extends SkillLayout {
             if (!skill.load()) {
 
             }
-        }else if ("恩赐".equalsIgnoreCase(name)) {
+        } else if ("恩赐".equalsIgnoreCase(name)) {
             final PropertySkill iskll = new PropertySkill();
             skill = iskll;
             skill.setName("恩赐");
@@ -531,7 +563,7 @@ public class PetSkill extends SkillLayout {
             if (!skill.load()) {
 
             }
-        }else if ("宠物大师".equalsIgnoreCase(name)) {
+        } else if ("宠物大师".equalsIgnoreCase(name)) {
             final PropertySkill iskll = new PropertySkill();
             skill = iskll;
             skill.setName("宠物大师");
@@ -568,7 +600,7 @@ public class PetSkill extends SkillLayout {
             if (!skill.load()) {
                 iskll.setPetSize(5);
             }
-            if(iskll.getPetSize() < 5){
+            if (iskll.getPetSize() < 5) {
                 iskll.setPetSize(5);
             }
         }

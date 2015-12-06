@@ -1,4 +1,4 @@
-package cn.gavin.skill.type;
+package cn.gavin.skill;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -11,8 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.skill.system.BaseSkill;
-import cn.gavin.skill.system.SkillLayout;
+import cn.gavin.skill.system.*;
 import cn.gavin.utils.MazeContents;
 
 /**
@@ -58,6 +57,22 @@ public class SkillMainDialog implements View.OnClickListener {
             case R.id.base_skill:
                 skillLayout = new BaseSkill(context);
                 skillLayout.setTag("勇者");
+                break;
+            case R.id.evil_skill:
+                skillLayout = new EvilSkill(context);
+                skillLayout.setTag("魔王");
+                break;
+            case R.id.long_skill:
+                skillLayout = new LongSkill(context);
+                skillLayout.setTag("龙裔");
+                break;
+            case R.id.swindler_skill:
+                skillLayout = new SwindlerSkill(context);
+                skillLayout.setTag("欺诈师");
+                break;
+            case R.id.pet_skill:
+                skillLayout = new PetSkill(context);
+                skillLayout.setTag("宠物大师");
                 break;
         }
         if (skillLayout != null) {

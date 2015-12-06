@@ -27,6 +27,11 @@ public class Barrier implements LocalGood {
         this.count = count;
     }
 
+    @Override
+    public void setClass(String clazz) {
+
+    }
+
     public String toString() {
         return getName() + "<br>每当你的宠物想要生蛋的时候，自动使用这个物品阻止他们生蛋。<br>拥有数量：" + count;
     }

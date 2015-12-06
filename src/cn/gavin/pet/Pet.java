@@ -40,11 +40,14 @@ public class Pet extends Base {
 
 
     public void click() {
+        if(!MazeContents.hero.getUuid().equals(getOwnerId()) && MazeContents.hero.getUpperAtk() < getMaxAtk()/2){
+            return;
+        }
         intimacy++;
-        if (intimacy > 50000000) {
+        if (intimacy > 50000000 || MazeContents.hero.getUpperAtk() < getMaxAtk()/4) {
             intimacy--;
         }
-        if (getRandom().nextLong(intimacy) > 2000) {
+        if (getRandom().nextLong(intimacy) > 3000) {
             uHp += 100;
             atk += 50;
             def += 150;
@@ -136,6 +139,9 @@ public class Pet extends Base {
             pet.setAtk(monster.getAtk());
             pet.setHp(hp);
             int index = Monster.getIndex(pet.getName());
+            if(MazeContents.hero.ismV() && index%2==0){
+                return null;
+            }
             if (index >= 0 && index < Monster.lastNames.length - 11) {
                 pet.setType(Monster.lastNames[index]);
             } else {
