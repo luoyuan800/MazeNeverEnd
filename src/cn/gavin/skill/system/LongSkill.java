@@ -214,7 +214,7 @@ public class LongSkill extends SkillLayout {
             final PropertySkill iskll = new PropertySkill() {
                 public void setOnUsed(boolean use) {
                     if (!onUsed && use && MainGameActivity.context != null) {
-                        long elementValue = (hero.getAgility() + hero.getStrength() + hero.getPower() + hero.getBaseDefense() + hero.getBaseAttackValue()) / 5;
+                        long elementValue = (hero.getAgility() + hero.getStrength() + hero.getPower() + hero.getBaseDefense() + hero.getBaseAttackValue()) / 10;
                         if (hero.getRandom().nextLong(hero.getAttackValue() + 1) < hero.getRandom().nextLong(elementValue + 1)) {
                             hero.setElement(Element.金);
                         } else if (hero.getRandom().nextLong(hero.getDefenseValue() + 1) < hero.getRandom().nextLong(elementValue + 1)) {
@@ -225,6 +225,8 @@ public class LongSkill extends SkillLayout {
                             hero.setElement(Element.火);
                         } else if (hero.getRandom().nextLong(hero.getAgility() + 1) < hero.getRandom().nextLong(elementValue + 1)) {
                             hero.setElement(Element.木);
+                        } else{
+                            hero.setElement(Element.values()[hero.getRandom().nextInt(Element.values().length -2)]);
                         }
                         hero.addPoint(-6000);
                     }
