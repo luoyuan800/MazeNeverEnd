@@ -1,6 +1,7 @@
 package cn.gavin;
 
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.utils.MazeContents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ public enum Achievement {
     click100000("点击达人", "你是还是单身吧？点击次数达到100000次.增加5点击奖励", 0, 0, 0, 6, "点击次数达到100000次", 0, 0f, 0),
     click100("点击新手", "点击次数达到100次，无任何奖励", 0, 0, 0, 0, "点击次数达到100次", 0, 0f, 0),
     unbeaten("不败", "只能说你运气太好了，连胜次数达到100。力量+10", 10, 0, 0, 0, "连胜次数达到100", 0, 0f, 0),
-    maltreat("受虐狂", "被打败次数达到10000。力量+5", 5, 0, 0, 0, "被打败次数达到10000", 0, 0f, 0),
+    maltreat("受虐狂", "被打败次数达到10000。力量+5", 5, 0, 0, 0, "被打败次数达到" + MazeContents.hero.getDeathCount() + "/10000", 0, 0f, 0),
     maze50("菜鸟", "到达迷宫50层", 0, 0, 0, 0, "到达迷宫50层", 0, 0f, 0),
     maze100("新手", "到达迷宫100层。敏捷+20", 0, 0, 20, 0, "到达迷宫100层", 0, 0f, 0),
     maze500("不是新人", "到达迷宫500层，敏捷+20", 0, 20, 0, 0, "到达迷宫500层", 0, 0f, 0),
