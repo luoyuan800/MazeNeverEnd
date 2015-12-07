@@ -154,8 +154,11 @@ public class Pet extends Base {
             pet.setOwnerId(MazeContents.hero.getUuid());
             if ((SkillFactory.getSkill("神赋", MazeContents.hero).isActive() && random.nextInt(100) < 30) || random.nextInt(5000) < 5) {
                 int sindex = random.nextInt(PetSkillList.values().length);
-                if (sindex == 0 || sindex == 1) {
+                if (sindex < 4) {
                     sindex += random.nextInt(4);
+                }
+                if(sindex >= PetSkillList.values().length){
+                    sindex = PetSkillList.values().length;
                 }
                 NSkill petS = PetSkillList.values()[sindex].getSkill(pet);
                 if (petS instanceof PetSkill) {
@@ -355,7 +358,7 @@ public class Pet extends Base {
             egg.setOwnerId(hero.getUuid());
             if (!f.getType().equals(m.getType())) {
                 if (random.nextInt(10000) + random.nextFloat() < (31.115 + hero.getPetAbe())) {
-                    String lastName = Monster.lastNames[random.nextInt(Monster.lastNames.length)];
+                    String lastName = Monster.lastNames[random.nextInt(Monster.lastNames.length-1)];
                     egg.setName("变异的" + lastName);
                     if (lastName.equals("作者")) {
                         egg.setAtk(egg.getAtk() * 2);

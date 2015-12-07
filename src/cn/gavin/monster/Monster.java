@@ -244,8 +244,17 @@ public class Monster {
         Random random = new Random();
         mazeLev = maze.getLev();
         int first = (int) random.nextLong(maze.getLev() / 50 < firstNames.length ? maze.getLev() / 50 + 1 : firstNames.length);
+        if(first >= firstNames.length){
+            first = random.nextInt(firstNames.length);
+        }
         int second = (int) random.nextLong(maze.getLev() < secondNames.length ? maze.getLev() + 1 : secondNames.length);
-        int last = (int) random.nextLong(maze.getLev()/10 < lastNames.length ? maze.getLev() + 1 : lastNames.length);
+        if(second >= secondNames.length){
+            second = random.nextInt(secondNames.length);
+        }
+        int last = (int) random.nextLong(maze.getLev()/10 < lastNames.length ? maze.getLev()/10 + 1 : lastNames.length);
+        if(last >= lastNames.length){
+            last = random.nextInt(lastNames.length);
+        }
         hp = baseHP[last] + firstAdditionHP[first] + secondAdditionHP[second];
         atk = baseAtk[last] + firstAdditionAtk[first] + secondAdditionAtk[second];
         firstName = firstNames[first];
