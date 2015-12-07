@@ -58,6 +58,7 @@ public class Hero implements BaseObject {
     private Skill firstSkill;
     private Skill secondSkill;
     private Skill thirdSkill;
+    private Skill itemSkill;
     private Long awardCount = 1l;
     private Long lockBox = 0l;
     private Long keyCount = 0l;
@@ -90,7 +91,8 @@ public class Hero implements BaseObject {
     private long resetSkillCount = 0;
     private String bakColor;
     private String uuid;
-
+    private float petAbe = 0;
+    private boolean mV = false;
     public Float getParry() {
         return parry;
     }
@@ -497,7 +499,7 @@ public class Hero implements BaseObject {
                         }
                     }
                     if (clickAward > 500) {
-                        addMaterial(random.nextLong(clickAward) + 100);
+                        addMaterial(random.nextLong(clickAward / 500) + 500);
                     } else {
                         addMaterial(clickAward);
                     }
@@ -528,7 +530,7 @@ public class Hero implements BaseObject {
     }
 
     public Skill useAttackSkill(Monster monster) {
-        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill);
+        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill, itemSkill);
         for (Skill skill : existSkill) {
             if (skill != null && skill instanceof AttackSkill && skill.perform()) {
                 return skill;
@@ -538,7 +540,7 @@ public class Hero implements BaseObject {
     }
 
     public Skill useDefendSkill(Monster monster) {
-        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill);
+        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill, itemSkill);
         for (Skill skill : existSkill) {
             if (skill != null && skill instanceof DefendSkill) {
                 if (skill.perform()) {
@@ -591,7 +593,7 @@ public class Hero implements BaseObject {
 
     public void addUpperHp(long hp) {
         if (this.upperHp + hp < Long.MAX_VALUE / 2 - 1000) {
-                this.upperHp += hp;
+            this.upperHp += hp;
             //addHp(hp);
         }
     }
@@ -822,63 +824,67 @@ public class Hero implements BaseObject {
     private void appendEffect(Accessory accessory) {
         EnumMap<Effect, Long> effectLongEnumMap = getAccessoryEffectMap(accessory);
         for (EnumMap.Entry<Effect, Long> effect : effectLongEnumMap.entrySet()) {
+            Long value = effect.getValue();
             switch (effect.getKey()) {
                 case ADD_DODGE_RATE:
-                    setDodgeRate(dodgeRate + effect.getValue());
+                    setDodgeRate(dodgeRate + value);
                     break;
                 case ADD_CLICK_POINT_AWARD:
-                    setClickPointAward(clickPointAward + effect.getValue());
+                    setClickPointAward(clickPointAward + value);
                     break;
                 case ADD_HIT_RATE:
-                    setHitRate(hitRate + effect.getValue());
+                    setHitRate(hitRate + value);
                     break;
                 case ADD_STR:
-                    addStrength(effect.getValue());
+                    addStrength(value);
                     break;
                 case ADD_UPPER_HP:
-                    addUpperHp(effect.getValue());
+                    addUpperHp(value);
                     break;
                 case ADD_DEF:
-                    addDefenseValue(effect.getValue());
+                    addDefenseValue(value);
                     break;
                 case ADD_ATK:
-                    addAttackValue(effect.getValue());
+                    addAttackValue(value);
                     break;
                 case ADD_AGI:
-                    addAgility(effect.getValue());
+                    addAgility(value);
                     break;
                 case ADD_POWER:
-                    addLife(effect.getValue());
+                    addLife(value);
                     break;
                 case ADD_CLICK_AWARD:
-                    addClickAward(effect.getValue());
+                    addClickAward(value);
                     break;
                 case ADD_PARRY:
-                    parry += effect.getValue();
+                    parry += value;
                     break;
                 case ADD_PER_ATK:
-                    Double atk = attackValue * effect.getValue() / 100d;
-                    if (Math.abs(atk) != atk) {
+                    Double atk = attackValue * value / 100d;
+                    if (atk < 0 && value > 0) {//如果计算出来的数值符号不相同，表明数据溢出了
                         atk = 0d;
                     }
                     putPerValue(accessory.getType(), effect.getKey(), atk.longValue());
                     addAttackValue(atk.longValue());
                     break;
                 case ADD_PER_DEF:
-                    Double def = defenseValue * effect.getValue() / 100d;
-                    if (Math.abs(def) != def) {
+                    Double def = defenseValue * value / 100d;
+                    if (def < 0 && value > 0) {
                         def = 0d;
                     }
                     putPerValue(accessory.getType(), effect.getKey(), def.longValue());
                     addDefenseValue(def.longValue());
                     break;
                 case ADD_PER_UPPER_HP:
-                    Double uHp = getRealUHP() * effect.getValue() / 100d;
-                    if (Math.abs(uHp) != uHp) {
+                    Double uHp = getRealUHP() * value / 100d;
+                    if (uHp < 0 && value > 0) {
                         uHp = 0d;
                     }
                     putPerValue(accessory.getType(), effect.getKey(), uHp.longValue());
                     addUpperHp(uHp.longValue());
+                    break;
+                case ADD_PET_ABE:
+                    setPetAbe(petAbe + value);
                     break;
             }
         }
@@ -935,6 +941,9 @@ public class Hero implements BaseObject {
                     Long uHp = getPerValue(accessory.getType(), effect.getKey());
 
                     addUpperHp(-uHp);
+                    break;
+                case ADD_PET_ABE:
+                    setPetAbe(petAbe - effect.getValue());
                     break;
             }
         }
@@ -1045,8 +1054,11 @@ public class Hero implements BaseObject {
                 clickAward = reincaCount + 1;
                 petSize = 3 + reincaCount.intValue() + 1;
                 if (petSize > 10) petSize = 10;
-                eggRate += 1;
-                petRate = 1;
+                eggRate = 300 + reincaCount;
+                petRate = 0.7f - reincaCount / 25;
+                if (petRate < 0.01) petRate = 0.01f;
+                eggStep = 1 + reincaCount;
+                maxMazeLev = 1l;
                 DBHelper dbHelper = DBHelper.getDbHelper();
                 dbHelper.beginTransaction();
                 dbHelper.excuseSQLWithoutResult("DELETE FROM item");
@@ -1116,12 +1128,12 @@ public class Hero implements BaseObject {
         }
     }
 
-    public boolean isOn(Accessory accessory){
+    public boolean isOn(Accessory accessory) {
         switch (accessory.getType()) {
             case RingBuilder.type:
                 return ring != null && ring.getId().equals(accessory.getId());
             case NecklaceBuilder.type:
-                return necklace != null && necklace.getId().equals(accessory.getId()) ;
+                return necklace != null && necklace.getId().equals(accessory.getId());
             case HatBuilder.type:
                 return hat != null && hat.getId().equals(accessory.getId());
             default:
@@ -1355,5 +1367,53 @@ public class Hero implements BaseObject {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public void restoreHalf() {
+        onChange = false;
+        onSkill = false;
+        this.hp = getUpperHp() / 2;
+        for (Pet pet : getPets()) {
+            pet.restoreHalf();
+        }
+    }
+
+    public void setPetAbe(float petAbe) {
+        if (petAbe > 30) {
+            petAbe = 30f;
+        }
+        this.petAbe = petAbe;
+    }
+
+    public float getPetAbe() {
+        return petAbe;
+    }
+
+    public boolean petOnUsed(Pet pet) {
+        for (Pet p : getPets()) {
+            if (p.getId().equalsIgnoreCase(pet.getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Skill getItemSkill() {
+        return itemSkill;
+    }
+
+    public void setItemSkill(Skill itemSkill) {
+        if (this.itemSkill != null && !this.itemSkill.equal(itemSkill)) {
+            this.itemSkill.setOnUsed(false);
+        }
+        this.itemSkill = itemSkill;
+    }
+
+    public boolean ismV() {
+        return mV;
+    }
+
+    public void setmV(boolean mV) {
+        this.mV = mV;
     }
 }

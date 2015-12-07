@@ -143,19 +143,28 @@
             <LinearLayout
                 android:id="@+id/character_itembar"
                 android:layout_width="fill_parent"
-                android:layout_height="70sp"
+                android:layout_height="wrap_content"
                 android:background="#58c4ff"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/character_itembar_contribute"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
+                    android:id="@+id/character_name"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="#ff00acff"
                     android:clickable="true"
                     android:gravity="center"
                     android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/character_itembar_contribute"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#ff00acff"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:textSize="12sp" />
 
 
             </LinearLayout>

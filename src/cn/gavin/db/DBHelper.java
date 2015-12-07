@@ -12,6 +12,7 @@ import cn.gavin.forge.Accessory;
 import cn.gavin.forge.ForgeDB;
 import cn.gavin.forge.Item;
 import cn.gavin.forge.effect.Effect;
+import cn.gavin.good.GoodManager;
 import cn.gavin.log.LogHelper;
 import cn.gavin.palace.PalaceMonster;
 import cn.gavin.pet.PetDB;
@@ -30,7 +31,8 @@ public class DBHelper {
     private static int DB_VERSION_1_4_8 = 14;
     private static int DB_VERSION_1_5 = 15;
     private static int DB_VERSION_1_6 = 16;
-    private static int DB_VERSION = 17;
+    private static int DB_VERSION_1_7 = 17;
+    private static int DB_VERSION = 18;
 
     private Context context;
     private SQLiteDatabase database;
@@ -122,6 +124,7 @@ public class DBHelper {
             PetDB.createDB(db);
             db.setTransactionSuccessful();
             db.endTransaction();
+            GoodManager.buildGoodsDB(db);
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "CreateTable", e);
@@ -130,6 +133,9 @@ public class DBHelper {
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if(newVersion < oldVersion){
+            throw new RuntimeException("反向安装了低版本：" + oldVersion + "-->" + newVersion);
+        }
         upgrade8_9(db, oldVersion);
         upgrade10_11(db, oldVersion);
         upgrade11_12(db, oldVersion);
@@ -137,6 +143,16 @@ public class DBHelper {
         upgrade14_15(db, oldVersion);
         upgrade15_16(db);
         upgrade16_17(db);
+        upgrade17_18(db);
+    }
+
+    private void upgrade17_18(SQLiteDatabase db){
+        try{
+        GoodManager.buildGoodsDB(db);
+        }catch (Exception e){
+            e.printStackTrace();
+            LogHelper.logException(e);
+        }
     }
 
     private void upgrade16_17(SQLiteDatabase db) {

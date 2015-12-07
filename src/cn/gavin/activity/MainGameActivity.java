@@ -30,6 +30,8 @@ import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.adapter.RecipeAdapter;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.forge.list.ItemName;
+import cn.gavin.good.GoodsDialog;
+import cn.gavin.good.ShopDialog;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.maze.MazeService;
@@ -41,11 +43,12 @@ import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
 import cn.gavin.pet.PetDialog;
 import cn.gavin.pet.skill.PetSkillList;
-import cn.gavin.pet.skill.Shaman;
+import cn.gavin.pet.swop.ui.SwapPetMainDialog;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
+import cn.gavin.skill.SkillMainDialog;
 import cn.gavin.upload.CdKey;
 import cn.gavin.upload.Upload;
 import cn.gavin.utils.MazeContents;
@@ -138,7 +141,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private TextView necklaceTextView;
     private TextView hatTextView;
     private Button recipeButton;
-    private Button cleanButton;
+    private Button shopButton;
     private Button buyLockBoxButton;
     private Button monsterBookButton;
     private MonsterBook monsterBook;
@@ -151,6 +154,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private boolean updatePalace;
     private TextView petView;
     private Button petDetail;
+    private Button swapPetButton;
+    private Button goodsButton;
+    private TextView characterName;
 
 
     //Get Function
@@ -269,8 +275,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         showUpdate();
                         break;
                     case 100:
-                        heroN.addMaterial(100000);
-                        heroN.addPoint(20);
+                        heroN.addMaterial(5000000);
+                        heroN.addPoint(200);
                         alipay.addPayTime();
                         if (alipay.getPayTime() == 10) {
                             Achievement.crapGame.enable();
@@ -325,6 +331,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 super.handleMessage(msg);
             } catch (Exception exp) {
                 Log.e(TAG, "MainGameActivity.Handler", exp);
+                LogHelper.logException(exp);
             }
         }
 
@@ -392,7 +399,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             }
         });
         try {
-            BmobUpdateAgent.update(this);
+            //BmobUpdateAgent.update(this);
             PalaceMonster.getPalaceCount(context);
         } catch (Exception e) {
             LogHelper.logException(e);
@@ -443,6 +450,17 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             @Override
             public void onClick(View view) {
                 buttonGroup.showPrevious();
+            }
+        });
+        swapPetButton = (Button)findViewById(R.id.pet_swap_button);
+        swapPetButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try{
+                    SwapPetMainDialog dialog = new SwapPetMainDialog();
+                }catch (Exception e){
+                    LogHelper.logException(e);
+                }
             }
         });
     }
@@ -496,7 +514,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         tv.setText("注意：\n1.  感谢您的支持，无论您是想踩还是赞~\n" +
                 "2.  这个并不算是真正内购功能（虽然确实很像内购）\n" +
                 "3.  请适量使用。过多的锻造点数并不能加快您的游戏进度。\n" +
-                "4.  您会获得额外的10W点锻造点数和随机的能力点数。\n" +
+                "4.  您会获得额外的500W点锻造点数和随机的能力点数。\n" +
                 "5.  您会随机获得一个高属性宠物。\n");
         dialog.setView(tv);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
@@ -527,11 +545,14 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         dialog.setTitle("是否确认转生？");
         TextView tv = new TextView(context);
         tv.setText("注意：\n1.  你会失去所有技能等级、技能点数。\n" +
-                "2.  所有材料会被清空。\n" +
-                "3.  装备着的饰品会继承下来，其他装备会被丢弃。\n" +
-                "4.  未分配的能力点数会被清空.\n" +
-                "5.  转生后的基础属性会根据转生前的属性得到加强（基础属性影响人物的成长）。\n" +
-                "6.  转生消耗的锻造点数会随着转生次数递增。");
+                "2.  迷宫记录会被清除。\n" +
+                "3.  所有材料会被清空。\n" +
+                "4  装备着的饰品会继承下来，其他装备会被丢弃。\n" +
+                "5.  未分配的能力点数会被清空.\n" +
+                "6.  转生后的基础属性会根据转生前的属性得到加强（基础属性影响人物的成长）。\n" +
+                "7.  转生消耗的锻造点数会随着转生次数递增。\n" +
+                "8.  转生会增加宠物携带上限。\n" +
+                "9. 转生后怪物属性会增强，但你也可以爬得更高。");
         dialog.setView(tv);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
@@ -806,7 +827,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             heroN.setMaxMazeLev(heroN.getMaxMazeLev() + 101);
                             maze.setLevel(99);
                             Achievement.dragon.enable(heroN);
-                            SkillFactory.getSkill("虚无吞噬", heroN, skillDialog).setActive(true);
+                            SkillFactory.getSkill("虚无吞噬", heroN).setActive(true);
                             DBHelper.getDbHelper().excuseSQLWithoutResult("UPDATE recipe set found = 'true'");
                         } else if (input.equals("201509181447ac")) {
                             for (Achievement achievement : Achievement.values()) {
@@ -860,9 +881,12 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
     private void showAwardPet() {
         final Pet pet = new Pet();
-        int i = 24 + heroN.getRandom().nextInt(4);
-        if (i >= Monster.lastNames.length) {
+        int i = 23 + heroN.getRandom().nextInt(6);
+        if (i >= Monster.lastNames.length ) {
             i = Monster.lastNames.length - 1;
+        }
+        if(i == 23){
+            i = 23 -1;
         }
         pet.setType(Monster.lastNames[i]);
         pet.setAtk(heroN.getBaseAttackValue() *2 + 1);
@@ -875,10 +899,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         }
         pet.setName("奖励的普通" + pet.getType());
         pet.setSex(heroN.getRandom().nextInt(2));
-        pet.setSkill(PetSkillList.Shaman.getSkill(pet));
+        pet.setSkill(PetSkillList.getRandomSkill(heroN.getRandom(),pet,0,8));
         pet.setLev(maze.getLev());
         pet.setIntimacy(0l);
         pet.setOwner(heroN.getName());
+        pet.setOwnerId(heroN.getUuid());
         PetDB.save(pet);
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("您获得了新宠物");
@@ -1064,6 +1089,12 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                                 @Override
                                 public void run() {
                                     int count = 0;
+                                    try {
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                        LogHelper.logException(e);
+                                        e.printStackTrace();
+                                    }
                                     while (updatePalace && count < 100000) {
                                         try {
                                             Thread.sleep(refreshInfoSpeed);
@@ -1328,6 +1359,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         mainInfoPlatform.setOnLongClickListener(this);
         // ---- ---- 标题（人物名称 | 最深迷宫数)
         itembarContri = (TextView) findViewById(R.id.character_itembar_contribute);
+        characterName = (TextView) findViewById(R.id.character_name);
+        characterName.setOnClickListener(this);
         itembarContri.setOnClickListener(this);
         try {
             itembarContri.setBackgroundColor(Color.parseColor(heroN.getTitleColor()));
@@ -1404,8 +1437,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         hatTextView.setOnClickListener(this);
         recipeButton = (Button) findViewById(R.id.forge_recipe_button);
         recipeButton.setOnClickListener(this);
-        cleanButton = (Button) findViewById(R.id.transfer_button);
-        cleanButton.setOnClickListener(this);
+        shopButton = (Button) findViewById(R.id.shop_button);
+        shopButton.setOnClickListener(this);
         buyLockBoxButton = (Button) findViewById(R.id.lock_box_get_button);
         buyLockBoxButton.setOnClickListener(this);
         monsterBookButton = (Button) findViewById(R.id.monster_button);
@@ -1422,6 +1455,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         petView.setOnClickListener(this);
         petDetail = (Button) findViewById(R.id.pet_detail_button);
         petDetail.setOnClickListener(this);
+        goodsButton = (Button)findViewById(R.id.goods_button);
+        goodsButton.setOnClickListener(this);
         refresh();
     }
 
@@ -1487,8 +1522,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             addNStreButton.setEnabled(false);
             addNAgiButton.setEnabled(false);
         }
-        itembarContri.setText(heroN.getName() + (heroN.getReincaCount() != 0 ? ("(" + heroN.getReincaCount() + ")") : "") +
-                "\n迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
+        characterName.setText(heroN.getName() + (heroN.getReincaCount() != 0 ? ("(" + heroN.getReincaCount() + ")") : ""));
+        itembarContri.setText( "迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
         if (heroN.getFirstSkill() != null) {
             firstSkillButton.setText(heroN.getFirstSkill().getDisplayName());
             firstSkillButton.setEnabled(true);
@@ -1776,6 +1811,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.goods_button:
+                GoodsDialog goodsDialog = new GoodsDialog(this);
+                goodsDialog.show();
+                break;
             case R.id.pet_detail_button:
                 saveHelper.savePet();
                 new PetDialog(context).show(heroN);
@@ -1820,8 +1859,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     showItemFull();
                 }
                 break;
-            case R.id.transfer_button:
-                showCleanDialog();
+            case R.id.shop_button:
+                ShopDialog shopDialog = new ShopDialog(this);
+                shopDialog.show();
                 break;
             case R.id.ring_view:
             case R.id.necklace_view:
@@ -1880,12 +1920,35 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 handler.sendEmptyMessage(103);
                 break;
             case R.id.skill_button:
-                if (!skillDialog.isInit()) {
-                    skillDialog.init();
-                }
-                skillDialog.show(heroN);
+//                if (!skillDialog.isInit()) {
+//                    skillDialog.init();
+//                }
+//                skillDialog.show(heroN);
+                SkillMainDialog skillMainDialog = new SkillMainDialog();
+                skillMainDialog.show();
                 break;
             case R.id.update_button:
+                BmobUpdateAgent.setDialogListener(new BmobDialogButtonListener() {
+
+                    @Override
+                    public void onClick(int status) {
+                        try {
+                            switch (status) {
+                                case UpdateStatus.Update:
+                                    save();
+                                    Achievement.updater.enable(heroN);
+                                    break;
+                                case UpdateStatus.NotNow:
+                                    break;
+                                case UpdateStatus.Close://只有在强制更新状态下才会在更新对话框的右上方出现close按钮,如果用户不点击”立即更新“按钮，这时候开发者可做些操作，比如直接退出应用等
+                                    exist();
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            LogHelper.logException(e);
+                        }
+                    }
+                });
                 BmobUpdateAgent.forceUpdate(context);
 //                showUpdate();
                 break;
@@ -1914,6 +1977,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 showPayDialog();
                 heroN.click(false);
                 break;
+            case R.id.character_name:
             case R.id.character_itembar_contribute:
                 showNameDialog();
                 heroN.click(false);

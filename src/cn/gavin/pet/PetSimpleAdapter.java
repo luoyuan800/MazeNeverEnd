@@ -13,6 +13,7 @@ import cn.gavin.activity.MainGameActivity;
 import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
+import cn.gavin.utils.ui.AddPointDialog;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -344,9 +345,9 @@ public class PetSimpleAdapter extends BaseAdapter {
             if (pet != null) {
                 String source = getIntimacyString();
                 leveText.setText(Html.fromHtml(source));
-                hpValue.setText(pet.getHp() + "/" + pet.getUHp());
-                atkValue.setText(pet.getMaxAtk() + "");
-                defValue.setText(pet.getMaxDef() + "");
+                hpValue.setText(StringUtils.formatNumber(pet.getHp()) + "/" + StringUtils.formatNumber(pet.getUHp()));
+                atkValue.setText(StringUtils.formatNumber(pet.getMaxAtk()));
+                defValue.setText(StringUtils.formatNumber(pet.getMaxDef()));
                 petOwner.setText(pet.getOwner());
                 Hero hero = MazeContents.hero;
                 if (hero.getPoint() < 1) {
@@ -395,16 +396,16 @@ public class PetSimpleAdapter extends BaseAdapter {
             if (pet != null) {
                 nameValue.setText(Html.fromHtml(pet.getFormatName()));
                 leveText.setText(Html.fromHtml(getIntimacyString()));
-                hpValue.setText(pet.getHp() + "/" + pet.getUHp());
-                atkValue.setText(pet.getMaxAtk() + "");
-                defValue.setText(pet.getMaxDef() + "");
+                hpValue.setText(StringUtils.formatNumber(pet.getHp()) + "/" + StringUtils.formatNumber(pet.getUHp()));
+                atkValue.setText(StringUtils.formatNumber(pet.getMaxAtk()));
+                defValue.setText(StringUtils.formatNumber(pet.getMaxDef()));
                 NSkill skill = pet.getAllSkill();
                 if (skill != null) {
                     skillName.setText(skill.getName());
                 } else {
                     skillName.setText("无");
                 }
-                petPic.setImageResource(MazeContents.getImageByName(pet.getName()));
+                petPic.setImageResource(MazeContents.getImageByName(pet.getName(), pet.getType()));
                 petOwner.setText(pet.getOwner());
                 final Hero hero = MazeContents.hero;
                 if (hero.getPoint() < 1) {
@@ -461,134 +462,130 @@ public class PetSimpleAdapter extends BaseAdapter {
                         }
                     }
                 });
-                releaseButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AlertDialog dialog = new AlertDialog.Builder(context).create();
-                        dialog.setTitle("确认释放宠物？？");
-                        TextView view = new TextView(context);
-                        view.setText(Html.fromHtml("你确认释放宠物：" + pet.getFormatName() + "吗？<br>释放后该宠物即为消失，已经分配的点数不会返还！"));
-                        dialog.setView(view);
-                        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出",
-                                new DialogInterface.OnClickListener() {
+                if (onUsedPetsId.contains(pet.getId())) {
+                    releaseButton.setEnabled(false);
+                } else {
+                    releaseButton.setEnabled(true);
+                    releaseButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            AlertDialog dialog = new AlertDialog.Builder(context).create();
+                            dialog.setTitle("确认释放宠物？？");
+                            TextView view = new TextView(context);
+                            view.setText(Html.fromHtml("你确认释放宠物：" + pet.getFormatName() + "吗？<br>释放后该宠物即为消失，已经分配的点数不会返还！"));
+                            dialog.setView(view);
+                            dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出",
+                                    new DialogInterface.OnClickListener() {
 
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-
-                                });
-                        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认",
-                                new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        detail.dismiss();
-                                        onUsedPetsId.remove(pet.getId());
-                                        listener.adapterData.remove(pet);
-                                        if (pet.isOnUsed()) {
-                                            pet.setOnUsed(false);
-                                            onUsedCheck.setChecked(false);
-                                            listener.setToHero();
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
                                         }
-                                        pet.releasePet(MazeContents.hero, context);
-                                        listener.refresh();
-                                        refresh();
-                                    }
 
-                                });
-                        dialog.show();
-                    }
-                });
+                                    });
+                            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认",
+                                    new DialogInterface.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            detail.dismiss();
+                                            onUsedPetsId.remove(pet.getId());
+                                            listener.adapterData.remove(pet);
+                                            if (pet.isOnUsed()) {
+                                                pet.setOnUsed(false);
+                                                onUsedCheck.setChecked(false);
+                                                listener.setToHero();
+                                            }
+                                            pet.releasePet(MazeContents.hero, context);
+                                            listener.refresh();
+                                            refresh();
+                                        }
+
+                                    });
+                            dialog.show();
+                        }
+                    });
+                }
                 addHpButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        numberPicker.setValue(1);
-                        fenpeidianshu.setTitle("增加HP");
-                        fenpeidianshu.show();
-                        if (hero.getPoint() > 1000) {
-                            numberPicker.setMaxValue(1000);
-                        } else {
-                            numberPicker.setMaxValue(hero.getPoint().intValue());
-                        }
-                        Button button = fenpeidianshu.getButton(DialogInterface.BUTTON_POSITIVE);
-                        if (button != null) {
-                            button.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    int value = numberPicker.getValue();
-                                    if (hero.getPoint() >= value) {
-                                        for (int i = 0; i < value; i++) {
-                                            pet.addHp(MazeContents.hero);
-                                        }
-                                    }
-                                    fenpeidianshu.hide();
-                                    pet.click();
-                                    refresh();
+                        final AddPointDialog addPointDialog = new AddPointDialog(context);
+                        View.OnClickListener addListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                pet.addHp(MazeContents.hero);
+                                addPointDialog.refresh();
+                                refresh();
+                            }
+                        };
+                        View.OnClickListener addNListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                long n = MazeContents.hero.getRandom().nextLong(MazeContents.hero.getPoint());
+                                for (int i = 0; i < n; i++) {
+                                    pet.addHp(MazeContents.hero);
                                 }
-                            });
-                        }
+                                addPointDialog.refresh();
+                                refresh();
+                            }
+                        };
+                        addPointDialog.setTitle("增加HP");
+                        addPointDialog.show(addListener, addNListener, MazeContents.getImageByName(pet.getName(), pet.getType()));
                     }
                 });
                 addAtkButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        numberPicker.setValue(1);
-                        fenpeidianshu.setTitle("增加攻击");
-                        fenpeidianshu.show();
-                        if (hero.getPoint() > 1000) {
-                            numberPicker.setMaxValue(1000);
-                        } else {
-                            numberPicker.setMaxValue(hero.getPoint().intValue());
-                        }
-                        Button button = fenpeidianshu.getButton(DialogInterface.BUTTON_POSITIVE);
-                        if (button != null) {
-                            button.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    int value = numberPicker.getValue();
-                                    if (hero.getPoint() >= value) {
-                                        for (int i = 0; i < value; i++) {
-                                            pet.addAtk(MazeContents.hero);
-                                        }
-                                    }
-                                    fenpeidianshu.hide();
-                                    pet.click();
-                                    refresh();
+                        final AddPointDialog addPointDialog = new AddPointDialog(context);
+                        View.OnClickListener addListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                pet.addAtk(MazeContents.hero);
+                                addPointDialog.refresh();
+                                refresh();
+                            }
+                        };
+                        View.OnClickListener addNListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                long n = MazeContents.hero.getRandom().nextLong(MazeContents.hero.getPoint());
+                                for (int i = 0; i < n; i++) {
+                                    pet.addAtk(MazeContents.hero);
                                 }
-                            });
-                        }
+                                addPointDialog.refresh();
+                                refresh();
+                            }
+                        };
+                        addPointDialog.setTitle("增加攻击");
+                        addPointDialog.show(addListener, addNListener, MazeContents.getImageByName(pet.getName(), pet.getType()));
                     }
                 });
                 addDefButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        numberPicker.setValue(1);
-                        fenpeidianshu.setTitle("增加防御");
-                        fenpeidianshu.show();
-                        if (hero.getPoint() > 1000) {
-                            numberPicker.setMaxValue(1000);
-                        } else {
-                            numberPicker.setMaxValue(hero.getPoint().intValue());
-                        }
-                        Button button = fenpeidianshu.getButton(DialogInterface.BUTTON_POSITIVE);
-                        if (button != null) {
-                            button.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    int value = numberPicker.getValue();
-                                    if (hero.getPoint() >= value) {
-                                        for (int i = 0; i < value; i++) {
-                                            pet.addDef(MazeContents.hero);
-                                        }
-                                    }
-                                    fenpeidianshu.hide();
-                                    pet.click();
-                                    refresh();
+                        final AddPointDialog addPointDialog = new AddPointDialog(context);
+                        View.OnClickListener addListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                pet.addDef(MazeContents.hero);
+                                addPointDialog.refresh();
+                                refresh();
+                            }
+                        };
+                        View.OnClickListener addNListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                long n = MazeContents.hero.getRandom().nextLong(MazeContents.hero.getPoint());
+                                for (int i = 0; i < n; i++) {
+                                    pet.addDef(MazeContents.hero);
                                 }
-                            });
-                        }
+                                addPointDialog.refresh();
+                                refresh();
+                            }
+                        };
+                        addPointDialog.setTitle("增加防御");
+                        addPointDialog.show(addListener, addNListener, MazeContents.getImageByName(pet.getName(), pet.getType()));
                     }
                 });
                 if (pet.isOnUsed()) {

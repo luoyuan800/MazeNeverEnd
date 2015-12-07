@@ -21,25 +21,24 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SkillFactory {
     private static Map<String, Skill> skillMap = new ConcurrentHashMap<String, Skill>();
 
-    public static synchronized Skill getSkill(String name, Hero hero, final SkillDialog dialog) {
+    public static synchronized Skill getSkill(String name, Hero hero) {
         try {
             Skill skill = skillMap.get(name);
             if (skill == null) {
-                skill = BaseSkill.getSkill(name, hero, dialog);
-                if (skill == null){
-                    skill = EvilSkill.getSkill(name, hero, dialog);
+                skill = BaseSkill.getSkill(name, hero);
+                if (skill == null) {
+                    skill = EvilSkill.getSkill(name, hero);
                 }
-                if(skill == null){
-                    skill = SwindlerSkill.getSkill(name, hero, dialog);
+                if (skill == null) {
+                    skill = SwindlerSkill.getSkill(name, hero);
                 }
-                if(skill == null){
-                    skill = LongSkill.getSkill(name,hero,dialog);
+                if (skill == null) {
+                    skill = LongSkill.getSkill(name, hero);
                 }
-                if(skill == null){
-                    skill = PetSkill.getSkill(name, hero, dialog);
+                if (skill == null) {
+                    skill = PetSkill.getSkill(name, hero);
                 }
-                if (skill != null && hero!=null && dialog!=null) {
-                    skill.setSkillDialog(dialog);
+                if (skill != null && hero != null) {
                     skill.setPerform(new EnableExpression() {
                         @Override
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {

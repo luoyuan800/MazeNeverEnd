@@ -73,16 +73,6 @@ public enum Effect {
             return award;
         }
     }, "增加点击锻造点数奖励"),
-    ADD_CLICK_POINT_AWARD(new Calculate() {
-        @Override
-        public Number calculate(Hero hero, Monster monster) {
-            Random random = hero.getRandom();
-            long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 5000 + 1) + 1;
-            if (award <= 2) award = 1;
-            if (award >= 4) award = random.nextLong(4) + 1;
-            return award;
-        }
-    }, "增加点击能力点数奖励"),
     ADD_HIT_RATE(new Calculate() {
         @Override
         public Number calculate(Hero hero, Monster monster) {
@@ -142,7 +132,41 @@ public enum Effect {
             if(def > 10) def = 10;
             return def;
         }
-    }, "增加防御上限%");
+    }, "增加防御上限%"),
+    ADD_CLICK_POINT_AWARD(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            Random random = hero.getRandom();
+            long award = random.nextLong((hero.getMaxMazeLev() + monster.getMaterial()) / 5000 + 1) + 1;
+            if (award <= 2) award = 1;
+            if (award >= 4) award = random.nextLong(4) + 1;
+            return award;
+        }
+    }, "增加点击能力点数奖励"),
+    ADD_PET_ABE(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            return 0.02;
+        }
+    }, "增加宠物变异几率"),
+    START_BURST(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            return 3;
+        }
+    }, "附带技能星爆<br>亮瞎敌人的双眼,敌人HP变成一个不大于当前HP的随机数。释放概率"),
+    ICE_BURST(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            return 3;
+        }
+    }, "附带技能冰爆<br>冻住敌人随机回合。释放概率"),
+    FEN_BURST(new Calculate() {
+        @Override
+        public Number calculate(Hero hero, Monster monster) {
+            return 3;
+        }
+    }, "附带技能令风<br>秒杀土属性的敌人。释放概率");
     private Calculate calculate;
     private String name;
 
@@ -167,6 +191,10 @@ public enum Effect {
             monster.setMazeLev(maze.getLev() * 2);
         }
         return calculate(hero, monster).longValue();
+    }
+
+    public static Effect randomEffect(Random random){
+        return Effect.values()[random.nextInt(values().length - 8)];
     }
 
 }

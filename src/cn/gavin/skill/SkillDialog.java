@@ -21,6 +21,7 @@ import java.util.List;
 /**
  * Created by luoyuan on 9/12/15.
  */
+@Deprecated
 public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
     private MainGameActivity context;
     private AlertDialog alertDialog;
@@ -78,19 +79,19 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
         viewFlipper = new ViewFlipper(context);
 
         BaseSkill baseSkill = new BaseSkill(context);
-        baseSkill.init(this);
+        baseSkill.init();
 
         EvilSkill evilSkill = new EvilSkill(context);
-        evilSkill.init(this);
+        evilSkill.init();
 
         SwindlerSkill swindlerSkill = new SwindlerSkill(context);
-        swindlerSkill.init(this);
+        swindlerSkill.init();
 
         LongSkill longSkill = new LongSkill(context);
-        longSkill.init(this);
+        longSkill.init();
 
         PetSkill petSkill = new PetSkill(context);
-        petSkill.init(this);
+        petSkill.init();
 
         viewFlipper.addView(baseSkill);
         viewFlipper.addView(evilSkill);

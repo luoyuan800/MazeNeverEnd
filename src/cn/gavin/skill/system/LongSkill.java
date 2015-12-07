@@ -13,7 +13,6 @@ import cn.gavin.maze.BattleController;
 import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.Skill;
-import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.skill.expression.DescExpression;
 import cn.gavin.skill.expression.EnableExpression;
@@ -21,6 +20,7 @@ import cn.gavin.skill.expression.UseExpression;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.PropertySkill;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Created by luoyuan on 9/13/15.
@@ -34,31 +34,52 @@ public class LongSkill extends SkillLayout {
         this.context = context;
     }
 
-    public void init(SkillDialog dialog) {
-        Skill skill = SkillFactory.getSkill("龙裔", hero, dialog);
+    public void init() {
+        Skill skill = SkillFactory.getSkill("龙裔", hero);
         Button button = (Button) view.findViewById(R.id.long_skill_ly_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("咆哮", hero, dialog);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
+        skill = SkillFactory.getSkill("咆哮", hero);
         button = (Button) view.findViewById(R.id.long_skill_px_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("龙铠", hero, dialog);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
+        skill = SkillFactory.getSkill("龙铠", hero);
         button = (Button) view.findViewById(R.id.long_skill_lk_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("觉醒", hero, dialog);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
+        skill = SkillFactory.getSkill("觉醒", hero);
         button = (Button) view.findViewById(R.id.long_skill_jx_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("龙爪", hero, dialog);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
+        skill = SkillFactory.getSkill("龙爪", hero);
         button = (Button) view.findViewById(R.id.long_skill_lz_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("吐息", hero, dialog);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
+        skill = SkillFactory.getSkill("吐息", hero);
         button = (Button) view.findViewById(R.id.long_skill_tx_button);
         skill.setSkillButton(button);
-        skill = SkillFactory.getSkill("沙尘", hero, dialog);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
+        skill = SkillFactory.getSkill("沙尘", hero);
         button = (Button) view.findViewById(R.id.long_skill_sc_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
     }
 
-    public static Skill getSkill(String name, final Hero hero, final SkillDialog dialog) {
+    public static Skill getSkill(String name, final Hero hero) {
         Skill skill = null;
         if ("龙裔".equalsIgnoreCase(name)) {
             final PropertySkill iskll = new PropertySkill();
@@ -106,7 +127,7 @@ public class LongSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("龙裔", hero, dialog).isActive();
+                    return SkillFactory.getSkill("龙裔", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -151,7 +172,7 @@ public class LongSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("咆哮", hero, dialog).isActive();
+                    return SkillFactory.getSkill("咆哮", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -193,7 +214,7 @@ public class LongSkill extends SkillLayout {
             final PropertySkill iskll = new PropertySkill() {
                 public void setOnUsed(boolean use) {
                     if (!onUsed && use && MainGameActivity.context != null) {
-                        long elementValue = (hero.getAgility() + hero.getStrength() + hero.getPower() + hero.getBaseDefense() + hero.getBaseAttackValue()) / 5;
+                        long elementValue = (hero.getAgility() + hero.getStrength() + hero.getPower() + hero.getBaseDefense() + hero.getBaseAttackValue()) / 10;
                         if (hero.getRandom().nextLong(hero.getAttackValue() + 1) < hero.getRandom().nextLong(elementValue + 1)) {
                             hero.setElement(Element.金);
                         } else if (hero.getRandom().nextLong(hero.getDefenseValue() + 1) < hero.getRandom().nextLong(elementValue + 1)) {
@@ -204,6 +225,8 @@ public class LongSkill extends SkillLayout {
                             hero.setElement(Element.火);
                         } else if (hero.getRandom().nextLong(hero.getAgility() + 1) < hero.getRandom().nextLong(elementValue + 1)) {
                             hero.setElement(Element.木);
+                        } else{
+                            hero.setElement(Element.values()[hero.getRandom().nextInt(Element.values().length -2)]);
                         }
                         hero.addPoint(-6000);
                     }
@@ -216,7 +239,7 @@ public class LongSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getPoint() > 6001 && SkillFactory.getSkill("龙铠", hero, dialog).isActive();
+                    return hero.getPoint() > 6001 && SkillFactory.getSkill("龙铠", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -254,7 +277,7 @@ public class LongSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("龙裔", hero, dialog).isActive();
+                    return SkillFactory.getSkill("龙裔", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -286,7 +309,7 @@ public class LongSkill extends SkillLayout {
                         monster.addBattleSkillDesc(msg);
                     }
                     monster.addHp(-harm);
-                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点金属性伤害。";
+                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点金属性伤害。";
                     iskll.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;
@@ -313,7 +336,7 @@ public class LongSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("龙爪", hero, dialog).isActive();
+                    return SkillFactory.getSkill("龙爪", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -345,7 +368,7 @@ public class LongSkill extends SkillLayout {
                         monster.addBattleSkillDesc(msg);
                     }
                     monster.addHp(-harm);
-                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点火属性伤害。";
+                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点火属性伤害。";
                     iskll.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;
@@ -372,7 +395,7 @@ public class LongSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("吐息", hero, dialog).isActive();
+                    return SkillFactory.getSkill("吐息", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -404,7 +427,7 @@ public class LongSkill extends SkillLayout {
                         monster.addBattleSkillDesc(msg);
                     }
                     monster.addHp(-harm);
-                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点土属性伤害。";
+                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点土属性伤害。";
                     iskll.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;

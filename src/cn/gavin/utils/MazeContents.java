@@ -7,6 +7,7 @@ import cn.gavin.forge.effect.Effect;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
+import cn.gavin.pet.Pet;
 import cn.gavin.skill.SkillDialog;
 
 /**
@@ -100,7 +101,10 @@ public class MazeContents {
         return value;
     }
 
-    public static int getImageByName(String name) {
+    public static int getImageByName(String name, String type) {
+        if ("蛋".equals(type)) {
+            return R.drawable.egg;
+        }
         int index = Monster.getIndex(name);
         int image = R.drawable.h_4_s;
         switch (index) {
@@ -123,22 +127,38 @@ public class MazeContents {
                 image = R.drawable.laoshu;
                 break;
             case 6:
-                image = R.drawable.mayi;
+                if (name.contains("红")) {
+                    image = R.drawable.mayi_red;
+                } else {
+                    image = R.drawable.mayi;
+                }
                 break;
             case 7:
-                image = R.drawable.laohu;
+                if (name.contains("红")) {
+                    image = R.drawable.laohu_red;
+                } else {
+                    image = R.drawable.laohu;
+                }
                 break;
             case 8:
                 image = R.drawable.jiao;
                 break;
             case 9:
-                image = R.drawable.xiezi;
+                if (name.contains("红")) {
+                    image = R.drawable.xiezi_red;
+                } else {
+                    image = R.drawable.xiezi;
+                }
                 break;
             case 10:
                 image = R.drawable.srn;
                 break;
             case 11:
-                image = R.drawable.bianfu;
+                if (name.contains("红")) {
+                    image = R.drawable.bianfu_red;
+                } else {
+                    image = R.drawable.bianfu;
+                }
                 break;
             case 12:
                 image = R.drawable.se;
@@ -162,13 +182,21 @@ public class MazeContents {
                 image = R.drawable.jingling;
                 break;
             case 19:
-                image = R.drawable.jiangshi;
+                if (name.contains("红")) {
+                    image = R.drawable.jiangshi_red;
+                } else {
+                    image = R.drawable.jiangshi;
+                }
                 break;
             case 20:
                 image = R.drawable.fengh;
                 break;
             case 21:
-                image = R.drawable.long_pet;
+                if (name.contains("红")) {
+                    image = R.drawable.long_pet_red;
+                } else {
+                    image = R.drawable.long_pet;
+                }
                 break;
             case 22:
                 image = R.drawable.kulou;
@@ -188,9 +216,39 @@ public class MazeContents {
             case 28:
                 image = R.drawable.qiongqi;
                 break;
+            case 29:
+                if (name.contains("红")) {
+                    image = R.drawable.jiuweihu_red;
+                } else {
+                    image = R.drawable.jiuweihu;
+                }
+                break;
+            case 30:
+                image = R.drawable.fudi;
+                break;
+            case 31:
+                image = R.drawable.zheng;
+                break;
+            case 32:
+                image = R.drawable.zhuru;
+                break;
+            case 33:
+                image = R.drawable.taowu;
+                break;
             default:
                 image = R.drawable.h_4_s;
         }
         return image;
+    }
+
+    public static boolean checkPet(Pet myPet) {
+        boolean check;
+        String name = myPet.getName();
+        int nameIndex = Monster.getIndex(name);
+        check = Monster.lastNames[nameIndex].equals(myPet.getType());
+        if(nameIndex >= Monster.lastNames.length){
+            check = name.contains("蛋");
+        }
+        return check;
     }
 }

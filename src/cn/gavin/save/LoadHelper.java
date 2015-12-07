@@ -28,6 +28,7 @@ import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
 import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
+import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -89,7 +90,17 @@ public class LoadHelper {
         heroN.setDefenseValue(preferences.getLong("baseDefense", 1));
         heroN.setClick(preferences.getLong("click", 0));
         heroN.setPoint(preferences.getLong("point", 0));
-        heroN.setMaterial(preferences.getLong("material", 0));
+        if(!preferences.contains("n_material")){
+            //第一次升级到1.8
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong("n_material", preferences.getLong("material", 0));
+            editor.putLong("o_material", preferences.getLong("material",0));
+            heroN.setMaterial(preferences.getLong("material", 0));
+            editor.apply();
+        }else {
+            heroN.setMaterial(preferences.getLong("n_material", 0));
+        }
+
         heroN.setSwordLev(preferences.getLong("swordLev", 0));
         heroN.setArmorLev(preferences.getLong("armorLev", 0));
         heroN.setMaxMazeLev(preferences.getLong("maxMazeLev", 1));
@@ -164,6 +175,8 @@ public class LoadHelper {
         heroN.setTitleColor(preferences.getString("title_color", "#ff00acff"));
         heroN.setUuid(preferences.getString("uuid", UUID.randomUUID().toString()));
         heroN.setOnSkill(false);
+        heroN.setPetAbe(preferences.getFloat("pet_abe", 0));
+        heroN.setmV(preferences.getBoolean("mv", new Random().nextBoolean()));
         maze.setCsmgl(preferences.getInt("csm", 9987));
         loadValue(heroN);
         MazeContents.hero = heroN;
@@ -241,7 +254,7 @@ public class LoadHelper {
         try {
             Cursor cursor = DBHelper.getDbHelper().excuseSOL(sql);
             while (!cursor.isAfterLast()) {
-                SkillFactory.getSkill(cursor.getString(cursor.getColumnIndex("name")), hero, dialog);
+                SkillFactory.getSkill(cursor.getString(cursor.getColumnIndex("name")), hero);
                 cursor.moveToNext();
             }
             cursor.close();

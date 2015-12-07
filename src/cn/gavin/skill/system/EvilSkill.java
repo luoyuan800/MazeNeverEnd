@@ -5,12 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import cn.gavin.*;
+import cn.gavin.Achievement;
+import cn.gavin.Armor;
+import cn.gavin.Hero;
+import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.Skill;
-import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.skill.expression.DescExpression;
 import cn.gavin.skill.expression.EnableExpression;
@@ -18,6 +20,7 @@ import cn.gavin.skill.expression.UseExpression;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.PropertySkill;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Created by luoyuan on 9/28/15.
@@ -33,61 +36,87 @@ public class EvilSkill extends SkillLayout {
         this.context = context;
     }
 
-    public void init(SkillDialog dialog) {
-        Skill skill = SkillFactory.getSkill("魔王天赋", hero, dialog);
+    public void init() {
+        Skill skill = SkillFactory.getSkill("魔王天赋", hero);
         Button button = (Button) view.findViewById(R.id.skill_evil_m_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("腐蚀", hero, dialog);
+        skill = SkillFactory.getSkill("腐蚀", hero);
         button = (Button) view.findViewById(R.id.skill_evil_f_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("强化", hero, dialog);
+        skill = SkillFactory.getSkill("强化", hero);
         button = (Button) view.findViewById(R.id.skill_evil_q_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("迷雾", hero, dialog);
+        skill = SkillFactory.getSkill("迷雾", hero);
         button = (Button) view.findViewById(R.id.skill_evil_mw_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("闪电", hero, dialog);
+        skill = SkillFactory.getSkill("闪电", hero);
         button = (Button) view.findViewById(R.id.skill_evil_s_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("隐身", hero, dialog);
+        skill = SkillFactory.getSkill("隐身", hero);
         button = (Button) view.findViewById(R.id.skill_evil_y_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("水波", hero, dialog);
+        skill = SkillFactory.getSkill("水波", hero);
         button = (Button) view.findViewById(R.id.skill_evil_sb_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("精神力", hero, dialog);
+        skill = SkillFactory.getSkill("精神力", hero);
         button = (Button) view.findViewById(R.id.skill_evil_j_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("反杀", hero, dialog);
+        skill = SkillFactory.getSkill("反杀", hero);
         button = (Button) view.findViewById(R.id.skill_evil_fs_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("不死之身", hero, dialog);
+        skill = SkillFactory.getSkill("不死之身", hero);
         button = (Button) view.findViewById(R.id.skill_evil_b_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("变身", hero, dialog);
+        skill = SkillFactory.getSkill("变身", hero);
         button = (Button) view.findViewById(R.id.skill_evil_bs_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("生命吸收", hero, dialog);
+        skill = SkillFactory.getSkill("生命吸收", hero);
         button = (Button) view.findViewById(R.id.skill_evil_sm_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("多重攻击", hero, dialog);
+        skill = SkillFactory.getSkill("多重攻击", hero);
         button = (Button) view.findViewById(R.id.skill_evil_mul_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
     }
 
-    public static Skill getSkill(String name, Hero hero, final SkillDialog dialog){
+    public static Skill getSkill(String name, Hero hero) {
         Skill skill = null;
         if (name.equals("腐蚀")) {
             skill = new AttackSkill();
@@ -96,7 +125,7 @@ public class EvilSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getSkillPoint() > 0 && SkillFactory.getSkill("魔王天赋", hero, dialog).isActive();
+                    return hero.getSkillPoint() > 0 && SkillFactory.getSkill("魔王天赋", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -140,7 +169,7 @@ public class EvilSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getSkillPoint() > 0 && !SkillFactory.getSkill("勇者之击", hero, dialog).isActive();
+                    return hero.getSkillPoint() > 0 && !SkillFactory.getSkill("勇者之击", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -166,7 +195,7 @@ public class EvilSkill extends SkillLayout {
                     String msg1 = monster.getFormatName() + "攻击了" + hero.getFormatName();
                     skill.addMessage(msg1);
                     monster.addBattleSkillDesc(msg1);
-                    String msg2 = hero.getFormatName() + "使用了技能" + skill.getName() + "将" + harm + "点伤害转化为生命";
+                    String msg2 = hero.getFormatName() + "使用了技能" + skill.getName() + "将" + StringUtils.formatNumber(harm) + "点伤害转化为生命";
                     skill.addMessage(msg2);
                     monster.addBattleSkillDesc(msg2);
                     Achievement.devils.enable(hero);
@@ -195,7 +224,7 @@ public class EvilSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getSkillPoint() > 0 && SkillFactory.getSkill("魔王天赋", hero, dialog).isActive();
+                    return hero.getSkillPoint() > 0 && SkillFactory.getSkill("魔王天赋", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -209,16 +238,16 @@ public class EvilSkill extends SkillLayout {
             skill.setRelease(new UseExpression() {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                    if(hero.isOnSkill()){
+                    if (hero.isOnSkill()) {
                         long harm = monster.getAtk() - hero.getDefenseValue();
                         if (harm <= 0) {
                             harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1) + 1;
                         }
                         hero.addHp(harm);
-                        String msg1 = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了<font color=\"red\">" + harm + "</font>点伤害。";
+                        String msg1 = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了<font color=\"red\">" + StringUtils.formatNumber(harm) + "</font>点伤害。";
                         skill.addMessage(msg1);
                         monster.addBattleSkillDesc(msg1);
-                    }else {
+                    } else {
                         final long hp = hero.getHp() * iskll.getBaseHarm();
                         hero.setSkillAdditionHp(hp);
                         hero.setOnSkill(true);
@@ -273,7 +302,7 @@ public class EvilSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getSkillPoint() > 0 && SkillFactory.getSkill("腐蚀", hero, dialog).isActive();
+                    return hero.getSkillPoint() > 0 && SkillFactory.getSkill("腐蚀", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -316,7 +345,7 @@ public class EvilSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getSkillPoint() > 0 && SkillFactory.getSkill("迷雾", hero, dialog).isActive();
+                    return hero.getSkillPoint() > 0 && SkillFactory.getSkill("迷雾", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -358,10 +387,10 @@ public class EvilSkill extends SkillLayout {
                             setAgi(getHero().getAgility());
                             setStr(getHero().getStrength());
                             setLife(getHero().getPower());
-                        }else if(onUsed && !used){
-                            setAgi(getHero().getAgility()/2);
-                            setStr(getHero().getStrength()/2);
-                            setLife(getHero().getPower()/2);
+                        } else if (onUsed && !used) {
+                            setAgi(getHero().getAgility() / 2);
+                            setStr(getHero().getStrength() / 2);
+                            setLife(getHero().getPower() / 2);
                         }
                         super.setOnUsed(used);
                     }
@@ -372,7 +401,7 @@ public class EvilSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getSkillPoint() > 0 && SkillFactory.getSkill("隐身", hero, dialog).isActive();
+                    return hero.getSkillPoint() > 0 && SkillFactory.getSkill("隐身", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -412,7 +441,7 @@ public class EvilSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getSkillPoint() > 0 && SkillFactory.getSkill("精神力", hero, dialog).isActive();
+                    return hero.getSkillPoint() > 0 && SkillFactory.getSkill("精神力", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -455,7 +484,7 @@ public class EvilSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getSkillPoint() > 0 && SkillFactory.getSkill("强化", hero, dialog).isActive();
+                    return hero.getSkillPoint() > 0 && SkillFactory.getSkill("强化", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -463,8 +492,8 @@ public class EvilSkill extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
                     builder.append("从虚空中拉出一条闪电攻击敌人。<br>").append(skill.getProbability()).
-                            append("的概率释放。造成额外的").append(iskll.getBaseHarm()).append("-").
-                            append(iskll.getBaseHarm() + iskll.getAdditionHarm()).append("闪电伤害");
+                            append("的概率释放。造成额外的").append(StringUtils.formatNumber(iskll.getBaseHarm())).append("-").
+                            append(StringUtils.formatNumber(iskll.getBaseHarm() + iskll.getAdditionHarm())).append("闪电伤害");
                     return builder.toString();
                 }
             });
@@ -472,14 +501,14 @@ public class EvilSkill extends SkillLayout {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = hero.getAttackValue() + iskll.getBaseHarm() + hero.getRandom().nextLong(iskll.getAdditionHarm() + 1);
-                    if(harm < 0){
+                    if (harm < 0) {
                         iskll.setAdditionHarm(Integer.MAX_VALUE);
-                        iskll.setBaseHarm(Integer.MAX_VALUE/8);
-                        harm = Integer.MAX_VALUE -100000;
+                        iskll.setBaseHarm(Integer.MAX_VALUE / 8);
+                        harm = Integer.MAX_VALUE - 100000;
                     }
                     monster.addHp(-harm);
                     String msg = hero.getFormatName() + "使用了技能" + iskll.getName() + "，对" +
-                            monster.getFormatName() + "造成了" + harm + "的闪电伤害";
+                            monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "的闪电伤害";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;
@@ -492,8 +521,8 @@ public class EvilSkill extends SkillLayout {
                     if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 1.1f);
                     }
-                    if(iskll.getAdditionHarm() < hero.getBaseAttackValue() * 100 && iskll.getAdditionHarm() < Integer.MAX_VALUE) {
-                        iskll.setBaseHarm(iskll.getBaseHarm()*2 + 2000);
+                    if (iskll.getAdditionHarm() < hero.getBaseAttackValue() * 100 && iskll.getAdditionHarm() < Integer.MAX_VALUE) {
+                        iskll.setBaseHarm(iskll.getBaseHarm() * 2 + 2000);
                         iskll.setAdditionHarm(iskll.getAdditionHarm() * 2 + 4000);
                     }
                     return false;
@@ -512,7 +541,7 @@ public class EvilSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getArmor().equalsIgnoreCase(Armor.水波甲.name()) && hero.getSkillPoint() > 0 && SkillFactory.getSkill("闪电", hero, dialog).isActive();
+                    return hero.getArmor().equalsIgnoreCase(Armor.水波甲.name()) && hero.getSkillPoint() > 0 && SkillFactory.getSkill("闪电", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -520,7 +549,7 @@ public class EvilSkill extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
                     builder.append("柔则克刚。需要防具升级为水波甲<b>的时候</b>才可以激活。<br>").append(skill.getProbability()).
-                            append("的概率释放。受到攻击的时候抵消").append(iskll.getProbability()*2 + 50).append("%的伤害");
+                            append("的概率释放。受到攻击的时候抵消").append(iskll.getProbability() * 2 + 50).append("%的伤害");
                     return builder.toString();
                 }
             });
@@ -531,14 +560,14 @@ public class EvilSkill extends SkillLayout {
                     if (harm <= 0) {
                         harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1);
                     }
-                    String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "的伤害。";
+                    String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "的伤害。";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
-                    double v = harm * (iskll.getProbability()*2 + 50d) / 100d;
-                    if(v > harm) v = harm -1;
+                    double v = harm * (iskll.getProbability() * 2 + 50d) / 100d;
+                    if (v > harm) v = harm - 1;
                     harm = (long) (harm - v);
                     String msg1 = hero.getFormatName() + "使用了技能" + iskll.getName() + "，抵消了" +
-                            (long)v + "的伤害";
+                            (long) v + "的伤害";
                     skill.addMessage(msg1);
                     monster.addBattleSkillDesc(msg1);
                     hero.addHp(-harm);
@@ -567,7 +596,7 @@ public class EvilSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("水波", hero, dialog).isActive();
+                            && SkillFactory.getSkill("水波", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -612,8 +641,8 @@ public class EvilSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getSkillPoint() > 0 && (SkillFactory.getSkill("精神力", hero, dialog).isActive()
-                            || SkillFactory.getSkill("反杀", hero, dialog).isActive());
+                    return hero.getSkillPoint() > 0 && (SkillFactory.getSkill("精神力", hero).isActive()
+                            || SkillFactory.getSkill("反杀", hero).isActive());
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -629,14 +658,14 @@ public class EvilSkill extends SkillLayout {
             skill.setRelease(new UseExpression() {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, final Skill skill) {
-                    if(hero.isOnChange()){
+                    if (hero.isOnChange()) {
                         long harm = hero.getAttackValue();
                         monster.addHp(-harm);
                         String msg = hero.getFormatName() + "攻击了" +
-                                monster.getFormatName() + "造成了" + harm + "的伤害";
+                                monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "的伤害";
                         skill.addMessage(msg);
                         monster.addBattleSkillDesc(msg);
-                    }else {
+                    } else {
                         hero.setChangeName(monster.getName());
                         hero.setChangAtk(monster.getAtk());
                         hero.setChangeUhp(monster.getMaxHP());
@@ -674,7 +703,7 @@ public class EvilSkill extends SkillLayout {
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     if (skill.getProbability() < 35) {
                         skill.setProbability(skill.getProbability() + 3.1f);
-                        if(iskll.getBaseHarm() < 20) {
+                        if (iskll.getBaseHarm() < 20) {
                             iskll.setBaseHarm(iskll.getBaseHarm() + 3);
                         }
                         return true;
@@ -695,7 +724,7 @@ public class EvilSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getSkillPoint() > 0 && (SkillFactory.getSkill("反杀", hero, dialog).isActive()
+                    return hero.getSkillPoint() > 0 && (SkillFactory.getSkill("反杀", hero).isActive()
                     );
                 }
             });
@@ -714,10 +743,10 @@ public class EvilSkill extends SkillLayout {
                     double harm = monster.getHp() * (iskll.getBaseHarm() / 100d);
                     monster.addHp(-(long) harm);
                     hero.addHp((long) harm);
-                    String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，吸收了" + monster.getFormatName() + "的" + (long)harm + "点生命值。";
+                    String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，吸收了" + monster.getFormatName() + "的" + StringUtils.formatNumber((long) harm) + "点生命值。";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
-                    if(skill.getCount() == 10000){
+                    if (skill.getCount() == 10000) {
                         Achievement.doctor.enable(hero);
                     }
                     return false;
@@ -747,8 +776,8 @@ public class EvilSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getSkillPoint() > 0 && (SkillFactory.getSkill("不死之身", hero, dialog).isActive()
-                            || SkillFactory.getSkill("变身", hero, dialog).isActive() || SkillFactory.getSkill("生命吸收", hero, dialog).isActive());
+                    return hero.getSkillPoint() > 0 && (SkillFactory.getSkill("不死之身", hero).isActive()
+                            || SkillFactory.getSkill("变身", hero).isActive() || SkillFactory.getSkill("生命吸收", hero).isActive());
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -766,13 +795,13 @@ public class EvilSkill extends SkillLayout {
                     Double harm = hero.getAttackValue() * (iskll.getBaseHarm() / 100d);
                     long i = hero.getRandom().nextLong(iskll.getAdditionHarm() + 1) + 1;
                     long l = harm.longValue() * i;
-                    if(l <= 0){
+                    if (l <= 0) {
                         l = hero.getBaseAttackValue();
-                        iskll.setAdditionHarm(i/2);
+                        iskll.setAdditionHarm(i / 2);
                     }
                     monster.addHp(-l);
                     String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，对" +
-                            monster.getFormatName() + "进行了" + i + "次攻击，总共造成了" + l + "伤害。";
+                            monster.getFormatName() + "进行了" + i + "次攻击，总共造成了" + StringUtils.formatNumber(l) + "伤害。";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     Achievement.satan.enable(hero);
@@ -785,7 +814,7 @@ public class EvilSkill extends SkillLayout {
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     if (skill.getProbability() < 35) {
                         skill.setProbability(skill.getProbability() + 3.1f);
-                        if(iskll.getBaseHarm() < 100) {
+                        if (iskll.getBaseHarm() < 100) {
                             iskll.setBaseHarm(iskll.getBaseHarm() + 2);
                         }
                         iskll.setAdditionHarm(iskll.getAdditionHarm() + 2);

@@ -12,7 +12,6 @@ import cn.gavin.activity.MainGameActivity;
 import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.Skill;
-import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.skill.expression.DescExpression;
 import cn.gavin.skill.expression.EnableExpression;
@@ -20,6 +19,7 @@ import cn.gavin.skill.expression.UseExpression;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.PropertySkill;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 luoyuan.
@@ -36,33 +36,51 @@ public class SwindlerSkill extends SkillLayout {
         this.context = context;
     }
 
-    public void init(SkillDialog dialog) {
-        Skill skill = SkillFactory.getSkill("点攻", hero, dialog);
+    public void init() {
+        Skill skill = SkillFactory.getSkill("点攻", hero);
         Button button = (Button) view.findViewById(R.id.skill_swindler_dg_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("点防", hero, dialog);
+
+        skill = SkillFactory.getSkill("点防", hero);
         button = (Button) view.findViewById(R.id.skill_swindler_df_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("欺诈游戏", hero, dialog);
+
+        skill = SkillFactory.getSkill("欺诈游戏", hero);
         button = (Button) view.findViewById(R.id.skill_swindler_qg_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("欺诈师", hero, dialog);
+
+        skill = SkillFactory.getSkill("欺诈师", hero);
         button = (Button) view.findViewById(R.id.skill_swindler_qzs_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("浮生百刃", hero, dialog);
+
+        skill = SkillFactory.getSkill("浮生百刃", hero);
         button = (Button) view.findViewById(R.id.skill_swindler_f_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("虚无吞噬", hero, dialog);
+
+        skill = SkillFactory.getSkill("虚无吞噬", hero);
         button = (Button) view.findViewById(R.id.skill_swindler_x_button);
         skill.setSkillButton(button);
+        button.setOnClickListener(buildOnClickListener(skill));
+        skills.add(skill);
+
     }
 
-    public static Skill getSkill(String name, final Hero hero, final SkillDialog dialog) {
+    public static Skill getSkill(String name, final Hero hero) {
         Skill skill = null;
         if ("点攻".equalsIgnoreCase(name)) {
             final AttackSkill iskll = new AttackSkill();
@@ -72,7 +90,7 @@ public class SwindlerSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return  SkillFactory.getSkill("欺诈游戏", hero, dialog).isActive()&& Achievement.click50000.isEnable();
+                    return SkillFactory.getSkill("欺诈游戏", hero).isActive() && Achievement.click50000.isEnable();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -90,12 +108,12 @@ public class SwindlerSkill extends SkillLayout {
                     long harm = hero.getAttackValue() +
                             (hero.getClick() < (hero.getAttackValue()) ? (hero.getClick() + hero.getClickAward()) :
                                     hero.getRandom().nextLong(hero.getClick() + hero.getAttackValue()));
-                    if(harm < 0){
+                    if (harm < 0) {
                         harm = hero.getRandom().nextLong(hero.getClick() + 1) + 1;
                     }
                     monster.addHp(-harm);
                     String msg = hero.getFormatName() + "使用了技能" + skill.getName() +
-                            "，对" + monster.getFormatName() + "造成了" + harm + "的伤害。";
+                            "，对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "的伤害。";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;
@@ -123,7 +141,7 @@ public class SwindlerSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("欺诈游戏", hero, dialog).isActive() && Achievement.click50000.isEnable();
+                    return SkillFactory.getSkill("欺诈游戏", hero).isActive() && Achievement.click50000.isEnable();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -148,14 +166,14 @@ public class SwindlerSkill extends SkillLayout {
                     long reduce = hero.getClick() < hero.getBaseAttackValue() ?
                             (hero.getClick() + hero.getClickAward()) :
                             (hero.getRandom().nextLong(hero.getClick() + hero.getBaseDefense()));
-                    String smsg = hero.getFormatName() + "使用了技能" + skill.getName() + "提升了" + reduce + "点防御力";
+                    String smsg = hero.getFormatName() + "使用了技能" + skill.getName() + "提升了" + StringUtils.formatNumber(reduce) + "点防御力";
                     skill.addMessage(smsg);
                     monster.addBattleSkillDesc(smsg);
                     harm -= reduce;
                     if (harm < 0) harm = 0;
                     hero.addHp(-harm);
                     String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() +
-                            " 造成了" + harm + "的伤害。";
+                            " 造成了" + StringUtils.formatNumber(harm) + "的伤害。";
                     skill.addMessage(msg);
                     monster.addBattleDesc(msg);
                     return false;
@@ -199,14 +217,14 @@ public class SwindlerSkill extends SkillLayout {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long n = hero.getRandom().nextLong(hero.getClick() / 70000 + 15);
-                    if(n > 10000){
+                    if (n > 10000) {
                         n = hero.getRandom().nextInt(10000);
                     }
                     boolean coinSide = hero.getRandom().nextBoolean();
                     String coin = hero.getFormatName() + "开启" + iskll.getName() + ",抛了一次硬币,结果为" + (coinSide ? "正" : "反");
                     skill.addMessage(coin);
                     monster.addBattleSkillDesc(coin);
-                    if (!coinSide && SkillFactory.getSkill("欺诈师", hero, dialog).isActive()) {
+                    if (!coinSide && SkillFactory.getSkill("欺诈师", hero).isActive()) {
                         coinSide = hero.getRandom().nextBoolean();
                         coin = "欺诈师" + hero.getFormatName() + "又抛了一次硬币,结果为" + (coinSide ? "正" : "反");
                         Achievement.swindler.enable(hero);
@@ -216,15 +234,15 @@ public class SwindlerSkill extends SkillLayout {
 
                     if (coinSide) {
                         long harm = n * hero.getAttackValue();
-                        if(harm < 0)harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1) + 1;
+                        if (harm < 0) harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1) + 1;
                         monster.addHp(-harm);
                         String msg = hero.getFormatName() + "攻击了" + monster.getFormatName() +
-                                " 造成了" + harm + "的伤害。";
+                                " 造成了" + StringUtils.formatNumber(harm) + "的伤害。";
                         skill.addMessage(msg);
                         monster.addBattleDesc(msg);
                     } else {
                         long harm = monster.getAtk() - hero.getDefenseValue();
-                        if(harm < 0){
+                        if (harm < 0) {
                             harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1) + 1;
                         }
                         if (hero.isParry()) {
@@ -235,7 +253,7 @@ public class SwindlerSkill extends SkillLayout {
                         harm *= n;
                         hero.addHp(-harm);
                         String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() +
-                                " 造成了" + harm + "的伤害。";
+                                " 造成了" + StringUtils.formatNumber(harm) + "的伤害。";
                         skill.addMessage(msg);
                         monster.addBattleDesc(msg);
                     }
@@ -264,7 +282,7 @@ public class SwindlerSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return SkillFactory.getSkill("点攻", hero, dialog).isActive()||SkillFactory.getSkill("点防",hero,dialog).isActive();
+                    return SkillFactory.getSkill("点攻", hero).isActive() || SkillFactory.getSkill("点防", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -298,13 +316,13 @@ public class SwindlerSkill extends SkillLayout {
                 public void setActive(boolean active) {
                     if (active) {
                         long baseHarm = getHero().getRandom().nextLong((hero.getClick() + hero.getBaseDefense()) * hero.getMaxMazeLev() + 1) + 100;
-                        if(baseHarm < 0) {
-                            baseHarm = Integer.MAX_VALUE/100;
+                        if (baseHarm < 0) {
+                            baseHarm = Integer.MAX_VALUE / 100;
                         }
                         setBaseHarm(baseHarm);
                         long additionHarm = getHero().getRandom().nextLong((hero.getClick() + hero.getBaseAttackValue()) * hero.getMaxMazeLev() + 1) + 100;
-                        if(additionHarm < 0){
-                            additionHarm = Integer.MAX_VALUE/2;
+                        if (additionHarm < 0) {
+                            additionHarm = Integer.MAX_VALUE / 2;
                         }
                         setAdditionHarm(additionHarm);
                     }
@@ -326,7 +344,7 @@ public class SwindlerSkill extends SkillLayout {
                     StringBuilder builder = new StringBuilder();
                     builder.append("无需技能点激活，每前进100层迷宫随机激活。<br>技能叠加的伤害数值在激活的时候随机生成。激活后每100层变换一次技能伤害值。<br>");
                     builder.append(skill.getProbability()).append("%的概率释放，造成").
-                            append(!skill.isActive() ? "????" : ((hero.getAttackValue() + iskll.getBaseHarm()) + " - " + (hero.getAttackValue() + iskll.getBaseHarm() + iskll.getAdditionHarm()))).
+                            append(!skill.isActive() ? "????" : (StringUtils.formatNumber((hero.getAttackValue() + iskll.getBaseHarm())) + " - " + StringUtils.formatNumber((hero.getAttackValue() + iskll.getBaseHarm() + iskll.getAdditionHarm())))).
                             append("的伤害。");
                     return builder.toString();
                 }
@@ -336,12 +354,12 @@ public class SwindlerSkill extends SkillLayout {
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = hero.getAttackValue() +
                             iskll.getBaseHarm() + hero.getRandom().nextLong(iskll.getAdditionHarm());
-                    if(harm<0){
+                    if (harm < 0) {
                         harm = Integer.MAX_VALUE;
                     }
                     monster.addHp(-harm);
                     String msg = hero.getFormatName() + "使用了技能" + skill.getName() +
-                            "，对" + monster.getFormatName() + "造成了" + harm + "的伤害。";
+                            "，对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "的伤害。";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;
@@ -392,7 +410,7 @@ public class SwindlerSkill extends SkillLayout {
                     String coin = hero.getFormatName() + "抛了一次硬币,结果为" + (coinSide ? "正" : "反");
                     skill.addMessage(coin);
                     monster.addBattleSkillDesc(coin);
-                    if (!coinSide && SkillFactory.getSkill("欺诈师", hero, dialog).isActive()) {
+                    if (!coinSide && SkillFactory.getSkill("欺诈师", hero).isActive()) {
                         coinSide = hero.getRandom().nextBoolean();
                         coin = "欺诈师" + hero.getFormatName() + "又抛了一次硬币,结果为" + (coinSide ? "正" : "反");
                         Achievement.swindler.enable(hero);
@@ -402,7 +420,7 @@ public class SwindlerSkill extends SkillLayout {
                     if (coinSide) {
                         long harm = hero.getAttackValue();
                         monster.addHp(-harm);
-                        msg = hero.getFormatName() + "进行了一次攻击，对" + monster.getFormatName() + "造成了" + harm + "的伤害。";
+                        msg = hero.getFormatName() + "进行了一次攻击，对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "的伤害。";
                         skill.addMessage(msg);
                         monster.addBattleDesc(msg);
                     }

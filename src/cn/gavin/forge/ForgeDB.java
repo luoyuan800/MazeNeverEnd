@@ -147,11 +147,11 @@ public class ForgeDB {
         database.execSQL(sql);
         sql = String.format(base, "叶良辰的内裤", "龙皮-龙须-龙须-龙须-龙须", "ADD_HIT_RATE:51-ADD_DODGE_RATE:10", "ADD_PER_ATK:61-ADD_PARRY:90", HatBuilder.type, "#FF8C00");
         database.execSQL(sql);
-        sql = String.format(base, "Soi●残缺(暴击)", "食人鸟毛-鼠筋-鼠筋-鼠筋-鼠筋", "ADD_ATK:~20000-ADD_DEF:~20000-ADD_UPPER_HP:~20000", "ADD_PER_UPPER_HP:~15-ADD_HIT_RATE:30-ADD_PARRY:30-ADD_DODGE_RATE:10-ADD_CLICK_AWARD:10-ADD_CLICK_POINT-AWARD:1", HatBuilder.type, "#FF8C00");
+        sql = String.format(base, "Soi●残缺(暴击)", "食人鸟毛-鼠筋-鼠筋-鼠筋-鼠筋", "ADD_ATK:~20000-ADD_DEF:~20000-ADD_UPPER_HP:~20000", "ADD_PER_UPPER_HP:~15-ADD_HIT_RATE:30-ADD_PARRY:30-ADD_DODGE_RATE:10-ADD_CLICK_AWARD:10-ADD_CLICK_POINT_AWARD:1", HatBuilder.type, "#FF8C00");
         database.execSQL(sql);
-        sql = String.format(base, "Soi●残缺(格挡)", "鼠骨-鼠筋-鼠骨-鼠骨-鼠骨",  "ADD_ATK:~20000-ADD_DEF:~20000-ADD_UPPER_HP:~20000", "ADD_PER_UPPER_HP:~25-ADD_HIT_RATE:20-ADD_PARRY:30-ADD_DODGE_RATE:10-ADD_CLICK_AWARD:10-ADD_CLICK_POINT-AWARD:1", NecklaceBuilder.type, "#FF8C00");
+        sql = String.format(base, "Soi●残缺(格挡)", "鼠骨-鼠筋-鼠骨-鼠骨-鼠骨",  "ADD_ATK:~20000-ADD_DEF:~20000-ADD_UPPER_HP:~20000", "ADD_PER_UPPER_HP:~25-ADD_HIT_RATE:20-ADD_PARRY:30-ADD_DODGE_RATE:10-ADD_CLICK_AWARD:10-ADD_CLICK_POINT_AWARD:1", NecklaceBuilder.type, "#FF8C00");
         database.execSQL(sql);
-        sql = String.format(base, "Soi●残缺(闪避)", "硝石-紫熏木-紫熏木-紫熏木-紫熏木",  "ADD_ATK:~20000-ADD_DEF:~20000-ADD_UPPER_HP:~20000", "ADD_PER_UPPER_HP:~35-ADD_HIT_RATE:20-ADD_PARRY:30-ADD_DODGE_RATE:20-ADD_CLICK_AWARD:10-ADD_CLICK_POINT-AWARD:1", RingBuilder.type, "#FF8C00");
+        sql = String.format(base, "Soi●残缺(闪避)", "硝石-紫熏木-紫熏木-紫熏木-紫熏木",  "ADD_ATK:~20000-ADD_DEF:~20000-ADD_UPPER_HP:~20000", "ADD_PER_UPPER_HP:~35-ADD_HIT_RATE:20-ADD_PARRY:30-ADD_DODGE_RATE:20-ADD_CLICK_AWARD:10-ADD_CLICK_POINT_AWARD:1", RingBuilder.type, "#FF8C00");
         database.execSQL(sql);
 
     }

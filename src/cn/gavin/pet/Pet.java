@@ -1,22 +1,18 @@
 package cn.gavin.pet;
 
 import android.content.Context;
-
 import cn.gavin.Achievement;
 import cn.gavin.Element;
 import cn.gavin.Hero;
-import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.pet.skill.PetSkill;
-import cn.gavin.pet.skill.PetSkillList;
-import cn.gavin.utils.MazeContents;
 import cn.gavin.monster.Monster;
 import cn.gavin.palace.Base;
 import cn.gavin.palace.nskill.NSkill;
-import cn.gavin.pet.skill.GoldenSearcher;
 import cn.gavin.pet.skill.HealthSkill;
-import cn.gavin.pet.skill.QuickGrow;
+import cn.gavin.pet.skill.PetSkill;
+import cn.gavin.pet.skill.PetSkillList;
 import cn.gavin.skill.SkillFactory;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
@@ -28,7 +24,6 @@ import cn.gavin.utils.StringUtils;
 public class Pet extends Base {
     private NSkill skill;
     private long intimacy;
-    private int image;
     private long deathCount;
     private String type;
     private String id;
@@ -41,14 +36,18 @@ public class Pet extends Base {
     private long def_rise = 5;
     private long hp_rise = 20;
     private String owner;
+    private String ownerId;
 
 
     public void click() {
+        if(!MazeContents.hero.getUuid().equals(getOwnerId()) && MazeContents.hero.getUpperAtk() < getMaxAtk()/2){
+            return;
+        }
         intimacy++;
-        if (intimacy > 50000000) {
+        if (intimacy > 50000000 || MazeContents.hero.getUpperAtk() < getMaxAtk()/4) {
             intimacy--;
         }
-        if (getRandom().nextLong(intimacy) > 2000) {
+        if (getRandom().nextLong(intimacy) > 3000) {
             uHp += 100;
             atk += 50;
             def += 150;
@@ -74,7 +73,7 @@ public class Pet extends Base {
     public void addHp(long hp) {
         super.addHp(hp);
         if (this.hp <= 0) {
-            if (SkillFactory.getSkill("爱心", MazeContents.hero, null).isActive()) {
+            if (SkillFactory.getSkill("爱心", MazeContents.hero).isActive()) {
                 intimacy *= 0.9;
             } else {
                 intimacy *= 0.6;
@@ -84,6 +83,13 @@ public class Pet extends Base {
     }
 
     public void setSkill(NSkill skill) {
+        if (skill != null) {
+            if (skill instanceof PetSkill) {
+                this.skill = skill;
+            } else {
+                addSkill(skill);
+            }
+        }
         this.skill = skill;
     }
 
@@ -91,10 +97,10 @@ public class Pet extends Base {
         return skill;
     }
 
-    public NSkill getAllSkill(){
-        if(skill != null){
+    public NSkill getAllSkill() {
+        if (skill != null) {
             return skill;
-        }else if(!getSkills().isEmpty()){
+        } else if (!getSkills().isEmpty()) {
             return getSkills().iterator().next();
         }
         return null;
@@ -109,7 +115,7 @@ public class Pet extends Base {
             rate = 98;
         }
         double current = random.nextInt(100) + random.nextDouble();
-        if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 5 && rate > current) {
+        if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 17 && rate > current) {
             Pet pet = cPet(monster, random);
             if (pet == null) return null;
             Achievement.pet.enable(MazeContents.hero);
@@ -120,7 +126,7 @@ public class Pet extends Base {
     }
 
     public static Pet cPet(Monster monster, Random random) {
-        if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 5) {
+        if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 17) {
             Pet pet = new Pet();
             pet.setElement(monster.getElement());
             pet.setName(monster.getName());
@@ -133,9 +139,11 @@ public class Pet extends Base {
             pet.setAtk(monster.getAtk());
             pet.setHp(hp);
             int index = Monster.getIndex(pet.getName());
-            if (index >= 0 && index < Monster.lastNames.length - 7) {
+            if(MazeContents.hero.ismV() && index%2==0){
+                return null;
+            }
+            if (index >= 0 && index < Monster.lastNames.length - 11) {
                 pet.setType(Monster.lastNames[index]);
-                setImage(pet, index);
             } else {
                 return null;
             }
@@ -143,9 +151,10 @@ public class Pet extends Base {
             pet.setIntimacy(0l);
             pet.setSex(random.nextInt(2));
             pet.setOwner(MazeContents.hero.getName());
-            if((SkillFactory.getSkill("神赋", MazeContents.hero, null).isActive() && random.nextInt(100) < 30) || random.nextInt(5000) < 5){
+            pet.setOwnerId(MazeContents.hero.getUuid());
+            if ((SkillFactory.getSkill("神赋", MazeContents.hero).isActive() && random.nextInt(100) < 30) || random.nextInt(5000) < 5) {
                 int sindex = random.nextInt(PetSkillList.values().length);
-                if(sindex == 0 || sindex == 1){
+                if (sindex == 0 || sindex == 1) {
                     sindex += random.nextInt(4);
                 }
                 NSkill petS = PetSkillList.values()[sindex].getSkill(pet);
@@ -154,10 +163,10 @@ public class Pet extends Base {
                 } else {
                     pet.addSkill(petS);
                 }
-            }else if(random.nextInt(1000) == 1){
+            } else if (random.nextInt(1000) == 1) {
                 pet.setSkill(new HealthSkill());
             }
-            if(SkillFactory.getSkill("霸气", MazeContents.hero, null).isActive()){
+            if (SkillFactory.getSkill("霸气", MazeContents.hero).isActive()) {
                 pet.setAtk_rise(pet.getAtk_rise() * 3);
                 pet.setDef_rise(pet.getDef_rise() * 3);
                 pet.setHp_rise(pet.getHp_rise() * 3);
@@ -169,112 +178,12 @@ public class Pet extends Base {
         }
     }
 
-    public static void setImage(Pet pet, int index) {
-        switch (index) {
-            case 0:
-                pet.image = R.drawable.zl;
-                break;
-            case 1:
-                pet.image = R.drawable.qy;
-                break;
-            case 2:
-                pet.image = R.drawable.pc;
-                break;
-            case 3:
-                pet.image = R.drawable.feie;
-                break;
-            case 4:
-                pet.image = R.drawable.zz;
-                break;
-            case 5:
-                pet.image = R.drawable.laoshu;
-                break;
-            case 6:
-                pet.image = R.drawable.mayi;
-                break;
-            case 7:
-                pet.image = R.drawable.laohu;
-                break;
-            case 8:
-                pet.image = R.drawable.jiao;
-                break;
-            case 9:
-                pet.image = R.drawable.xiezi;
-                break;
-            case 10:
-                pet.image = R.drawable.srn;
-                break;
-            case 11:
-                pet.image = R.drawable.bianfu;
-                break;
-            case 12:
-                pet.image = R.drawable.se;
-                break;
-            case 13:
-                pet.image = R.drawable.niu;
-                break;
-            case 14:
-                pet.image = R.drawable.wugui;
-                break;
-            case 15:
-                pet.image = R.drawable.santoushe;
-                break;
-            case 16:
-                pet.image = R.drawable.ciwei;
-                break;
-            case 17:
-                pet.image = R.drawable.lan;
-                break;
-            case 18:
-                pet.image = R.drawable.jingling;
-                break;
-            case 19:
-                pet.image = R.drawable.jiangshi;
-                break;
-            case 20:
-                pet.image = R.drawable.fengh;
-                break;
-            case 21:
-                pet.image = R.drawable.long_pet;
-                break;
-            case 24:
-                pet.image = R.drawable.xion;
-                break;
-            default:
-                pet.image = R.drawable.h_4_s;
-        }
-    }
-
-    public static long die(long num) {
-        if (num == 0) return 0;
-        if (num > 100000) {
-            return 10;
-        }
-        if (num > 10000000) {
-            return 20;
-        }
-        if (num > 100000000) {
-            return 30;
-        }
-        if (num > 1000000000) {
-            return 40;
-        }
-        if (num > 10000000000l) {
-            return 50;
-        }
-        return 5;
-    }
-
     public long getMaxAtk() {
         return atk;
     }
 
     public long getMaxDef() {
         return def;
-    }
-
-    public int getImage() {
-        return image;
     }
 
     public long getIntimacy() {
@@ -291,6 +200,10 @@ public class Pet extends Base {
 
     public void restore() {
         this.hp = getUHp();
+    }
+
+    public void restoreHalf() {
+        this.hp = getUHp() / 2;
     }
 
     public void releasePet(Hero hero, MainGameActivity context) {
@@ -366,6 +279,9 @@ public class Pet extends Base {
     }
 
     public void setfName(String fName) {
+        if (!StringUtils.isNotEmpty(fName)) {
+            fName = "未知";
+        }
         this.fName = fName;
     }
 
@@ -374,6 +290,9 @@ public class Pet extends Base {
     }
 
     public void setmName(String mName) {
+        if (!StringUtils.isNotEmpty(mName)) {
+            mName = "未知";
+        }
         this.mName = mName;
     }
 
@@ -400,7 +319,7 @@ public class Pet extends Base {
             rate = 98;
         }
 
-        if(rate <= 0) {
+        if (rate <= 0) {
             rate = 0.01;
         }
 
@@ -408,7 +327,7 @@ public class Pet extends Base {
         if (!f.getId().equals(m.getId()) && rate > current) {
             Pet egg = new Pet();
             String type = m.getType();
-            if("蛋".equals(type) || f.getName().endsWith("蛋") || m.getName().endsWith("蛋")){
+            if ("蛋".equals(type) || f.getName().endsWith("蛋") || m.getName().endsWith("蛋")) {
                 return null;
             }
             String firstName = StringUtils.split(f.getName(), "的")[0];
@@ -418,20 +337,24 @@ public class Pet extends Base {
             egg.setIntimacy(1000l);
             egg.setType("蛋");
             egg.setDeathCount(255 - (f.getDeathCount() + m.getDeathCount()));
+            if (egg.getDeathCount() <= 0) {
+                egg.setDeathCount(5);
+            }
             egg.setfName(f.getName());
             egg.setmName(m.getName());
             egg.setHp(f.getUHp() / 2 + random.nextLong(m.getHp()));
             egg.setAtk(f.getMaxAtk() / 2 + random.nextLong(m.getMaxAtk()));
             egg.setDef(f.getMaxDef() / 2 + random.nextLong(m.getMaxDef()));
-            egg.setAtk_rise((f.getAtk_rise() + m.getAtk_rise())/2);
-            egg.setDef_rise((f.getDef_rise() + m.getDef_rise())/2);
-            egg.setHp_rise((f.getHp_rise() + m.getHp_rise())/2);
+            egg.setAtk_rise((f.getAtk_rise() + m.getAtk_rise()) / 2);
+            egg.setDef_rise((f.getDef_rise() + m.getDef_rise()) / 2);
+            egg.setHp_rise((f.getHp_rise() + m.getHp_rise()) / 2);
             egg.setSex(random.nextInt(2));
             egg.setLev(lev);
             egg.setElement(Element.values()[random.nextInt(Element.values().length - 1)]);
             egg.setOwner(hero.getName());
+            egg.setOwnerId(hero.getUuid());
             if (!f.getType().equals(m.getType())) {
-                if (random.nextInt(10000) + random.nextFloat() < 21.115) {
+                if (random.nextInt(10000) + random.nextFloat() < (31.115 + hero.getPetAbe())) {
                     String lastName = Monster.lastNames[random.nextInt(Monster.lastNames.length)];
                     egg.setName("变异的" + lastName);
                     if (lastName.equals("作者")) {
@@ -444,30 +367,31 @@ public class Pet extends Base {
                     egg.hp_rise = MazeContents.hero.MAX_HP_RISE;
                 }
             }
-            if((SkillFactory.getSkill("恩赐", MazeContents.hero, null).isActive() && random.nextInt(100) < 40) || random.nextInt(1000) < 5){
+            if ((SkillFactory.getSkill("恩赐", MazeContents.hero).isActive() && random.nextInt(100) < 45) || random.nextInt(1000) < 5) {
                 NSkill petS = PetSkillList.values()[random.nextInt(PetSkillList.values().length)].getSkill(egg);
                 if (petS instanceof PetSkill) {
                     egg.setSkill(petS);
                 } else {
                     egg.addSkill(petS);
                 }
-            }if(random.nextInt(1000) < 10){
+            }
+            if (random.nextInt(1000) < 10) {
                 egg.setSkill(new HealthSkill());
             }
             NSkill pSkill = egg.getAllSkill();
-            if(pSkill == null){
-                if(f.getAllSkill()!=null && m.getAllSkill()!=null){
-                    if(random.nextBoolean()){
+            if (pSkill == null) {
+                if (f.getAllSkill() != null && m.getAllSkill() != null) {
+                    if (random.nextBoolean()) {
                         pSkill = f.getAllSkill();
-                    }else{
+                    } else {
                         pSkill = m.getAllSkill();
                     }
-                }else if(f.getAllSkill()!=null){
+                } else if (f.getAllSkill() != null) {
                     pSkill = f.getAllSkill();
-                } else if(m.getAllSkill() !=null){
+                } else if (m.getAllSkill() != null) {
                     pSkill = m.getAllSkill();
                 }
-                if(pSkill!= null){
+                if (pSkill != null) {
                     if (pSkill instanceof PetSkill) {
                         egg.setSkill(pSkill);
                     } else {
@@ -476,7 +400,6 @@ public class Pet extends Base {
                 }
             }
 
-            PetDB.save(egg);
             Achievement.egg.enable(hero);
             return egg;
         } else {
@@ -514,5 +437,21 @@ public class Pet extends Base {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getColor() {
+        return color;
     }
 }

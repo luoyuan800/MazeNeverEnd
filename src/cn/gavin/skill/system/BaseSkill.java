@@ -23,6 +23,7 @@ import cn.gavin.skill.expression.UseExpression;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.PropertySkill;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Created by luoyuan on 9/13/15.
@@ -36,79 +37,111 @@ public class BaseSkill extends SkillLayout {
     public BaseSkill(Context context) {
         super(context);
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.skill_layout_base, (ViewGroup) this.findViewById(R.id.skill_dialog));
+        View view = inflater.inflate(R.layout.skill_layout_base, (ViewGroup) this.findViewById(R.id.base_skill_layout_root));
         this.addView(view);
         this.view = view;
         this.context = context;
     }
 
-    public void init(SkillDialog dialog) {
-        Skill skill = SkillFactory.getSkill("勇者之击", hero, dialog);
+    public void init() {
+        Skill skill = SkillFactory.getSkill("勇者之击", hero);
         Button button = (Button) view.findViewById(R.id.base_skill_r_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("闪避", hero, dialog);
+        skill = SkillFactory.getSkill("闪避", hero);
         button = (Button) view.findViewById(R.id.base_skill_s_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("铁拳", hero, dialog);
+        skill = SkillFactory.getSkill("铁拳", hero);
         button = (Button) view.findViewById(R.id.skill_base_t_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("反弹", hero, dialog);
+        skill = SkillFactory.getSkill("反弹", hero);
         button = (Button) view.findViewById(R.id.skill_base_f_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("巨大化", hero, dialog);
+        skill = SkillFactory.getSkill("巨大化", hero);
         button = (Button) view.findViewById(R.id.skill_base_j_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("定身", hero, dialog);
+        skill = SkillFactory.getSkill("定身", hero);
         button = (Button) view.findViewById(R.id.skill_base_d_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("超能量", hero, dialog);
+        skill = SkillFactory.getSkill("超能量", hero);
         button = (Button) view.findViewById(R.id.skill_base_c_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("瞬间移动", hero, dialog);
+        skill = SkillFactory.getSkill("瞬间移动", hero);
         button = (Button) view.findViewById(R.id.skill_base_sy_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("斩击", hero, dialog);
+        skill = SkillFactory.getSkill("斩击", hero);
         button = (Button) view.findViewById(R.id.skill_base_zj_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("裂空剑", hero, dialog);
+        skill = SkillFactory.getSkill("裂空剑", hero);
         button = (Button) view.findViewById(R.id.skill_base_lkj_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("传送", hero, dialog);
+        skill = SkillFactory.getSkill("传送", hero);
         button = (Button) view.findViewById(R.id.skill_base_cs_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("错位", hero, dialog);
+        skill = SkillFactory.getSkill("错位", hero);
         button = (Button) view.findViewById(R.id.skill_base_cw_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("原能力", hero, dialog);
+        skill = SkillFactory.getSkill("原能力", hero);
         button = (Button) view.findViewById(R.id.skill_base_ynl_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("寻宝", hero, dialog);
+        skill = SkillFactory.getSkill("寻宝", hero);
         button = (Button) view.findViewById(R.id.skill_base_xb_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("超防御", hero, dialog);
+        skill = SkillFactory.getSkill("超防御", hero);
         button = (Button) view.findViewById(R.id.skill_base_cfy_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
 
-        skill = SkillFactory.getSkill("重击", hero, dialog);
+        skill = SkillFactory.getSkill("重击", hero);
         button = (Button) view.findViewById(R.id.skill_base_hit_button);
+        button.setOnClickListener(buildOnClickListener(skill));
         skill.setSkillButton(button);
+        skills.add(skill);
     }
 
-    public static Skill getSkill(String name, Hero hero, final SkillDialog dialog) {
+    public static Skill getSkill(String name, Hero hero) {
         Skill skill = null;
         if (name.equals("勇者之击")) {
             AttackSkill attackSkill = new AttackSkill();
@@ -118,7 +151,7 @@ public class BaseSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (skill.isActive() || hero.getSkillPoint() > 0) && !SkillFactory.getSkill("魔王天赋", hero, dialog).isActive();
+                    return (skill.isActive() || hero.getSkillPoint() > 0) && !SkillFactory.getSkill("魔王天赋", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -128,8 +161,8 @@ public class BaseSkill extends SkillLayout {
                     StringBuilder builder = new StringBuilder();
                     builder.append("勇者的基本技能，学会了才能踏上征途。<br>");
                     builder.append(attackSkill.getProbability()).append("%概率释放<br>");
-                    builder.append("造成额外的").append(attackSkill.getBaseHarm()).append(" - ").
-                            append(attackSkill.getBaseHarm() + attackSkill.getAdditionHarm()).append("伤害").append("<br>").
+                    builder.append("造成额外的").append(StringUtils.formatNumber(attackSkill.getBaseHarm())).append(" - ").
+                            append(StringUtils.formatNumber(attackSkill.getBaseHarm() + attackSkill.getAdditionHarm())).append("伤害").append("<br>").
                             append("不可与魔王技能同时激活");
                     return builder.toString();
                 }
@@ -148,7 +181,7 @@ public class BaseSkill extends SkillLayout {
                     if(harm > hero.getBaseAttackValue() * 10){
                         harm/=10;
                     }
-                    String skillmsg = skill.format(hero.getFormatName() + "使用了技能" + skill.getName() + "对" + monster.getFormatName() + "造成了" + harm + "点伤害");
+                    String skillmsg = skill.format(hero.getFormatName() + "使用了技能" + skill.getName() + "对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点伤害");
                     context.addMessage(skillmsg);
                     monster.addBattleSkillDesc(skillmsg);
                     monster.addHp(-harm);
@@ -185,7 +218,7 @@ public class BaseSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("勇者之击", hero, dialog).isActive();
+                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("勇者之击", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -231,7 +264,7 @@ public class BaseSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("超能量", hero, dialog).isActive();
+                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("超能量", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -249,7 +282,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = hero.getRandom().nextLong(hero.getHp() + 1);
-                    String msg = skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "攻击" + monster.getFormatName() + "造成了" + harm + "点伤害");
+                    String msg = skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "攻击" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点伤害");
                     context.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     monster.addHp(-harm);
@@ -276,7 +309,7 @@ public class BaseSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("勇者之击", hero, dialog).isActive();
+                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("勇者之击", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -295,7 +328,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = hero.getUpperAtk() + hero.getRandom().nextLong(hero.getStrength() / 100 + 1);
-                    String msg1 = skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "攻击" + monster.getFormatName() + "造成了" + harm + "点伤害");
+                    String msg1 = skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "攻击" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点伤害");
                     context.addMessage(msg1);
                     monster.addBattleSkillDesc(msg1);
                     monster.addHp(-harm);
@@ -309,7 +342,7 @@ public class BaseSkill extends SkillLayout {
                             e.printStackTrace();
                         }
                         harm = hero.getAttackValue() + hero.getRandom().nextLong(hero.getStrength() / 100 + 1);
-                        String msg3 = skill.format(hero.getFormatName() + "攻击眩晕中的" + monster.getFormatName() + "造成了" + harm + "点伤害");
+                        String msg3 = skill.format(hero.getFormatName() + "攻击眩晕中的" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点伤害");
                         context.addMessage(msg3);
                         monster.addBattleSkillDesc(msg3);
                         monster.addHp(-harm);
@@ -337,7 +370,7 @@ public class BaseSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("闪避", hero, dialog).isActive();
+                    return (skill.isActive() || hero.getSkillPoint() > 0) && SkillFactory.getSkill("闪避", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -361,7 +394,7 @@ public class BaseSkill extends SkillLayout {
                     context.addMessage(msg1);
                     monster.addBattleSkillDesc(msg1);
                     long rHarm = Math.round(harm * ((50f + skill.getProbability() * 5f) / 100f));
-                    String msg2 = skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "反弹了" + rHarm + "的伤害");
+                    String msg2 = skill.format(hero.getFormatName() + "使用技能" + skill.getName() + "反弹了" + StringUtils.formatNumber(rHarm) + "的伤害");
                     context.addMessage(msg2);
                     monster.addBattleSkillDesc(msg2);
                     monster.addHp(-rHarm);
@@ -391,7 +424,7 @@ public class BaseSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (skill.isActive() || hero.getSkillPoint() > 0) && (SkillFactory.getSkill("闪避", hero, dialog).isActive() || SkillFactory.getSkill("铁拳", hero, dialog).isActive());
+                    return (skill.isActive() || hero.getSkillPoint() > 0) && (SkillFactory.getSkill("闪避", hero).isActive() || SkillFactory.getSkill("铁拳", hero).isActive());
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -412,13 +445,13 @@ public class BaseSkill extends SkillLayout {
                         harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1);
                     }
                     hero.addHp(-harm);
-                    String msg1 = skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害");
+                    String msg1 = skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点伤害");
                     context.addMessage(msg1);
                     monster.addBattleSkillDesc(msg1);
                     if (!hero.isOnSkill()) {
                         final long atk = hero.getRandom().nextLong(Math.round(hero.getAttackValue() + hero.getAttackValue() * (25f + skill.getProbability() * 5f) / 100f) + 1);
                         hero.setSkillAdditionAtk(atk);
-                        String msg2 = skill.format(hero.getFormatName() + "触发了" + skill.getName() + "攻击力增加了" + atk);
+                        String msg2 = skill.format(hero.getFormatName() + "触发了" + skill.getName() + "攻击力增加了" + StringUtils.formatNumber(atk));
                         context.addMessage(msg2);
                         monster.addBattleSkillDesc(msg2);
                         hero.setOnSkill(true);
@@ -457,7 +490,7 @@ public class BaseSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (skill.isActive() || hero.getSkillPoint() > 0) && (SkillFactory.getSkill("铁拳", hero, dialog).isActive());
+                    return (skill.isActive() || hero.getSkillPoint() > 0) && (SkillFactory.getSkill("铁拳", hero).isActive());
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -512,9 +545,9 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && (SkillFactory.getSkill("反弹", hero, dialog).isActive() ||
-                            SkillFactory.getSkill("巨大化", hero, dialog).isActive() ||
-                            SkillFactory.getSkill("定身", hero, dialog).isActive());
+                            && (SkillFactory.getSkill("反弹", hero).isActive() ||
+                            SkillFactory.getSkill("巨大化", hero).isActive() ||
+                            SkillFactory.getSkill("定身", hero).isActive());
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -536,14 +569,14 @@ public class BaseSkill extends SkillLayout {
                         harm = hero.getRandom().nextLong(hero.getMaxMazeLev() + 1);
                     }
                     hero.addHp(-harm);
-                    String msg1 = skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + harm + "点伤害");
+                    String msg1 = skill.format(monster.getFormatName() + "攻击了" + hero.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点伤害");
                     context.addMessage(msg1);
                     monster.addBattleSkillDesc(msg1);
                     if (hero.isOnSkill()) {
                         final long hp = hero.getRandom().nextLong(Math.round(hero.getAttackValue() + hero.getAttackValue() * (80f + skill.getProbability() * 5f) / 100f) + 1);
                         hero.setSkillAdditionHp(hp);
                         hero.setOnSkill(true);
-                        String msg2 = skill.format(hero.getFormatName() + "触发了" + skill.getName() + "生命值上限增加了" + hp);
+                        String msg2 = skill.format(hero.getFormatName() + "触发了" + skill.getName() + "生命值上限增加了" + StringUtils.formatNumber(hp));
                         context.addMessage(msg2);
                         monster.addBattleSkillDesc(msg2);
                         new Thread(new Runnable() {
@@ -582,7 +615,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("超能量", hero, dialog).isActive();
+                            && SkillFactory.getSkill("超能量", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -635,7 +668,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("瞬间移动", hero, dialog).isActive();
+                            && SkillFactory.getSkill("瞬间移动", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -677,7 +710,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("超能量", hero, dialog).isActive() && (Sword.valueOf(hero.getSword()).ordinal() > Sword.金剑.ordinal());
+                            && SkillFactory.getSkill("超能量", hero).isActive() && (Sword.valueOf(hero.getSword()).ordinal() > Sword.金剑.ordinal());
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -686,7 +719,7 @@ public class BaseSkill extends SkillLayout {
                     AttackSkill ds = (AttackSkill) skill;
                     StringBuilder builder = new StringBuilder();
                     builder.append("高阶剑技能，需要装备武器阶位高于金剑才可以激活<br>");
-                    builder.append(ds.getProbability()).append("%的概率释放，造成额外的").append(ds.getBaseHarm()).append(" - ").append(ds.getBaseHarm() + ds.getAdditionHarm()).append("伤害");
+                    builder.append(ds.getProbability()).append("%的概率释放，造成额外的").append(StringUtils.formatNumber(ds.getBaseHarm())).append(" - ").append(StringUtils.formatNumber(ds.getBaseHarm() + ds.getAdditionHarm())).append("伤害");
                     return builder.toString();
                 }
             });
@@ -696,7 +729,7 @@ public class BaseSkill extends SkillLayout {
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = hero.getAttackValue() + ((AttackSkill) skill).getBaseHarm() + hero.getRandom().nextLong(((AttackSkill) skill).getAdditionHarm() + 1);
                     monster.addHp(-harm);
-                    String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，对" + monster.getName() + "造成了" + harm + "点伤害";
+                    String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，对" + monster.getName() + "造成了" + StringUtils.formatNumber(harm) + "点伤害";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;
@@ -731,7 +764,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("裂空剑", hero, dialog).isActive();
+                            && SkillFactory.getSkill("裂空剑", hero).isActive();
                 }
             });
             defendSkill.setDescription(new DescExpression() {
@@ -755,7 +788,7 @@ public class BaseSkill extends SkillLayout {
                     if (hero.getHp() <= 0) {
                         return false;
                     }
-                    String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了" + harm + "的伤害";
+                    String msg = monster.getFormatName() + "攻击了" + hero.getFormatName() + "，造成了" + StringUtils.formatNumber(harm) + "的伤害";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     hero.restore();
@@ -787,7 +820,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("原能力", hero, dialog).isActive();
+                            && SkillFactory.getSkill("原能力", hero).isActive();
                 }
             });
             iSkill.setDescription(new DescExpression() {
@@ -810,7 +843,7 @@ public class BaseSkill extends SkillLayout {
                         harm = hero.getAttackValue();
                     }
                     monster.addHp(-harm);
-                    String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，对" + monster.getFormatName() + "造成了" + harm + "伤害";
+                    String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "伤害";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     Achievement.R_hero.enable(hero);
@@ -850,7 +883,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("传送", hero, dialog).isActive();
+                            && SkillFactory.getSkill("传送", hero).isActive();
                 }
             });
             iskll.setDescription(new DescExpression() {
@@ -887,7 +920,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("斩击", hero, dialog).isActive();
+                            && SkillFactory.getSkill("斩击", hero).isActive();
                 }
             });
             iskll.setDescription(new DescExpression() {
@@ -913,7 +946,7 @@ public class BaseSkill extends SkillLayout {
                     } else {
                         long harm = hero.getAttackValue();
                         monster.addHp(-harm);
-                        String msg1 = hero.getFormatName() + "攻击了" + monster.getFormatName() + "造成了" + harm + "点伤害";
+                        String msg1 = hero.getFormatName() + "攻击了" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点伤害";
                         MainGameActivity.context.addMessage(msg1);
                         monster.addBattleSkillDesc(msg1);
                     }
@@ -950,7 +983,7 @@ public class BaseSkill extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return (skill.isActive() || hero.getSkillPoint() > 0)
-                            && SkillFactory.getSkill("错位", hero, dialog).isActive();
+                            && SkillFactory.getSkill("错位", hero).isActive();
                 }
             });
             iskll.setDescription(new DescExpression() {

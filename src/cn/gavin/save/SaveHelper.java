@@ -82,7 +82,7 @@ public class SaveHelper {
         editor.putLong("baseDefense", heroN.getBaseDefense());
         editor.putLong("click", heroN.getClick());
         editor.putLong("point", heroN.getPoint());
-        editor.putLong("material", heroN.getMaterial());
+        editor.putLong("n_material", heroN.getMaterial());
         editor.putLong("swordLev", heroN.getSwordLev());
         editor.putLong("armorLev", heroN.getArmorLev());
         editor.putString("swordName", heroN.getSword());
@@ -92,6 +92,7 @@ public class SaveHelper {
         editor.putLong("power", heroN.getPower());
         editor.putLong("agility", heroN.getAgility());
         editor.putLong("clickAward", heroN.getClickAward());
+        editor.putBoolean("mv", heroN.ismV());
         if (heroN.getRing() != null) {
             editor.putString("ring", heroN.getRing().getId());
         } else {
@@ -146,6 +147,7 @@ public class SaveHelper {
         editor.putLong("reset_skill", heroN.getResetSkillCount());
         editor.putInt("csm", maze.getCsmgl());
         editor.putString("uuid", heroN.getUuid());
+        editor.putFloat("pet_abe", heroN.getPetAbe());
         editor.apply();
     }
 

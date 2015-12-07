@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/main_control_buttons">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:id="@+id/main_control_buttons">
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
         <Button
-            android:id="@+id/pause_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:layout_weight="1"
-            android:focusableInTouchMode="false"
-            android:text="@string/pause_label"
-            android:textSize="12sp" />
+                android:id="@+id/pause_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:layout_weight="1"
+                android:focusableInTouchMode="false"
+                android:text="@string/pause_label"
+                android:textSize="12sp"/>
 
         <Button
-            android:id="@+id/upload_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:layout_weight="1"
-            android:focusableInTouchMode="false"
-            android:text="@string/upload_label"
-            android:textSize="10sp" />
+                android:id="@+id/upload_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:layout_weight="1"
+                android:focusableInTouchMode="false"
+                android:text="@string/upload_label"
+                android:textSize="10sp"/>
 
         <Button
-            android:id="@+id/save_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:layout_weight="1"
-            android:focusableInTouchMode="false"
-            android:text="存档"
-            android:textSize="12sp" />
+                android:id="@+id/save_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:layout_weight="1"
+                android:focusableInTouchMode="false"
+                android:text="存档"
+                android:textSize="12sp"/>
     </LinearLayout>
     <LinearLayout
             android:layout_width="fill_parent"
@@ -51,9 +51,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="fill_horizontal"
                 android:layout_weight="1"
-            android:focusableInTouchMode="false"
-            android:text="@string/reset_skill_label"
-                android:textSize="10sp" />
+                android:focusableInTouchMode="false"
+                android:text="@string/reset_skill_label"
+                android:textSize="10sp"/>
 
         <Button
                 android:id="@+id/rebirth_button"
@@ -61,59 +61,58 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="fill_horizontal"
                 android:layout_weight="1"
-            android:focusableInTouchMode="false"
-            android:text="转生"
-                android:textSize="12sp" />
+                android:focusableInTouchMode="false"
+                android:text="转生"
+                android:textSize="12sp"/>
 
         <Button
-                android:id="@+id/transfer_button"
+                android:id="@+id/shop_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="fill_horizontal"
                 android:layout_weight="1"
-            android:focusableInTouchMode="false"
-            android:enabled="false"
-                android:text="传送"
-                android:textSize="10sp" />
+                android:focusableInTouchMode="false"
+                android:text="商店"
+                android:textSize="12sp"/>
     </LinearLayout>
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
         <Button
-            android:id="@+id/skill_point_get_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:focusableInTouchMode="false"
-            android:text="获取技能点"
-            android:textSize="12sp" />
+                android:id="@+id/skill_point_get_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:focusableInTouchMode="false"
+                android:text="获取技能点"
+                android:textSize="12sp"/>
 
         <Button
-            android:id="@+id/lock_box_get_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:layout_weight="1"
-            android:focusableInTouchMode="false"
-            android:text="获取宝箱"
-            android:textSize="12sp" />
+                android:id="@+id/lock_box_get_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:layout_weight="1"
+                android:focusableInTouchMode="false"
+                android:text="获取宝箱"
+                android:textSize="12sp"/>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
         <Button
-            android:id="@+id/buy_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:focusableInTouchMode="false"
-            android:layout_weight="1"
-            android:text="@string/buy_label"
-            android:textSize="12sp" />
+                android:id="@+id/buy_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:focusableInTouchMode="false"
+                android:layout_weight="1"
+                android:text="@string/buy_label"
+                android:textSize="12sp"/>
     </LinearLayout>
 </LinearLayout>

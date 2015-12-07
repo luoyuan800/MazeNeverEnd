@@ -1,8 +1,14 @@
 package cn.gavin.maze;
 
+import java.util.List;
+
 import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.db.good.detail.Barrier;
+import cn.gavin.db.good.detail.HalfSail;
+import cn.gavin.db.good.detail.Medallion;
+import cn.gavin.db.good.detail.SafetyRope;
 import cn.gavin.monster.Monster;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.pet.Pet;
@@ -13,8 +19,6 @@ import cn.gavin.skill.SkillFactory;
 import cn.gavin.story.StoryHelper;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
-
-import java.util.List;
 
 /**
  * Created by gluo on 8/26/2015.
@@ -119,7 +123,10 @@ public class Maze {
 
                 addMessage(context, "-------------------");
             } else if (random.nextLong(850 + hunt) > 993 && random.nextLong(hero.getAgility()) > random.nextLong(6971)) {
-                long mate = random.nextLong(level * 300 + 1) + random.nextLong(hero.getAgility() / 1000 + 100) + 100;
+                long mate = random.nextLong(level * 30 + 1) + random.nextLong(hero.getAgility() / 10000 + 10) + 58;
+                if (mate > 10000) {
+                    mate = 9000 + random.nextLong(mate - 10000);
+                }
                 addMessage(context, hero.getFormatName() + "找到了一个宝箱， 获得了<font color=\"#FF8C00\">" + mate + "</font>锻造点数");
                 hero.addMaterial(mate);
                 addMessage(context, "-------------------");
@@ -142,7 +149,7 @@ public class Maze {
                 mazeLevelDetect();
                 addMessage(context, "-------------------");
             } else if (random.nextBoolean()) {
-                Skill skill1 = SkillFactory.getSkill("隐身", hero, context.getSkillDialog());
+                Skill skill1 = SkillFactory.getSkill("隐身", hero);
                 if (skill1.isActive() && skill1.perform()) {
                     continue;
                 }
@@ -174,16 +181,54 @@ public class Maze {
                         }
                     }
                 } else {
-                    streaking = 0;
-                    step = 0;
-                    String defeatedmsg = hero.getFormatName() + "被" + monster.getFormatName() + "打败了，回到迷宫第一层。";
-                    addMessage(context, defeatedmsg);
-                    monster.addBattleDesc(defeatedmsg);
                     if (level > 25) {
                         context.save();
                     }
-                    this.level = 1;
-                    hero.restore();
+                    Medallion medallion = Medallion.load();
+                    if (medallion.getCount() > 0) {
+                        medallion.setCount(medallion.getCount() - 1);
+                        String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
+                                "打败了。<br>" + hero.getFormatName() + "掏出金晃晃的" + medallion.getName() + "晃瞎了大家的双眼。<br>" + hero.getFormatName() + "和他的宠物们原地复活了。";
+                        addMessage(context, notDie);
+                        monster.addBattleDesc(notDie);
+                        hero.restoreHalf();
+                    } else {
+                        SafetyRope safetyRope = SafetyRope.load();
+                        if (safetyRope.getCount() > 0) {
+                            long slev = level / 10;
+                            safetyRope.setCount(safetyRope.getCount() - 1);
+                            String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
+                                    "打败了。<br>" + hero.getFormatName() + "因为" + safetyRope.getName() + "护体掉到了" + slev;
+                            addMessage(context, notDie);
+                            monster.addBattleDesc(notDie);
+                            hero.restoreHalf();
+                            streaking = 0;
+                            step = 0;
+                            this.level = slev;
+                        } else {
+                            HalfSail halfSail = HalfSail.load();
+                            if (halfSail.getCount() > 0) {
+                                long slev = level / 2;
+                                halfSail.setCount(halfSail.getCount() - 1);
+                                String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
+                                        "打败了。<br>" + hero.getFormatName() + "因为" + halfSail.getName() + "护体掉到了" + slev;
+                                addMessage(context, notDie);
+                                monster.addBattleDesc(notDie);
+                                hero.restoreHalf();
+                                streaking = 0;
+                                step = 0;
+                                this.level = slev;
+                            } else {
+                                streaking = 0;
+                                step = 0;
+                                String defeatedmsg = hero.getFormatName() + "被" + monster.getFormatName() + "打败了，掉回到迷宫第一层。";
+                                addMessage(context, defeatedmsg);
+                                monster.addBattleDesc(defeatedmsg);
+                                this.level = 1;
+                                hero.restore();
+                            }
+                        }
+                    }
                     lastSave = level;
                 }
                 monsterBook.addMonster(monster);
@@ -202,7 +247,7 @@ public class Maze {
                     case 3:
                         if (hero.getPets().size() > 0) {
                             addMessage(context, hero.getFormatName() + "和宠物们玩耍了一下会。");
-                            for(Pet pet : hero.getPets()){
+                            for (Pet pet : hero.getPets()) {
                                 pet.click();
                             }
                         } else {
@@ -274,7 +319,7 @@ public class Maze {
 //                    level--;
                 }
             }
-            if (PetDB.getPetCount(null) < hero.getPetSize() + 10) {
+            if (PetDB.getPetCount(null) < hero.getPetSize() + 30) {
                 Pet f = null;
                 Pet m = null;
                 List<Pet> pets = hero.getPets();
@@ -300,18 +345,25 @@ public class Maze {
                 if (f != null && m != null) {
                     Pet egg = Pet.egg(f, m, level, hero);
                     if (egg != null) {
-                        addMessage(MainGameActivity.context, f.getFormatName() + "和" + m.getFormatName() + "生了一个蛋。");
-                        if (hero.getPets().size() < hero.getPetSize()) {
-                            hero.getPets().add(egg);
+                        Barrier barrier = Barrier.load();
+                        if (barrier.getCount() > 0) {
+                            barrier.setCount(barrier.getCount() - 1);
+                            addMessage(MainGameActivity.context, f.getFormatName() + "和" + m.getFormatName() + "想生蛋。但是被" + hero.getFormatName() + "阻止了！");
+                        } else {
+                            PetDB.save(egg);
+                            addMessage(MainGameActivity.context, f.getFormatName() + "和" + m.getFormatName() + "生了一个蛋。");
+                            if (hero.getPets().size() < hero.getPetSize()) {
+                                hero.getPets().add(egg);
+                            }
                         }
                     }
                 }
 
             }
             if (level != 0 && level % 100 == 0) {
-                Skill fSkill = SkillFactory.getSkill("浮生百刃", hero, MainGameActivity.context.getSkillDialog());
-                Skill xSkill = SkillFactory.getSkill("虚无吞噬", hero, MainGameActivity.context.getSkillDialog());
-                boolean qzs = SkillFactory.getSkill("欺诈师", hero, MainGameActivity.context.getSkillDialog()).isActive();
+                Skill fSkill = SkillFactory.getSkill("浮生百刃", hero);
+                Skill xSkill = SkillFactory.getSkill("虚无吞噬", hero);
+                boolean qzs = SkillFactory.getSkill("欺诈师", hero).isActive();
                 if (qzs && (random.nextLong(hero.getMaxMazeLev() + 1000) > 1100)) {
                     fSkill.setActive(true);
                 }

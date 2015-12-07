@@ -12,8 +12,9 @@ import java.net.URL;
 import cn.bmob.v3.listener.SaveListener;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.utils.MazeContents;
+import cn.gavin.log.LogHelper;
 import cn.gavin.skill.Skill;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -23,15 +24,16 @@ public class Upload {
     private static String UPLOAD_URL = "http://mazeneverend.sinaapp.com";
 
     private MainGameActivity context;
-    public Upload(MainGameActivity context){
+
+    public Upload(MainGameActivity context) {
         this.context = context;
     }
 
-    public boolean upload(final Hero hero){
-        new Thread(){
-            public void run(){
+    public boolean upload(final Hero hero) {
+        new Thread() {
+            public void run() {
                 boolean check = MazeContents.checkCheat(hero);
-                if(check) {
+                if (check) {
                     PalaceObject object = new PalaceObject();
                     object.setHello(hero.getHello());
                     object.setAtk(hero.getUpperAtk().toString());
@@ -47,6 +49,15 @@ public class Upload {
                     object.setLev(hero.getMaxMazeLev());
                     object.setElement(hero.getElement().name());
                     object.setReCount(hero.getReincaCount());
+                    object.setUuid(hero.getUuid());
+                    try {
+                        String pkName = MainGameActivity.context.getPackageName();
+                        int versionCode = MainGameActivity.context.getPackageManager()
+                                .getPackageInfo(pkName, 0).versionCode;
+                        object.setVersion(versionCode);
+                    } catch (Exception e) {
+                        LogHelper.logException(e);
+                    }
                     object.save(context, new SaveListener() {
                         @Override
                         public void onSuccess() {
@@ -61,7 +72,7 @@ public class Upload {
                             context.getHandler().sendMessage(message);
                         }
                     });
-                }else{
+                } else {
                     context.getHandler().sendEmptyMessage(108);
                 }
             }
@@ -79,8 +90,8 @@ public class Upload {
             InputStreamReader reader = new InputStreamReader(con.getInputStream());
             BufferedReader bReader = new BufferedReader(reader);
             String line = null;
-            while((line = bReader.readLine())!=null){
-                if(line.matches(".*success.*")){
+            while ((line = bReader.readLine()) != null) {
+                if (line.matches(".*success.*")) {
                     return true;
                 }
             }
@@ -102,7 +113,7 @@ public class Upload {
         builder.append("&mazeLev=").append(hero.getMaxMazeLev());
         builder.append("&pay=").append(pay);
         Skill skill = hero.getFirstSkill();
-        if(skill!=null){
+        if (skill != null) {
             builder.append("&skill=").append(StringUtils.toHexString(skill.getName())).append("_").append(skill.getCount());
         }
         return builder.toString();

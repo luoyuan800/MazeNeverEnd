@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#ff63006a"
+    android:layout_height="match_parent">
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    >
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_net_pet"
+        android:src="@drawable/change_pet"
+        android:layout_gravity="center"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffe7d205"
+        android:textAlignment="center"
+        android:text="在宠物中心寻找心仪的宠物进行交换！\n免费！"/>
+    </LinearLayout>
+    <Space
+        android:layout_width="10dp"
+        android:layout_height="10dp" />
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    >
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/upload_my_pet"
+        android:layout_gravity="center"
+        android:src="@drawable/pet_upload"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffe7d205"
+        android:textAlignment="center"
+        android:text="找不到想要的宠物？\n上传自己的宠物等别人来交换吧！\n需要缴纳50W锻造点数作为保管费"/>
+    </LinearLayout>
+</LinearLayout>

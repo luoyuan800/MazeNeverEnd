@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import cn.gavin.Achievement;
 import cn.gavin.Element;
 import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;
 import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.pet.skill.PetSkill;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -126,6 +128,30 @@ public class PetDB {
             pet.setSkill(nSkill);
         } else {
             pet.addSkill(nSkill);
+        }
+        if("龙".equals(pet.getType())){
+            Achievement.Long.enable(MazeContents.hero);
+        }
+        if("九尾狐".equals(pet.getType())){
+            Achievement.JiuWeiHU.enable(MazeContents.hero);
+        }
+        if("朱獳".equals(pet.getType()) || "梼杌".equals(pet.getType()) ){
+            Achievement.ShengShou.enable(MazeContents.hero);
+        }
+        if("朱厌".equals(pet.getType()) || "穷奇".equals(pet.getType()) ){
+            Achievement.FShengShou.enable(MazeContents.hero);
+        }
+        if("老虎".equals(pet.getType()) ){
+            Achievement.WuSong.enable(MazeContents.hero);
+        }
+        if("嗜血蚁".equals(pet.getType()) ){
+            Achievement.Ant.enable(MazeContents.hero);
+        }
+        if("僵尸".equals(pet.getType()) ){
+            Achievement.Zombie.enable(MazeContents.hero);
+        }
+        if("蟑螂".equals(pet.getType()) ){
+            Achievement.XiaoQian.enable(MazeContents.hero);
         }
     }
 
