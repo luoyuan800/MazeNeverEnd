@@ -328,86 +328,90 @@ public class Pet extends Base {
 
         double current = random.nextInt(100) + random.nextDouble();
         if (!f.getId().equals(m.getId()) && rate > current) {
-            Pet egg = new Pet();
-            String type = m.getType();
-            if ("蛋".equals(type) || f.getName().endsWith("蛋") || m.getName().endsWith("蛋")) {
-                return null;
-            }
-            String firstName = StringUtils.split(f.getName(), "的")[0];
-            String secondName = StringUtils.split(m.getName(), "的")[1];
-            secondName = secondName.replace(type, "");
-            egg.setName(firstName + "的" + secondName + type);
-            egg.setIntimacy(1000l);
-            egg.setType("蛋");
-            egg.setDeathCount(255 - (f.getDeathCount() + m.getDeathCount()));
-            if (egg.getDeathCount() <= 0) {
-                egg.setDeathCount(5);
-            }
-            egg.setfName(f.getName());
-            egg.setmName(m.getName());
-            egg.setHp(f.getUHp() / 2 + random.nextLong(m.getHp()));
-            egg.setAtk(f.getMaxAtk() / 2 + random.nextLong(m.getMaxAtk()));
-            egg.setDef(f.getMaxDef() / 2 + random.nextLong(m.getMaxDef()));
-            egg.setAtk_rise((f.getAtk_rise() + m.getAtk_rise()) / 2);
-            egg.setDef_rise((f.getDef_rise() + m.getDef_rise()) / 2);
-            egg.setHp_rise((f.getHp_rise() + m.getHp_rise()) / 2);
-            egg.setSex(random.nextInt(2));
-            egg.setLev(lev);
-            egg.setElement(Element.values()[random.nextInt(Element.values().length - 1)]);
-            egg.setOwner(hero.getName());
-            egg.setOwnerId(hero.getUuid());
-            if (!f.getType().equals(m.getType())) {
-                if (random.nextInt(10000) + random.nextFloat() < (31.115 + hero.getPetAbe())) {
-                    String lastName = Monster.lastNames[random.nextInt(Monster.lastNames.length-1)];
-                    egg.setName("变异的" + lastName);
-                    if (lastName.equals("作者")) {
-                        egg.setAtk(egg.getAtk() * 2);
-                        egg.setName("变异的蟑螂");
-                    }
-                    egg.color = "#B8860B";
-                    egg.atk_rise = MazeContents.hero.ATR_RISE;
-                    egg.def_rise = MazeContents.hero.DEF_RISE;
-                    egg.hp_rise = MazeContents.hero.MAX_HP_RISE;
-                }
-            }
-            if ((SkillFactory.getSkill("恩赐", MazeContents.hero).isActive() && random.nextInt(100) < 45) || random.nextInt(1000) < 5) {
-                NSkill petS = PetSkillList.values()[random.nextInt(PetSkillList.values().length)].getSkill(egg);
-                if (petS instanceof PetSkill) {
-                    egg.setSkill(petS);
-                } else {
-                    egg.addSkill(petS);
-                }
-            }
-            if (random.nextInt(1000) < 10) {
-                egg.setSkill(new HealthSkill());
-            }
-            NSkill pSkill = egg.getAllSkill();
-            if (pSkill == null) {
-                if (f.getAllSkill() != null && m.getAllSkill() != null) {
-                    if (random.nextBoolean()) {
-                        pSkill = f.getAllSkill();
-                    } else {
-                        pSkill = m.getAllSkill();
-                    }
-                } else if (f.getAllSkill() != null) {
-                    pSkill = f.getAllSkill();
-                } else if (m.getAllSkill() != null) {
-                    pSkill = m.getAllSkill();
-                }
-                if (pSkill != null) {
-                    if (pSkill instanceof PetSkill) {
-                        egg.setSkill(pSkill);
-                    } else {
-                        egg.addSkill(pSkill);
-                    }
-                }
-            }
-
-            Achievement.egg.enable(hero);
-            return egg;
+            return getEgg(f, m, lev, hero, random);
         } else {
             return null;
         }
+    }
+
+    public static Pet getEgg(Pet f, Pet m, long lev, Hero hero, Random random) {
+        Pet egg = new Pet();
+        String type = m.getType();
+        if ("蛋".equals(type) || f.getName().endsWith("蛋") || m.getName().endsWith("蛋")) {
+            return null;
+        }
+        String firstName = StringUtils.split(f.getName(), "的")[0];
+        String secondName = StringUtils.split(m.getName(), "的")[1];
+        secondName = secondName.replace(type, "");
+        egg.setName(firstName + "的" + secondName + type);
+        egg.setIntimacy(1000l);
+        egg.setType("蛋");
+        egg.setDeathCount(255 - (f.getDeathCount() + m.getDeathCount()));
+        if (egg.getDeathCount() <= 0) {
+            egg.setDeathCount(5);
+        }
+        egg.setfName(f.getName());
+        egg.setmName(m.getName());
+        egg.setHp(f.getUHp() / 2 + random.nextLong(m.getHp()));
+        egg.setAtk(f.getMaxAtk() / 2 + random.nextLong(m.getMaxAtk()));
+        egg.setDef(f.getMaxDef() / 2 + random.nextLong(m.getMaxDef()));
+        egg.setAtk_rise((f.getAtk_rise() + m.getAtk_rise()) / 2);
+        egg.setDef_rise((f.getDef_rise() + m.getDef_rise()) / 2);
+        egg.setHp_rise((f.getHp_rise() + m.getHp_rise()) / 2);
+        egg.setSex(random.nextInt(2));
+        egg.setLev(lev);
+        egg.setElement(Element.values()[random.nextInt(Element.values().length - 1)]);
+        egg.setOwner(hero.getName());
+        egg.setOwnerId(hero.getUuid());
+        if (!f.getType().equals(m.getType())) {
+            if (random.nextInt(10000) + random.nextFloat() < (31.115 + hero.getPetAbe())) {
+                String lastName = Monster.lastNames[random.nextInt(Monster.lastNames.length-1)];
+                egg.setName("变异的" + lastName);
+                if (lastName.equals("作者")) {
+                    egg.setAtk(egg.getAtk() * 2);
+                    egg.setName("变异的蟑螂");
+                }
+                egg.color = "#B8860B";
+                egg.atk_rise = MazeContents.hero.ATR_RISE;
+                egg.def_rise = MazeContents.hero.DEF_RISE;
+                egg.hp_rise = MazeContents.hero.MAX_HP_RISE;
+            }
+        }
+        if ((SkillFactory.getSkill("恩赐", MazeContents.hero).isActive() && random.nextInt(100) < 45) || random.nextInt(1000) < 5) {
+            NSkill petS = PetSkillList.values()[random.nextInt(PetSkillList.values().length)].getSkill(egg);
+            if (petS instanceof PetSkill) {
+                egg.setSkill(petS);
+            } else {
+                egg.addSkill(petS);
+            }
+        }
+        if (random.nextInt(1000) < 10) {
+            egg.setSkill(new HealthSkill());
+        }
+        NSkill pSkill = egg.getAllSkill();
+        if (pSkill == null) {
+            if (f.getAllSkill() != null && m.getAllSkill() != null) {
+                if (random.nextBoolean()) {
+                    pSkill = f.getAllSkill();
+                } else {
+                    pSkill = m.getAllSkill();
+                }
+            } else if (f.getAllSkill() != null) {
+                pSkill = f.getAllSkill();
+            } else if (m.getAllSkill() != null) {
+                pSkill = m.getAllSkill();
+            }
+            if (pSkill != null) {
+                if (pSkill instanceof PetSkill) {
+                    egg.setSkill(pSkill);
+                } else {
+                    egg.addSkill(pSkill);
+                }
+            }
+        }
+
+        Achievement.egg.enable(hero);
+        return egg;
     }
 
     public long getAtk_rise() {
