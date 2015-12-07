@@ -127,7 +127,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
                         PalaceHero mazeHero = (PalaceHero) maze.getHero();
                         int material = 100000 + mazeHero.getRestoreCount() * 500000;
                         if(heroN.getMaterial() > material) {
-                            heroN.addMaterial(material);
+                            heroN.addMaterial(-material);
                             mazeHero.setRestoreCount(mazeHero.getRestoreCount() + 1);
                             mazeHero.addHp(mazeHero.getUHp() / 2 + 1);
                             long value = (100000 + mazeHero.getRestoreCount() * 500000) / 10000;

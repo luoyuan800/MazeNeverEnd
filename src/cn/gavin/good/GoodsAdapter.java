@@ -55,7 +55,7 @@ public class GoodsAdapter extends BaseAdapter {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MazeContents.hero.addMaterial(goodsInNet.getCost());
+                    MazeContents.hero.addMaterial(-goodsInNet.getCost());
                     type.setCount(type.getCount() + 1);
                     type.save();
                     notifyDataSetChanged();

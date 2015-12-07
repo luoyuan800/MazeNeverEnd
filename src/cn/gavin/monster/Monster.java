@@ -24,27 +24,27 @@ public class Monster {
     public final static long[] firstAdditionHP = {15, 25, 400, 1000, 500, 2000, 10000, 70000, 70000};
     public final static long[] firstAdditionAtk = {3, 25, 100, 500, 2000, 2800, 4000, 10000, 20000};
     public final static float[] firstAdditionSilent = {0, 10, 0, 0, 0.1f, 0, 1, 1, 5};
-    public final static String[] secondNames = {"小", "中", "大", "大大", "人面", "强壮", "无力", "红唇","笨","鲁莽","暴力","胖", "红色", "绿色"};
-    public final static long[] secondAdditionHP = {15, 25, 100, 500, 1003, 2000, 6000, 10000, 1000000, 100, 200000,50000,6000,2209380};
-    public final static long[] secondAdditionAtk = {5, 10, 30, 100, 150, 500, 5500, 500, 1, 9000, 10000, 30000,60000,1};
-    public final static float[] secondAdditionSilent = {0, 0, 0, 0, 0, 0, 0.5f, 0.5f, 0.1f, 0.9f, 1, 0,0,2};
-    public final static long[] secondAdditionRate = {20, 10, 5, 1, 1, 0, 0, 0, 0, -1, -5, -10,-40,-50};
+    public final static String[] secondNames = {"小", "中", "大", "大大", "人面", "强壮", "无力", "红唇", "笨", "鲁莽", "暴力", "胖", "红色", "绿色"};
+    public final static long[] secondAdditionHP = {15, 25, 100, 500, 1003, 2000, 6000, 10000, 1000000, 100, 200000, 50000, 6000, 2209380};
+    public final static long[] secondAdditionAtk = {5, 10, 30, 100, 150, 500, 5500, 500, 1, 9000, 10000, 30000, 60000, 1};
+    public final static float[] secondAdditionSilent = {0, 0, 0, 0, 0, 0, 0.5f, 0.5f, 0.1f, 0.9f, 1, 0, 0, 2};
+    public final static long[] secondAdditionRate = {20, 10, 5, 1, 1, 0, 0, 0, 0, -1, -5, -10, -40, -50};
     public final static String[] lastNames = {"蟑螂", "大蚯蚓", "异壳虫", "巨型飞蛾", "猪", "老鼠", "嗜血蚁",
             "老虎", "蛟", "变异蝎", "食人鸟", "丑蝙蝠", "蛇", "野牛", "龟", "三头蛇", "刺猬", "狼", "精灵",
             "僵尸", "凤凰", "龙", "骷髅", "作者", "熊", "朱厌", "陆吾", "山魁", "穷奇",
-            "九尾狐","猼訑","狰","朱獳", "梼杌"
+            "九尾狐", "猼訑", "狰", "朱獳", "梼杌"
     };
     public final static long[] baseHP = {8, 20, 55, 75, 95, 115, 400, 1000, 800, 520, 280, 350, 380,
             450, 530, 1000, 1500, 2300, 4000, 4500, 6000, 10000, 20000, 70000, 30000, 60000, 80000, 50000, 100000,
-            300000,600000,650000,700000, 800000
+            300000, 600000, 650000, 700000, 800000
     };
     public final static long[] baseAtk = {1, 5, 15, 25, 35, 56, 100, 120, 305, 40, 60, 125, 200,
             450, 500, 700, 720, 1000, 1500, 2500, 300, 3400, 5000, 70000, 6000, 6500, 10000, 20000, 90000,
-            100000, 110000, 140000,160000, 200000
+            100000, 110000, 140000, 160000, 200000
     };
-    public final static  float[] basePetSub = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    public final static float[] basePetSub = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 1, 2, 3, 4, 5,
-            50, 10, 14,16, 20
+            50, 10, 14, 16, 20
     };
     private final static List[] itemNames = {
             Arrays.asList(ItemName.原石),
@@ -93,7 +93,7 @@ public class Monster {
     private long rate = 300;
     private float petsub = 0f;
 
-    public boolean isPetSub(Random random){
+    public boolean isPetSub(Random random) {
         return (random.nextInt(100) + random.nextFloat()) < petsub;
     }
 
@@ -102,6 +102,9 @@ public class Monster {
     }
 
     public static int getIndex(String name) {
+        if (name.matches("三头蛇")) {
+            return 15;
+        }
         for (int i = 0; i < lastNames.length; i++) {
             if (name.matches(".*" + lastNames[i])) {
                 return i;
@@ -119,7 +122,7 @@ public class Monster {
             }
             monster = buildDefaultDefender(maze, hero, random);
         }
-        if(monster.material == 0) {
+        if (monster.material == 0) {
             monster.material = random.nextLong(maze.getLev() * monster.atk + 1) / 3115 + 55;
         }
         if (monster.material > 5000) {
@@ -170,43 +173,56 @@ public class Monster {
         if (atk < hero.getDefenseValue()) {
             atk += random.nextLong(hero.getDefenseValue() * 2);
         }
-        if(hp < 0){
+        if (hp < 0) {
             hp = hero.getUpperHp();
         }
-        if( maze.getLev() /10000 > 5 && random.nextLong(hero.getReincaCount()) < 3){
-            if(random.nextBoolean()){
-                hp += hero.getUpperHp()/(hero.getReincaCount() + 1);
-                atk += random.nextLong((hero.getUpperAtk() + hero.getRealUHP())/2);
+        if (maze.getLev() / 10000 > 5 && random.nextLong(hero.getReincaCount()) < 3) {
+            if (random.nextBoolean()) {
+                hp += hero.getUpperHp() / (hero.getReincaCount() + 1);
+                atk += random.nextLong((hero.getUpperAtk() + hero.getRealUHP()) / 2);
                 Monster monster = new Monster("心好累", "", "作者",
                         hp,
                         atk);
-                monster.setSilent(55/(int)(hero.getReincaCount() + 1));
-                monster.petsub = 5;
+                monster.setSilent(55 / (int) (hero.getReincaCount() + 1));
+                monster.petsub = 65;
                 return monster;
             }
-        }else if(maze.getLev()/10000 >= 4){
-            if(random.nextBoolean() && random.nextLong(hero.getReincaCount()) < 5){
-                atk += (random.nextLong((hero.getUpperAtk() + hero.getRealUHP())))/(hero.getReincaCount() + 1);
+        } else if (maze.getLev() / 10000 >= 4) {
+            if (random.nextBoolean() && random.nextLong(hero.getReincaCount()) < 5) {
+                atk += (random.nextLong((hero.getUpperAtk() + hero.getRealUHP()))) / (hero.getReincaCount() + 1);
                 Monster monster = new Monster("愤怒", "", "作者",
                         hp,
                         atk);
                 monster.setSilent(20);
-                monster.petsub = 30;
+                monster.petsub = 50;
                 return monster;
             }
-        }else if(maze.getLev() % 50000 == 0){
-            if(random.nextBoolean()&& random.nextLong(hero.getReincaCount()) < 2){
+        } else if (maze.getLev() % 50000 == 0) {
+            if (random.nextBoolean() && random.nextLong(hero.getReincaCount()) < 2) {
                 //atk += random.nextLong((hero.getUpperAtk() + hero.getRealUHP()));
-                hp += (hero.getUpperHp() + hero.getUpperAtk() + hero.getUpperDef()) /(hero.getReincaCount() + 1);
-                if(!Achievement.richer.isEnable()){
+                hp += (hero.getUpperHp() + hero.getUpperAtk() + hero.getUpperDef()) / (hero.getReincaCount() + 1);
+                if (!Achievement.richer.isEnable()) {
                     atk *= 5;
                 }
                 Monster monster = new Monster("心灵脆弱", "", "作者",
                         hp,
                         atk);
-                monster.setSilent(99/(int)(hero.getReincaCount() + 1));
-                monster.petsub = 60;
+                monster.setSilent(99 / (int) (hero.getReincaCount() + 1));
+                monster.petsub = 90;
                 monster.material = -2222222;
+                return monster;
+            } else {
+                atk = hero.getUpperDef() + 1000;
+                hp += (hero.getUpperHp() + hero.getUpperAtk() + hero.getUpperDef()) / (hero.getReincaCount() + 1);
+                if (!Achievement.richer.isEnable()) {
+                    hp *= 2;
+                }
+                Monster monster = new Monster("傻乎乎", "", "作者",
+                        hp,
+                        atk);
+                monster.setSilent(99 / (int) (hero.getReincaCount() + 1));
+                monster.petsub = 96;
+                monster.material = 2222222;
                 return monster;
             }
         }
@@ -228,8 +244,17 @@ public class Monster {
         Random random = new Random();
         mazeLev = maze.getLev();
         int first = (int) random.nextLong(maze.getLev() / 50 < firstNames.length ? maze.getLev() / 50 + 1 : firstNames.length);
+        if(first >= firstNames.length){
+            first = random.nextInt(firstNames.length);
+        }
         int second = (int) random.nextLong(maze.getLev() < secondNames.length ? maze.getLev() + 1 : secondNames.length);
-        int last = (int) random.nextLong(maze.getLev() < lastNames.length ? maze.getLev() + 1 : lastNames.length);
+        if(second >= secondNames.length){
+            second = random.nextInt(secondNames.length);
+        }
+        int last = (int) random.nextLong(maze.getLev()/10 < lastNames.length ? maze.getLev()/10 + 1 : lastNames.length);
+        if(last >= lastNames.length){
+            last = random.nextInt(lastNames.length);
+        }
         hp = baseHP[last] + firstAdditionHP[first] + secondAdditionHP[second];
         atk = baseAtk[last] + firstAdditionAtk[first] + secondAdditionAtk[second];
         firstName = firstNames[first];
@@ -275,8 +300,8 @@ public class Monster {
         }
         long m1 = random.nextLong(hp + 1) / 180 + 5;
         long m2 = random.nextLong(atk + 1) / 409 + 10;
-        material = random.nextLong((m1 + m2) / 829 +1) + 20 + random.nextLong(maze.getLev() / 5 + 1);
-        if(material > 3000){
+        material = random.nextLong((m1 + m2) / 829 + 1) + 20 + random.nextLong(maze.getLev() / 5 + 1);
+        if (material > 3000) {
             material = 300 + random.nextInt(3000);
         }
         maxHP = hp;
@@ -288,16 +313,16 @@ public class Monster {
             rate = 5;
         }
         rate /= 2;
-        if(maze.getLev() > 1000) {
+        if (maze.getLev() > 1000) {
             silent += firstAdditionSilent[first];
             silent += secondAdditionSilent[second];
         }
-        if(maze.getLev() > 30000){
+        if (maze.getLev() > 30000) {
             int addi = 10;
-            if(hero.getReincaCount() > 0){
+            if (hero.getReincaCount() > 0) {
                 addi /= (hero.getReincaCount() * 10);
             }
-            if(addi < 1){
+            if (addi < 1) {
                 addi = 1;
             }
             hp *= addi;
@@ -311,8 +336,8 @@ public class Monster {
         if (getAtk() > (hero.getUpperHp() + hero.getDefenseValue()) / 2) {
             setFormatName("<B><font color=\"red\">" + getName() + "</font></B>" + "(" + element + ")");
             if (!getName().startsWith("【守护者】") && silent == 0) {
-                atk = hero.getUpperDef() + hero.getUpperAtk()/4;
-                if(mazeLev > 2000) {
+                atk = hero.getUpperDef() + hero.getUpperAtk() / 4;
+                if (mazeLev > 2000) {
                     silent = hero.getRandom().nextLong(20 + mazeLev / 1000) + hero.getRandom().nextFloat();
                 }
             }
@@ -447,20 +472,23 @@ public class Monster {
         monster.silent = 100;
         monster.mazeLev = 0;
         monster.element = Element.水;
+        monster.petsub = 100;
         monster.formatName(MazeContents.hero);
+        monster.maxHP = monster.hp;
         return monster;
     }
 
     public static Monster copy(Hero hero) {
         Monster monster = new Monster("镜像", "", hero.getName(), hero.getUpperHp() + hero.getUpperDef(), hero.getUpperAtk());
         monster.silent = 80;
+        monster.petsub = 75;
         monster.element = hero.getElement();
         monster.mazeLev = hero.getMaxMazeLev();
         monster.formatName(MazeContents.hero);
         if (monster.getHp() < 0) {
-            monster.hp = Long.MAX_VALUE - 1000;
-            monster.maxHP = monster.hp;
+            monster.hp = Long.MAX_VALUE - 10000;
         }
+        monster.maxHP = monster.hp;
         return monster;
     }
 

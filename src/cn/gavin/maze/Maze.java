@@ -154,7 +154,11 @@ public class Maze {
                     continue;
                 }
                 Monster monster = null;
-                if (!MazeContents.checkCheat(hero)) {
+                boolean cheat = false;
+                for(Pet pet : hero.getPets()){
+                    cheat = !MazeContents.checkPet(pet);
+                }
+                if (!MazeContents.checkCheat(hero) || cheat) {
                     monster = Monster.CHEATBOSS();
                 }
                 if (level % 10000 == 0) {
