@@ -245,10 +245,7 @@ public class MazeContents {
         boolean check;
         String name = myPet.getName();
         int nameIndex = Monster.getIndex(name);
-        check = Monster.lastNames[nameIndex].equals(myPet.getType());
-        if(nameIndex >= Monster.lastNames.length){
-            check = name.contains("蛋");
-        }
+        check = (nameIndex < Monster.lastNames.length && Monster.lastNames[nameIndex].equals(myPet.getType())) || "蛋".equals(myPet.getType());
         return check;
     }
 }

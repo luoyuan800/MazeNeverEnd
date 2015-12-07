@@ -3,6 +3,7 @@ package cn.gavin.forge.dialog;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,6 +37,10 @@ public class ItemDetailDialog {
     public void show(int what) {
         if (itemDialog == null) init();
         itemDialog.show();
+        Button positive = itemDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        if(positive!=null){
+            positive.setEnabled(false);
+        }
         this.what = what;
     }
 

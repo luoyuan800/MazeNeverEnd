@@ -84,7 +84,7 @@ public abstract class SkillLayout extends ScrollView {
                     dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "升级", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(final DialogInterface dialogInterface, int i) {
-                            final long lev = skill.getCount()/1000;
+                            final long lev = skill.getCount()/1000 + 1;
                             AlertDialog levDialog = new AlertDialog.Builder(context).create();
                             levDialog.setMessage("消耗" + lev + "个技能点升级当前技能吗？");
                             levDialog.setButton(DialogInterface.BUTTON_POSITIVE,"确认", new DialogInterface.OnClickListener() {
@@ -92,8 +92,10 @@ public abstract class SkillLayout extends ScrollView {
                                 public void onClick(DialogInterface levDialog, int i) {
                                     hero.setSkillPoint(hero.getSkillPoint() - lev);
                                     skill.levelUp();
+                                    skill.setCount(skill.getCount() + 1001);
                                     dialogInterface.dismiss();
                                     levDialog.dismiss();
+                                    refresh();
                                 }
                             });
                             levDialog.setButton(DialogInterface.BUTTON_NEGATIVE,"取消",new DialogInterface.OnClickListener() {
@@ -121,10 +123,10 @@ public abstract class SkillLayout extends ScrollView {
                         positive.setEnabled(false);
                     }
                 }
-                Button neutral = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-                long lev = skill.getCount()/1000;
+                Button neutral = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+                long lev = skill.getCount()/1000 + 1;
                 if (neutral != null ) {
-                    if (skill.isEnable()&& hero.getSkillPoint() >= lev) {
+                    if (skill.isActive()&& hero.getSkillPoint() >= lev) {
                         neutral.setEnabled(true);
                     } else {
                         neutral.setEnabled(false);

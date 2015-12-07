@@ -204,6 +204,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         public void handleMessage(Message msg) {
             try {
                 switch (msg.what) {
+                    case 111:
+                        heroN.setAwardCount(heroN.getAwardCount() + 300);
+                        showAwardPet("版本升级补偿奖励");
+                        break;
                     case 110:
                         Toast.makeText(context, "--内购次数达到上限!--", Toast.LENGTH_LONG)
                                 .show();
@@ -282,7 +286,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             Achievement.crapGame.enable();
                         }
                         Achievement.richer.enable(heroN);
-                        showAwardPet();
+                        showAwardPet("感谢您的支持");
                         break;
                     case 1:
                         if (pause) {
@@ -515,7 +519,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 "2.  这个并不算是真正内购功能（虽然确实很像内购）\n" +
                 "3.  请适量使用。过多的锻造点数并不能加快您的游戏进度。\n" +
                 "4.  您会获得额外的500W点锻造点数和随机的能力点数。\n" +
-                "5.  您会随机获得一个高属性宠物。\n");
+                "5.  您会随机获得一个高成长的宠物。\n");
         dialog.setView(tv);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
@@ -879,11 +883,15 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     }
 
 
-    private void showAwardPet() {
+    private void showAwardPet(String title) {
         final Pet pet = new Pet();
         int i = 23 + heroN.getRandom().nextInt(6);
+
         if (i >= Monster.lastNames.length ) {
             i = Monster.lastNames.length - 1;
+        }
+        if(heroN.ismV() && i%2==0){
+            i--;
         }
         if(i == 23){
             i = 23 -1;
@@ -897,7 +905,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         } else {
             pet.setElement(Element.values()[heroN.getRandom().nextInt(Element.values().length)]);
         }
-        pet.setName("奖励的普通" + pet.getType());
+        String[] secondName = {"红色","绿色","普通","臭臭"};
+        pet.setName("奖励的" + secondName[heroN.getRandom().nextInt(4)]+ pet.getType());
         pet.setSex(heroN.getRandom().nextInt(2));
         pet.setSkill(PetSkillList.getRandomSkill(heroN.getRandom(),pet,0,8));
         pet.setLev(maze.getLev());
@@ -921,6 +930,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     }
 
                 });
+        dialog.setTitle(title);
         dialog.show();
     }
 
@@ -1664,6 +1674,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         public void run() {
             try {
                 new MoveThread().start();
+                if(heroN.getAwardCount() < alipay.getPayTime()* 300 && alipay.getPayTime() > 0) {
+                    handler.sendEmptyMessage(111);
+                }
                 while (gameThreadRunning) {
                     try {
                         Thread.sleep(refreshInfoSpeed);
