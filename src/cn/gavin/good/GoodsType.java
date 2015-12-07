@@ -5,17 +5,19 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.text.Html;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
+import cn.gavin.forge.Item;
+import cn.gavin.forge.effect.Effect;
+import cn.gavin.forge.list.ItemName;
 import cn.gavin.log.LogHelper;
 import cn.gavin.pet.Pet;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Copyright 2015 luoyuan.
@@ -68,8 +70,10 @@ public enum GoodsType {
                             textView.setText("使用物品失败！");
                         } else {
                             textView.setText(Html.fromHtml(f.getFormatName() + "和" + m.getFormatName() + "生了一个蛋"));
-                            f.setIntimacy(f.getIntimacy()/3);
-                            m.setIntimacy(m.getIntimacy()/4);
+                            f.setIntimacy(f.getIntimacy() / 3);
+                            m.setIntimacy(m.getIntimacy() / 4);
+                            GoodsType.Aphrodisiac.count--;
+                            GoodsType.Aphrodisiac.save();
                             egg.save();
                         }
                     }
@@ -83,17 +87,142 @@ public enum GoodsType {
                     alertDialog.show();
                     return null;
                 }
+            },
+            true),
+    HalfSafe("折扣", "拥有这个物品可以在被击败时只掉到当前层数的一半，你和你宠物半血复活", new GoodScript() {
+        @Override
+        public Object use() {
+            GoodsType.HalfSafe.count--;
+            GoodsType.HalfSafe.save();
+            return null;
+        }
+    }, false),
+    Medallion("免死金牌", "拥有这个物品可以在被击败时不会掉到第一层，你和你宠物原地半血复活", new GoodScript() {
+        @Override
+        public Object use() {
+            GoodsType.Medallion.count--;
+            GoodsType.Medallion.save();
+            return null;
+        }
+    }, false),
+    SafetyRope("安全绳", "拥有这个物品可以在被击败时掉回当前层数/10的那一层，你和你宠物原地半血复活", new GoodScript() {
+        @Override
+        public Object use() {
+            GoodsType.SafetyRope.count--;
+            GoodsType.SafetyRope.save();
+            return null;
+        }
+    }, false),
+    RandomGoods("开盖有奖", "使用后随机获得一个物品(有1/2的概率获物品）", new GoodScript() {
+        @Override
+        public Object use() {
+            GoodsType.RandomGoods.count--;
+            GoodsType.RandomGoods.save();
+            int index = MazeContents.hero.getRandom().nextInt(10);
+            TextView textView = new TextView(MainGameActivity.context);
+            if (index < values().length) {
+                GoodsType goods = values()[index];
+                goods.load();
+                goods.count++;
+                goods.save();
+                textView.setText("你获得了：" + goods.getName());
+            } else {
+                textView.setText("谢谢惠顾，欢迎您再次购买！");
             }
-    );
+            AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
+            dialog.setView(textView);
+            dialog.show();
+            return null;
+        }
+    }, true),
+    RandomPortal("随机传送", "使用后随机传送。传送范围为（当前层数-100）至（最高层数+300）之间", new GoodScript() {
+        @Override
+        public Object use() {
+            GoodsType.RandomPortal.count--;
+            GoodsType.RandomPortal.save();
+            long min = MazeContents.maze.getLev() -100;
+            long max = MazeContents.hero.getMaxMazeLev() + 301;
+            long lev=  MazeContents.hero.getRandom().nextLong(max) - MazeContents.hero.getRandom().nextLong(min);
+            if(lev < min) lev = min;
+            if(lev > max) lev = max;
+            if(lev <= 0) lev = 1;
+            MazeContents.maze.setLevel(lev);
+            TextView textView = new TextView(MainGameActivity.context);
+            textView.setText(Html.fromHtml("你被传送到了第 " +  lev + " 层"));
+            AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
+            dialog.setView(textView);
+            dialog.show();
+            return null;
+        }
+    }, true),
+    KeyGoods("钥匙X10", "使用获得10把钥匙", new GoodScript() {
+        @Override
+        public Object use() {
+            GoodsType.KeyGoods.count--;
+            GoodsType.KeyGoods.save();
+            MazeContents.hero.setKeyCount(MazeContents.hero.getKeyCount() + 10);
+            TextView textView = new TextView(MainGameActivity.context);
+            textView.setText(Html.fromHtml("你现在的钥匙总数为" +  MazeContents.hero.getKeyCount()));
+            AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
+            dialog.setView(textView);
+            dialog.show();
+            return null;
+        }
+    }, true),
+    RandomItem("随机材料", "使用后获得随机一个材料(有可能获得无法正常掉落的特殊属性材料）", new GoodScript() {
+        @Override
+        public Object use() {
+            GoodsType.RandomItem.count--;
+            GoodsType.RandomItem.save();
+            ItemName name = ItemName.values()[MazeContents.hero.getRandom().nextInt(ItemName.values().length)];
+            Item item = new Item();
+            item.setName(name);
+            item.setEffect(Effect.randomEffect(MazeContents.hero.getRandom()));
+            item.setEffectValue(item.getEffect().calculate(MazeContents.hero));
+            if (MazeContents.hero.getRandom().nextInt(100) == 1) {
+                int index = 10 + MazeContents.hero.getRandom().nextInt(8);
+                if (index >= Effect.values().length) index = 11;
+                item.setEffect1(Effect.values()[index]);
+                item.setEffect1Value(item.getEffect1().calculate(MazeContents.hero));
+            }
+            TextView textView = new TextView(MainGameActivity.context);
+            textView.setText(Html.fromHtml("你获得了：" + item.toString()));
+            item.save(null);
+            AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
+            dialog.setView(textView);
+            dialog.show();
+            return null;
+        }
+    }, true),
+    LockBox("带锁的宝箱", "使用后获得一个带锁的宝箱", new GoodScript() {
+        @Override
+        public Object use() {
+            GoodsType.LockBox.count--;
+            GoodsType.LockBox.save();
+            MazeContents.hero.setLockBox(MazeContents.hero.getLockBox() + 1);
+            return null;
+        }
+    }, true),
+    SkillPoint("秘籍", "使用后获得一点技能点", new GoodScript() {
+        @Override
+        public Object use() {
+            GoodsType.SkillPoint.count--;
+            GoodsType.SkillPoint.save();
+            MazeContents.hero.setSkillPoint(MazeContents.hero.getSkillPoint() + 1);
+            return null;
+        }
+    }, true);
     private String name;
     private String desc;
     private GoodScript script;
     private int count;
+    private boolean usable;
 
-    private GoodsType(String name, String desc, GoodScript script) {
+    private GoodsType(String name, String desc, GoodScript script, boolean usable) {
         this.name = name;
         this.desc = desc;
         this.script = script;
+        this.usable = usable;
     }
 
     public String getName() {
@@ -123,6 +252,14 @@ public enum GoodsType {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public void load() {
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM goods where name = '" + name() + "'");
+        if (!cursor.isAfterLast()) {
+            setCount(cursor.getInt(cursor.getColumnIndex("count")));
+        }
+        cursor.close();
     }
 
     public static GoodsType loadByName(String name) {
@@ -157,5 +294,9 @@ public enum GoodsType {
             e.printStackTrace();
         }
         return Collections.emptyList();
+    }
+
+    public boolean isUsable() {
+        return usable;
     }
 }

@@ -741,6 +741,7 @@ public class EvilSkill extends SkillLayout {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, final Skill skill) {
                     double harm = monster.getHp() * (iskll.getBaseHarm() / 100d);
+                    if (harm < 0) harm = 0;
                     monster.addHp(-(long) harm);
                     hero.addHp((long) harm);
                     String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，吸收了" + monster.getFormatName() + "的" + StringUtils.formatNumber((long) harm) + "点生命值。";

@@ -71,7 +71,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="fill_horizontal"
                 android:layout_weight="1"
-            android:enabled="false"
                 android:focusableInTouchMode="false"
                 android:text="商店"
                 android:textSize="12sp"/>

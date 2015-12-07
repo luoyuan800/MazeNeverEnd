@@ -50,7 +50,12 @@ public class MyGoodsAdapter extends BaseAdapter {
         Button button = (Button) view.findViewById(R.id.good_buy_button);
         final GoodsType type = getItem(i);
         if (button != null) {
-            button.setEnabled(type.getCount() > 0);
+            button.setEnabled(type.getCount() > 0 && type.isUsable());
+            if(type.isUsable()){
+                button.setText("使用");
+            }else{
+                button.setText("被动物品");
+            }
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

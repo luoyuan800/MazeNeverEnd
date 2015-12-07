@@ -102,7 +102,7 @@ public class Monster {
     }
 
     public static int getIndex(String name) {
-        if (name.matches("三头蛇")) {
+        if (name.endsWith("三头蛇")) {
             return 15;
         }
         for (int i = 0; i < lastNames.length; i++) {

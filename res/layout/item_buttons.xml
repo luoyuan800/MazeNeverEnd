@@ -120,7 +120,6 @@
             android:layout_gravity="fill_horizontal"
             android:layout_weight="1"
             android:focusableInTouchMode="false"
-            android:enabled="false"
             android:text="物品"
             android:textSize="12sp"/>
         <Button

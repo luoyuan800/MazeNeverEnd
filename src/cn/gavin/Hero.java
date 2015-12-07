@@ -884,7 +884,7 @@ public class Hero implements BaseObject {
                     addUpperHp(uHp.longValue());
                     break;
                 case ADD_PET_ABE:
-                    setPetAbe(petAbe + value);
+                    setPetAbe(petAbe + value.floatValue()/100f);
                     break;
             }
         }

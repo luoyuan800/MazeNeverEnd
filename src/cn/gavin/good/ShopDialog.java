@@ -6,7 +6,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.TextView;
 import cn.gavin.log.LogHelper;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.ui.LoadMoreListView;
 
 /**
@@ -27,6 +29,13 @@ public class ShopDialog {
                     listView.setAdapter(adapter);
                     listView.onLoadMoreComplete(true);
                     shopDialog.setView(listView);
+                    shopDialog.show();
+                    MazeContents.maze.setSailed(false);
+                    break;
+                case 1:
+                    TextView textView = new TextView(activity);
+                    textView.setText("爬楼的过程中会有商人随机进驻商店，目前还未有商人进驻你的商店，请继续爬楼。");
+                    shopDialog.setView(textView);
                     shopDialog.show();
                     break;
             }
@@ -49,31 +58,35 @@ public class ShopDialog {
     private boolean onShow;
 
     public void show() {
-        goodManager.queryNetGoods();
-        final ProgressDialog progressDialog = new ProgressDialog(activity);
-        progressDialog.setMessage("正在进入商店");
-        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                progressDialog.dismiss();
-                onShow = false;
-            }
-        });
-        progressDialog.show();
-        onShow = true;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                    while (!goodManager.isFinished() && onShow) ;
+        if (MazeContents.maze.isSailed()) {
+            goodManager.queryNetGoods();
+            final ProgressDialog progressDialog = new ProgressDialog(activity);
+            progressDialog.setMessage("正在进入商店");
+            progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
                     progressDialog.dismiss();
-                    handler.sendEmptyMessage(0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    LogHelper.logException(e);
+                    onShow = false;
                 }
-            }
-        }).start();
+            });
+            progressDialog.show();
+            onShow = true;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(1000);
+                        while (!goodManager.isFinished() && onShow) ;
+                        progressDialog.dismiss();
+                        handler.sendEmptyMessage(0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        LogHelper.logException(e);
+                    }
+                }
+            }).start();
+        } else {
+            handler.sendEmptyMessage(1);
+        }
     }
 }

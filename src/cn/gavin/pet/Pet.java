@@ -47,7 +47,7 @@ public class Pet extends Base {
         if (intimacy > 50000000 || MazeContents.hero.getUpperAtk() < getMaxAtk()/4) {
             intimacy--;
         }
-        if (getRandom().nextLong(intimacy) > 3000) {
+        if (getRandom().nextLong(intimacy) > 5000) {
             uHp += 100;
             atk += 50;
             def += 150;
@@ -154,8 +154,11 @@ public class Pet extends Base {
             pet.setOwnerId(MazeContents.hero.getUuid());
             if ((SkillFactory.getSkill("神赋", MazeContents.hero).isActive() && random.nextInt(100) < 30) || random.nextInt(5000) < 5) {
                 int sindex = random.nextInt(PetSkillList.values().length);
-                if (sindex < 4) {
-                    sindex += random.nextInt(4);
+                if (sindex < 5) {
+                    sindex += random.nextInt(6);
+                }
+                if(sindex == 2){
+                    sindex = 3;
                 }
                 if(sindex >= PetSkillList.values().length){
                     sindex = PetSkillList.values().length;
@@ -378,7 +381,9 @@ public class Pet extends Base {
             }
         }
         if ((SkillFactory.getSkill("恩赐", MazeContents.hero).isActive() && random.nextInt(100) < 45) || random.nextInt(1000) < 5) {
-            NSkill petS = PetSkillList.values()[random.nextInt(PetSkillList.values().length)].getSkill(egg);
+            int index = random.nextInt(PetSkillList.values().length);
+            if(index == 2) index = 1;
+            NSkill petS = PetSkillList.values()[index].getSkill(egg);
             if (petS instanceof PetSkill) {
                 egg.setSkill(petS);
             } else {

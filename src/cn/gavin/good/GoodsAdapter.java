@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.gavin.R;
 import cn.gavin.utils.MazeContents;
+import cn.gavin.utils.StringUtils;
 
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class GoodsAdapter extends BaseAdapter {
         }
         ((TextView) view.findViewById(R.id.good_buy_name)).setText(type.getName());
         ((TextView) view.findViewById(R.id.good_buy_desc)).setText(type.getDesc());
-        ((TextView) view.findViewById(R.id.good_by_cost)).setText("价格：" + goodsInNet.getCost());
+        ((TextView) view.findViewById(R.id.good_by_cost)).setText("价格：" + StringUtils.formatNumber(goodsInNet.getCost()));
         return view;
     }
 }

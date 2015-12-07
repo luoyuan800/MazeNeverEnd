@@ -31,6 +31,7 @@ import cn.gavin.forge.adapter.RecipeAdapter;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.good.GoodsDialog;
+import cn.gavin.good.GoodsType;
 import cn.gavin.good.ShopDialog;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
@@ -129,7 +130,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private Button addNAgiButton;
     private Button addNPowerButton;
     private Button addNStreButton;
-    private Button getSkillPointButton;
     private TextView lockBoxCount;
     private TextView keyCount;
     private Button forgeButton;
@@ -142,7 +142,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private TextView hatTextView;
     private Button recipeButton;
     private Button shopButton;
-    private Button buyLockBoxButton;
     private Button monsterBookButton;
     private MonsterBook monsterBook;
     private Button reincaenationButton;
@@ -205,8 +204,13 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             try {
                 switch (msg.what) {
                     case 111:
-                        heroN.setAwardCount(heroN.getAwardCount() + 300);
-                        showAwardPet("版本升级补偿奖励");
+                        heroN.setAwardCount(heroN.getAwardCount() + 3000);
+                        GoodsType goods = GoodsType.RandomGoods;
+                        goods.load();
+                        goods.setCount(goods.getCount() + 1);
+                        goods.save();
+                        Toast.makeText(context, "--感谢您一直以来的支持!特赠送您一个随机物品，请到物品栏中查收！--", Toast.LENGTH_LONG)
+                                .show();
                         break;
                     case 110:
                         Toast.makeText(context, "--内购次数达到上限!--", Toast.LENGTH_LONG)
@@ -220,7 +224,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             isHidBattle = true;
                             mainInfoPlatform.removeAllViews();
                             TextView textView = new TextView(context);
-                            textView.setText("\n\n长按显示战斗信息\n\n欢迎进群：332406332 \n举报bug和提供您的建议！");
+                            textView.setText("\n\n长按显示战斗信息\n\n欢迎光临贴吧：勇者闯迷宫game\n欢迎进群：332406332 \n举报bug和提供您的建议！");
                             mainInfoPlatform.addView(textView);
                         }
                         break;
@@ -1428,8 +1432,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         addNStreButton.setOnClickListener(this);
         addNPowerButton = (Button) findViewById(R.id.add_n_power);
         addNPowerButton.setOnClickListener(this);
-        getSkillPointButton = (Button) findViewById(R.id.skill_point_get_button);
-        getSkillPointButton.setOnClickListener(this);
         lockBoxCount = (TextView) findViewById(R.id.local_box);
         lockBoxCount.setOnClickListener(this);
         keyCount = (TextView) findViewById(R.id.key_count);
@@ -1449,8 +1451,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         recipeButton.setOnClickListener(this);
         shopButton = (Button) findViewById(R.id.shop_button);
         shopButton.setOnClickListener(this);
-        buyLockBoxButton = (Button) findViewById(R.id.lock_box_get_button);
-        buyLockBoxButton.setOnClickListener(this);
         monsterBookButton = (Button) findViewById(R.id.monster_button);
         monsterBookButton.setOnClickListener(this);
         reincaenationButton = (Button) findViewById(R.id.rebirth_button);
@@ -1674,7 +1674,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         public void run() {
             try {
                 new MoveThread().start();
-                if(heroN.getAwardCount() < alipay.getPayTime()* 300 && alipay.getPayTime() > 0) {
+                if(heroN.getAwardCount() < 3000 && alipay.getPayTime() > 0) {
                     handler.sendEmptyMessage(111);
                 }
                 while (gameThreadRunning) {

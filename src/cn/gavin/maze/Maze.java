@@ -1,14 +1,11 @@
 package cn.gavin.maze;
 
-import java.util.List;
-
 import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.good.detail.Barrier;
-import cn.gavin.db.good.detail.HalfSail;
-import cn.gavin.db.good.detail.Medallion;
 import cn.gavin.db.good.detail.SafetyRope;
+import cn.gavin.good.GoodsType;
 import cn.gavin.monster.Monster;
 import cn.gavin.monster.MonsterBook;
 import cn.gavin.pet.Pet;
@@ -19,6 +16,8 @@ import cn.gavin.skill.SkillFactory;
 import cn.gavin.story.StoryHelper;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
+
+import java.util.List;
 
 /**
  * Created by gluo on 8/26/2015.
@@ -36,6 +35,7 @@ public class Maze {
     protected long lastSave;
     private long hunt = 150;
     private int petRate = 1;
+    private boolean sailed = false;
 
     public void setCsmgl(int csmgl) {
         this.csmgl = csmgl;
@@ -155,7 +155,7 @@ public class Maze {
                 }
                 Monster monster = null;
                 boolean cheat = false;
-                for(Pet pet : hero.getPets()){
+                for (Pet pet : hero.getPets()) {
                     cheat = !MazeContents.checkPet(pet);
                 }
                 if (!MazeContents.checkCheat(hero) || cheat) {
@@ -188,19 +188,21 @@ public class Maze {
                     if (level > 25) {
                         context.save();
                     }
-                    Medallion medallion = Medallion.load();
+                    GoodsType medallion = GoodsType.Medallion;
+                    medallion.load();
                     if (medallion.getCount() > 0) {
-                        medallion.setCount(medallion.getCount() - 1);
+                        medallion.getScript().use();
                         String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
                                 "打败了。<br>" + hero.getFormatName() + "掏出金晃晃的" + medallion.getName() + "晃瞎了大家的双眼。<br>" + hero.getFormatName() + "和他的宠物们原地复活了。";
                         addMessage(context, notDie);
                         monster.addBattleDesc(notDie);
                         hero.restoreHalf();
                     } else {
-                        SafetyRope safetyRope = SafetyRope.load();
+                        GoodsType safetyRope = GoodsType.SafetyRope;
+                        SafetyRope.load();
                         if (safetyRope.getCount() > 0) {
-                            long slev = level / 10;
-                            safetyRope.setCount(safetyRope.getCount() - 1);
+                            safetyRope.getScript().use();
+                            long slev = level / 10 + 1;
                             String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
                                     "打败了。<br>" + hero.getFormatName() + "因为" + safetyRope.getName() + "护体掉到了" + slev;
                             addMessage(context, notDie);
@@ -210,10 +212,11 @@ public class Maze {
                             step = 0;
                             this.level = slev;
                         } else {
-                            HalfSail halfSail = HalfSail.load();
+                            GoodsType halfSail = GoodsType.HalfSafe;
+                            halfSail.load();
                             if (halfSail.getCount() > 0) {
-                                long slev = level / 2;
-                                halfSail.setCount(halfSail.getCount() - 1);
+                                halfSail.getScript().use();
+                                long slev = level / 2 + 1;
                                 String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
                                         "打败了。<br>" + hero.getFormatName() + "因为" + halfSail.getName() + "护体掉到了" + slev;
                                 addMessage(context, notDie);
@@ -375,6 +378,10 @@ public class Maze {
                     xSkill.setActive(true);
                 }
             }
+            if(!isSailed() && random.nextLong(hero.getAgility()/1000) > random.nextLong(100)){
+                setSailed(true);
+                addMessage(MainGameActivity.context,"有商人入驻商店了，你可以去选购物品。");
+            }
         }
     }
 
@@ -383,8 +390,8 @@ public class Maze {
     }
 
     public void setLevel(long level) {
-        mazeLevelDetect();
         this.level = level;
+        mazeLevelDetect();
     }
 
     public float getMeetRate() {
@@ -401,5 +408,16 @@ public class Maze {
 
     public void setHunt(long hunt) {
         this.hunt = hunt;
+    }
+
+    public boolean isSailed() {
+        return sailed;
+    }
+
+    public void setSailed(boolean sailed) {
+        this.sailed = sailed;
+        if(!sailed){
+            addMessage(MainGameActivity.context, "商人离开了商店，请耐心等待下一位商人的到达。");
+        }
     }
 }

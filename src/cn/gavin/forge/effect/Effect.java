@@ -146,7 +146,7 @@ public enum Effect {
     ADD_PET_ABE(new Calculate() {
         @Override
         public Number calculate(Hero hero, Monster monster) {
-            return 0.02;
+            return 2;
         }
     }, "增加宠物变异几率"),
     START_BURST(new Calculate() {

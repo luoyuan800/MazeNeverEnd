@@ -33,10 +33,10 @@ public class StoryHelper {
         final Random random = hero.getRandom();
         boolean b = hero.getAgility() / 1000 > random.nextInt();
         boolean a = Achievement.guider1.isEnable() ? random.nextInt(10000) > 4977 : random.nextInt(10000) < 35;
-        if (Achievement.story.isEnable() && hero.getKeyCount() > 7 && !Achievement.restriction.isEnable() && a) {
+        if (Achievement.story.isEnable() && hero.getKeyCount() > 15 && !Achievement.restriction.isEnable() && a) {
             context.addMessage(String.format("%s找到了一扇上锁了的门，使用一把钥匙打开这扇门", hero.getFormatName()));
             hero.setKeyCount(hero.getKeyCount() - 1);
-            if (Achievement.guider1.isEnable() && !Achievement.guider2.isEnable() && b && hero.getKeyCount() >= 6 && random.nextInt(100) > 85 && context.getMaze().getLev()%4 == 0) {
+            if (Achievement.guider1.isEnable() && !Achievement.guider2.isEnable() && b && hero.getKeyCount() >= 6 && random.nextInt(100) > 55 && context.getMaze().getLev()%4 == 0) {
                 context.addMessage(hero.getFormatName() + "在门后面遇见了<font color=\"#FF0000\">袁酥兄</font><br>" +
                         "<font color=\"#FF0000\">袁酥兄</font>：孩子我们又见面了~<br>" +
                         "<font color=\"#FF0000\">袁酥兄</font>：这次就我就告诉你一些高等级的秘密<br>" +
@@ -46,7 +46,7 @@ public class StoryHelper {
                 Achievement.guider2.enable(hero);
                 hero.setKeyCount(hero.getKeyCount() - 4);
                 return true;
-            } else if (context.getMaze().getLev()%23 == 0 && Achievement.guider1.isEnable() && Achievement.guider2.isEnable() && b && random.nextInt(100) > 97 && !Achievement.guider3.isEnable() && hero.getKeyCount() >= 5) {
+            } else if (context.getMaze().getLev()%23 == 0 && Achievement.guider1.isEnable() && Achievement.guider2.isEnable() && b && random.nextInt(100) > 87 && !Achievement.guider3.isEnable() && hero.getKeyCount() >= 5) {
                 context.addMessage(hero.getFormatName() + "在门后面遇见了<font color=\"#FF0000\">袁酥兄</font><br>" +
                         "<font color=\"#FF0000\">袁酥兄</font>：老朋友，你好~<br>" +
                         "<font color=\"#FF0000\">袁酥兄</font>：这次见面我没有什么话好说，我只是想从你身上拿走钥匙而已。<br>" +
@@ -56,7 +56,7 @@ public class StoryHelper {
                 hero.setKeyCount(hero.getKeyCount() - hero.getKeyCount()/2);
                 hero.setLockBox(hero.getLockBox() + 1);
                 return true;
-            } else if (context.getMaze().getLev()%95 == 0 && !Achievement.five.isEnable() && hero.getKeyCount() >= random.nextInt(50)) {
+            } else if (context.getMaze().getLev()%95 == 0 && !Achievement.five.isEnable() && hero.getKeyCount() >= random.nextInt(25)) {
                 context.addMessage(hero.getFormatName() + "在门里面遇见了一个奇怪的男人♂<br>" +
                         "<font color=\"#FF0000\">某某人</font>：这位迷失的朋友，你好！我是<font color=\"#FF0000\">龙剑森</font>~<br>" +
                         "<font color=\"#FF0000\">龙剑森</font>：我是不小心进入到了这个迷宫中，从此和外面的时候隔离开来了。<br>" +
@@ -85,7 +85,7 @@ public class StoryHelper {
                 Achievement.reinforce.enable(hero);
                 hero.setKeyCount(hero.getKeyCount() + 3);
                 return true;
-            } else if (context.getMaze().getLev()%221 == 0&&Achievement.five.isEnable() && Achievement.reinforce.isEnable() && !Achievement.restriction.isEnable() && hero.getKeyCount() >= random.nextInt(50)) {
+            } else if (context.getMaze().getLev()%221 == 0&&Achievement.five.isEnable() && Achievement.reinforce.isEnable() && !Achievement.restriction.isEnable() && hero.getKeyCount() >= random.nextInt(30)) {
                 context.addMessage(hero.getFormatName() + "门里面遇见了<font color=\"#FF0000\">龙剑森</font><br>" +
                         "<font color=\"#FF0000\">龙剑森</font>：老朋友我们又见面了~<br>" +
                         "<font color=\"#FF0000\">龙剑森</font>：来，好久不见，可有想我呢？。" +
