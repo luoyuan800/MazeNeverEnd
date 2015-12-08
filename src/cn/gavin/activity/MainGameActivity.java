@@ -190,6 +190,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private Button swapPetButton;
     private Button goodsButton;
     private TextView characterName;
+    private View mainRightDown;
+    private View mainLeftUp;
+    private LinearLayout mainLeftDown;
 
 
     //Get Function
@@ -257,8 +260,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                                 "游戏玩法就是挂机挂机再挂机，希望您能喜欢这个放置类游戏<br>\n" +
                                 "游戏的主界面左边是游戏信息和内容的显示的地方，请随时关注<br>\n" +
                                 "游戏右边会显示人物形象和相应的控制按钮，点击左右切换按钮可以切换其他按钮面板<br>\n" +
-                                "请百度搜索我们的贴吧：勇者闯迷宫game 获取更多的帮助信息<br>\n" +
-                                "我们赠送了一个随机物品给你，请到物品背包中查收<br>\n" +
+                                "请百度搜索游戏的贴吧：勇者闯迷宫game 获取更多的帮助信息<br>\n" +
+                                "系统赠送了一个随机物品给你，请到物品背包中查收<br>\n" +
                                 "祝您游戏快乐！"));
                         scrollView.addView(welcome);
                         dialog.setView(scrollView);
@@ -842,8 +845,26 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             heroN.setAwardCount(heroN.getAwardCount() + 16);
                         } else if (input.startsWith("#")) {
                             try {
-                                itembarContri.setBackgroundColor(Color.parseColor(input));
-                                heroN.setTitleColor(input);
+                                String[] color = StringUtils.split(input, "_");
+                                if(color.length < 2) {
+                                    itembarContri.setBackgroundColor(Color.parseColor(input));
+                                    heroN.setTitleColor(input);
+                                }else {
+                                    switch (StringUtils.toInt(color[1])){
+                                        case 1:
+                                            mainLeftUp.setBackgroundColor(Color.parseColor(color[0]));
+                                            heroN.setLeftUpColor(color[0]);
+                                            break;
+                                        case 2 :
+                                            mainLeftDown.setBackgroundColor(Color.parseColor(color[0]));
+                                            heroN.setLeftDownColor(color[0]);
+                                            break;
+                                        case 3:
+                                            mainRightDown.setBackgroundColor(Color.parseColor(color[0]));
+                                            heroN.setRightDownColor(color[0]);
+                                            break;
+                                    }
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -1057,7 +1078,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         TextView textView = new TextView(this);
         textView.setText(Html.fromHtml("0. 开启殿堂的大门需要3把钥匙+50W的锻造点数.<br>" +
                 "1. 只有以下技能可以在殿堂挑战中使用：<br>" +
-                "    <B>勇者之击、闪避、反弹、原能力、重击、魔王天赋、闪电、水波、多重攻击、欺诈游戏、虚无吞噬、龙爪、吐息、沙尘</B><br>" +
+                "    <B>勇者之击、闪避、反弹、原能力、重击、魔王天赋、闪电、水波、多重攻击、欺诈游戏、虚无吞噬、龙爪、沙尘</B><br>" +
                 "2. 挑战过程中不能放入后台，否则会因为手机系统关闭后台线程导致挑战中止。<br>" +
                 "3. 因为很重要所以再说一遍，<font color=\"red\">不是所有的技能都可以在殿堂挑战中使用！</font><br>" +
                 "4. 请大家和谐友爱互助，不要因为被打败而懊恼和诅咒作者被美女揩油。<br>" +
@@ -1439,8 +1460,14 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         characterName = (TextView) findViewById(R.id.character_name);
         characterName.setOnClickListener(this);
         itembarContri.setOnClickListener(this);
+        mainRightDown = findViewById(R.id.character_item_contribute);
+        mainLeftUp = findViewById(R.id.linearLayout2);
+        mainLeftDown = mainInfoPlatform;
         try {
             itembarContri.setBackgroundColor(Color.parseColor(heroN.getTitleColor()));
+            mainLeftUp.setBackgroundColor(Color.parseColor(heroN.getLeftUpColor()));
+            mainLeftDown.setBackgroundColor(Color.parseColor(heroN.getLeftDownColor()));
+            mainRightDown.setBackgroundColor(Color.parseColor(heroN.getRightDownColor()));
         } catch (Exception e) {
             e.printStackTrace();
         }

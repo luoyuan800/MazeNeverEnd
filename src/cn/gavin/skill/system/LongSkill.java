@@ -344,33 +344,39 @@ public class LongSkill extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
                     builder.append("火焰吐息，将攻击转换为火属性。<br>");
-                    builder.append("如果自身属性为相生属性则攻击翻倍。如果自身属性为相克属性则攻击减为80%。");
+                    builder.append("如果对方属性被火克制，则有几率秒杀敌人。如果自身属性为相克属性则攻击减为80%。");
                     return builder.toString();
                 }
             });
             skill.setRelease(new UseExpression() {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
-                    long harm = hero.getAttackValue();
-                    if (hero.getElement() == Element.木) {
-                        harm *= 2;
-                    } else if (hero.getElement() == Element.水) {
-                        harm *= 0.8;
-                    }
-                    if (Element.火.restriction(monster.getElement())) {
-                        harm *= 1.5;
-                    } else if (monster.getElement().restriction(Element.火)) {
-                        harm *= 0.82;
-                    }
-                    if (hero.isHit()) {
-                        String msg = hero.getFormatName() + "使出了暴击";
+                    boolean kill = hero.getRandom().nextInt(100) < 3;
+                    if(kill && Element.火.restriction(monster.getElement())){
+                        String killmsg = hero.getFormatName() + "使用了技能" + iskll.getName() + "秒杀了" + monster.getFormatName();
+                        monster.addBattleSkillDesc(killmsg);
+                        skill.addMessage(killmsg);
+                    }else {
+                        long harm = hero.getAttackValue();
+                        if (hero.getElement() == Element.水) {
+                            harm *= 0.8;
+                        }
+                        if (Element.火.restriction(monster.getElement())) {
+                            harm *= 1.5;
+                        } else if (monster.getElement().restriction(Element.火)) {
+                            harm *= 0.82;
+                        }
+
+                        if (hero.isHit()) {
+                            String msg = hero.getFormatName() + "使出了暴击";
+                            iskll.addMessage(msg);
+                            monster.addBattleSkillDesc(msg);
+                        }
+                        monster.addHp(-harm);
+                        String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点火属性伤害。";
                         iskll.addMessage(msg);
                         monster.addBattleSkillDesc(msg);
                     }
-                    monster.addHp(-harm);
-                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点火属性伤害。";
-                    iskll.addMessage(msg);
-                    monster.addBattleSkillDesc(msg);
                     return false;
                 }
 
@@ -403,7 +409,7 @@ public class LongSkill extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     StringBuilder builder = new StringBuilder();
                     builder.append("飞沙走石，将攻击转换为土属性。<br>");
-                    builder.append("如果自身属性为相生属性则攻击翻倍。如果自身属性为相克属性则攻击减为80%。");
+                    builder.append("如果自身属性为相同属性则攻击后将恢复生命值。如果自身属性为相克属性则攻击减为80%。");
                     return builder.toString();
                 }
             });
@@ -411,9 +417,7 @@ public class LongSkill extends SkillLayout {
                 @Override
                 public boolean release(final Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = hero.getAttackValue();
-                    if (hero.getElement() == Element.火) {
-                        harm *= 2;
-                    } else if (hero.getElement() == Element.木) {
+                    if (hero.getElement() == Element.木) {
                         harm *= 0.8;
                     }
                     if (Element.土.restriction(monster.getElement())) {
@@ -427,7 +431,10 @@ public class LongSkill extends SkillLayout {
                         monster.addBattleSkillDesc(msg);
                     }
                     monster.addHp(-harm);
-                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" + monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) + "点土属性伤害。";
+                    hero.addHp(harm);
+                    String msg = hero.getFormatName() + "使用技能" + iskll.getName() + "对" +
+                            monster.getFormatName() + "造成了" + StringUtils.formatNumber(harm) +
+                            "点土属性伤害。<br>同时自己也恢复了相同数值的HP";
                     iskll.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
                     return false;

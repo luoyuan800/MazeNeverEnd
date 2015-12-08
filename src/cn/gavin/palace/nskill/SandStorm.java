@@ -21,13 +21,13 @@ public class SandStorm extends AtkSkill {
     @Override
     public long getHarm(Base target) {
         long harm = me.getAtk();
-        if(me.getElement().isReinforce(Element.土)){
-            harm *= 2;
-        }else if(me.getElement().restriction(Element.土)){
+        if(me.getElement().restriction(Element.土)){
             harm *= 0.8;
         }
         long l = harm - target.getDef();
         if(l <= 0) l = me.getLev();
+        me.addHp(l);
+        me.addMessage("恢复了" + l + "点HP");
         return l;
     }
 

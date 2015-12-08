@@ -88,6 +88,9 @@ public class Hero implements BaseObject {
     private float eggRate = 300;
     private long eggStep = 1;
     private String titleColor;
+    private String leftUpColor;
+    private String leftDownColor;
+    private String rightDownColor;
     private long resetSkillCount = 0;
     private String bakColor;
     private String uuid;
@@ -1415,5 +1418,29 @@ public class Hero implements BaseObject {
 
     public void setmV(boolean mV) {
         this.mV = mV;
+    }
+
+    public String getRightDownColor() {
+        return rightDownColor;
+    }
+
+    public void setRightDownColor(String rightDownColor) {
+        this.rightDownColor = rightDownColor;
+    }
+
+    public String getLeftDownColor() {
+        return leftDownColor;
+    }
+
+    public void setLeftDownColor(String leftDownColor) {
+        this.leftDownColor = leftDownColor;
+    }
+
+    public String getLeftUpColor() {
+        return leftUpColor;
+    }
+
+    public void setLeftUpColor(String leftUpColor) {
+        this.leftUpColor = leftUpColor;
     }
 }

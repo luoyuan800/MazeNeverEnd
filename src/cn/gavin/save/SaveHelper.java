@@ -144,6 +144,9 @@ public class SaveHelper {
         }
         editor.putString("pet_id", petIds.toString());
         editor.putString("title_color", heroN.getTitleColor());
+        editor.putString("left_up_color", heroN.getLeftUpColor());
+        editor.putString("left_down_color", heroN.getLeftDownColor());
+        editor.putString("right_down_color", heroN.getRightDownColor());
         editor.putLong("reset_skill", heroN.getResetSkillCount());
         editor.putInt("csm", maze.getCsmgl());
         editor.putString("uuid", heroN.getUuid());

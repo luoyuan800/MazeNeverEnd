@@ -135,7 +135,7 @@ public class Pet extends Base {
             if (hp == 0) {
                 hp = monsterHp / 2 + 10;
             }
-            pet.setDef((monsterHp - hp)/300);
+            pet.setDef((monsterHp - hp)/300 + 10);
             if(pet.getMaxDef() > MazeContents.hero.getBaseDefense()){
                 pet.setDef(pet.getMaxDef()/200 + 10);
             }

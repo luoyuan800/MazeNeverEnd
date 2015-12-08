@@ -21,13 +21,14 @@ public class DragonBreath extends AtkSkill {
     @Override
     public long getHarm(Base target) {
         long harm = me.getAtk();
-        if(me.getElement().isReinforce(Element.火)){
-            harm *= 2;
-        }else if(me.getElement().restriction(Element.火)){
+        if(me.getElement().restriction(Element.火)){
             harm *= 0.8;
         }
         long l = harm - target.getDef();
         if(l <= 0) l = me.getLev();
+        if(Element.火.restriction(target.getElement())){
+            l += target.getUHp();
+        }
         return l;
     }
 

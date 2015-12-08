@@ -42,6 +42,7 @@
         android:layout_centerVertical="true"
         android:text="@string/game_menu_tip"
         android:gravity="center"
+        android:layout_marginTop="20dp"
         android:textSize="12sp" />
 
 </RelativeLayout>

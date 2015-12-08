@@ -253,7 +253,7 @@ public class Monster {
         if(second >= secondNames.length){
             second = random.nextInt(secondNames.length);
         }
-        int last = (int) random.nextLong(maze.getLev()/10 < lastNames.length ? maze.getLev()/10 + 1 : lastNames.length);
+        int last = (int) random.nextLong(maze.getLev()/10 < lastNames.length ? maze.getLev()/10 + 4 : lastNames.length);
         if(last >= lastNames.length){
             last = random.nextInt(lastNames.length);
         }
@@ -306,7 +306,7 @@ public class Monster {
         if(hero.getMaxMazeLev() < 10000){
             material += 20;
         }
-        if(maze.getLev() < hero.getMaxMazeLev()){
+        if(hero.getMaxMazeLev() > 5000 && maze.getLev() < hero.getMaxMazeLev()){
             material/=2;
         }
         if (material > 3000) {

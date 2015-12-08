@@ -19,6 +19,8 @@ import cn.gavin.skill.expression.EnableExpression;
 import cn.gavin.skill.expression.UseExpression;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
+import cn.gavin.skill.type.EvilHide;
+import cn.gavin.skill.type.EvilReKill;
 import cn.gavin.skill.type.PropertySkill;
 import cn.gavin.utils.StringUtils;
 
@@ -339,7 +341,7 @@ public class EvilSkill extends SkillLayout {
                 iskll.setBaseHarm(2l);
             }
         } else if (name.equals("隐身")) {
-            skill = new PropertySkill();
+            skill = new EvilHide();
             skill.setName("隐身");
             skill.setHero(hero);
             skill.setEnableExpression(new EnableExpression() {
@@ -368,10 +370,10 @@ public class EvilSkill extends SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if (skill.getProbability() > 25) {
+                    if (skill.getProbability() > 20) {
                         return false;
                     }
-                    skill.setProbability(skill.getProbability() + 1.1f);
+                    skill.setProbability(skill.getProbability() + 0.8f);
                     return true;
                 }
             });
@@ -589,7 +591,7 @@ public class EvilSkill extends SkillLayout {
                 skill.setProbability(8.0f);
             }
         } else if (name.equals("反杀")) {
-            skill = new PropertySkill(0, 0, 0, 0, 0, 0, 0);
+            skill = new EvilReKill();
             skill.setName("反杀");
             skill.setHero(hero);
             skill.setEnableExpression(new EnableExpression() {
@@ -626,8 +628,8 @@ public class EvilSkill extends SkillLayout {
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    if (skill.getProbability() < 8) {
-                        skill.setProbability(skill.getProbability() + 0.9f);
+                    if (skill.getProbability() < 5) {
+                        skill.setProbability(skill.getProbability() + 0.5f);
                         return true;
                     }
                     return false;

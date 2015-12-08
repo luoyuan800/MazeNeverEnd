@@ -170,7 +170,7 @@ public class DBHelper {
             new ForgeDB().upgradeTp1_6(db);
         }catch (Exception e){
             e.printStackTrace();
-            LogHelper.logException(e);
+//            LogHelper.logException(e);
         }
     }
 

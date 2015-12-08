@@ -29,6 +29,6 @@
     <string name="hero_name">勇者</string>
     <string name="book_label">怪物</string>
     <string name="skill_label">技能</string><string name="pet_tip">宠物加点使用的是你的能力点数</string>
-    <string name="game_menu_tip">抵制不良游戏，拒绝盗版游戏。注意自我保护，谨防上当受骗。\n适度游戏益脑，沉迷游戏伤身。合理安排时间，享受健康生活。</string>
+    <string name="game_menu_tip">抵制不良游戏，拒绝盗版游戏。\n注意自我保护，谨防上当受骗。\n适度游戏益脑，沉迷游戏伤身。\n合理安排时间，享受健康生活。</string>
 
 </resources>

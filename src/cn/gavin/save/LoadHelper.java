@@ -173,11 +173,14 @@ public class LoadHelper {
             }
         }
         heroN.setTitleColor(preferences.getString("title_color", "#ff00acff"));
+        heroN.setLeftUpColor(preferences.getString("left_up_color", "#FFFFFF"));
+        heroN.setLeftDownColor(preferences.getString("left_down_color", "#ff11f8ff"));
+        heroN.setRightDownColor(preferences.getString("right_down_color", "#FFFFFF"));
         heroN.setUuid(preferences.getString("uuid", UUID.randomUUID().toString()));
         heroN.setOnSkill(false);
         heroN.setPetAbe(preferences.getFloat("pet_abe", 0));
         heroN.setmV(preferences.getBoolean("mv", new Random().nextBoolean()));
-        maze.setCsmgl(preferences.getInt("csm", 9987));
+        maze.setCsmgl(preferences.getInt("csm", 9977));
         loadValue(heroN);
         MazeContents.hero = heroN;
         MazeContents.maze = maze;

@@ -1,6 +1,7 @@
 package cn.gavin.palace;
 
 import cn.gavin.Hero;
+import cn.gavin.palace.nskill.DragonBreath;
 import cn.gavin.palace.nskill.NSkill;
 
 /**
@@ -25,13 +26,22 @@ public class PalaceHero extends Base {
         setRandom(hero.getRandom());
         setHello(hero.getHello());
         if (hero.getFirstSkill() != null) {
-            addSkill(NSkill.createSkillBySkill(hero.getFirstSkill(), this));
+            NSkill skill = NSkill.createSkillBySkill(hero.getFirstSkill(), this);
+            if(!(skill instanceof DragonBreath)) {
+                addSkill(skill);
+            }
         }
         if (hero.getSecondSkill() != null) {
-            addSkill(NSkill.createSkillBySkill(hero.getSecondSkill(), this));
+            NSkill skill = NSkill.createSkillBySkill(hero.getSecondSkill(), this);
+            if(!(skill instanceof DragonBreath)) {
+                addSkill(skill);
+            }
         }
         if (hero.getThirdSkill() != null) {
-            addSkill(NSkill.createSkillBySkill(hero.getThirdSkill(), this));
+            NSkill skill = NSkill.createSkillBySkill(hero.getThirdSkill(), this);
+            if(!(skill instanceof DragonBreath)) {
+                addSkill(skill);
+            }
         }
     }
 
