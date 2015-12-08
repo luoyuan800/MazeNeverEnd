@@ -142,9 +142,8 @@ public class PetSkill extends SkillLayout {
                     return true;
                 }
             });
-            if (!skill.load()) {
+                iskll.setEggRate(-200f);
                 iskll.setPetRate(-0.5f);
-            }
         } else if ("培育家".equalsIgnoreCase(name)) {
             final PropertySkill iskll = new PropertySkill();
             skill = iskll;
@@ -179,6 +178,7 @@ public class PetSkill extends SkillLayout {
                 }
             });
             iskll.setEggRate(200f);
+            iskll.setPetRate(0.5f);
         } else if ("捕捉术".equalsIgnoreCase(name)) {
             final AttackSkill iskll = new AttackSkill();
             skill = iskll;

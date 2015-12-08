@@ -237,13 +237,40 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         public void handleMessage(Message msg) {
             try {
                 switch (msg.what) {
+                    case 112:
+                        heroN.setAwardCount(heroN.getAwardCount() + 1);
+                        GoodsType firstGoods = GoodsType.RandomGoods;
+                        firstGoods.load();
+                        firstGoods.setCount(firstGoods.getCount() + 1);
+                        firstGoods.save();
+                        ScrollView scrollView = new ScrollView(context);
+                        AlertDialog dialog = new Builder(context).create();
+                        dialog.setTitle("欢迎您进入迷宫");
+                        dialog.setButton(DialogInterface.BUTTON_POSITIVE,"我知道了",new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        TextView welcome = new TextView(context);
+                        welcome.setText(Html.fromHtml("这是您第一次进入这个世界，这是一个简单的游戏，游戏中有物品系统、技能系统、装备打造系统、宠物系统<br>\n" +
+                                "游戏玩法就是挂机挂机再挂机，希望您能喜欢这个放置类游戏<br>\n" +
+                                "游戏的主界面左边是游戏信息和内容的显示的地方，请随时关注<br>\n" +
+                                "游戏右边会显示人物形象和相应的控制按钮，点击左右切换按钮可以切换其他按钮面板<br>\n" +
+                                "请百度搜索我们的贴吧：勇者闯迷宫game 获取更多的帮助信息<br>\n" +
+                                "我们赠送了一个随机物品给你，请到物品背包中查收<br>\n" +
+                                "祝您游戏快乐！"));
+                        scrollView.addView(welcome);
+                        dialog.setView(scrollView);
+                        dialog.show();
+                        break;
                     case 111:
                         heroN.setAwardCount(heroN.getAwardCount() + 3000);
                         GoodsType goods = GoodsType.RandomGoods;
                         goods.load();
                         goods.setCount(goods.getCount() + 1);
                         goods.save();
-                        Toast.makeText(context, "--感谢您一直以来的支持!特赠送您一个随机物品，请到物品栏中查收！--", Toast.LENGTH_LONG)
+                        Toast.makeText(context, "--感谢您一直以来的支持!特赠送您一个随机物品和十把钥匙，请到物品背包中查收！--", Toast.LENGTH_LONG)
                                 .show();
                         break;
                     case 110:
@@ -1712,6 +1739,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 new MoveThread().start();
                 if (heroN.getAwardCount() < 3000 && alipay.getPayTime() > 0) {
                     handler.sendEmptyMessage(111);
+                }else if(heroN.getAwardCount() == 0){
+                    handler.sendEmptyMessage(112);
                 }
                 while (gameThreadRunning) {
                     try {

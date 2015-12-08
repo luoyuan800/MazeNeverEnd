@@ -37,10 +37,6 @@ public class ItemDetailDialog {
     public void show(int what) {
         if (itemDialog == null) init();
         itemDialog.show();
-        Button positive = itemDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        if(positive!=null){
-            positive.setEnabled(false);
-        }
         this.what = what;
     }
 

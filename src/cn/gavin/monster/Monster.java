@@ -300,9 +300,12 @@ public class Monster {
         }
         long m1 = random.nextLong(hp + 1) / 180 + 5;
         long m2 = random.nextLong(atk + 1) / 409 + 10;
-        material = random.nextLong((m1 + m2) / 829 + 1) + 20 + random.nextLong(maze.getLev() / 5 + 1);
+        material = random.nextLong((m1 + m2) / 828 + 1) + 20 + random.nextLong(maze.getLev() / 5 + 1);
+        if(maze.getLev() < 1000){
+            material += 10;
+        }
         if (material > 3000) {
-            material = 300 + random.nextInt(3000);
+            material = 300 + random.nextInt(2700);
         }
         maxHP = hp;
         builder = new StringBuilder("第");

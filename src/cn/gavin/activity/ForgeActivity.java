@@ -377,6 +377,9 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
 
                 });
         dialog.show();
+        if(MazeContents.hero!=null){
+            MazeContents.hero.addMaterial(-mate);
+        }
     }
 
     public Handler handler = new Handler() {

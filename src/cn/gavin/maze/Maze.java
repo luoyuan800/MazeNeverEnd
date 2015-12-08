@@ -378,7 +378,7 @@ public class Maze {
                     xSkill.setActive(true);
                 }
             }
-            if(!isSailed() && random.nextLong(hero.getAgility()/1000) > random.nextLong(100)){
+            if(!isSailed() && random.nextLong(hero.getAgility()/5000) > random.nextLong(1000)){
                 setSailed(true);
                 addMessage(MainGameActivity.context,"有商人入驻商店了，你可以去选购物品。");
             }

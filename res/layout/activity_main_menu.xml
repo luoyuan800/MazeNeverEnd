@@ -33,4 +33,14 @@
         android:text="@string/start_label"
         android:textSize="40sp" />
 
+    <TextView
+        android:id="@+id/menu_game_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/menu_start"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/game_menu_tip"
+        android:textSize="20sp" />
+
 </RelativeLayout>
