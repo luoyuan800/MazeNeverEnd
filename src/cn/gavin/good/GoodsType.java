@@ -118,9 +118,10 @@ public enum GoodsType {
         public Object use() {
             GoodsType.RandomGoods.count--;
             GoodsType.RandomGoods.save();
-            int index = MazeContents.hero.getRandom().nextInt(10);
+            int index = MazeContents.hero.getRandom().nextInt(20);
             TextView textView = new TextView(MainGameActivity.context);
             if (index < values().length) {
+                if(index == 2) index += MazeContents.hero.getRandom().nextInt(4);
                 GoodsType goods = values()[index];
                 goods.load();
                 goods.count++;
@@ -131,6 +132,12 @@ public enum GoodsType {
             }
             AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
             dialog.setView(textView);
+            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
             dialog.show();
             return null;
         }
@@ -151,6 +158,12 @@ public enum GoodsType {
             textView.setText(Html.fromHtml("你被传送到了第 " +  lev + " 层"));
             AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
             dialog.setView(textView);
+            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
             dialog.show();
             return null;
         }
@@ -165,6 +178,12 @@ public enum GoodsType {
             textView.setText(Html.fromHtml("你现在的钥匙总数为" +  MazeContents.hero.getKeyCount()));
             AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
             dialog.setView(textView);
+            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
             dialog.show();
             return null;
         }
@@ -190,6 +209,12 @@ public enum GoodsType {
             item.save(null);
             AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
             dialog.setView(textView);
+            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
             dialog.show();
             return null;
         }

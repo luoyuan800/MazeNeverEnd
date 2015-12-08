@@ -85,7 +85,6 @@
             android:layout_gravity="fill_horizontal"
             android:layout_weight="1"
             android:focusableInTouchMode="false"
-            android:enabled="false"
             android:text="换宠"
             android:textSize="12sp"/>
 

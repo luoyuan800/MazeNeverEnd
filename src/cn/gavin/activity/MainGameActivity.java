@@ -12,20 +12,61 @@ import android.content.pm.PackageInfo;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.*;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.text.Html;
 import android.util.Log;
-import android.view.*;
+import android.view.GestureDetector;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Random;
+
 import cn.bmob.v3.listener.BmobDialogButtonListener;
 import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.bmob.v3.update.UpdateStatus;
-import cn.gavin.*;
+import cn.gavin.Achievement;
+import cn.gavin.Armor;
+import cn.gavin.Element;
+import cn.gavin.Hero;
+import cn.gavin.R;
+import cn.gavin.Sword;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
-import cn.gavin.forge.*;
+import cn.gavin.forge.Accessory;
+import cn.gavin.forge.HatBuilder;
+import cn.gavin.forge.Item;
+import cn.gavin.forge.NecklaceBuilder;
+import cn.gavin.forge.RingBuilder;
 import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.adapter.RecipeAdapter;
 import cn.gavin.forge.effect.Effect;
@@ -54,13 +95,6 @@ import cn.gavin.upload.CdKey;
 import cn.gavin.upload.Upload;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
-
-import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Random;
 
 public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener, OnItemClickListener, BaseContext {
     //Constants
@@ -460,13 +494,13 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 buttonGroup.showPrevious();
             }
         });
-        swapPetButton = (Button)findViewById(R.id.pet_swap_button);
+        swapPetButton = (Button) findViewById(R.id.pet_swap_button);
         swapPetButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                try{
+                try {
                     SwapPetMainDialog dialog = new SwapPetMainDialog();
-                }catch (Exception e){
+                } catch (Exception e) {
                     LogHelper.logException(e);
                 }
             }
@@ -765,10 +799,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final String input = tv.getText().toString();
-                        if(heroN.getAwardCount() < 26 &&input.equals("bbbbb~5")){
+                        if (heroN.getAwardCount() < 26 && input.equals("bbbbb~5")) {
                             heroN.setAwardCount(heroN.getAwardCount() + 26);
                             heroN.setPetSize(3 + heroN.getReincaCount().intValue() + 5);
-                        }else if (input.equals("gavin~0")) {
+                        } else if (input.equals("gavin~0")) {
                             for (int i = 0; i < 10; i++) {
                                 Pet.cPet(new Monster(heroN, maze), heroN.getRandom());
                             }
@@ -891,35 +925,36 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         final Pet pet = new Pet();
         int i = 23 + heroN.getRandom().nextInt(6);
 
-        if (i >= Monster.lastNames.length ) {
+        if (i >= Monster.lastNames.length) {
             i = Monster.lastNames.length - 1;
         }
-        if(heroN.ismV() && i%2==0){
+        if (heroN.ismV() && i % 2 == 0) {
             i--;
         }
-        if(i == 23){
-            i = 23 -1;
+        if (i == 23) {
+            i = 23 - 1;
         }
         pet.setType(Monster.lastNames[i]);
-        pet.setAtk(heroN.getBaseAttackValue() *2 + 1);
-        pet.setDef(heroN.getBaseDefense() * 2 + 1);
-        pet.setHp(heroN.getRealHP()  + 1);
+        pet.setAtk(heroN.getBaseAttackValue() / 200 + 20);
+        pet.setDef(heroN.getBaseDefense() / 200 + 10);
+        pet.setHp(heroN.getRealHP() / 500 + 10);
+        pet.setAtk_rise(heroN.ATR_RISE);
+        pet.setHp_rise(heroN.MAX_HP_RISE);
         if (heroN.getElement() != Element.无) {
             pet.setElement(heroN.getElement());
         } else {
             pet.setElement(Element.values()[heroN.getRandom().nextInt(Element.values().length)]);
         }
-        String[] secondName = {"红色","绿色","普通","臭臭"};
-        pet.setName("奖励的" + secondName[heroN.getRandom().nextInt(4)]+ pet.getType());
+        String[] secondName = {"红色", "绿色", "普通", "臭臭"};
+        pet.setName("奖励的" + secondName[heroN.getRandom().nextInt(4)] + pet.getType());
         pet.setSex(heroN.getRandom().nextInt(2));
-        pet.setSkill(PetSkillList.getRandomSkill(heroN.getRandom(),pet,0,8));
+        pet.setSkill(PetSkillList.getRandomSkill(heroN.getRandom(), pet, 0, 8));
         pet.setLev(maze.getLev());
         pet.setIntimacy(0l);
         pet.setOwner(heroN.getName());
         pet.setOwnerId(heroN.getUuid());
         PetDB.save(pet);
         AlertDialog dialog = new Builder(this).create();
-        dialog.setTitle("您获得了新宠物");
         final TextView tv = new TextView(context);
         StringBuilder builder = new StringBuilder("你获得了宠物<br>");
         builder.append(pet.getFormatName()).append("<br>").append("hp:").append(pet.getHp()).append(" | ").append("atk:").append(pet.getAtk())
@@ -1168,6 +1203,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 });
         dialog.show();
     }
+
     private void showItemFull() {
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("背包满了！");
@@ -1465,7 +1501,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         petView.setOnClickListener(this);
         petDetail = (Button) findViewById(R.id.pet_detail_button);
         petDetail.setOnClickListener(this);
-        goodsButton = (Button)findViewById(R.id.goods_button);
+        goodsButton = (Button) findViewById(R.id.goods_button);
         goodsButton.setOnClickListener(this);
         refresh();
     }
@@ -1533,7 +1569,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             addNAgiButton.setEnabled(false);
         }
         characterName.setText(heroN.getName() + (heroN.getReincaCount() != 0 ? ("(" + heroN.getReincaCount() + ")") : ""));
-        itembarContri.setText( "迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
+        itembarContri.setText("迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
         if (heroN.getFirstSkill() != null) {
             firstSkillButton.setText(heroN.getFirstSkill().getDisplayName());
             firstSkillButton.setEnabled(true);
@@ -1674,7 +1710,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         public void run() {
             try {
                 new MoveThread().start();
-                if(heroN.getAwardCount() < 3000 && alipay.getPayTime() > 0) {
+                if (heroN.getAwardCount() < 3000 && alipay.getPayTime() > 0) {
                     handler.sendEmptyMessage(111);
                 }
                 while (gameThreadRunning) {
@@ -1858,17 +1894,13 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             case R.id.monster_button:
                 monsterBook.showBook(context);
                 break;
-            case R.id.lock_box_get_button:
-                getLockBox();
-                heroN.click(false);
-                break;
             case R.id.local_box:
                 boolean count = Item.getItemCount() < 1000;
                 if (heroN.getKeyCount() > 0 && heroN.getLockBox() > 0 && count) {
                     heroN.setKeyCount(heroN.getKeyCount() - 1);
                     showLockBox();
                     heroN.click(false);
-                }else if(!count){
+                } else if (!count) {
                     showItemFull();
                 }
                 break;
@@ -1894,9 +1926,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 handler.sendEmptyMessage(103);
                 Intent intent = new Intent(this, ForgeActivity.class);
                 startActivity(intent);
-                break;
-            case R.id.skill_point_get_button:
-                showGetSkillPointDialog();
                 break;
             case R.id.add_n_agi:
                 long agi = heroN.getRandom().nextLong(heroN.getPoint() + 1);

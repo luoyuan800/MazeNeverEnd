@@ -75,7 +75,7 @@
                 android:text="商店"
                 android:textSize="12sp"/>
     </LinearLayout>
-    <LinearLayout
+    <!--<LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -98,7 +98,7 @@
                 android:focusableInTouchMode="false"
                 android:text="获取宝箱"
                 android:textSize="12sp"/>
-    </LinearLayout>
+    </LinearLayout>-->
 
     <LinearLayout
             android:layout_width="fill_parent"

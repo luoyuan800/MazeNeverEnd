@@ -133,11 +133,20 @@ public class Pet extends Base {
             long monsterHp = monster.getMaxHP();
             long hp = pet.getRandom().nextLong(monsterHp);
             if (hp == 0) {
-                hp = monsterHp / 2;
+                hp = monsterHp / 2 + 10;
             }
-            pet.setDef(monsterHp - hp);
-            pet.setAtk(monster.getAtk());
-            pet.setHp(hp);
+            pet.setDef((monsterHp - hp)/300);
+            if(pet.getMaxDef() > MazeContents.hero.getBaseDefense()){
+                pet.setDef(pet.getMaxDef()/200 + 10);
+            }
+            pet.setAtk(monster.getAtk()/500);
+            if(pet.getMaxAtk() > MazeContents.hero.getBaseAttackValue()){
+                pet.setAtk(pet.getMaxAtk()/400 + 10);
+            }
+            pet.setHp(hp/500);
+            if(pet.getUHp() > MazeContents.hero.getRealUHP()){
+                pet.setHp(pet.getUHp()/200 + 20);
+            }
             int index = Monster.getIndex(pet.getName());
             if(MazeContents.hero.ismV() && index%2==0){
                 return null;
