@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.TextView;
+
+import cn.gavin.Achievement;
 import cn.gavin.log.LogHelper;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.ui.LoadMoreListView;
@@ -31,6 +33,7 @@ public class ShopDialog {
                     shopDialog.setView(listView);
                     shopDialog.show();
                     MazeContents.maze.setSailed(false);
+                    Achievement.Shop.enable(MazeContents.hero);
                     break;
                 case 1:
                     TextView textView = new TextView(activity);

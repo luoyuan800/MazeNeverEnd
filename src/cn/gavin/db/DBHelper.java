@@ -122,9 +122,9 @@ public class DBHelper {
             forgeDB.createTable(db);
             PalaceMonster.createDB(db);
             PetDB.createDB(db);
+            GoodManager.buildGoodsDB(db);
             db.setTransactionSuccessful();
             db.endTransaction();
-            GoodManager.buildGoodsDB(db);
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "CreateTable", e);

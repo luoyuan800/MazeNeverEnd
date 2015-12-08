@@ -40,7 +40,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
     public static final String APK_PATH = Environment.getExternalStorageDirectory() + "/maze";
 
     // 战斗刷新速度
-    private long refreshInfoSpeed =600;
+    private long refreshInfoSpeed =650;
 
     // 战斗信息
     private ScrollView mainInfoSv;
@@ -200,7 +200,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
 
         Handler mHandler = new Handler();
 
-        mHandler.post(new Runnable() {
+        new Thread(new Runnable() {
             public void run() {
                 if (scroll == null || inner == null) {
                     return;
@@ -213,7 +213,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
 
                 scroll.scrollTo(0, offset);
             }
-        });
+        }).start();
     }
 
     @Override

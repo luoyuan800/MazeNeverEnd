@@ -244,6 +244,14 @@ public class Maze {
                 switch (random.nextInt(5)) {
                     case 0:
                         addMessage(context, hero.getFormatName() + "思考了一下人生...");
+                        if(hero.getReincaCount() > 0){
+                            long point = hero.getReincaCount();
+                            if(point > 10){
+                                point = 10 + hero.getRandom().nextInt(10);
+                            }
+                            addMessage(context, hero.getFormatName() + "获得了" + point + "点能力点");
+                            hero.addPoint(point);
+                        }
                         break;
                     case 1:
                         addMessage(context, hero.getFormatName() + "犹豫了一下不知道做什么好。");

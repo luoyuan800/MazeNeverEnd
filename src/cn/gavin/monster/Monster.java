@@ -185,6 +185,7 @@ public class Monster {
                         atk);
                 monster.setSilent(55 / (int) (hero.getReincaCount() + 1));
                 monster.petsub = 65;
+                Achievement.Tire.enable(hero);
                 return monster;
             }
         } else if (maze.getLev() / 10000 >= 4) {
@@ -195,6 +196,7 @@ public class Monster {
                         atk);
                 monster.setSilent(20);
                 monster.petsub = 50;
+                Achievement.anger.enable(hero);
                 return monster;
             }
         } else if (maze.getLev() % 50000 == 0) {
@@ -301,8 +303,11 @@ public class Monster {
         long m1 = random.nextLong(hp + 1) / 180 + 5;
         long m2 = random.nextLong(atk + 1) / 409 + 10;
         material = random.nextLong((m1 + m2) / 828 + 1) + 20 + random.nextLong(maze.getLev() / 5 + 1);
-        if(maze.getLev() < 1000){
-            material += 10;
+        if(hero.getMaxMazeLev() < 10000){
+            material += 20;
+        }
+        if(maze.getLev() < hero.getMaxMazeLev()){
+            material/=2;
         }
         if (material > 3000) {
             material = 300 + random.nextInt(2700);
