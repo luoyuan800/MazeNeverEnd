@@ -28,6 +28,7 @@ import cn.gavin.forge.RingBuilder;
 import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.dialog.ItemDetailDialog;
 import cn.gavin.forge.list.FuseItems;
+import cn.gavin.log.LogHelper;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
 
@@ -384,30 +385,35 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
 
     public Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-            Item item = (Item) msg.obj;
-            if (item != null) {
-                switch (msg.what) {
-                    case R.id.forge_item_1:
-                        item1Button.setText(item.getName().name());
-                        item1 = item;
-                        break;
-                    case R.id.forge_item_2:
-                        item2Button.setText(item.getName().name());
-                        item2 = item;
-                        break;
-                    case R.id.forge_item_3:
-                        item3Button.setText(item.getName().name());
-                        item3 = item;
-                        break;
-                    case R.id.forge_item_4:
-                        item4Button.setText(item.getName().name());
-                        item4 = item;
-                        break;
-                    case R.id.forge_item_5:
-                        item5Button.setText(item.getName().name());
-                        item5 = item;
-                        break;
+            try {
+                Item item = (Item) msg.obj;
+                if (item != null) {
+                    switch (msg.what) {
+                        case R.id.forge_item_1:
+                            item1Button.setText(item.getName().name());
+                            item1 = item;
+                            break;
+                        case R.id.forge_item_2:
+                            item2Button.setText(item.getName().name());
+                            item2 = item;
+                            break;
+                        case R.id.forge_item_3:
+                            item3Button.setText(item.getName().name());
+                            item3 = item;
+                            break;
+                        case R.id.forge_item_4:
+                            item4Button.setText(item.getName().name());
+                            item4 = item;
+                            break;
+                        case R.id.forge_item_5:
+                            item5Button.setText(item.getName().name());
+                            item5 = item;
+                            break;
+                    }
                 }
+            }catch (Exception e){
+                e.printStackTrace();
+                LogHelper.logException(e);
             }
             super.handleMessage(msg);
         }

@@ -88,6 +88,7 @@ public class ItemAdapter extends BaseAdapter implements LoadMoreListView.OnRefre
             holder = (ItemViewHolder) convertView.getTag();
         }
         holder.updateItem(getItem(position));
+        convertView.setEnabled(!((ForgeActivity)detailDialog.getActivity()).contains(getItem(position)));
         return convertView;
     }
 

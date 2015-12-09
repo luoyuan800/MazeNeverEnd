@@ -51,7 +51,10 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Random;
 
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.BmobDialogButtonListener;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.bmob.v3.update.UpdateStatus;
 import cn.gavin.Achievement;
@@ -92,6 +95,7 @@ import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.skill.SkillMainDialog;
 import cn.gavin.upload.CdKey;
+import cn.gavin.upload.PalaceObject;
 import cn.gavin.upload.Upload;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
@@ -237,9 +241,78 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private Handler handler = new Handler() {
 
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(final Message msg) {
             try {
                 switch (msg.what) {
+                    case 116:
+                        for(String goodName : (String[]) msg.obj){
+                            GoodsType goods = GoodsType.loadByName(goodName);
+                            goods.setCount(goods.getCount() + 1);
+                            goods.save();
+                        }
+                        break;
+                    case 115:
+                        AlertDialog notInSortDialog = new Builder(context).create();
+                        notInSortDialog.setMessage("对不起！\n您没有进入前五名！\n请继续努力！");
+                        notInSortDialog.setButton(DialogInterface.BUTTON_NEGATIVE,"知道了",new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        notInSortDialog.show();
+                        break;
+                    case 114:
+                        AlertDialog errorDialog = new Builder(context).create();
+                        errorDialog.setMessage("对不起！网络故障，请您稍后再试！");
+                        errorDialog.setButton(DialogInterface.BUTTON_NEGATIVE,"知道了",new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        errorDialog.show();
+                        break;
+                    case 113:
+                        AlertDialog successDialog = new Builder(context).create();
+                        final PalaceObject palaceObject = (PalaceObject)msg.obj;
+                        final String[] goodsAward = StringUtils.split(palaceObject.getAward(), "-");
+                        StringBuilder goodNames = new StringBuilder();
+                        for(String good : goodsAward){
+                            GoodsType goodsType = GoodsType.valueOf(good);
+                            goodNames.append(goodsType.getName()).append("\n");
+                        }
+                        successDialog.setMessage("恭喜您进入殿堂前五名！\n您获得了奖励物品为\n" + goodNames +
+                                "\n请您及时领取，过期无效！");
+                        successDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "暂不领取", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        successDialog.setButton(DialogInterface.BUTTON_POSITIVE, "领取", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                palaceObject.setAward(" ");
+                                palaceObject.update(context, palaceObject.getObjectId(),new UpdateListener() {
+                                    @Override
+                                    public void onSuccess() {
+                                        Message message = new Message();
+                                        message.obj = goodsAward;
+                                        message.what = 116;
+                                        handler.sendMessage(message);
+                                    }
+
+                                    @Override
+                                    public void onFailure(int i, String s) {
+                                        handler.sendEmptyMessage(114);
+                                    }
+                                });
+                                dialog.dismiss();
+                            }
+                        });
+                        successDialog.show();
+                        break;
                     case 112:
                         heroN.setAwardCount(heroN.getAwardCount() + 1);
                         GoodsType firstGoods = GoodsType.RandomGoods;
@@ -471,7 +544,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             }
         });
         try {
-            //BmobUpdateAgent.update(this);
+            BmobUpdateAgent.update(this);
             PalaceMonster.getPalaceCount(context);
         } catch (Exception e) {
             LogHelper.logException(e);
@@ -1116,6 +1189,40 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         }
     }
 
+
+    private void checkPalaceSort() {
+        final ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle("正在校验殿堂排名");
+        progressDialog.show();
+        BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
+        query.addWhereEqualTo("uuid", heroN.getUuid());
+        query.findObjects(context,new FindListener<PalaceObject>() {
+            @Override
+            public void onSuccess(List<PalaceObject> palaceObjects) {
+                if(!palaceObjects.isEmpty()){
+                    PalaceObject palaceObject = palaceObjects.get(0);
+                    if(palaceObject.getSort() > 5 && StringUtils.isNotEmpty(palaceObject.getAward())){
+                        Message message = new Message();
+                        message.what = 113;
+                        message.obj= palaceObject;
+                        handler.sendMessage(message);
+                        progressDialog.dismiss();
+                        return;
+                    }
+                }
+                handler.sendEmptyMessage(115);
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                handler.sendEmptyMessage(114);
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+
     private void showPalaceDetail() {
         final AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("殿堂");
@@ -1126,6 +1233,15 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                    }
+
+                });
+        dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "领取奖励",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        checkPalaceSort();
                     }
 
                 });
@@ -1675,7 +1791,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         StringBuilder builder = new StringBuilder();
         for (Pet pet : heroN.getPets()) {
             if (!pet.getType().equals("蛋")) {
-                builder.append(pet.getType()).append(pet.getSex() == 0 ? "♂" : "♀").append("<br>");
+                builder.append("<font color=\"").append(pet.getColor()).append("\" font>");
+                builder.append(pet.getType()).append(pet.getSex() == 0 ? "♂" : "♀").append("</font><br>");
             } else {
                 builder.append(pet.getType()).append("<br>");
             }

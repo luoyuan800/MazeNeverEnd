@@ -198,7 +198,7 @@ public enum GoodsType {
             item.setName(name);
             item.setEffect(Effect.randomEffect(MazeContents.hero.getRandom()));
             item.setEffectValue(item.getEffect().calculate(MazeContents.hero));
-            if (MazeContents.hero.getRandom().nextInt(100) == 1) {
+            if (MazeContents.hero.getRandom().nextInt(100) < 3) {
                 int index = 10 + MazeContents.hero.getRandom().nextInt(8);
                 if (index >= Effect.values().length) index = 11;
                 item.setEffect1(Effect.values()[index]);

@@ -3,7 +3,6 @@ package cn.gavin.forge.dialog;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,6 +14,7 @@ import cn.gavin.forge.adapter.ItemAdapter;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.log.LogHelper;
 import cn.gavin.utils.MazeContents;
+import cn.gavin.utils.Random;
 import cn.gavin.utils.ui.LoadMoreListView;
 
 /**
@@ -27,6 +27,10 @@ public class ItemDetailDialog {
     private Activity activity;
     private ItemAdapter adapter;
     private EditText filterText;
+
+    public Activity getActivity() {
+        return activity;
+    }
 
     public ItemDetailDialog(Activity activity) {
         this.activity = activity;
@@ -58,32 +62,44 @@ public class ItemDetailDialog {
         itemDialog.setButton(DialogInterface.BUTTON_POSITIVE, "随机添加", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                int count = adapter.getCount();
-                if(count > 5) count -= 4;
-                int i0 = MazeContents.hero.getRandom().nextInt(count);
-                Item item = adapter.getItem(i0);
-                Item item1 = null;
-                Item item2 = null;
-                Item item3 = null;
-                Item item4 = null;
-                int position = i0 + 1;
-                if(position < count){
-                    item1 = adapter.getItem(position);
-                    position = position + 1;
-                    if(position < count){
-                        item2 = adapter.getItem(position);
-                        position = position + 1;
-                        if(position < count){
-                            item3 = adapter.getItem(position);
-                            position = position + 1;
-                            if(position < count){
-                                item4 = adapter.getItem(position);
-                            }
-                        }
+                try {
+                    Random random = MazeContents.hero.getRandom();
+                    int count = adapter.getCount();
+                    if (count < 5) {
+                        return;
                     }
+                    int each = count / 5;
+                    int first = 0 + random.nextInt(each);
+                    int second = each + random.nextInt(each);
+                    int third = each * 2 + random.nextInt(each);
+                    int fourth = each * 3 + random.nextInt(each);
+                    int five = each * 4 + random.nextInt(each);
+                    Item item = null;
+                    Item item1 = null;
+                    Item item2 = null;
+                    Item item3 = null;
+                    Item item4 = null;
+                    if (first < adapter.getCount()) {
+                        item = adapter.getItem(first);
+                    }
+                    if (second < adapter.getCount()) {
+                        item1 = adapter.getItem(second);
+                    }
+                    if (third < adapter.getCount()) {
+                        item2 = adapter.getItem(third);
+                    }
+                    if (fourth < adapter.getCount()) {
+                        item3 = adapter.getItem(fourth);
+                    }
+                    if (five < adapter.getCount()) {
+                        item4 = adapter.getItem(five);
+                    }
+                    ((ForgeActivity) activity).setItems(item, item1, item2, item3, item4);
+                    itemDialog.hide();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    LogHelper.logException(e);
                 }
-                ((ForgeActivity)activity).setItems(item,item1,item2,item3,item4);
-                itemDialog.hide();
             }
         });
         itemDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {

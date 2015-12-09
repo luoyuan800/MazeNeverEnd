@@ -47,10 +47,10 @@ public class Pet extends Base {
         if (intimacy > 50000000 || MazeContents.hero.getUpperAtk() < getMaxAtk()/4) {
             intimacy--;
         }
-        if (getRandom().nextLong(intimacy) > 5000) {
-            uHp += 100;
-            atk += 50;
-            def += 150;
+        if (getRandom().nextLong(intimacy) > 500 + getRandom().nextInt(1000)) {
+            uHp += 50;
+            atk += 10;
+            def += 70;
         }
     }
 
@@ -139,11 +139,11 @@ public class Pet extends Base {
             if(pet.getMaxDef() > MazeContents.hero.getBaseDefense()){
                 pet.setDef(pet.getMaxDef()/200 + 10);
             }
-            pet.setAtk(monster.getAtk()/500);
+            pet.setAtk(monster.getAtk()/500 + 10);
             if(pet.getMaxAtk() > MazeContents.hero.getBaseAttackValue()){
                 pet.setAtk(pet.getMaxAtk()/400 + 10);
             }
-            pet.setHp(hp/500);
+            pet.setHp(hp/500 + 20);
             if(pet.getUHp() > MazeContents.hero.getRealUHP()){
                 pet.setHp(pet.getUHp()/200 + 20);
             }

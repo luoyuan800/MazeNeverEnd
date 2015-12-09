@@ -58,6 +58,7 @@ public abstract class Skill {
         } else if (this.onUsed && !onUsed) {
             hero.removeSkill(this);
         }
+        save();
         this.onUsed = onUsed;
     }
 
@@ -69,6 +70,7 @@ public abstract class Skill {
         if (!this.active && active) {
             hero.setSkillPoint(hero.getSkillPoint() - 1);
         }
+        save();
         this.active = active;
     }
 

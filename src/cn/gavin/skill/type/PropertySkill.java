@@ -59,6 +59,7 @@ public class PropertySkill extends Skill {
             setOnUsed(false);
         }
         this.active = active;
+        save();
         super.refresh();
     }
 
@@ -90,20 +91,8 @@ public class PropertySkill extends Skill {
                 getHero().setPetSize(getHero().getPetSize() - petSize);
             }
         }
+        save();
         this.onUsed = used;
-    }
-
-    public void refresh() {
-        super.refresh();
-        getSkillButton().setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (isEnable()) {
-                    setActive(true);
-                }
-                return false;
-            }
-        });
     }
 
     public long getAgi() {

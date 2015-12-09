@@ -86,6 +86,9 @@ public class Maze {
                 level++;
                 mazeLevelDetect();
                 long point = 1 + level / 10 + random.nextLong(level + 1) / 300;
+                if(hero.getMaxMazeLev() < 500){
+                    point *= 3;
+                }
                 if (point > 70) {
                     point = 40 + random.nextInt(70);
                 }
