@@ -62,7 +62,7 @@ public class GoodManager {
     }
 
     public static void buildGoodsDB(SQLiteDatabase sqLiteDatabase){
-        String createTable = "CREATE TABLE goods(" +
+        String createTable = "CREATE TABLE if not exists goods(" +
                 "name TEXT NOT NULL PRIMARY KEY," +
                 "count TEXT," +
                 "class TEXT" +

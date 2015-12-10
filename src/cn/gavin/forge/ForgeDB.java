@@ -71,6 +71,7 @@ public class ForgeDB {
         upgradeTp1_5(database);
         upgradeTp1_6(database);
         upgradeTp1_7(database);
+        upgradeTo1_8(database);
     }
 
     public void upgradeTo1_3_2(SQLiteDatabase database) {
@@ -149,10 +150,28 @@ public class ForgeDB {
         database.execSQL(sql);
         sql = String.format(base, "Soi●残缺(暴击)", "食人鸟毛-鼠筋-鼠筋-鼠筋-鼠筋", "ADD_ATK:~20000-ADD_DEF:~20000-ADD_UPPER_HP:~20000", "ADD_PER_UPPER_HP:~15-ADD_HIT_RATE:30-ADD_PARRY:30-ADD_DODGE_RATE:10-ADD_CLICK_AWARD:10-ADD_CLICK_POINT_AWARD:1", HatBuilder.type, "#FF8C00");
         database.execSQL(sql);
-        sql = String.format(base, "Soi●残缺(格挡)", "鼠骨-鼠筋-鼠骨-鼠骨-鼠骨",  "ADD_ATK:~20000-ADD_DEF:~20000-ADD_UPPER_HP:~20000", "ADD_PER_UPPER_HP:~25-ADD_HIT_RATE:20-ADD_PARRY:30-ADD_DODGE_RATE:10-ADD_CLICK_AWARD:10-ADD_CLICK_POINT_AWARD:1", NecklaceBuilder.type, "#FF8C00");
+        sql = String.format(base, "Soi●残缺(格挡)", "鼠骨-鼠筋-鼠骨-鼠骨-鼠骨", "ADD_ATK:~20000-ADD_DEF:~20000-ADD_UPPER_HP:~20000", "ADD_PER_UPPER_HP:~25-ADD_HIT_RATE:20-ADD_PARRY:30-ADD_DODGE_RATE:10-ADD_CLICK_AWARD:10-ADD_CLICK_POINT_AWARD:1", NecklaceBuilder.type, "#FF8C00");
         database.execSQL(sql);
-        sql = String.format(base, "Soi●残缺(闪避)", "硝石-紫熏木-紫熏木-紫熏木-紫熏木",  "ADD_ATK:~20000-ADD_DEF:~20000-ADD_UPPER_HP:~20000", "ADD_PER_UPPER_HP:~35-ADD_HIT_RATE:20-ADD_PARRY:30-ADD_DODGE_RATE:20-ADD_CLICK_AWARD:10-ADD_CLICK_POINT_AWARD:1", RingBuilder.type, "#FF8C00");
+        sql = String.format(base, "Soi●残缺(闪避)", "硝石-紫熏木-紫熏木-紫熏木-紫熏木", "ADD_ATK:~20000-ADD_DEF:~20000-ADD_UPPER_HP:~20000", "ADD_PER_UPPER_HP:~35-ADD_HIT_RATE:20-ADD_PARRY:30-ADD_DODGE_RATE:20-ADD_CLICK_AWARD:10-ADD_CLICK_POINT_AWARD:1", RingBuilder.type, "#FF8C00");
         database.execSQL(sql);
 
+    }
+
+    public void upgradeTo1_8(SQLiteDatabase database){
+        String base = "REPLACE INTO recipe (name, items, base, addition, found, user, type, color) values ('%s', '%s','%s','%s','false','false','%s','%s')";
+        String sql = String.format(base, "初音的守护<br><font color=\"#FF4500\">天长地久，不离不弃</font>", "龙皮-龙须-紫熏木-紫熏木-紫熏木", "ADD_CLICK_AWARD:60000-ADD_ATK:~700000-ADD_DEF:~100000", "START_BURST:80-ADD_PET_ABE:35-ADD_PER_UPPER_HP:~22", RingBuilder.type, "#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base, "蝶祁的眷恋<br><font color=\"#FF4500\">我会在你身后一直默默的陪着你</font>", "龙皮-龙须-紫熏木-龙骨-紫熏木", "ADD_PER_DEF:14-ADD_PER_ATK:10-ADD_CLICK_POINT_AWARD:3", "ADD_HIT_RATE:~10-ADD_PER_UPPER_HP:62", NecklaceBuilder.type, "#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base, "李宗瑞的安全套", "龙皮-龙须-精铁-龙骨-紫熏木", "ADD_ATK:10000", "ADD_HIT_RATE:90-ADD_PARRY:35-ADD_DODGE_RATE:15-ADD_CLICK_AWARD:50", RingBuilder.type, "#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base, "赵日天的裤腰带", "龙皮-龙须-龙须-龙骨-紫熏木", "ADD_PER_ATK:24", "ADD_HIT_RATE:30-ADD_PARRY:30-ADD_DODGE_RATE:10-ADD_CLICK_AWARD:5-ADD_CLICK_POINT_AWARD:1", RingBuilder.type, "#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base, "仙剑メ天道链", "蚁须-龙须-龙须-龙骨-紫熏木", "ADD_AGI:240000", "ADD_HIT_RATE:60-ADD_PARRY:~10-ADD_CLICK_POINT_AWARD:1", NecklaceBuilder.type, "#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base, "仙剑メ天道冠", "蚁须-龙须-龙须-龙骨-紫熏木", "ADD_PER_DEF:24", "ADD_HIT_RATE:~10-ADD_PARRY:60-ADD_CLICK_AWARD:65", HatBuilder.type, "#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base, "仙剑メ天道戒", "蚁须-鼠骨-龙须-龙骨-紫熏木", "ADD_ATK:640000", "ADD_HIT_RATE:30-ADD_PARRY:30-ADD_DODGE_RATE:10", RingBuilder.type, "#FF8C00");
+        database.execSQL(sql);
     }
 }

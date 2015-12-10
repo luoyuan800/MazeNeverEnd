@@ -126,7 +126,7 @@ public class Pet extends Base {
     }
 
     public static Pet cPet(Monster monster, Random random) {
-        if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 17) {
+        if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 15) {
             Pet pet = new Pet();
             pet.setElement(monster.getElement());
             pet.setName(monster.getName());

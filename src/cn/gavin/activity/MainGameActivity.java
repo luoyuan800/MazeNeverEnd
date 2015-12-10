@@ -244,17 +244,30 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         public void handleMessage(final Message msg) {
             try {
                 switch (msg.what) {
+                    case 117:
+                        AlertDialog alreadyGetDialog = new Builder(context).create();
+                        alreadyGetDialog.setMessage("对不起！\n您已经领取过奖励了！\n请明天再来！");
+                        alreadyGetDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "知道了", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        alreadyGetDialog.show();
+                        break;
                     case 116:
-                        for(String goodName : (String[]) msg.obj){
+                        for (String goodName : (String[]) msg.obj) {
                             GoodsType goods = GoodsType.loadByName(goodName);
                             goods.setCount(goods.getCount() + 1);
                             goods.save();
+                            Toast.makeText(context, "--获得了" + goods.getName() + "--", Toast.LENGTH_SHORT)
+                                    .show();
                         }
                         break;
                     case 115:
                         AlertDialog notInSortDialog = new Builder(context).create();
                         notInSortDialog.setMessage("对不起！\n您没有进入前五名！\n请继续努力！");
-                        notInSortDialog.setButton(DialogInterface.BUTTON_NEGATIVE,"知道了",new DialogInterface.OnClickListener() {
+                        notInSortDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "知道了", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -265,7 +278,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     case 114:
                         AlertDialog errorDialog = new Builder(context).create();
                         errorDialog.setMessage("对不起！网络故障，请您稍后再试！");
-                        errorDialog.setButton(DialogInterface.BUTTON_NEGATIVE,"知道了",new DialogInterface.OnClickListener() {
+                        errorDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "知道了", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -275,14 +288,14 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         break;
                     case 113:
                         AlertDialog successDialog = new Builder(context).create();
-                        final PalaceObject palaceObject = (PalaceObject)msg.obj;
+                        final PalaceObject palaceObject = (PalaceObject) msg.obj;
                         final String[] goodsAward = StringUtils.split(palaceObject.getAward(), "-");
                         StringBuilder goodNames = new StringBuilder();
-                        for(String good : goodsAward){
+                        for (String good : goodsAward) {
                             GoodsType goodsType = GoodsType.valueOf(good);
                             goodNames.append(goodsType.getName()).append("\n");
                         }
-                        successDialog.setMessage("恭喜您进入殿堂前五名！\n您获得了奖励物品为\n" + goodNames +
+                        successDialog.setMessage("恭喜您成为殿堂" + (msg.arg1> 10000 ? "第" + msg.arg1 : "最后一") + " 名！\n您获得了奖励物品为\n" + goodNames +
                                 "\n请您及时领取，过期无效！");
                         successDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "暂不领取", new DialogInterface.OnClickListener() {
                             @Override
@@ -293,8 +306,12 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         successDialog.setButton(DialogInterface.BUTTON_POSITIVE, "领取", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                palaceObject.setAward(" ");
-                                palaceObject.update(context, palaceObject.getObjectId(),new UpdateListener() {
+                                PalaceObject palaceObject1 = new PalaceObject();
+                                palaceObject1.setValue("award", " ");
+                                palaceObject1.setObjectId(palaceObject.getObjectId());
+                                palaceObject1.setAward(" ");
+                                palaceObject1.setTableName("PalaceObject");
+                                palaceObject1.update(context, palaceObject.getObjectId(), new UpdateListener() {
                                     @Override
                                     public void onSuccess() {
                                         Message message = new Message();
@@ -322,7 +339,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         ScrollView scrollView = new ScrollView(context);
                         AlertDialog dialog = new Builder(context).create();
                         dialog.setTitle("欢迎您进入迷宫");
-                        dialog.setButton(DialogInterface.BUTTON_POSITIVE,"我知道了",new DialogInterface.OnClickListener() {
+                        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "我知道了", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -919,16 +936,16 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         } else if (input.startsWith("#")) {
                             try {
                                 String[] color = StringUtils.split(input, "_");
-                                if(color.length < 2) {
+                                if (color.length < 2) {
                                     itembarContri.setBackgroundColor(Color.parseColor(input));
                                     heroN.setTitleColor(input);
-                                }else {
-                                    switch (StringUtils.toInt(color[1])){
+                                } else {
+                                    switch (StringUtils.toInt(color[1])) {
                                         case 1:
                                             mainLeftUp.setBackgroundColor(Color.parseColor(color[0]));
                                             heroN.setLeftUpColor(color[0]);
                                             break;
-                                        case 2 :
+                                        case 2:
                                             mainLeftDown.setBackgroundColor(Color.parseColor(color[0]));
                                             heroN.setLeftDownColor(color[0]);
                                             break;
@@ -1195,22 +1212,67 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         progressDialog.setTitle("正在校验殿堂排名");
         progressDialog.show();
         BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
-        query.addWhereEqualTo("uuid", heroN.getUuid());
-        query.findObjects(context,new FindListener<PalaceObject>() {
+        query.setLimit(5);
+        query.order("-lev");
+        query.findObjects(context, new FindListener<PalaceObject>() {
             @Override
             public void onSuccess(List<PalaceObject> palaceObjects) {
-                if(!palaceObjects.isEmpty()){
-                    PalaceObject palaceObject = palaceObjects.get(0);
-                    if(palaceObject.getSort() > 5 && StringUtils.isNotEmpty(palaceObject.getAward())){
-                        Message message = new Message();
-                        message.what = 113;
-                        message.obj= palaceObject;
-                        handler.sendMessage(message);
-                        progressDialog.dismiss();
-                        return;
+                if (!palaceObjects.isEmpty()) {
+                    boolean award = false;
+                    for (int i = 0; i < palaceObjects.size(); i++) {
+                        PalaceObject palaceObject = palaceObjects.get(i);
+                        if (heroN.getUuid().equals(palaceObject.getUuid())) {
+                            if (!StringUtils.isNotEmpty(palaceObject.getAward())) {
+                                handler.sendEmptyMessage(117);
+                                award = true;
+                            } else {
+                                Message message = new Message();
+                                message.what = 113;
+                                message.obj = palaceObject;
+                                message.arg1 = i + 1;
+                                handler.sendMessage(message);
+                                award = true;
+                            }
+                            break;
+                        }
+                    }
+                    if (!award) {
+                        BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
+                        query.setLimit(1);
+                        query.order("lev");
+                        query.findObjects(context, new FindListener<PalaceObject>() {
+
+                            @Override
+                            public void onSuccess(List<PalaceObject> palaceObjects) {
+                                if(!palaceObjects.isEmpty()){
+                                    boolean award = false;
+                                    PalaceObject palaceObject = palaceObjects.get(0);
+                                    if (heroN.getUuid().equals(palaceObject.getUuid())) {
+                                        if (!StringUtils.isNotEmpty(palaceObject.getAward())) {
+                                            handler.sendEmptyMessage(117);
+                                            award = true;
+                                        } else {
+                                            Message message = new Message();
+                                            message.what = 113;
+                                            message.obj = palaceObject;
+                                            message.arg1 = palaceObject.getLev().intValue();
+                                            handler.sendMessage(message);
+                                            award = true;
+                                        }
+                                    }
+                                    if (!award) {
+                                        handler.sendEmptyMessage(115);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onError(int i, String s) {
+                                handler.sendEmptyMessage(114);
+                            }
+                        });
                     }
                 }
-                handler.sendEmptyMessage(115);
                 progressDialog.dismiss();
             }
 
@@ -1883,7 +1945,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 new MoveThread().start();
                 if (heroN.getAwardCount() < 3000 && alipay.getPayTime() > 0) {
                     handler.sendEmptyMessage(111);
-                }else if(heroN.getAwardCount() == 0){
+                } else if (heroN.getAwardCount() == 0) {
                     handler.sendEmptyMessage(112);
                 }
                 while (gameThreadRunning) {

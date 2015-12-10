@@ -45,12 +45,27 @@ public class PetDB {
                 "lev TEXT," +
                 "sex INTEGER," +
                 "owner TEXT," +
+                "owner_id TEXT," +
+                "color TEXT," +
                 "farther TEXT," +
                 "mother TEXT" +
                 ")";
 
         db.execSQL(sql);
         db.execSQL("CREATE UNIQUE INDEX pet_index ON pet (id)");
+    }
+
+    public static void upgradeTo1_8(SQLiteDatabase db){
+        try{
+            db.beginTransaction();
+            db.execSQL("ALTER TABLE pet ADD COLUMN color TEXT");
+            db.execSQL("ALTER TABLE pet ADD COLUMN owner_id TEXT");
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        }catch (Exception e){
+            e.printStackTrace();
+            LogHelper.logException(e);
+        }
     }
 
     public static int getPetCount(SQLiteDatabase database) {
@@ -69,8 +84,9 @@ public class PetDB {
 
     public static void save(Pet... pets) {
         String base = "REPLACE INTO pet (id, name, type, intimacy, element, skill, skill_count, " +
-                "death_c, atk, def, hp,u_hp, lev, farther, mother, sex, atk_rise, hp_rise, def_rise, owner) " +
-                "values ('%s', '%s', '%s','%s','%s','%s','%s','%s','%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s','%s', '%s')";
+                "death_c, atk, def, hp,u_hp, lev, farther, mother, sex, atk_rise, hp_rise, def_rise, owner, color, owner_id) " +
+                "values ('%s', '%s', '%s','%s','%s','%s','%s'," +
+                "'%s','%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s','%s', '%s','%s', '%s')";
         for (Pet pet : pets) {
             if (!StringUtils.isNotEmpty(pet.getId())) {
                 pet.setId(UUID.randomUUID().toString());
@@ -80,7 +96,7 @@ public class PetDB {
                     pet.getIntimacy(), pet.getElement().name(), skill != null ? skill.getName() : "",
                     skill != null ? skill.getCount() : "0", pet.getDeathCount(), pet.getMaxAtk(),
                     pet.getMaxDef(), pet.getHp(), pet.getUHp(), pet.getLev(), pet.getfName(),
-                    pet.getmName(), pet.getSex(), pet.getAtk_rise(), pet.getHp_rise(), pet.getDef_rise(), pet.getOwner());
+                    pet.getmName(), pet.getSex(), pet.getAtk_rise(), pet.getHp_rise(), pet.getDef_rise(), pet.getOwner(), pet.getColor(), pet.getOwnerId());
             DBHelper.getDbHelper().excuseSQLWithoutResult(sql);
             petCatch.put(pet.getId(),pet);
         }
@@ -121,6 +137,18 @@ public class PetDB {
         pet.setDef_rise(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def_rise"))));
         pet.setHp_rise(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp_rise"))));
         pet.setOwner(cursor.getString(cursor.getColumnIndex("owner")));
+        String ownerId = cursor.getString(cursor.getColumnIndex("owner_id"));
+        if(StringUtils.isNotEmpty(ownerId)) {
+            pet.setOwnerId(ownerId);
+        }
+        String color = cursor.getString(cursor.getColumnIndex("color"));
+        if(StringUtils.isNotEmpty(color)) {
+            pet.setColor(color);
+        }else{
+            if(pet.getName().startsWith("变异的") && StringUtils.isNotEmpty(pet.getfName()) && !pet.getfName().startsWith("变异的")){
+                pet.setColor("#B8860B");
+            }
+        }
         String skill = cursor.getString(cursor.getColumnIndex("skill"));
         long skillCount = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("skill_count")));
         NSkill nSkill = NSkill.createSkillByName(skill, pet, skillCount, null);

@@ -36,7 +36,7 @@ public class StoryHelper {
         if (Achievement.story.isEnable() && hero.getKeyCount() > 15 && !Achievement.restriction.isEnable() && a) {
             context.addMessage(String.format("%s找到了一扇上锁了的门，使用一把钥匙打开这扇门", hero.getFormatName()));
             hero.setKeyCount(hero.getKeyCount() - 1);
-            if (Achievement.guider1.isEnable() && !Achievement.guider2.isEnable() && b && hero.getKeyCount() >= 6 && random.nextInt(100) > 55 && context.getMaze().getLev()%4 == 0) {
+            if (Achievement.guider1.isEnable() && !Achievement.guider2.isEnable() && b && hero.getKeyCount() >= 10 && random.nextInt(100) > 55 && context.getMaze().getLev()%4 == 0) {
                 context.addMessage(hero.getFormatName() + "在门后面遇见了<font color=\"#FF0000\">袁酥兄</font><br>" +
                         "<font color=\"#FF0000\">袁酥兄</font>：孩子我们又见面了~<br>" +
                         "<font color=\"#FF0000\">袁酥兄</font>：这次就我就告诉你一些高等级的秘密<br>" +
@@ -107,7 +107,12 @@ public class StoryHelper {
                 hero.setKeyCount(hero.getKeyCount() - 1);
                 return false;
             }else {
-                context.addMessage("但是门后面什么都没有！");
+                if(random.nextBoolean()) {
+                    context.addMessage("但是门后面什么都没有！");
+                }else{
+                    context.addMessage("捡到了一把钥匙");
+                    hero.setKeyCount(hero.getKeyCount() + 1);
+                }
             }
         } else {
             if (b && !Achievement.story.isEnable()) {
@@ -122,7 +127,7 @@ public class StoryHelper {
                     && 2 > (random.nextLong(hero.getLockBox() + 1) + 1) && random.nextLong(915 + context.getMaze().getHunt()) > 1065) {
                 context.addMessage(hero.getFormatName() + "找到一个带锁的宝箱");
                 hero.setLockBox(hero.getLockBox() + 1);
-            } else if (hero.getKeyCount() < 15 && properties > 1130 && random.nextInt(1001) > 787) {
+            } else if (random.nextLong(hero.getKeyCount()) < 15 && properties > 1130 && random.nextInt(1001) > 787) {
                 context.addMessage(hero.getFormatName() + "找到一把宝箱钥匙");
                 hero.setKeyCount(hero.getKeyCount() + 1);
             }

@@ -149,10 +149,12 @@ public class DBHelper {
     private void upgrade17_18(SQLiteDatabase db){
         try{
         GoodManager.buildGoodsDB(db);
+            new ForgeDB().upgradeTo1_8(database);
         }catch (Exception e){
             e.printStackTrace();
             LogHelper.logException(e);
         }
+        PetDB.upgradeTo1_8(db);
     }
 
     private void upgrade16_17(SQLiteDatabase db) {

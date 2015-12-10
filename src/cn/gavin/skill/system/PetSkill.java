@@ -177,6 +177,7 @@ public class PetSkill extends SkillLayout {
                     return true;
                 }
             });
+            iskll.load();
             iskll.setEggRate(200f);
             iskll.setPetRate(0.5f);
         } else if ("捕捉术".equalsIgnoreCase(name)) {
@@ -486,7 +487,7 @@ public class PetSkill extends SkillLayout {
                     return true;
                 }
             });
-            if (!skill.load()) {
+            if (!iskll.load()) {
                 skill.setProbability(1);
             }
         } else if ("神赋".equalsIgnoreCase(name)) {

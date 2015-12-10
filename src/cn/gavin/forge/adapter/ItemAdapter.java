@@ -17,6 +17,7 @@ import cn.gavin.R;
 import cn.gavin.activity.ForgeActivity;
 import cn.gavin.forge.Item;
 import cn.gavin.forge.dialog.ItemDetailDialog;
+import cn.gavin.utils.StringUtils;
 import cn.gavin.utils.ui.LoadMoreListView;
 
 /**
@@ -94,7 +95,7 @@ public class ItemAdapter extends BaseAdapter implements LoadMoreListView.OnRefre
 
     @Override
     public void onLoadMore() {
-        List<Item> items = Item.loadByLimit(itemList.size() - 1, 10, "");
+        List<Item> items = Item.loadByLimit(itemList.size() - 1, 10, query);
         if (!items.isEmpty()) {
             addItem(items);
             listView.onLoadMoreComplete(false);
@@ -107,10 +108,14 @@ public class ItemAdapter extends BaseAdapter implements LoadMoreListView.OnRefre
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
     }
-
+private String query = "";
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        String query = "where name like '%" + s.toString() + "%'";
+        if(StringUtils.isNotEmpty(s.toString())) {
+            query = "where name like '%" + s.toString() + "%'";
+        }else{
+            query = "";
+        }
         List<Item> items = Item.loadByLimit(0, 10, query);
         searchResult(items);
     }

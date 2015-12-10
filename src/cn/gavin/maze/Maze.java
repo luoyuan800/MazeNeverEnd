@@ -337,7 +337,7 @@ public class Maze {
 //                    level--;
                 }
             }
-            if (PetDB.getPetCount(null) < hero.getPetSize() + 30) {
+            if (PetDB.getPetCount(null) < hero.getPetSize() + 20) {
                 Pet f = null;
                 Pet m = null;
                 List<Pet> pets = hero.getPets();
