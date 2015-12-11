@@ -149,6 +149,11 @@ public class DBHelper {
     private void upgrade17_18(SQLiteDatabase db){
         try{
         GoodManager.buildGoodsDB(db);
+        }catch (Exception e){
+            e.printStackTrace();
+            LogHelper.logException(e);
+        }
+        try {
             new ForgeDB().upgradeTo1_8(database);
         }catch (Exception e){
             e.printStackTrace();

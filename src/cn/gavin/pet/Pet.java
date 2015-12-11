@@ -1,6 +1,7 @@
 package cn.gavin.pet;
 
 import android.content.Context;
+
 import cn.gavin.Achievement;
 import cn.gavin.Element;
 import cn.gavin.Hero;
@@ -40,11 +41,11 @@ public class Pet extends Base {
 
 
     public void click() {
-        if(!MazeContents.hero.getUuid().equals(getOwnerId()) && MazeContents.hero.getUpperAtk() < getMaxAtk()/2){
+        if (!MazeContents.hero.getUuid().equals(getOwnerId()) && MazeContents.hero.getUpperAtk() < getMaxAtk() / 2) {
             return;
         }
         intimacy++;
-        if (intimacy > 50000000 || MazeContents.hero.getUpperAtk() < getMaxAtk()/4) {
+        if (intimacy > 50000000 || MazeContents.hero.getUpperAtk() < getMaxAtk() / 4) {
             intimacy--;
         }
         if (getRandom().nextLong(intimacy) > 500 + getRandom().nextInt(1000)) {
@@ -114,7 +115,7 @@ public class Pet extends Base {
         if (rate >= 100) {
             rate = 98;
         }
-        double current = random.nextInt(100) + random.nextDouble();
+        double current = random.nextInt(100) - 1 + random.nextDouble() + random.nextInt(PetDB.getPetCount(null) + 1) / 10;
         if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 17 && rate > current) {
             Pet pet = cPet(monster, random);
             if (pet == null) return null;
@@ -135,20 +136,20 @@ public class Pet extends Base {
             if (hp == 0) {
                 hp = monsterHp / 2 + 10;
             }
-            pet.setDef((monsterHp - hp)/300 + 10);
-            if(pet.getMaxDef() > MazeContents.hero.getBaseDefense()){
-                pet.setDef(pet.getMaxDef()/200 + 10);
+            pet.setDef((monsterHp - hp) / 300 + 10);
+            if (pet.getMaxDef() > MazeContents.hero.getBaseDefense()) {
+                pet.setDef(pet.getMaxDef() / 200 + 10);
             }
-            pet.setAtk(monster.getAtk()/500 + 10);
-            if(pet.getMaxAtk() > MazeContents.hero.getBaseAttackValue()){
-                pet.setAtk(pet.getMaxAtk()/400 + 10);
+            pet.setAtk(monster.getAtk() / 500 + 10);
+            if (pet.getMaxAtk() > MazeContents.hero.getBaseAttackValue()) {
+                pet.setAtk(pet.getMaxAtk() / 400 + 10);
             }
-            pet.setHp(hp/500 + 20);
-            if(pet.getUHp() > MazeContents.hero.getRealUHP()){
-                pet.setHp(pet.getUHp()/200 + 20);
+            pet.setHp(hp / 500 + 20);
+            if (pet.getUHp() > MazeContents.hero.getRealUHP()) {
+                pet.setHp(pet.getUHp() / 200 + 20);
             }
             int index = Monster.getIndex(pet.getName());
-            if(MazeContents.hero.ismV() && index%2==0){
+            if (MazeContents.hero.ismV() && index % 2 == 0) {
                 return null;
             }
             if (index >= 0 && index < Monster.lastNames.length - 11) {
@@ -166,10 +167,10 @@ public class Pet extends Base {
                 if (sindex < 5) {
                     sindex += random.nextInt(6);
                 }
-                if(sindex == 2){
+                if (sindex == 2) {
                     sindex = 3;
                 }
-                if(sindex >= PetSkillList.values().length){
+                if (sindex >= PetSkillList.values().length) {
                     sindex = PetSkillList.values().length;
                 }
                 NSkill petS = PetSkillList.values()[sindex].getSkill(pet);
@@ -338,7 +339,7 @@ public class Pet extends Base {
             rate = 0.01;
         }
 
-        double current = random.nextInt(100) + random.nextDouble();
+        double current = random.nextInt(100) - 1 + random.nextDouble() + random.nextInt(PetDB.getPetCount(null) + 1) / 10;
         if (!f.getId().equals(m.getId()) && rate > current) {
             return getEgg(f, m, lev, hero, random);
         } else {
@@ -377,7 +378,7 @@ public class Pet extends Base {
         egg.setOwnerId(hero.getUuid());
         if (!f.getType().equals(m.getType())) {
             if (random.nextInt(10000) + random.nextFloat() < (31.115 + hero.getPetAbe())) {
-                String lastName = Monster.lastNames[random.nextInt(Monster.lastNames.length-1)];
+                String lastName = Monster.lastNames[random.nextInt(Monster.lastNames.length - 1)];
                 egg.setName("变异的" + lastName);
                 if (lastName.equals("作者")) {
                     egg.setAtk(egg.getAtk() * 2);
@@ -391,7 +392,7 @@ public class Pet extends Base {
         }
         if ((SkillFactory.getSkill("恩赐", MazeContents.hero).isActive() && random.nextInt(100) < 45) || random.nextInt(1000) < 5) {
             int index = random.nextInt(PetSkillList.values().length);
-            if(index == 2) index = 1;
+            if (index == 2) index = 1;
             NSkill petS = PetSkillList.values()[index].getSkill(egg);
             if (petS instanceof PetSkill) {
                 egg.setSkill(petS);

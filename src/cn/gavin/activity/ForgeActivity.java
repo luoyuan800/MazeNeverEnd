@@ -301,6 +301,9 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                             Item item = FuseItems.fuse(item1, item2, item3, item4, item5);
                             if (item != null) {
                                 resultText.setText(Html.fromHtml("获得了<br>" + item.toString()));
+                                if(item.equals(item1)){
+                                    resultText.setText("材料属性达到了上限不能再进行融合了！");
+                                }
                             }
                         } else {
                             resultText.setText("需要五个材料才可以进行融合");

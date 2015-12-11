@@ -9,6 +9,7 @@ import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.skill.expression.EnableExpression;
 import cn.gavin.skill.system.*;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
 
 import java.util.Map;
@@ -100,6 +101,19 @@ public class SkillFactory {
         };
     }
 
+    public static synchronized int reset(String name){
+        int point = 0;
+        Skill skill = getSkill(name, MazeContents.hero);
+        if (skill.isActive()) {
+            if (skill.isOnUsed()) {
+                skill.setOnUsed(false);
+            }
+            skill.setActive(false);
+            point++;
+        }
+        return point;
+    }
+
     public static synchronized long reset() {
         int point = 0;
         for (Skill skill : skillMap.values()) {
@@ -108,6 +122,7 @@ public class SkillFactory {
                     skill.setOnUsed(false);
                 }
                 skill.setActive(false);
+                skill.setCount(skill.getCount()/2);
                 point++;
             }
         }
