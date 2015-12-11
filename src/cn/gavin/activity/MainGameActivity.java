@@ -999,17 +999,17 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             heroN.addMaterial(60000);
                             heroN.setAwardCount(heroN.getAwardCount() + 3);
                         } else if (input.equals("201509181447")) {
-                            heroN.setPetSize(heroN.getPetSize() + 10);
-                            heroN.setPetRate(0.001f);
-                            heroN.addMaterial(10000000);
-                            heroN.addPoint(100000);
-                            heroN.setLockBox(heroN.getLockBox() + 1000);
-                            heroN.setKeyCount(heroN.getKeyCount() + 1000);
-                            heroN.setMaxMazeLev(heroN.getMaxMazeLev() + 101);
-                            maze.setLevel(99);
-                            Achievement.dragon.enable(heroN);
-                            SkillFactory.getSkill("虚无吞噬", heroN).setActive(true);
-                            DBHelper.getDbHelper().excuseSQLWithoutResult("UPDATE recipe set found = 'true'");
+//                            heroN.setPetSize(heroN.getPetSize() + 10);
+//                            heroN.setPetRate(0.001f);
+//                            heroN.addMaterial(10000000);
+//                            heroN.addPoint(100000);
+//                            heroN.setLockBox(heroN.getLockBox() + 1000);
+//                            heroN.setKeyCount(heroN.getKeyCount() + 1000);
+//                            heroN.setMaxMazeLev(heroN.getMaxMazeLev() + 101);
+//                            maze.setLevel(99);
+//                            Achievement.dragon.enable(heroN);
+//                            SkillFactory.getSkill("虚无吞噬", heroN).setActive(true);
+//                            DBHelper.getDbHelper().excuseSQLWithoutResult("UPDATE recipe set found = 'true'");
                         } else if (input.equals("201509181447ac")) {
                             for (Achievement achievement : Achievement.values()) {
                                 achievement.enable(heroN);
