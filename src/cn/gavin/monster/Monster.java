@@ -304,7 +304,7 @@ public class Monster {
         long m2 = random.nextLong(atk + 1) / 409 + 10;
         material = random.nextLong((m1 + m2) / 828 + 1) + 20 + random.nextLong(maze.getLev() / 5 + 1);
         if(hero.getMaxMazeLev() < 10000){
-            material += 20;
+            material += 30;
         }
         if(hero.getMaxMazeLev() > 5000 && maze.getLev() < hero.getMaxMazeLev()){
             material/=2;

@@ -142,7 +142,8 @@ public class PetSkill extends SkillLayout {
                     return true;
                 }
             });
-                iskll.setEggRate(-200f);
+            iskll.load();
+            iskll.setEggRate(-200f);
                 iskll.setPetRate(-0.5f);
         } else if ("培育家".equalsIgnoreCase(name)) {
             final PropertySkill iskll = new PropertySkill();

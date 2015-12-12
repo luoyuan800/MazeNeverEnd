@@ -160,6 +160,9 @@ public class Maze {
                 boolean cheat = false;
                 for (Pet pet : hero.getPets()) {
                     cheat = !MazeContents.checkPet(pet);
+                    if(cheat){
+                        break;
+                    }
                 }
                 if (!MazeContents.checkCheat(hero) || cheat) {
                     monster = Monster.CHEATBOSS();

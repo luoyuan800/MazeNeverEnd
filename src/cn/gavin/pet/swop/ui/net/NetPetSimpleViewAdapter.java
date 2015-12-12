@@ -7,6 +7,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import cn.gavin.R;
@@ -85,6 +87,7 @@ public class NetPetSimpleViewAdapter extends BaseAdapter {
         private TextView atk;
         private TextView def;
         private SwapPet pet;
+        private TextView hello;
 
         private PetViewHolder(View.OnClickListener listener) {
             view = View.inflate(MainGameActivity.context,
@@ -95,6 +98,7 @@ public class NetPetSimpleViewAdapter extends BaseAdapter {
                 hp = (TextView) view.findViewById(R.id.pet_hp);
                 atk = (TextView) view.findViewById(R.id.pet_atk);
                 def = (TextView) view.findViewById(R.id.pet_def);
+                hello = (TextView) view.findViewById(R.id.pet_swap_hello);
                 view.setTag(this);
                 view.setOnClickListener(listener);
             }
@@ -112,6 +116,11 @@ public class NetPetSimpleViewAdapter extends BaseAdapter {
                 def.setText("DEF:" + StringUtils.formatNumber(pet.getDef()));
                 def.setVisibility(View.VISIBLE);
                 petImage.setVisibility(View.VISIBLE);
+                if(StringUtils.isNotEmpty(pet.getHello())){
+                    hello.setText(pet.getHello());
+                }else{
+                    hello.setText("選我選我吧！");
+                }
                 petImage.setImageResource((MazeContents.getImageByName(pet.getName(),
                         pet.getType() == Integer.MAX_VALUE-1 ? "蛋" : "")));
             } else {

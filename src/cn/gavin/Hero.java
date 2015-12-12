@@ -1,6 +1,14 @@
 package cn.gavin;
 
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
@@ -13,13 +21,11 @@ import cn.gavin.monster.Monster;
 import cn.gavin.pet.Pet;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;
+import cn.gavin.skill.system.ItemSkill;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.RestoreSkill;
 import cn.gavin.utils.Random;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Hero implements BaseObject {
     private static final String TAG = "Hero";
@@ -96,6 +102,7 @@ public class Hero implements BaseObject {
     private String uuid;
     private float petAbe = 0;
     private boolean mV = false;
+
     public Float getParry() {
         return parry;
     }
@@ -507,7 +514,9 @@ public class Hero implements BaseObject {
                         addMaterial(clickAward);
                     }
                     if (clickPointAward > 5) {
-                        addPoint(random.nextLong(clickPointAward));
+                        long point1 = random.nextLong(clickPointAward);
+                        if(point1 > 15) point1 = 15;
+                        addPoint(point1);
                     } else {
                         addPoint(clickPointAward);
                     }
@@ -828,6 +837,7 @@ public class Hero implements BaseObject {
         EnumMap<Effect, Long> effectLongEnumMap = getAccessoryEffectMap(accessory);
         for (EnumMap.Entry<Effect, Long> effect : effectLongEnumMap.entrySet()) {
             Long value = effect.getValue();
+            String itemSkillName;
             switch (effect.getKey()) {
                 case ADD_DODGE_RATE:
                     setDodgeRate(dodgeRate + value);
@@ -887,7 +897,16 @@ public class Hero implements BaseObject {
                     addUpperHp(uHp.longValue());
                     break;
                 case ADD_PET_ABE:
-                    setPetAbe(petAbe + value.floatValue()/100f);
+                    setPetAbe(petAbe + value.floatValue() / 100f);
+                    break;
+                case START_BURST:
+                    setItemSkill(SkillFactory.getSkill("星爆", this));
+                    break;
+                case ICE_BURST:
+                    setItemSkill(SkillFactory.getSkill("冰爆", this));
+                    break;
+                case FEN_BURST:
+                    setItemSkill(SkillFactory.getSkill("令风", this));
                     break;
             }
         }
@@ -947,6 +966,21 @@ public class Hero implements BaseObject {
                     break;
                 case ADD_PET_ABE:
                     setPetAbe(petAbe - effect.getValue());
+                    break;
+                case START_BURST:
+                    if(getItemSkill()!=null && getItemSkill().getName().equals("星爆")) {
+                        setItemSkill(null);
+                    }
+                    break;
+                case ICE_BURST:
+                    if(getItemSkill()!=null && getItemSkill().getName().equals("冰爆")) {
+                        setItemSkill(null);
+                    }
+                    break;
+                case FEN_BURST:
+                    if(getItemSkill()!=null && getItemSkill().getName().equals("令风")) {
+                        setItemSkill(null);
+                    }
                     break;
             }
         }
@@ -1096,7 +1130,7 @@ public class Hero implements BaseObject {
 
     private void addReincarnation(String name, long hp, long atk, long lev) {
         String sql = String.format("REPLACE INTO npc(name, lev, hp, atk) " +
-                "values('%s','%s','%s','%s')",
+                        "values('%s','%s','%s','%s')",
                 name, lev, hp, atk);
         DBHelper.getDbHelper().excuseSQLWithoutResult(sql);
     }
@@ -1271,9 +1305,6 @@ public class Hero implements BaseObject {
 
     public void setClickPointAward(Long clickPointAward) {
         this.clickPointAward = clickPointAward;
-        if (this.clickPointAward > 2) {
-            this.clickPointAward = 2l;
-        }
     }
 
     public Element getElement() {

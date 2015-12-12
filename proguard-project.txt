@@ -29,3 +29,6 @@
 -keep class cn.bmob.push.** {*;}
 -keep class cn.gavin.upload.PalaceObject{*;}
 -keep class cn.gavin.upload.CdKey{*;}
+-keep class cn.gavin.pet.swop.SwapPet{*;}
+-keep class cn.gavin.db.good.Good{*;}
+-keep class cn.gavin.good.GoodsInNet{*;}

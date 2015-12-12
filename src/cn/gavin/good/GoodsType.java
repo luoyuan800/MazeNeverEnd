@@ -236,6 +236,24 @@ public enum GoodsType {
             MazeContents.hero.setSkillPoint(MazeContents.hero.getSkillPoint() + 1);
             return null;
         }
+    }, true),
+    TenMMeat("10W锻造点数", "使用后获得10W锻造点数", new GoodScript() {
+        @Override
+        public Object use() {
+            GoodsType.TenMMeat.count--;
+            GoodsType.TenMMeat.save();
+            MazeContents.hero.addMaterial(100000);
+            return null;
+        }
+    }, true),
+    FiveMMeat("50W锻造点数", "使用后获得50W锻造点数", new GoodScript() {
+        @Override
+        public Object use() {
+            GoodsType.FiveMMeat.count--;
+            GoodsType.FiveMMeat.save();
+            MazeContents.hero.addMaterial(500000);
+            return null;
+        }
     }, true);
     private String name;
     private String desc;

@@ -7,6 +7,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -115,42 +116,55 @@ public class SwapDialog implements LoadMoreListView.OnRefreshLoadingMoreListener
                     builder.setView(view);
                     builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            SwapPet swapPet = SwapPet.buildSwapPet(pet);
-                            AlertDialog alertDialog = (AlertDialog) dialog;
-                            Spinner fs = (Spinner) alertDialog.findViewById(R.id.first_name);
-                            Spinner ss = (Spinner) alertDialog.findViewById(R.id.second_name);
-                            Spinner ls = (Spinner) alertDialog.findViewById(R.id.last_name);
-                            String first = (String) fs.getSelectedItem();
-                            String second = (String) ss.getSelectedItem();
-                            String last = (String) ls.getSelectedItem();
-                            String askName = "";
-                            if (!"无".equals(first)) {
-                                askName += (first + "的");
-                            }
-                            if (!"无".equals(second)) {
-                                askName += second;
-                            }
-                            if (!"无".equals(last)) {
-                                swapPet.setAskType(Monster.getIndex(last));
-                            }
-                            if (StringUtils.isNotEmpty(askName)) {
-                                swapPet.setAskName(askName);
-                            }
-                            TextView askAtk = (TextView) alertDialog.findViewById(R.id.ask_atk);
-                            swapPet.setAskAtk(StringUtils.toLong(askAtk.getText().toString()));
-                            TextView askDef = (TextView) alertDialog.findViewById(R.id.ask_def);
-                            swapPet.setAskDef(StringUtils.toLong(askDef.getText().toString()));
-                            TextView askHp = (TextView) alertDialog.findViewById(R.id.ask_hp);
-                            swapPet.setAskHp(StringUtils.toLong(askHp.getText().toString()));
-                            Spinner sexs = (Spinner) alertDialog.findViewById(R.id.ask_sex);
-                            if ("♂".equals(sexs.getSelectedItem())) {
-                                swapPet.setAskSex(0);
-                            } else if ("♀".equals(sexs.getSelectedItem())) {
-                                swapPet.setAskSex(1);
-                            }
-                            SwapManager swapManager = new SwapManager();
-                            swapManager.uploadPet(context, swapPet, pet);
+                        public void onClick(final DialogInterface dialog, int which) {
+                            AlertDialog message = new AlertDialog.Builder(context).create();
+                            final EditText editText = new EditText(context);
+                            editText.setText("大家隨便換");
+                            message.setTitle("輸入您的留言（簡介，要求...）");
+                            message.setView(editText);
+                            message.setButton(DialogInterface.BUTTON_POSITIVE, "確認", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInt, int which) {
+                                    SwapPet swapPet = SwapPet.buildSwapPet(pet);
+                                    swapPet.setHello(editText.getText().toString());
+                                    AlertDialog alertDialog = (AlertDialog) dialog;
+                                    Spinner fs = (Spinner) alertDialog.findViewById(R.id.first_name);
+                                    Spinner ss = (Spinner) alertDialog.findViewById(R.id.second_name);
+                                    Spinner ls = (Spinner) alertDialog.findViewById(R.id.last_name);
+                                    String first = (String) fs.getSelectedItem();
+                                    String second = (String) ss.getSelectedItem();
+                                    String last = (String) ls.getSelectedItem();
+                                    String askName = "";
+                                    if (!"无".equals(first)) {
+                                        askName += (first + "的");
+                                    }
+                                    if (!"无".equals(second)) {
+                                        askName += second;
+                                    }
+                                    if (!"无".equals(last)) {
+                                        swapPet.setAskType(Monster.getIndex(last));
+                                    }
+                                    if (StringUtils.isNotEmpty(askName)) {
+                                        swapPet.setAskName(askName);
+                                    }
+                                    TextView askAtk = (TextView) alertDialog.findViewById(R.id.ask_atk);
+                                    swapPet.setAskAtk(StringUtils.toLong(askAtk.getText().toString()));
+                                    TextView askDef = (TextView) alertDialog.findViewById(R.id.ask_def);
+                                    swapPet.setAskDef(StringUtils.toLong(askDef.getText().toString()));
+                                    TextView askHp = (TextView) alertDialog.findViewById(R.id.ask_hp);
+                                    swapPet.setAskHp(StringUtils.toLong(askHp.getText().toString()));
+                                    Spinner sexs = (Spinner) alertDialog.findViewById(R.id.ask_sex);
+                                    if ("♂".equals(sexs.getSelectedItem())) {
+                                        swapPet.setAskSex(0);
+                                    } else if ("♀".equals(sexs.getSelectedItem())) {
+                                        swapPet.setAskSex(1);
+                                    }
+                                    SwapManager swapManager = new SwapManager();
+                                    swapManager.uploadPet(context, swapPet, pet);
+                                    dialogInt.dismiss();
+                                }
+                            });
+                            message.show();
                             dialog.dismiss();
                             dismiss();
                         }

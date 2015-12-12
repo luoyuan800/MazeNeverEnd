@@ -92,6 +92,7 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                             }
                         });
                         err.show();
+                        break;
                 }
                 super.handleMessage(msg);
             } catch (Exception e) {

@@ -164,7 +164,7 @@ public enum Effect {
     FEN_BURST(new Calculate() {
         @Override
         public Number calculate(Hero hero, Monster monster) {
-            return 3;
+            return 12;
         }
     }, "附带技能令风(装备技能只能有一个生效)<br>秒杀土属性的敌人。释放概率");
     private Calculate calculate;

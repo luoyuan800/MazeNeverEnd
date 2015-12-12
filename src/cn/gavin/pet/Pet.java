@@ -45,10 +45,10 @@ public class Pet extends Base {
             return;
         }
         intimacy++;
-        if (intimacy > 50000000 || MazeContents.hero.getUpperAtk() < getMaxAtk() / 4) {
+        if (intimacy > 50000000 || MazeContents.hero.getUpperAtk() < getMaxAtk() / 10) {
             intimacy--;
         }
-        if (getRandom().nextLong(intimacy) > 500 + getRandom().nextInt(1000)) {
+        if (getRandom().nextLong(intimacy) > 500 + getRandom().nextInt(500)) {
             uHp += 50;
             atk += 10;
             def += 70;
