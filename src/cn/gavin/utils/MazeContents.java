@@ -112,7 +112,11 @@ public class MazeContents {
                 image = R.drawable.zl;
                 break;
             case 1:
-                image = R.drawable.qy;
+                if (name.contains("红")) {
+                    image = R.drawable.qy_red;
+                } else {
+                    image = R.drawable.qy;
+                }
                 break;
             case 2:
                 image = R.drawable.pc;

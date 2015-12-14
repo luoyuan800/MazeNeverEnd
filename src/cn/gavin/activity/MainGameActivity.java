@@ -667,18 +667,18 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
     public void intFloatImage() {
         // 获取WindowManager
-        mWindowManager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        mWindowManager = getWindowManager();
         // 设置LayoutParams(全局变量）相关参数
         wmParams = new WindowManager.LayoutParams();
 
-        wmParams.type = WindowManager.LayoutParams.TYPE_PHONE; // 设置window type
+        wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG; // 设置window type
         wmParams.format = PixelFormat.RGBA_8888; // 设置图片格式，效果为背景透明
         // 设置Window flag
         wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 
         // 以屏幕左上角为原点，设置x、y初始值
-        wmParams.x = 5;
-        wmParams.y = 400;
+        wmParams.x = 50;
+        wmParams.y = 300;
         System.out.println("*************" + wmParams.y);
         // 设置悬浮窗口长宽数据
         wmParams.width = 80;
@@ -692,7 +692,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private void createFloatView() {
         img_Float = new ImageView(this);
         img_Float.setImageResource(R.drawable.die_msg);
-        img_Float.setAlpha(40);
+//        img_Float.setAlpha(50);
         // 调整悬浮窗口
         wmParams.gravity = Gravity.START | Gravity.CENTER_VERTICAL;
         // 显示myFloatView图像
