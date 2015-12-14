@@ -900,13 +900,19 @@ public class Hero implements BaseObject {
                     setPetAbe(petAbe + value.floatValue() / 100f);
                     break;
                 case START_BURST:
-                    setItemSkill(SkillFactory.getSkill("星爆", this));
+                    Skill startSkill = SkillFactory.getSkill("星爆", this);
+                    startSkill.setProbability(value);
+                    setItemSkill(startSkill);
                     break;
                 case ICE_BURST:
-                    setItemSkill(SkillFactory.getSkill("冰爆", this));
+                    Skill iceSkill = SkillFactory.getSkill("冰爆", this);
+                    iceSkill.setProbability(value);
+                    setItemSkill(iceSkill);
                     break;
                 case FEN_BURST:
-                    setItemSkill(SkillFactory.getSkill("令风", this));
+                    Skill wind = SkillFactory.getSkill("令风", this);
+                    wind.setProbability(value);
+                    setItemSkill(wind);
                     break;
             }
         }

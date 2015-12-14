@@ -214,7 +214,11 @@ public class MazeContents {
                 image = R.drawable.shankui;
                 break;
             case 28:
-                image = R.drawable.qiongqi;
+                if (name.contains("红")) {
+                    image = R.drawable.qiongqi_red;
+                } else {
+                    image = R.drawable.qiongqi;
+                }
                 break;
             case 29:
                 if (name.contains("红")) {

@@ -186,6 +186,7 @@ public class Maze {
                     Pet pet = Pet.catchPet(monster);
                     if (pet != null) {
                         addMessage(context, hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
+                        monster.addBattleDesc(hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
                         if (hero.getPets().size() < hero.getPetSize()) {
                             hero.getPets().add(pet);
                         }
@@ -242,6 +243,7 @@ public class Maze {
                             }
                         }
                     }
+                    context.showFloatView(monster.getBattleMsg());
                     lastSave = level;
                 }
                 monsterBook.addMonster(monster);
