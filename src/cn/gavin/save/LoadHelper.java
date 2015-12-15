@@ -172,10 +172,10 @@ public class LoadHelper {
                 }
             }
         }
-        heroN.setTitleColor(preferences.getString("title_color", "#ff00acff"));
-        heroN.setLeftUpColor(preferences.getString("left_up_color", "#00000000"));
-        heroN.setLeftDownColor(preferences.getString("left_down_color", "#8f11f8ff"));
-        heroN.setRightDownColor(preferences.getString("right_down_color", "#00000000"));
+        heroN.setTitleColor(preferences.getString("title_color", "#8a00acff"));
+        heroN.setLeftUpColor(preferences.getString("left_up_color", "#8bFFFFff"));
+        heroN.setLeftDownColor(preferences.getString("left_down_color", "#6b11f8ff"));
+        heroN.setRightDownColor(preferences.getString("right_down_color", "#8bFFFFff"));
         heroN.setUuid(preferences.getString("uuid", UUID.randomUUID().toString()));
         heroN.setOnSkill(false);
         heroN.setPetAbe(preferences.getFloat("pet_abe", 0));

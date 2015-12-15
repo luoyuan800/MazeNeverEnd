@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
@@ -152,7 +152,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="#af00acff"
+                    android:background="#8a00acff"
                     android:clickable="true"
                     android:gravity="center"
                     android:textSize="15sp" />
@@ -161,7 +161,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="#af00acff"
+                    android:background="#8a00acff"
                     android:clickable="true"
                     android:gravity="center"
                     android:textSize="12sp" />
@@ -192,7 +192,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="52dp"
                             android:layout_weight="1"
-                            android:alpha="80"
+                            android:alpha="90"
                             android:focusableInTouchMode="false"
                             android:gravity="center"
                             android:textSize="8sp" />
@@ -202,7 +202,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="52dp"
                             android:layout_weight="1"
-                            android:alpha="70"
+                            android:alpha="90"
                             android:gravity="center"
                             android:textSize="8sp" />
 
@@ -211,7 +211,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="52dp"
                             android:layout_weight="1"
-                            android:alpha="70"
+                            android:alpha="95"
                             android:focusableInTouchMode="false"
                             android:gravity="center"
                             android:textSize="8sp" />
@@ -392,7 +392,7 @@
                         android:focusableInTouchMode="false"
                         android:text="&lt;"
                         android:textColor="#0dc2fb"
-                        android:textSize="12sp" />
+                        android:textSize="12sp" android:alpha="100"/>
 
                     <View
                         android:id="@+id/skill_system_name"
@@ -412,7 +412,7 @@
                         android:focusableInTouchMode="false"
                         android:text="&gt;"
                         android:textColor="#0dc2fb"
-                        android:textSize="12sp" />
+                        android:textSize="12sp" android:alpha="100"/>
                 </LinearLayout>
 
                 <ViewFlipper

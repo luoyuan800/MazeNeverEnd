@@ -692,7 +692,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private void createFloatView() {
         img_Float = new ImageView(this);
         img_Float.setImageResource(R.drawable.die_msg);
-        img_Float.setAlpha(80);
+//        img_Float.setAlpha(23);
         // 调整悬浮窗口
         wmParams.gravity = Gravity.START | Gravity.CENTER_VERTICAL;
         // 显示myFloatView图像

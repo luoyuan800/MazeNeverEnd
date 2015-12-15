@@ -118,7 +118,7 @@ public enum GoodsType {
         public Object use() {
             GoodsType.RandomGoods.count--;
             GoodsType.RandomGoods.save();
-            int index = MazeContents.hero.getRandom().nextInt(20);
+            int index = MazeContents.hero.getRandom().nextInt(30);
             TextView textView = new TextView(MainGameActivity.context);
             if (index < values().length) {
                 if(index == 2) index += MazeContents.hero.getRandom().nextInt(4);
@@ -149,7 +149,7 @@ public enum GoodsType {
             GoodsType.RandomPortal.save();
             long min = MazeContents.maze.getLev() -100;
             long max = MazeContents.hero.getMaxMazeLev() + 301;
-            long lev=  MazeContents.hero.getRandom().nextLong(max) - MazeContents.hero.getRandom().nextLong(min);
+            long lev=  min - 200 + MazeContents.hero.getRandom().nextLong(max + 100);
             if(lev < min) lev = min;
             if(lev > max) lev = max;
             if(lev <= 0) lev = 1;
@@ -252,6 +252,24 @@ public enum GoodsType {
             GoodsType.FiveMMeat.count--;
             GoodsType.FiveMMeat.save();
             MazeContents.hero.addMaterial(500000);
+            return null;
+        }
+    }, true),
+    HadeMMeat("100W锻造点数", "使用后获得100W锻造点数", new GoodScript() {
+        @Override
+        public Object use() {
+            GoodsType.FiveMMeat.count--;
+            GoodsType.FiveMMeat.save();
+            MazeContents.hero.addMaterial(1000000);
+            return null;
+        }
+    }, true),
+    Hade2MMeat("200W锻造点数", "使用后获得200W锻造点数", new GoodScript() {
+        @Override
+        public Object use() {
+            GoodsType.FiveMMeat.count--;
+            GoodsType.FiveMMeat.save();
+            MazeContents.hero.addMaterial(2000000);
             return null;
         }
     }, true);

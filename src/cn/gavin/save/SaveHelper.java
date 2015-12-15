@@ -143,10 +143,26 @@ public class SaveHelper {
             petIds.append(pet.getId()).append("_");
         }
         editor.putString("pet_id", petIds.toString());
-        editor.putString("title_color", heroN.getTitleColor());
-        editor.putString("left_up_color", heroN.getLeftUpColor());
-        editor.putString("left_down_color", heroN.getLeftDownColor());
-        editor.putString("right_down_color", heroN.getRightDownColor());
+        String titleColor = heroN.getTitleColor();
+        if(titleColor.startsWith("#ff") || titleColor.startsWith("#FF")){
+            titleColor = titleColor.replaceFirst("#(ff|FF)","#8a");
+        }
+        editor.putString("title_color", titleColor);
+        String leftUpColor = heroN.getLeftUpColor();
+        if(leftUpColor.startsWith("#ff") || leftUpColor.startsWith("#FF")){
+            leftUpColor = leftUpColor.replaceFirst("#(ff|FF)","#8b");
+        }
+        editor.putString("left_up_color", leftUpColor);
+        String leftDownColor = heroN.getLeftDownColor();
+        if(leftDownColor.startsWith("#ff") || leftDownColor.startsWith("#FF")){
+            leftDownColor = leftDownColor.replaceFirst("#(ff|FF)","#6b");
+        }
+        editor.putString("left_down_color", leftDownColor);
+        String rightDownColor = heroN.getRightDownColor();
+        if(rightDownColor.startsWith("#ff") || rightDownColor.startsWith("#FF")){
+            rightDownColor = rightDownColor.replaceFirst("#(ff|FF)","#8b");
+        }
+        editor.putString("right_down_color", rightDownColor);
         editor.putLong("reset_skill", heroN.getResetSkillCount());
         editor.putInt("csm", maze.getCsmgl());
         editor.putString("uuid", heroN.getUuid());

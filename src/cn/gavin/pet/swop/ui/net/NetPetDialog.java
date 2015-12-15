@@ -301,27 +301,27 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                         } else {
                             StringBuilder condition = new StringBuilder("要求为:<br>");
                             if(netPet.getAskAtk()!=null) {
-                                condition.append("攻击高于 <i>").append(netPet.getAskAtk()).append("</i>");
+                                condition.append("攻击高于 <i>").append(netPet.getAskAtk()).append("</i><br>");
                             }
                             if(netPet.getAskDef()!=null) {
-                                condition.append("防御高于 <i>").append(netPet.getAskDef()).append("</i>");
+                                condition.append("防御高于 <i>").append(netPet.getAskDef()).append("</i><br>");
                             }
                             if(netPet.getAskHp()!=null) {
-                                condition.append("hp高于 <i>").append(netPet.getAskHp()).append("</i>");
+                                condition.append("hp高于 <i>").append(netPet.getAskHp()).append("</i><br>");
                             }
                             if(netPet.getAskType()!=null) {
                                 if( netPet.getAskType() < Monster.lastNames.length) {
-                                    condition.append("种类为 <i>").append(Monster.lastNames[netPet.getAskType()]).append("</i>");
+                                    condition.append("种类为 <i>").append(Monster.lastNames[netPet.getAskType()]).append("</i><br>");
                                 }
                             }
-                            if(netPet.getAskName()!=null) {
-                                condition.append("前后缀 <i>").append(netPet.getAskName()).append("/<i>");
+                            if(StringUtils.isNotEmpty(netPet.getAskName())) {
+                                condition.append("前后缀 <i>").append(netPet.getAskName()).append("</i><br>");
                             }
                             if(netPet.getAskSkill()!=null){
-                                condition.append("技能限定 <i>").append(netPet.getAskSkill()).append("</i>");
+                                condition.append("技能限定 <i>").append(netPet.getAskSkill()).append("</i><br>");
                             }
                             if(netPet.getAskSex()!=null){
-                                condition.append("性别限定 <i>").append(netPet.getAskSex()==0?"♂":"♀").append("</i>");
+                                condition.append("性别限定 <i>").append(netPet.getAskSex()==0?"♂":"♀").append("</i><br>");
                             }
                             TextView textView = new TextView(context);
                             textView.setText(Html.fromHtml("<font color=\"red\">对不起！您没有符合对方要求的宠物。</font>" + condition));

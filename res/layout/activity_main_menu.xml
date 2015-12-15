@@ -32,18 +32,17 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
         android:text="@string/start_label"
-        android:textSize="40sp" android:textStyle="bold"/>
+        android:textSize="40sp" android:textStyle="bold" android:alpha="25"/>
 
     <TextView
         android:id="@+id/menu_game_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/menu_start"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="@string/game_menu_tip"
         android:gravity="center"
         android:layout_marginTop="80dp"
-        android:textSize="12sp" android:textColor="@color/gray"/>
+        android:textSize="12sp" android:textColor="@color/gray" android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
