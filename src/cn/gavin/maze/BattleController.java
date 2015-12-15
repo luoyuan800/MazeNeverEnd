@@ -117,7 +117,7 @@ public class BattleController {
         for (Pet pet : pets) {
             if (pet != null && pet.getHp() > 0 && !"蛋".equals(pet.getType())) {
                 if (pet.gon()) {
-                    if(!monster.isPetSub(hero.getRandom())) {
+                    if(!monster.isPetSub(hero.getRandom(), pet)) {
                         NSkill petSkill = pet.getAtkSkill();
                         long petHarm = 0;
                         if (petSkill != null) {

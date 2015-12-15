@@ -299,8 +299,32 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                             loadMoreListView.onLoadMoreComplete(true);
                             myPetDialog.setView(loadMoreListView);
                         } else {
+                            StringBuilder condition = new StringBuilder("要求为:<br>");
+                            if(netPet.getAskAtk()!=null) {
+                                condition.append("攻击高于 <i>").append(netPet.getAskAtk()).append("</i>");
+                            }
+                            if(netPet.getAskDef()!=null) {
+                                condition.append("防御高于 <i>").append(netPet.getAskDef()).append("</i>");
+                            }
+                            if(netPet.getAskHp()!=null) {
+                                condition.append("hp高于 <i>").append(netPet.getAskHp()).append("</i>");
+                            }
+                            if(netPet.getAskType()!=null) {
+                                if( netPet.getAskType() < Monster.lastNames.length) {
+                                    condition.append("种类为 <i>").append(Monster.lastNames[netPet.getAskType()]).append("</i>");
+                                }
+                            }
+                            if(netPet.getAskName()!=null) {
+                                condition.append("前后缀 <i>").append(netPet.getAskName()).append("/<i>");
+                            }
+                            if(netPet.getAskSkill()!=null){
+                                condition.append("技能限定 <i>").append(netPet.getAskSkill()).append("</i>");
+                            }
+                            if(netPet.getAskSex()!=null){
+                                condition.append("性别限定 <i>").append(netPet.getAskSex()==0?"♂":"♀").append("</i>");
+                            }
                             TextView textView = new TextView(context);
-                            textView.setText("对不起！您没有符合对方要求的宠物。");
+                            textView.setText(Html.fromHtml("<font color=\"red\">对不起！您没有符合对方要求的宠物。</font>" + condition));
                             myPetDialog.setView(textView);
                         }
                         myPetDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {

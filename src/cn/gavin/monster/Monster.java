@@ -12,6 +12,7 @@ import cn.gavin.activity.MainGameActivity;
 import cn.gavin.forge.list.ItemName;
 import cn.gavin.maze.Maze;
 import cn.gavin.palace.PalaceMonster;
+import cn.gavin.pet.Pet;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
@@ -43,8 +44,8 @@ public class Monster {
             100000, 110000, 140000, 160000, 200000
     };
     public final static float[] basePetSub = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 1, 2, 3, 4, 5,
-            50, 10, 14, 16, 20
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 1, 2, 3, 4, 5,
+            30, 7, 9, 12, 40
     };
     private final static List[] itemNames = {
             Arrays.asList(ItemName.原石),
@@ -93,8 +94,18 @@ public class Monster {
     private long rate = 300;
     private float petsub = 0f;
 
-    public boolean isPetSub(Random random) {
-        return (random.nextInt(100) + random.nextFloat()) < petsub;
+    public boolean isPetSub(Random random, Pet pet) {
+        float v = petsub;
+        if(!name.contains("守护者")) {
+            int index = getIndex(name);
+            if (index == 23) index = 40;
+            v = petsub + index - getIndex(pet.getName());
+            if((pet.getMaxAtk() + pet.getMaxDef() + pet.getUHp())/3 < hp ){
+                v /= 2;
+            }
+            if (v < 0) v = 0;
+        }
+        return (random.nextInt(100) + random.nextFloat()) < v;
     }
 
     public boolean isSilent(Random random) {
