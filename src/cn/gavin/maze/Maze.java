@@ -106,6 +106,7 @@ public class Maze {
                                 pet.setType(pet.getName());
                             }
                             pet.setLev(level);
+                            pet.setDeathCount(0);
                             PetDB.save(pet);
                         }
                     } else if (!"蛋".equals(pet.getType()) && pet.getHp() > 0) {

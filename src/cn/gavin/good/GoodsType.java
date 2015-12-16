@@ -149,8 +149,10 @@ public enum GoodsType {
             GoodsType.RandomPortal.save();
             long min = MazeContents.maze.getLev() -100;
             long max = MazeContents.hero.getMaxMazeLev() + 301;
-            long lev=  min - 200 + MazeContents.hero.getRandom().nextLong(max + 100);
-            if(lev < min) lev = min;
+            long lev=  min - 400 + MazeContents.hero.getRandom().nextLong(max + 200);
+            if(lev < min){
+                lev = min + MazeContents.hero.getRandom().nextLong(200);
+            }
             if(lev > max) lev = max;
             if(lev <= 0) lev = 1;
             MazeContents.maze.setLevel(lev);
@@ -258,8 +260,8 @@ public enum GoodsType {
     HadeMMeat("100W锻造点数", "使用后获得100W锻造点数", new GoodScript() {
         @Override
         public Object use() {
-            GoodsType.FiveMMeat.count--;
-            GoodsType.FiveMMeat.save();
+            GoodsType.HadeMMeat.count--;
+            GoodsType.HadeMMeat.save();
             MazeContents.hero.addMaterial(1000000);
             return null;
         }
@@ -267,8 +269,8 @@ public enum GoodsType {
     Hade2MMeat("200W锻造点数", "使用后获得200W锻造点数", new GoodScript() {
         @Override
         public Object use() {
-            GoodsType.FiveMMeat.count--;
-            GoodsType.FiveMMeat.save();
+            GoodsType.Hade2MMeat.count--;
+            GoodsType.Hade2MMeat.save();
             MazeContents.hero.addMaterial(2000000);
             return null;
         }
@@ -336,7 +338,7 @@ public enum GoodsType {
     public static List<GoodsType> loadAll() {
         try {
             Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM goods WHERE count > 0");
-            List<GoodsType> list = new ArrayList<GoodsType>(cursor.getCount());
+            final List<GoodsType> list = new ArrayList<GoodsType>(cursor.getCount());
             while (!cursor.isAfterLast()) {
                 try {
                     GoodsType goodsType = valueOf(cursor.getString(cursor.getColumnIndex("name")));
@@ -349,6 +351,28 @@ public enum GoodsType {
                 cursor.moveToNext();
             }
             cursor.close();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    for(GoodsType goodsType : list){
+                        if(goodsType == FiveMMeat && goodsType.count < 0){
+                            while(goodsType.count < 0){
+                                MazeContents.hero.addMaterial(-1600000);
+                                goodsType.count ++;
+                            }
+                            goodsType.save();
+                            break;
+                        }else{
+                            if(goodsType.count < 0){
+                                goodsType.count = 0;
+                            }
+                            goodsType.save();
+                        }
+
+                    }
+                }
+            }).start();
+
             return list;
         } catch (Exception e) {
             LogHelper.logException(e);

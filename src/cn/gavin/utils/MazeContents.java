@@ -1,5 +1,9 @@
 package cn.gavin.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
+
 import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.R;
@@ -21,6 +25,11 @@ public class MazeContents {
     public static Maze maze;
     public static SkillDialog skillDialog;
     public static long lastUpload;
+    public static String SD_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze";
+
+public static Bitmap loadImageFromSD(String name){
+    return BitmapFactory.decodeFile(SD_PATH + "/image/" + name);
+}
 
     public static Maze getMaze() {
         return maze;

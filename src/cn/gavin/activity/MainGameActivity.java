@@ -11,8 +11,10 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -207,6 +209,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private WindowManager.LayoutParams wmParams = null;
     // 用于显示浮动图标
     private ImageView img_Float;
+    private View mainLayout;
 
 
     //Get Function
@@ -1075,6 +1078,11 @@ private boolean isFloat = false;
                         } else if (input.startsWith("#")) {
                             try {
                                 String[] color = StringUtils.split(input, "_");
+                                if(color.length > 0){
+                                    if(color[0].startsWith("#ff")||color[0].startsWith("#FF")){
+                                        color[0] = color[0].replaceFirst("#(ff|FF)", "#8b");
+                                    }
+                                }
                                 if (color.length < 2) {
                                     itembarContri.setBackgroundColor(Color.parseColor(input));
                                     heroN.setTitleColor(input);
@@ -1802,6 +1810,8 @@ private boolean isFloat = false;
         }
         skillDialog.setContext(this);
         monsterBook = new MonsterBook(this);
+        mainLayout = findViewById(R.id.main_game_activity);
+
         // 左侧战斗信息
         mainInfoSv = (ScrollView) findViewById(R.id.main_info_sv);
         mainInfoPlatform = (LinearLayout) findViewById(R.id.main_info_ll);
@@ -1815,6 +1825,11 @@ private boolean isFloat = false;
         mainLeftUp = findViewById(R.id.linearLayout2);
         mainLeftDown = mainInfoPlatform;
         try {
+            Bitmap bitmap = MazeContents.loadImageFromSD("maze_bak.png");
+            if(bitmap!=null) {
+                BitmapDrawable bitmapDrawable = new BitmapDrawable(this.getResources(), bitmap);
+                mainLayout.setBackgroundDrawable(bitmapDrawable);
+            }
             itembarContri.setBackgroundColor(Color.parseColor(heroN.getTitleColor()));
             mainLeftUp.setBackgroundColor(Color.parseColor(heroN.getLeftUpColor()));
             mainLeftDown.setBackgroundColor(Color.parseColor(heroN.getLeftDownColor()));

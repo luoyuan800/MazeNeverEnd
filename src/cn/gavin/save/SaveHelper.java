@@ -150,7 +150,7 @@ public class SaveHelper {
         editor.putString("title_color", titleColor);
         String leftUpColor = heroN.getLeftUpColor();
         if(leftUpColor.startsWith("#ff") || leftUpColor.startsWith("#FF")){
-            leftUpColor = leftUpColor.replaceFirst("#(ff|FF)","#8b");
+            leftUpColor = "#8bFFFFff";
         }
         editor.putString("left_up_color", leftUpColor);
         String leftDownColor = heroN.getLeftDownColor();
@@ -160,7 +160,7 @@ public class SaveHelper {
         editor.putString("left_down_color", leftDownColor);
         String rightDownColor = heroN.getRightDownColor();
         if(rightDownColor.startsWith("#ff") || rightDownColor.startsWith("#FF")){
-            rightDownColor = rightDownColor.replaceFirst("#(ff|FF)","#8b");
+            rightDownColor = "#8bFFFFff";
         }
         editor.putString("right_down_color", rightDownColor);
         editor.putLong("reset_skill", heroN.getResetSkillCount());
