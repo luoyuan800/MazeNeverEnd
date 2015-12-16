@@ -121,7 +121,7 @@ public enum GoodsType {
             int index = MazeContents.hero.getRandom().nextInt(30);
             TextView textView = new TextView(MainGameActivity.context);
             if (index < values().length) {
-                if(index == 2) index += MazeContents.hero.getRandom().nextInt(4);
+                if (index == 2) index += MazeContents.hero.getRandom().nextInt(4);
                 GoodsType goods = values()[index];
                 goods.load();
                 goods.count++;
@@ -147,17 +147,17 @@ public enum GoodsType {
         public Object use() {
             GoodsType.RandomPortal.count--;
             GoodsType.RandomPortal.save();
-            long min = MazeContents.maze.getLev() -100;
+            long min = MazeContents.maze.getLev() - 100;
             long max = MazeContents.hero.getMaxMazeLev() + 301;
-            long lev=  min - 400 + MazeContents.hero.getRandom().nextLong(max + 200);
-            if(lev < min){
+            long lev = min - 400 + MazeContents.hero.getRandom().nextLong(max + 200);
+            if (lev < min) {
                 lev = min + MazeContents.hero.getRandom().nextLong(200);
             }
-            if(lev > max) lev = max;
-            if(lev <= 0) lev = 1;
+            if (lev > max) lev = max;
+            if (lev <= 0) lev = 1;
             MazeContents.maze.setLevel(lev);
             TextView textView = new TextView(MainGameActivity.context);
-            textView.setText(Html.fromHtml("你被传送到了第 " +  lev + " 层"));
+            textView.setText(Html.fromHtml("你被传送到了第 " + lev + " 层"));
             AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
             dialog.setView(textView);
             dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
@@ -177,7 +177,7 @@ public enum GoodsType {
             GoodsType.KeyGoods.save();
             MazeContents.hero.setKeyCount(MazeContents.hero.getKeyCount() + 10);
             TextView textView = new TextView(MainGameActivity.context);
-            textView.setText(Html.fromHtml("你现在的钥匙总数为" +  MazeContents.hero.getKeyCount()));
+            textView.setText(Html.fromHtml("你现在的钥匙总数为" + MazeContents.hero.getKeyCount()));
             AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
             dialog.setView(textView);
             dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
@@ -354,16 +354,26 @@ public enum GoodsType {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    for(GoodsType goodsType : list){
-                        if(goodsType == FiveMMeat && goodsType.count < 0){
-                            while(goodsType.count < 0){
-                                MazeContents.hero.addMaterial(-1600000);
-                                goodsType.count ++;
+                    for (GoodsType goodsType : list) {
+                        if (goodsType == FiveMMeat && goodsType.count < 0) {
+                            while (goodsType.count < 0) {
+                                if (MazeContents.hero.getMaterial() <= 0) {
+                                    if (MazeContents.hero.getPoint() > 160000) {
+                                        MazeContents.hero.addPoint(-160000);
+                                    } else {
+                                        MazeContents.hero.addLife(-16000);
+                                        MazeContents.hero.addAgility(-16000);
+                                        MazeContents.hero.addStrength(-16000);
+                                    }
+                                } else {
+                                    MazeContents.hero.addMaterial(-1600000);
+                                }
+                                goodsType.count++;
                             }
                             goodsType.save();
                             break;
-                        }else{
-                            if(goodsType.count < 0){
+                        } else {
+                            if (goodsType.count < 0) {
                                 goodsType.count = 0;
                             }
                             goodsType.save();

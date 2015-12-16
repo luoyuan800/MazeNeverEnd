@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -16,67 +15,23 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
+import android.os.*;
 import android.text.Html;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ViewFlipper;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Random;
-
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.BmobDialogButtonListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.bmob.v3.update.UpdateStatus;
-import cn.gavin.Achievement;
-import cn.gavin.Armor;
-import cn.gavin.Element;
-import cn.gavin.Hero;
-import cn.gavin.R;
-import cn.gavin.Sword;
+import cn.gavin.*;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
-import cn.gavin.forge.Accessory;
-import cn.gavin.forge.HatBuilder;
-import cn.gavin.forge.Item;
-import cn.gavin.forge.NecklaceBuilder;
-import cn.gavin.forge.RingBuilder;
+import cn.gavin.forge.*;
 import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.adapter.RecipeAdapter;
 import cn.gavin.forge.effect.Effect;
@@ -106,6 +61,13 @@ import cn.gavin.upload.PalaceObject;
 import cn.gavin.upload.Upload;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
+
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Random;
 
 public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener, OnItemClickListener, BaseContext {
     //Constants
@@ -204,6 +166,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private View mainRightDown;
     private View mainLeftUp;
     private LinearLayout mainLeftDown;
+    TextView shopTipView;
 
     private WindowManager mWindowManager = null;
     private WindowManager.LayoutParams wmParams = null;
@@ -257,15 +220,47 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         public void handleMessage(final Message msg) {
             try {
                 switch (msg.what) {
+                    case 122:
+                        if (shopTipView != null) {
+                            mWindowManager.removeView(shopTipView);
+                        }
+                        shopTipView = null;
+                        break;
+                    case 121:
+                        // 获取WindowManager
+                        // 设置LayoutParams(全局变量）相关参数
+                        WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+
+                        params.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG; // 设置window type
+                        params.format = PixelFormat.RGBA_8888; // 设置图片格式，效果为背景透明
+                        // 设置Window flag
+                        params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+
+                        // 以屏幕左上角为原点，设置x、y初始值
+                        params.x = 400;
+                        params.y = 500;
+                        // 设置悬浮窗口长宽数据
+                        params.width = 80;
+                        params.height = 80;
+
+                        shopTipView = new TextView(context);
+                        shopTipView.setText("锻造点数：" + MazeContents.hero.getMaterial());
+
+//        img_Float.setAlpha(23);
+                        // 调整悬浮窗口
+                        params.gravity = Gravity.START | Gravity.CENTER_VERTICAL;
+                        // 显示myFloatView图像
+                        mWindowManager.addView(shopTipView, params);
+                        break;
                     case 120:
-                        if(isFloat) {
+                        if (isFloat) {
                             mWindowManager.removeView(img_Float);
                             isFloat = false;
                         }
                         break;
                     case 119:
                         final String dieMsg = msg.obj.toString();
-                        if(isFloat){
+                        if (isFloat) {
                             mWindowManager.removeView(img_Float);
                             isFloat = false;
                         }
@@ -278,7 +273,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                                 scrollView.addView(msgText);
                                 dieMessage.setView(scrollView);
                                 msgText.setText(Html.fromHtml(dieMsg));
-                                dieMessage.setButton(DialogInterface.BUTTON_NEGATIVE,"确定",new DialogInterface.OnClickListener() {
+                                dieMessage.setButton(DialogInterface.BUTTON_NEGATIVE, "确定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
@@ -700,7 +695,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         wmParams.gravity = Gravity.START | Gravity.CENTER_VERTICAL;
         // 显示myFloatView图像
     }
-private boolean isFloat = false;
+
+    private boolean isFloat = false;
+
     public void showFloatView(final String dieMsg) {
         Message message = new Message();
         message.what = 119;
@@ -1078,8 +1075,8 @@ private boolean isFloat = false;
                         } else if (input.startsWith("#")) {
                             try {
                                 String[] color = StringUtils.split(input, "_");
-                                if(color.length > 0){
-                                    if(color[0].startsWith("#ff")||color[0].startsWith("#FF")){
+                                if (color.length > 0) {
+                                    if (color[0].startsWith("#ff") || color[0].startsWith("#FF")) {
                                         color[0] = color[0].replaceFirst("#(ff|FF)", "#8b");
                                     }
                                 }
@@ -1145,17 +1142,17 @@ private boolean isFloat = false;
                             heroN.addMaterial(60000);
                             heroN.setAwardCount(heroN.getAwardCount() + 3);
                         } else if (input.equals("201509181447")) {
-//                            heroN.setPetSize(heroN.getPetSize() + 10);
-//                            heroN.setPetRate(0.001f);
-//                            heroN.addMaterial(10000000);
-//                            heroN.addPoint(100000);
-//                            heroN.setLockBox(heroN.getLockBox() + 1000);
-//                            heroN.setKeyCount(heroN.getKeyCount() + 1000);
-//                            heroN.setMaxMazeLev(heroN.getMaxMazeLev() + 101);
-//                            maze.setLevel(99);
-//                            Achievement.dragon.enable(heroN);
-//                            SkillFactory.getSkill("虚无吞噬", heroN).setActive(true);
-//                            DBHelper.getDbHelper().excuseSQLWithoutResult("UPDATE recipe set found = 'true'");
+                            heroN.setPetSize(heroN.getPetSize() + 10);
+                            heroN.setPetRate(0.001f);
+                            heroN.addMaterial(10000000);
+                            heroN.addPoint(100000);
+                            heroN.setLockBox(heroN.getLockBox() + 1000);
+                            heroN.setKeyCount(heroN.getKeyCount() + 1000);
+                            heroN.setMaxMazeLev(heroN.getMaxMazeLev() + 101);
+                            maze.setLevel(99);
+                            Achievement.dragon.enable(heroN);
+                            SkillFactory.getSkill("虚无吞噬", heroN).setActive(true);
+                            DBHelper.getDbHelper().excuseSQLWithoutResult("UPDATE recipe set found = 'true'");
                         } else if (input.equals("201509181447ac")) {
                             for (Achievement achievement : Achievement.values()) {
                                 achievement.enable(heroN);
@@ -1826,7 +1823,7 @@ private boolean isFloat = false;
         mainLeftDown = mainInfoPlatform;
         try {
             Bitmap bitmap = MazeContents.loadImageFromSD("maze_bak.png");
-            if(bitmap!=null) {
+            if (bitmap != null) {
                 BitmapDrawable bitmapDrawable = new BitmapDrawable(this.getResources(), bitmap);
                 mainLayout.setBackgroundDrawable(bitmapDrawable);
             }
@@ -2048,10 +2045,13 @@ private boolean isFloat = false;
             }
         }
         petView.setText(Html.fromHtml(builder.toString()));
-        if(maze.isSailed()) {
+        if (maze.isSailed()) {
             shopButton.setBackgroundResource(R.drawable.huoyan_biankuang);
-        }else{
+        } else {
             shopButton.setBackgroundResource(0);
+        }
+        if (shopTipView != null) {
+            shopTipView.setText("锻造点数：" + heroN.getMaterial());
         }
     }
 
