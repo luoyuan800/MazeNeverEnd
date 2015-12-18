@@ -56,7 +56,7 @@ public abstract class SkillLayout extends ScrollView {
                     dialog.setButton(DialogInterface.BUTTON_POSITIVE, "装备", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            skill.setOnUsed(true);
+                            skill.setOnUsed(true, false);
                             dialogInterface.dismiss();
                             refresh();
                         }
@@ -65,7 +65,7 @@ public abstract class SkillLayout extends ScrollView {
                     dialog.setButton(DialogInterface.BUTTON_POSITIVE, "卸下", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            skill.setOnUsed(false);
+                            skill.setOnUsed(false, false);
                             refresh();
                             dialogInterface.dismiss();
                         }

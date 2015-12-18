@@ -181,6 +181,7 @@ public class LoadHelper {
         heroN.setPetAbe(preferences.getFloat("pet_abe", 0));
         heroN.setmV(preferences.getBoolean("mv", new Random().nextBoolean()));
         maze.setCsmgl(preferences.getInt("csm", 9977));
+        maze.setCatchPetNameContains(preferences.getString("filter_pet_name",""));
         loadValue(heroN);
         MazeContents.hero = heroN;
         MazeContents.maze = maze;

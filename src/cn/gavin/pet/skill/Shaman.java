@@ -1,6 +1,7 @@
 package cn.gavin.pet.skill;
 
 import cn.gavin.Hero;
+import cn.gavin.activity.MainGameActivity;
 import cn.gavin.pet.Pet;
 
 /**
@@ -16,6 +17,9 @@ public class Shaman extends PetSkill {
                 if(pet.getHp() <= 0){
                     pet.restore();
                     pet.addHp(-pet.getUHp()/2);
+                    if(MainGameActivity.context!=null){
+                        MainGameActivity.context.addMessage(me.getFormatName() + "复活了" + pet.getFormatName());
+                    }
                     return;
                 }
             }

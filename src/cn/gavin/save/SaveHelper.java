@@ -167,6 +167,7 @@ public class SaveHelper {
         editor.putInt("csm", maze.getCsmgl());
         editor.putString("uuid", heroN.getUuid());
         editor.putFloat("pet_abe", heroN.getPetAbe());
+        editor.putString("filter_pet_name",maze.getCatchPetNameContains());
         editor.apply();
     }
 

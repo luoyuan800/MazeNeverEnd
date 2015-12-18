@@ -382,7 +382,7 @@ public class EvilSkill extends SkillLayout {
             }
         } else if (name.equals("精神力")) {
             skill = new PropertySkill() {
-                public void setOnUsed(boolean used) {
+                public void setOnUsed(boolean used, boolean isLoad) {
 
                     if (MainGameActivity.context != null) {
                         if (!onUsed && used) {
@@ -394,7 +394,7 @@ public class EvilSkill extends SkillLayout {
                             setStr(getHero().getStrength() / 2);
                             setLife(getHero().getPower() / 2);
                         }
-                        super.setOnUsed(used);
+                        super.setOnUsed(used, isLoad);
                     }
                 }
             };

@@ -4,20 +4,26 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.text.Html;
+import android.text.InputFilter;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
-import cn.gavin.activity.MainGameActivity;
-import cn.gavin.db.DBHelper;
-import cn.gavin.forge.Item;
-import cn.gavin.forge.effect.Effect;
-import cn.gavin.forge.list.ItemName;
-import cn.gavin.log.LogHelper;
-import cn.gavin.pet.Pet;
-import cn.gavin.utils.MazeContents;
-import cn.gavin.utils.Random;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import cn.gavin.activity.MainGameActivity;
+import cn.gavin.db.DBHelper;
+import cn.gavin.forge.Item;
+import cn.gavin.forge.adapter.AccessoryAdapter;
+import cn.gavin.forge.effect.Effect;
+import cn.gavin.forge.list.ItemName;
+import cn.gavin.log.LogHelper;
+import cn.gavin.pet.Pet;
+import cn.gavin.pet.PetAdapter;
+import cn.gavin.utils.MazeContents;
+import cn.gavin.utils.Random;
 
 /**
  * Copyright 2015 luoyuan.
@@ -28,63 +34,65 @@ public enum GoodsType {
     Aphrodisiac("奴隶", "使用后随机选择队伍中的两个宠物进行生蛋，宠物亲密度会大幅度降低。",
             new GoodScript() {
                 public Pet use() {
-                    AlertDialog alertDialog = new AlertDialog.Builder(MainGameActivity.context).create();
-                    alertDialog.setTitle("你获得了一个蛋");
-                    List<Pet> pets = MazeContents.hero.getPets();
-                    Random random = MazeContents.hero.getRandom();
-                    Pet f = null;
-                    Pet m = null;
-                    for (Pet pet : pets) {
-                        if (!"蛋".equals(pet.getType()) && random.nextBoolean() && pet.getSex() == 0) {
-                            f = pet;
-                            break;
-                        }
-                        if (!"蛋".equals(pet.getType()) && pet.getSex() == 1 && random.nextBoolean()) {
-                            m = pet;
-                            break;
-                        }
-                    }
-                    if (f == null) {
+                    if (Aphrodisiac.count > 0) {
+                        AlertDialog alertDialog = new AlertDialog.Builder(MainGameActivity.context).create();
+                        alertDialog.setTitle("你获得了一个蛋");
+                        List<Pet> pets = MazeContents.hero.getPets();
+                        Random random = MazeContents.hero.getRandom();
+                        Pet f = null;
+                        Pet m = null;
                         for (Pet pet : pets) {
-                            if (!"蛋".equals(pet.getType()) && pet.getSex() == 0) {
+                            if (!"蛋".equals(pet.getType()) && random.nextBoolean() && pet.getSex() == 0) {
                                 f = pet;
                                 break;
                             }
-                        }
-                    }
-
-                    if (m == null) {
-                        for (Pet pet : pets) {
-                            if (!"蛋".equals(pet.getType()) && pet.getSex() == 1) {
+                            if (!"蛋".equals(pet.getType()) && pet.getSex() == 1 && random.nextBoolean()) {
                                 m = pet;
                                 break;
                             }
                         }
-                    }
-                    TextView textView = new TextView(MainGameActivity.context);
-                    if (f == null || m == null) {
-                        textView.setText("你队伍中的宠物性别不符！无法使用这个物品!");
-                    } else {
-                        Pet egg = Pet.getEgg(f, m, MazeContents.maze.getLev(), MazeContents.hero, MazeContents.hero.getRandom());
-                        if (egg == null) {
-                            textView.setText("使用物品失败！");
+                        if (f == null) {
+                            for (Pet pet : pets) {
+                                if (!"蛋".equals(pet.getType()) && pet.getSex() == 0) {
+                                    f = pet;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (m == null) {
+                            for (Pet pet : pets) {
+                                if (!"蛋".equals(pet.getType()) && pet.getSex() == 1) {
+                                    m = pet;
+                                    break;
+                                }
+                            }
+                        }
+                        TextView textView = new TextView(MainGameActivity.context);
+                        if (f == null || m == null) {
+                            textView.setText("你队伍中的宠物性别不符！无法使用这个物品!");
                         } else {
-                            textView.setText(Html.fromHtml(f.getFormatName() + "和" + m.getFormatName() + "生了一个蛋"));
-                            f.setIntimacy(f.getIntimacy() / 3);
-                            m.setIntimacy(m.getIntimacy() / 4);
-                            GoodsType.Aphrodisiac.count--;
-                            GoodsType.Aphrodisiac.save();
-                            egg.save();
+                            Pet egg = Pet.getEgg(f, m, MazeContents.maze.getLev(), MazeContents.hero, MazeContents.hero.getRandom());
+                            if (egg == null) {
+                                textView.setText("使用物品失败！");
+                            } else {
+                                textView.setText(Html.fromHtml(f.getFormatName() + "和" + m.getFormatName() + "生了一个蛋"));
+                                f.setIntimacy(f.getIntimacy() / 3);
+                                m.setIntimacy(m.getIntimacy() / 4);
+                                GoodsType.Aphrodisiac.count--;
+                                GoodsType.Aphrodisiac.save();
+                                egg.save();
+                            }
                         }
+                        alertDialog.setView(textView);
+                        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        alertDialog.show();
                     }
-                    alertDialog.setView(textView);
-                    alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    alertDialog.show();
                     return null;
                 }
             },
@@ -116,165 +124,256 @@ public enum GoodsType {
     RandomGoods("开盖有奖", "使用后随机获得一个物品(有1/2的概率获物品）", new GoodScript() {
         @Override
         public Object use() {
-            GoodsType.RandomGoods.count--;
-            GoodsType.RandomGoods.save();
-            int index = MazeContents.hero.getRandom().nextInt(30);
-            TextView textView = new TextView(MainGameActivity.context);
-            if (index < values().length) {
-                if (index == 2) index += MazeContents.hero.getRandom().nextInt(4);
-                GoodsType goods = values()[index];
-                goods.load();
-                goods.count++;
-                goods.save();
-                textView.setText("你获得了：" + goods.getName());
-            } else {
-                textView.setText("谢谢惠顾，欢迎您再次购买！");
-            }
-            AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
-            dialog.setView(textView);
-            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
+            if (RandomGoods.count > 0) {
+                GoodsType.RandomGoods.count--;
+                GoodsType.RandomGoods.save();
+                int index = MazeContents.hero.getRandom().nextInt(30);
+                TextView textView = new TextView(MainGameActivity.context);
+                if (index == 2) index += MazeContents.hero.getRandom().nextInt(14);
+                if (index == 14) index += 1 + MazeContents.hero.getRandom().nextInt(10);
+                if (index < values().length) {
+                    GoodsType goods = values()[index];
+                    goods.load();
+                    goods.count++;
+                    goods.save();
+                    textView.setText("你获得了：" + goods.getName());
+                } else {
+                    textView.setText("谢谢惠顾，欢迎您再次购买！");
                 }
-            });
-            dialog.show();
+                AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
+                dialog.setView(textView);
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
             return null;
         }
     }, true),
-    RandomPortal("随机传送", "使用后随机传送。传送范围为（当前层数-100）至（最高层数+300）之间", new GoodScript() {
+    RandomPortal("随机传送", "使用后随机传送。传送范围为（当前层数-100）至（最高层数80%）之间", new GoodScript() {
         @Override
         public Object use() {
-            GoodsType.RandomPortal.count--;
-            GoodsType.RandomPortal.save();
-            long min = MazeContents.maze.getLev() - 100;
-            long max = MazeContents.hero.getMaxMazeLev() + 301;
-            long lev = min - 400 + MazeContents.hero.getRandom().nextLong(max + 200);
-            if (lev < min) {
-                lev = min + MazeContents.hero.getRandom().nextLong(200);
-            }
-            if (lev > max) lev = max;
-            if (lev <= 0) lev = 1;
-            MazeContents.maze.setLevel(lev);
-            TextView textView = new TextView(MainGameActivity.context);
-            textView.setText(Html.fromHtml("你被传送到了第 " + lev + " 层"));
-            AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
-            dialog.setView(textView);
-            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
+            if (RandomPortal.count > 0) {
+                GoodsType.RandomPortal.count--;
+                GoodsType.RandomPortal.save();
+                long min = MazeContents.maze.getLev() - 100;
+                long max = (long) (MazeContents.hero.getMaxMazeLev().doubleValue() * 0.8);
+                long lev = min - 100 + MazeContents.hero.getRandom().nextLong(max + 100);
+                if (lev < min) {
+                    lev = min + MazeContents.hero.getRandom().nextLong(200);
                 }
-            });
-            dialog.show();
+                if (lev > max) lev = max;
+                if (lev <= 0) lev = 1;
+                MazeContents.maze.setLevel(lev);
+                TextView textView = new TextView(MainGameActivity.context);
+                textView.setText(Html.fromHtml("你被传送到了第 " + lev + " 层"));
+                AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
+                dialog.setView(textView);
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
             return null;
         }
     }, true),
     KeyGoods("钥匙X10", "使用获得10把钥匙", new GoodScript() {
         @Override
         public Object use() {
-            GoodsType.KeyGoods.count--;
-            GoodsType.KeyGoods.save();
-            MazeContents.hero.setKeyCount(MazeContents.hero.getKeyCount() + 10);
-            TextView textView = new TextView(MainGameActivity.context);
-            textView.setText(Html.fromHtml("你现在的钥匙总数为" + MazeContents.hero.getKeyCount()));
-            AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
-            dialog.setView(textView);
-            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
+            if (KeyGoods.count > 0) {
+                GoodsType.KeyGoods.count--;
+                GoodsType.KeyGoods.save();
+                MazeContents.hero.setKeyCount(MazeContents.hero.getKeyCount() + 10);
+                TextView textView = new TextView(MainGameActivity.context);
+                textView.setText(Html.fromHtml("你现在的钥匙总数为" + MazeContents.hero.getKeyCount()));
+                AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
+                dialog.setView(textView);
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
             return null;
         }
     }, true),
     RandomItem("随机材料", "使用后获得随机一个材料(有可能获得无法正常掉落的特殊属性材料）", new GoodScript() {
         @Override
         public Object use() {
-            GoodsType.RandomItem.count--;
-            GoodsType.RandomItem.save();
-            ItemName name = ItemName.values()[MazeContents.hero.getRandom().nextInt(ItemName.values().length)];
-            Item item = new Item();
-            item.setName(name);
-            item.setEffect(Effect.randomEffect(MazeContents.hero.getRandom()));
-            item.setEffectValue(item.getEffect().calculate(MazeContents.hero));
-            if (MazeContents.hero.getRandom().nextInt(100) < 3) {
-                int index = 10 + MazeContents.hero.getRandom().nextInt(8);
-                if (index >= Effect.values().length) index = 11;
-                item.setEffect1(Effect.values()[index]);
-                item.setEffect1Value(item.getEffect1().calculate(MazeContents.hero));
-            }
-            TextView textView = new TextView(MainGameActivity.context);
-            textView.setText(Html.fromHtml("你获得了：" + item.toString()));
-            item.save(null);
-            AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
-            dialog.setView(textView);
-            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
+            if (RandomItem.count > 0) {
+                GoodsType.RandomItem.count--;
+                GoodsType.RandomItem.save();
+                ItemName name = ItemName.values()[MazeContents.hero.getRandom().nextInt(ItemName.values().length)];
+                Item item = new Item();
+                item.setName(name);
+                item.setEffect(Effect.randomEffect(MazeContents.hero.getRandom()));
+                item.setEffectValue(item.getEffect().calculate(MazeContents.hero));
+                if (MazeContents.hero.getRandom().nextInt(100) < 3) {
+                    int index = 10 + MazeContents.hero.getRandom().nextInt(8);
+                    if (index >= Effect.values().length) index = 11;
+                    item.setEffect1(Effect.values()[index]);
+                    item.setEffect1Value(item.getEffect1().calculate(MazeContents.hero));
                 }
-            });
-            dialog.show();
+                TextView textView = new TextView(MainGameActivity.context);
+                textView.setText(Html.fromHtml("你获得了：" + item.toString()));
+                item.save(null);
+                AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
+                dialog.setView(textView);
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
             return null;
         }
     }, true),
     LockBox("带锁的宝箱", "使用后获得一个带锁的宝箱", new GoodScript() {
         @Override
         public Object use() {
-            GoodsType.LockBox.count--;
-            GoodsType.LockBox.save();
-            MazeContents.hero.setLockBox(MazeContents.hero.getLockBox() + 1);
+            if (LockBox.count > 0) {
+                GoodsType.LockBox.count--;
+                GoodsType.LockBox.save();
+                MazeContents.hero.setLockBox(MazeContents.hero.getLockBox() + 1);
+            }
             return null;
         }
     }, true),
     SkillPoint("秘籍", "使用后获得一点技能点", new GoodScript() {
         @Override
         public Object use() {
-            GoodsType.SkillPoint.count--;
-            GoodsType.SkillPoint.save();
-            MazeContents.hero.setSkillPoint(MazeContents.hero.getSkillPoint() + 1);
+            if (SkillPoint.count > 0) {
+                GoodsType.SkillPoint.count--;
+                GoodsType.SkillPoint.save();
+                MazeContents.hero.setSkillPoint(MazeContents.hero.getSkillPoint() + 1);
+            }
             return null;
         }
     }, true),
     TenMMeat("10W锻造点数", "使用后获得10W锻造点数", new GoodScript() {
         @Override
         public Object use() {
-            GoodsType.TenMMeat.count--;
-            GoodsType.TenMMeat.save();
-            MazeContents.hero.addMaterial(100000);
+            if (TenMMeat.count > 0) {
+                GoodsType.TenMMeat.count--;
+                GoodsType.TenMMeat.save();
+                MazeContents.hero.addMaterial(100000);
+            }
             return null;
         }
     }, true),
     FiveMMeat("50W锻造点数", "使用后获得50W锻造点数", new GoodScript() {
         @Override
         public Object use() {
-            GoodsType.FiveMMeat.count--;
-            GoodsType.FiveMMeat.save();
-            MazeContents.hero.addMaterial(500000);
+            if (FiveMMeat.count > 0) {
+                GoodsType.FiveMMeat.count--;
+                GoodsType.FiveMMeat.save();
+                MazeContents.hero.addMaterial(500000);
+            }
             return null;
         }
     }, true),
     HadeMMeat("100W锻造点数", "使用后获得100W锻造点数", new GoodScript() {
         @Override
         public Object use() {
-            GoodsType.HadeMMeat.count--;
-            GoodsType.HadeMMeat.save();
-            MazeContents.hero.addMaterial(1000000);
+            if (HadeMMeat.count > 0) {
+                GoodsType.HadeMMeat.count--;
+                GoodsType.HadeMMeat.save();
+                MazeContents.hero.addMaterial(1000000);
+            }
             return null;
         }
     }, true),
     Hade2MMeat("200W锻造点数", "使用后获得200W锻造点数", new GoodScript() {
         @Override
         public Object use() {
-            GoodsType.Hade2MMeat.count--;
-            GoodsType.Hade2MMeat.save();
-            MazeContents.hero.addMaterial(2000000);
+            if (Hade2MMeat.count > 0) {
+                GoodsType.Hade2MMeat.count--;
+                GoodsType.Hade2MMeat.save();
+                MazeContents.hero.addMaterial(2000000);
+            }
             return null;
         }
-    }, true);
+    }, true),
+    RenameAcc("装备命名", "使用后选择一件装备自定义名字和描述(到达50000层免费赠送一个)。", new GoodScript() {
+        @Override
+        public Object use() {
+            if (RenameAcc.count > 0) {
+                GoodsType.RenameAcc.count--;
+                GoodsType.RenameAcc.save();
+                AlertDialog selectAccDialog = new AlertDialog.Builder(MainGameActivity.context).create();
+                selectAccDialog.setTitle("选择一件装备");
+                AccessoryAdapter accessoryAdapter = new AccessoryAdapter(2, selectAccDialog);
+                ListView listView = new ListView(MainGameActivity.context);
+                listView.setAdapter(accessoryAdapter);
+                selectAccDialog.setView(listView);
+                selectAccDialog.show();
+            }
+            return null;
+        }
+    }, true),
+    RenamePet("宠物前缀", "使用后选择一只宠物自定义前缀名(到达100000层免费赠送一个)。", new GoodScript() {
+        @Override
+        public Object use() {
+            if (RenamePet.count > 0) {
+                GoodsType.RenamePet.count--;
+                GoodsType.RenamePet.save();
+                AlertDialog selectPetDialog = new AlertDialog.Builder(MainGameActivity.context).create();
+                selectPetDialog.setTitle("选择宠物");
+                PetAdapter petAdapter = new PetAdapter(selectPetDialog);
+                ListView listView = new ListView(MainGameActivity.context);
+                listView.setAdapter(petAdapter);
+                selectPetDialog.setView(listView);
+                selectPetDialog.show();
+            }
+            return null;
+        }
+    }, true),
+    Barrier("单人房", "宠物每次想下蛋会被自动消耗来阻止。", new GoodScript() {
+        @Override
+        public Object use() {
+            if (Barrier.count > 0) {
+                GoodsType.Barrier.count--;
+                GoodsType.Barrier.save();
+            }
+            return null;
+        }
+    }, false),
+    Filter("过滤器", "使用后可以设计一个捕捉条件，那么只有符合条件的怪物被打败之后才可以捕捉。" +
+            "比如你只想捕捉’龙‘，那么可以在弹出窗口中输入’龙‘之后确定；如果你只想捕捉前缀为’无敌‘的怪物，那么在设定过滤条件为’无敌的‘即可。" +
+            "修改时候永久生效，如果要更改需要重新使用一个过滤器进行设置", new GoodScript() {
+        @Override
+        public Object use() {
+            if (Filter.count > 0) {
+                GoodsType.Filter.count--;
+                GoodsType.Filter.save();
+                AlertDialog filterDialog = new AlertDialog.Builder(MainGameActivity.context).create();
+                filterDialog.setTitle("过滤条件");
+                final EditText filterText = new EditText(MainGameActivity.context);
+                filterText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
+                filterText.setText("输入过滤条件");
+                filterDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        MazeContents.maze.setCatchPetNameContains(filterText.getText().toString());
+                    }
+                });
+                filterDialog.setView(filterText);
+                filterDialog.show();
+            }
+            return null;
+        }
+    }, false);
     private String name;
     private String desc;
     private GoodScript script;

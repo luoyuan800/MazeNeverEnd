@@ -476,4 +476,22 @@ public class Pet extends Base {
     public String getColor() {
         return color;
     }
+
+    public String getFirstName() {
+        String[] names = StringUtils.split(getName(), "的");
+        if(names.length > 1){
+            return names[0];
+        }else{
+            return "";
+        }
+    }
+
+    public String getLastName() {
+        String[] names = StringUtils.split(getName(), "的");
+        if(names.length > 1){
+            return names[1];
+        }else{
+            return "";
+        }
+    }
 }

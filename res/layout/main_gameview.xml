@@ -173,7 +173,7 @@
             <LinearLayout
                 android:id="@+id/character_item_contribute"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <LinearLayout

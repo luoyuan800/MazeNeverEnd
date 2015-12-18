@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,16 +29,16 @@ import cn.gavin.forge.RingBuilder;
  * Created by gluo on 10/5/2015.
  */
 public class AccessoryAdapter extends BaseAdapter {
-    private boolean dismantle;
+    private int mark;
     private AlertDialog fartherDialog;
 
-    public AccessoryAdapter(boolean dismantle, AlertDialog context) {
-        this.dismantle = dismantle;
+    public AccessoryAdapter(int mark, AlertDialog context) {
+        this.mark = mark;
         this.fartherDialog = context;
     }
 
     public AccessoryAdapter() {
-        dismantle = false;
+        mark = 0;
     }
 
     public static class AccessoryList {
@@ -123,7 +124,7 @@ public class AccessoryAdapter extends BaseAdapter {
         if (item.a1 != null) {
             holder.name1.setText(Html.fromHtml(item.a1.getFormatName() + (checkOnUsed(item.a1) ? "<font color=\"#006400\">u</font>" : "")));
             holder.name1.setEnabled(true);
-            holder.name1.setOnClickListener(dismantle ? buildDOnClick(item.a1) : buildOnClick(item.a1));
+            holder.name1.setOnClickListener(buildOnClickListener(item.a1));
         } else {
             holder.name1.setText("");
             holder.name1.setEnabled(false);
@@ -132,7 +133,7 @@ public class AccessoryAdapter extends BaseAdapter {
         if (item.a2 != null) {
             holder.name2.setText(Html.fromHtml(item.a2.getFormatName() + (checkOnUsed(item.a2) ? "<font color=\"#006400\">u</font>" : "")));
             holder.name2.setEnabled(true);
-            holder.name2.setOnClickListener(dismantle ? buildDOnClick(item.a2) : buildOnClick(item.a2));
+            holder.name2.setOnClickListener(buildOnClickListener(item.a2));
         } else {
             holder.name2.setText("");
             holder.name2.setEnabled(false);
@@ -141,7 +142,7 @@ public class AccessoryAdapter extends BaseAdapter {
         if (item.a3 != null) {
             holder.name3.setText(Html.fromHtml(item.a3.getFormatName() + (checkOnUsed(item.a3) ? "<font color=\"#006400\">u</font>" : "")));
             holder.name3.setEnabled(true);
-            holder.name3.setOnClickListener(dismantle ? buildDOnClick(item.a3) : buildOnClick(item.a3));
+            holder.name3.setOnClickListener(buildOnClickListener(item.a3));
         } else {
             holder.name3.setText("");
             holder.name3.setEnabled(false);
@@ -149,7 +150,7 @@ public class AccessoryAdapter extends BaseAdapter {
         if (item.a4 != null) {
             holder.name4.setText(Html.fromHtml(item.a4.getFormatName() + (checkOnUsed(item.a4) ? "<font color=\"#006400\">u</font>" : "")));
             holder.name4.setEnabled(true);
-            holder.name4.setOnClickListener(dismantle ? buildDOnClick(item.a4) : buildOnClick(item.a4));
+            holder.name4.setOnClickListener(buildOnClickListener(item.a4));
         } else {
             holder.name4.setText("");
             holder.name4.setEnabled(false);
@@ -221,6 +222,75 @@ public class AccessoryAdapter extends BaseAdapter {
                     }
                 });
                 alertDialog.show();
+            }
+        };
+    }
+
+    private View.OnClickListener buildOnClickListener(final Accessory a){
+        switch (mark){
+            case 0:
+                return buildOnClick(a);
+            case 1:
+                return buildDOnClick(a);
+            case 2:
+                return buildROnClick(a);
+        }
+        return null;
+    }
+
+    private View.OnClickListener buildROnClick(final Accessory a){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isOnUsed = checkOnUsed(a);
+                final AlertDialog alertDialog = new AlertDialog.Builder(fartherDialog.getContext()).create();
+                alertDialog.setTitle("输入名字和描述");
+                LinearLayout linearLayout = new LinearLayout(fartherDialog.getContext());
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
+                LinearLayout nameLayout = new LinearLayout(fartherDialog.getContext());
+                nameLayout.setOrientation(LinearLayout.HORIZONTAL);
+                final TextView textView = new TextView(fartherDialog.getContext());
+                textView.setText("修改名字：");
+                nameLayout.addView(textView);
+                final EditText nameEdit = new EditText(fartherDialog.getContext());
+                nameEdit.setText(a.getName());
+                nameLayout.addView(nameEdit);
+                linearLayout.addView(nameLayout);
+                LinearLayout descrLayout = new LinearLayout(fartherDialog.getContext());
+                descrLayout.setOrientation(LinearLayout.HORIZONTAL);
+                TextView descText = new TextView(fartherDialog.getContext());
+                descText.setText("修改描述：");
+                descrLayout.addView(descText);
+                final EditText descEdit = new EditText(fartherDialog.getContext());
+                descEdit.setText("自定义装备描述");
+                descrLayout.addView(descEdit);
+                linearLayout.addView(descrLayout);
+                alertDialog.setView(linearLayout);
+                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        a.setName(nameEdit.getText().toString());
+                        a.setTag(descEdit.getText().toString());
+                        a.save();
+                        AlertDialog ad2 = new AlertDialog.Builder(alertDialog.getContext()).create();
+                        ad2.setTitle("改名成功");
+                        TextView textView1 = new TextView(alertDialog.getContext());
+                        textView1.setText(Html.fromHtml(a.toString()));
+                        ad2.setView(textView1);
+                        ad2.setButton(DialogInterface.BUTTON_NEGATIVE, "知道了", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        ad2.show();
+                        alertDialog.dismiss();
+                        fartherDialog.dismiss();
+                        refresh();
+                    }
+                });
+                alertDialog.show();
+                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(!isOnUsed);
             }
         };
     }

@@ -17,6 +17,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.*;
 import android.text.Html;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
@@ -1051,6 +1052,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("给勇者取个名字");
         final EditText tv = new EditText(this);
+        tv.setFilters(new InputFilter[]{new InputFilter.LengthFilter(15)});
         tv.setText(heroN.getName());
         dialog.setView(tv);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
@@ -1142,6 +1144,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             heroN.addMaterial(60000);
                             heroN.setAwardCount(heroN.getAwardCount() + 3);
                         } else if (input.equals("201509181447")) {
+                            for(GoodsType goodsType : GoodsType.values()){
+                                goodsType.setCount(100);
+                                goodsType.save();
+                            }
                             heroN.setPetSize(heroN.getPetSize() + 10);
                             heroN.setPetRate(0.001f);
                             heroN.addMaterial(10000000);
@@ -1770,6 +1776,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         linearLayout.addView(info);
         final EditText textView = new EditText(this);
         textView.setText("遇見了吾，你將止步於此！");
+        textView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
         linearLayout.addView(textView);
         dialog.setView(linearLayout);
         dialog.setTitle("上传角色信息");
@@ -2398,6 +2405,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 skillMainDialog.show();
                 break;
             case R.id.update_button:
+                handler.sendEmptyMessage(103);
                 BmobUpdateAgent.setDialogListener(new BmobDialogButtonListener() {
 
                     @Override

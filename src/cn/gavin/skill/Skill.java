@@ -3,6 +3,7 @@ package cn.gavin.skill;
 import android.database.Cursor;
 import android.util.Log;
 import android.widget.Button;
+
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
@@ -52,13 +53,15 @@ public abstract class Skill {
         return onUsed;
     }
 
-    public void setOnUsed(boolean onUsed) {
+    public void setOnUsed(boolean onUsed, boolean isLoad) {
         if (!this.onUsed && onUsed) {
             hero.addSkill(this);
         } else if (this.onUsed && !onUsed) {
             hero.removeSkill(this);
         }
-        save();
+        if(!isLoad) {
+            save();
+        }
         this.onUsed = onUsed;
     }
 
@@ -100,7 +103,7 @@ public abstract class Skill {
 
     public String toString() {
         return String.format("<font color=\"red\">%s</font>(使用/点击次数:%s)<br>%s", name, count, description()
-                );
+        );
     }
 
     public void setSkillButton(Button button) {
@@ -212,10 +215,14 @@ public abstract class Skill {
         String checkExistSql = String.format("select name from skill where name ='%s'", getName());
         Cursor cursor = helper.excuseSOL(checkExistSql);
         String sql;
-        if (cursor.isAfterLast()) {
+        if (cursor.isAfterLast() || cursor.getCount() > 1) {
+            if (!cursor.isAfterLast()) {
+                helper.excuseSQLWithoutResult("DELETE FROM skill WHERE name = '" + getName() + "'");
+            }
             sql = String.format("insert into skill (name, is_active,is_on_use,probability, count) values('%s', '%s', '%s', '%s','%s')",
                     getName(), isActive(), isOnUsed(), getProbability(), getCount());
         } else {
+
             sql = String.format("update skill set is_active = '%s', is_on_use = '%s', probability = '%s', count = '%s' where name = '%s'",
                     isActive(), isOnUsed(), getProbability(), getCount(), getName());
         }
@@ -230,13 +237,16 @@ public abstract class Skill {
                     getName());
             Cursor cursor = helper.excuseSOL(sql);
             if (!cursor.isAfterLast()) {
-                setOnUsed(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_on_use"))));
+                setOnUsed(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_on_use"))), true);
                 active = (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_active"))));
                 setProbability(StringUtils.toFloat(cursor.getString(cursor.getColumnIndex("probability"))));
                 count = (StringUtils.toLong(cursor.getString(cursor.getColumnIndex("count"))));
+                cursor.close();
                 return true;
+            }else{
+                cursor.close();
             }
-            cursor.close();
+
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "loadSkill", e);

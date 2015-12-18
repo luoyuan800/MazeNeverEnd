@@ -16,6 +16,7 @@ import cn.gavin.skill.SkillFactory;
 import cn.gavin.story.StoryHelper;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
+import cn.gavin.utils.StringUtils;
 
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class Maze {
     private long hunt = 150;
     private int petRate = 1;
     private boolean sailed = false;
+    private String catchPetNameContains = "";
 
     public void setCsmgl(int csmgl) {
         this.csmgl = csmgl;
@@ -184,12 +186,14 @@ public class Maze {
                     if (streaking >= 100) {
                         Achievement.unbeaten.enable(hero);
                     }
-                    Pet pet = Pet.catchPet(monster);
-                    if (pet != null) {
-                        addMessage(context, hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
-                        monster.addBattleDesc(hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
-                        if (hero.getPets().size() < hero.getPetSize()) {
-                            hero.getPets().add(pet);
+                    if(!StringUtils.isNotEmpty(catchPetNameContains) || monster.getName().contains(catchPetNameContains)) {
+                        Pet pet = Pet.catchPet(monster);
+                        if (pet != null) {
+                            addMessage(context, hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
+                            monster.addBattleDesc(hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
+                            if (hero.getPets().size() < hero.getPetSize()) {
+                                hero.getPets().add(pet);
+                            }
                         }
                     }
                 } else {
@@ -329,12 +333,28 @@ public class Maze {
                         break;
                     case 50000:
                         if (Achievement.maze10000.isEnable()) {
+                            if(!Achievement.maze50000.isEnable()){
+                                GoodsType.RenameAcc.load();
+                                GoodsType.RenameAcc.setCount(GoodsType.RenameAcc.getCount() + 1);
+                                GoodsType.RenameAcc.save();
+                                addMessage(MainGameActivity.context, "恭喜你进入了50000层，系统奖励了自定义一件装备名称的物品。");
+                            }
                             Achievement.maze50000.enable(hero);
+
                         } else {
                             Achievement.cribber.enable(hero);
                         }
                         break;
-
+                    case 100000:
+                        GoodsType.RenamePet.load();
+                        GoodsType.RenamePet.setCount(GoodsType.RenamePet.getCount() + 1);
+                        GoodsType.RenamePet.save();
+                        addMessage(MainGameActivity.context, "恭喜你进入了100000层，系统奖励了自定义宠物名称的物品。");
+                        GoodsType.RenameAcc.load();
+                        GoodsType.RenameAcc.setCount(GoodsType.RenameAcc.getCount() + 1);
+                        GoodsType.RenameAcc.save();
+                        addMessage(MainGameActivity.context, "恭喜你进入了100000层，系统奖励了自定义一件装备名称的物品。");
+                        break;
                 }
             }
             if (level > 50000) {
@@ -369,9 +389,10 @@ public class Maze {
                 if (f != null && m != null) {
                     Pet egg = Pet.egg(f, m, level, hero);
                     if (egg != null) {
-                        Barrier barrier = Barrier.load();
+                        GoodsType barrier = GoodsType.Barrier;
+                        barrier.load();
                         if (barrier.getCount() > 0) {
-                            barrier.setCount(barrier.getCount() - 1);
+                            barrier.getScript().use();
                             addMessage(MainGameActivity.context, f.getFormatName() + "和" + m.getFormatName() + "想生蛋。但是被" + hero.getFormatName() + "阻止了！");
                         } else {
                             PetDB.save(egg);
@@ -395,7 +416,7 @@ public class Maze {
                     xSkill.setActive(true);
                 }
             }
-            if(!isSailed() && random.nextLong(hero.getAgility()/5000) > random.nextLong(1000)){
+            if(!isSailed() && (random.nextLong(hero.getAgility()/5000) > random.nextLong(3000)||(hero.getMaxMazeLev() < 200&&hero.getMaterial()<10000000))){
                 setSailed(true);
                 addMessage(MainGameActivity.context,"有商人入驻商店了，你可以去选购物品。");
             }
@@ -436,5 +457,13 @@ public class Maze {
         if(!sailed){
             addMessage(MainGameActivity.context, "商人离开了商店，请耐心等待下一位商人的到达。");
         }
+    }
+
+    public String getCatchPetNameContains() {
+        return catchPetNameContains;
+    }
+
+    public void setCatchPetNameContains(String catchPetNameContains) {
+        this.catchPetNameContains = catchPetNameContains;
     }
 }

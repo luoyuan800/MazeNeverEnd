@@ -1,6 +1,7 @@
 package cn.gavin.pet.skill;
 
 import cn.gavin.Hero;
+import cn.gavin.activity.MainGameActivity;
 
 /**
  * Copyright 2015 gluo.
@@ -11,6 +12,9 @@ public class HealthSkill extends PetSkill {
     @Override
     public void release(Hero hero) {
         hero.addHp(hero.getRealUHP()/10);
+        if(MainGameActivity.context!=null){
+            MainGameActivity.context.addMessage(me.getFormatName() + "使用治疗术帮助" + hero.getFormatName() + "恢复了HP");
+        }
     }
 
     @Override

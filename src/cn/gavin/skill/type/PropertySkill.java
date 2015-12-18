@@ -2,7 +2,6 @@ package cn.gavin.skill.type;
 
 import android.database.Cursor;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import cn.gavin.activity.MainGameActivity;
@@ -54,9 +53,9 @@ public class PropertySkill extends Skill {
     public void setActive(boolean active) {
         if (!isActive() && active) {
             super.setActive(true);
-            setOnUsed(true);
+            setOnUsed(true, false);
         } else if (isActive() && !active) {
-            setOnUsed(false);
+            setOnUsed(false, false);
         }
         this.active = active;
         save();
@@ -64,7 +63,7 @@ public class PropertySkill extends Skill {
     }
 
     @Override
-    public void setOnUsed(boolean used) {
+    public void setOnUsed(boolean used, boolean isLoad) {
         if (MainGameActivity.context != null) {
             if (!onUsed && used) {
                 getHero().addAgility(agi);

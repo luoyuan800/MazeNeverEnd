@@ -232,7 +232,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                 break;
             case R.id.forge_dismantle_button:
                 AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-                final AccessoryAdapter adapter = new AccessoryAdapter(true, alertDialog);
+                final AccessoryAdapter adapter = new AccessoryAdapter(1, alertDialog);
                 alertDialog.setTitle("点击装备进行拆解");
                 alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
                     @Override

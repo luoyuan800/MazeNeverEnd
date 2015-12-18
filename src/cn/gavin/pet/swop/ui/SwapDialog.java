@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.text.Html;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -120,6 +121,7 @@ public class SwapDialog implements LoadMoreListView.OnRefreshLoadingMoreListener
                             AlertDialog message = new AlertDialog.Builder(context).create();
                             final EditText editText = new EditText(context);
                             editText.setText("大家隨便換");
+                            editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
                             message.setTitle("輸入您的留言（簡介，要求...）");
                             message.setView(editText);
                             message.setButton(DialogInterface.BUTTON_POSITIVE, "確認", new DialogInterface.OnClickListener() {

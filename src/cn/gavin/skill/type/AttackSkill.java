@@ -2,6 +2,7 @@ package cn.gavin.skill.type;
 
 import android.database.Cursor;
 import android.util.Log;
+
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.skill.Skill;
@@ -38,17 +39,25 @@ public class AttackSkill extends Skill implements LevelAble {
         String sql = String.format("select * from skill where name='%s'",
                 getName());
         try {
+            boolean load = false;
             Cursor cursor = helper.excuseSOL(sql);
-            if (!cursor.isAfterLast()) {
-                setOnUsed(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_on_use"))));
-                active = (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_active"))));
-                setProbability(StringUtils.toFloat(cursor.getString(cursor.getColumnIndex("probability"))));
-                count = (StringUtils.toLong(cursor.getString(cursor.getColumnIndex("count"))));
-                baseHarm = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("base_harm")));
-                additionHarm = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("addition_harm")));
-                return true;
+            while (!cursor.isAfterLast()) {
+                Long base_harm = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("base_harm")));
+                if (baseHarm == 0 || base_harm > baseHarm) {
+                    load = true;
+                    baseHarm = base_harm;
+                    setOnUsed(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_on_use"))), false);
+                    active = (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_active"))));
+                    setProbability(StringUtils.toFloat(cursor.getString(cursor.getColumnIndex("probability"))));
+                    count = (StringUtils.toLong(cursor.getString(cursor.getColumnIndex("count"))));
+                    additionHarm = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("addition_harm")));
+                }
+                cursor.moveToNext();
             }
             cursor.close();
+            if(load) {
+                return true;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "LoadAttackSkill", e);

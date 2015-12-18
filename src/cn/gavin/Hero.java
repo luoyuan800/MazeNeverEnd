@@ -21,7 +21,6 @@ import cn.gavin.monster.Monster;
 import cn.gavin.pet.Pet;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;
-import cn.gavin.skill.system.ItemSkill;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.RestoreSkill;
@@ -269,7 +268,7 @@ public class Hero implements BaseObject {
             return;
         }
         if (firstSkill != null && thirdSkill != null && secondSkill != null) {
-            firstSkill.setOnUsed(false);
+            firstSkill.setOnUsed(false, false);
         }
         if (firstSkill == null) firstSkill = skill;
         else if (secondSkill == null) secondSkill = skill;
@@ -902,17 +901,17 @@ public class Hero implements BaseObject {
                 case START_BURST:
                     Skill startSkill = SkillFactory.getSkill("星爆", this);
                     startSkill.setProbability(value);
-                    setItemSkill(startSkill);
+                    startSkill.setOnUsed(true, false);
                     break;
                 case ICE_BURST:
                     Skill iceSkill = SkillFactory.getSkill("冰爆", this);
                     iceSkill.setProbability(value);
-                    setItemSkill(iceSkill);
+                    iceSkill.setOnUsed(true, false);
                     break;
                 case FEN_BURST:
                     Skill wind = SkillFactory.getSkill("令风", this);
                     wind.setProbability(value);
-                    setItemSkill(wind);
+                    wind.setOnUsed(true, false);
                     break;
             }
         }
@@ -1444,7 +1443,8 @@ public class Hero implements BaseObject {
 
     public void setItemSkill(Skill itemSkill) {
         if (this.itemSkill != null && !this.itemSkill.equal(itemSkill)) {
-            this.itemSkill.setOnUsed(false);
+            this.itemSkill.setOnUsed(false, false);
+            this.itemSkill = null;
         }
         this.itemSkill = itemSkill;
     }
