@@ -10,66 +10,29 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
+import android.os.*;
 import android.text.Html;
+import android.text.InputFilter;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ViewFlipper;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Random;
-
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.BmobDialogButtonListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.bmob.v3.update.UpdateStatus;
-import cn.gavin.Achievement;
-import cn.gavin.Armor;
-import cn.gavin.Element;
-import cn.gavin.Hero;
-import cn.gavin.R;
-import cn.gavin.Sword;
+import cn.gavin.*;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
-import cn.gavin.forge.Accessory;
-import cn.gavin.forge.HatBuilder;
-import cn.gavin.forge.Item;
-import cn.gavin.forge.NecklaceBuilder;
-import cn.gavin.forge.RingBuilder;
+import cn.gavin.forge.*;
 import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.adapter.RecipeAdapter;
 import cn.gavin.forge.effect.Effect;
@@ -99,6 +62,13 @@ import cn.gavin.upload.PalaceObject;
 import cn.gavin.upload.Upload;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
+
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Random;
 
 public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener, OnItemClickListener, BaseContext {
     //Constants
@@ -197,6 +167,13 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private View mainRightDown;
     private View mainLeftUp;
     private LinearLayout mainLeftDown;
+    TextView shopTipView;
+
+    private WindowManager mWindowManager = null;
+    private WindowManager.LayoutParams wmParams = null;
+    // 用于显示浮动图标
+    private ImageView img_Float;
+    private View mainLayout;
 
 
     //Get Function
@@ -244,6 +221,117 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         public void handleMessage(final Message msg) {
             try {
                 switch (msg.what) {
+                    case 122:
+                        if (shopTipView != null) {
+                            mWindowManager.removeView(shopTipView);
+                        }
+                        shopTipView = null;
+                        break;
+                    case 121:
+                        // 获取WindowManager
+                        // 设置LayoutParams(全局变量）相关参数
+                        WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+
+                        params.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG; // 设置window type
+                        params.format = PixelFormat.RGBA_8888; // 设置图片格式，效果为背景透明
+                        // 设置Window flag
+                        params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+
+                        // 以屏幕左上角为原点，设置x、y初始值
+                        params.x = 400;
+                        params.y = 500;
+                        // 设置悬浮窗口长宽数据
+                        params.width = 80;
+                        params.height = 80;
+
+                        shopTipView = new TextView(context);
+                        shopTipView.setText("锻造点数：" + MazeContents.hero.getMaterial());
+
+//        img_Float.setAlpha(23);
+                        // 调整悬浮窗口
+                        params.gravity = Gravity.START | Gravity.CENTER_VERTICAL;
+                        // 显示myFloatView图像
+                        mWindowManager.addView(shopTipView, params);
+                        break;
+                    case 120:
+                        if (isFloat) {
+                            mWindowManager.removeView(img_Float);
+                            isFloat = false;
+                        }
+                        break;
+                    case 119:
+                        final String dieMsg = msg.obj.toString();
+                        if (isFloat) {
+                            mWindowManager.removeView(img_Float);
+                            isFloat = false;
+                        }
+                        img_Float.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View arg0) {
+                                AlertDialog dieMessage = new Builder(context).create();
+                                dieMessage.setTitle("最近一次被打败的信息");
+                                ScrollView scrollView = new ScrollView(context);
+                                TextView msgText = new TextView(context);
+                                scrollView.addView(msgText);
+                                dieMessage.setView(scrollView);
+                                msgText.setText(Html.fromHtml(dieMsg));
+                                dieMessage.setButton(DialogInterface.BUTTON_NEGATIVE, "确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        mWindowManager.removeView(img_Float);
+                                        isFloat = false;
+                                    }
+                                });
+                                dieMessage.show();
+                            }
+                        });
+                        mWindowManager.addView(img_Float, wmParams);
+                        isFloat = true;
+                        break;
+                    case 118:
+                        AlertDialog inDialog = new Builder(context).create();
+                        final PalaceObject palaceObjectIn = (PalaceObject) msg.obj;
+                        final String[] goodsAwardIn = StringUtils.split(palaceObjectIn.getAward(), "-");
+                        StringBuilder goodNamesIn = new StringBuilder();
+                        for (String good : goodsAwardIn) {
+                            GoodsType goodsType = GoodsType.valueOf(good);
+                            goodNamesIn.append(goodsType.getName()).append("\n");
+                        }
+                        inDialog.setMessage("恭喜您进入殿堂！\n您获得了奖励为\n" + goodNamesIn +
+                                "\n请您及时领取，过期无效！");
+                        inDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "暂不领取", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        inDialog.setButton(DialogInterface.BUTTON_POSITIVE, "领取", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                PalaceObject palaceObject1 = new PalaceObject();
+                                palaceObject1.setValue("award", " ");
+                                palaceObject1.setObjectId(palaceObjectIn.getObjectId());
+                                palaceObject1.setAward(" ");
+                                palaceObject1.setTableName("PalaceObject");
+                                palaceObject1.update(context, palaceObjectIn.getObjectId(), new UpdateListener() {
+                                    @Override
+                                    public void onSuccess() {
+                                        Message message = new Message();
+                                        message.obj = goodsAwardIn;
+                                        message.what = 116;
+                                        handler.sendMessage(message);
+                                    }
+
+                                    @Override
+                                    public void onFailure(int i, String s) {
+                                        handler.sendEmptyMessage(114);
+                                    }
+                                });
+                                dialog.dismiss();
+                            }
+                        });
+                        inDialog.show();
+                        break;
                     case 117:
                         AlertDialog alreadyGetDialog = new Builder(context).create();
                         alreadyGetDialog.setMessage("对不起！\n您已经领取过奖励了！\n请明天再来！");
@@ -266,10 +354,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         break;
                     case 115:
                         AlertDialog notInSortDialog = new Builder(context).create();
-                        notInSortDialog.setMessage("对不起！\n您没有进入前五名！\n请继续努力！");
+                        notInSortDialog.setMessage("对不起！\n您没有进入殿堂！\n请继续努力！");
                         notInSortDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "知道了", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+
                                 dialog.dismiss();
                             }
                         });
@@ -295,8 +384,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             GoodsType goodsType = GoodsType.valueOf(good);
                             goodNames.append(goodsType.getName()).append("\n");
                         }
-                        successDialog.setMessage("恭喜您成为殿堂" + (msg.arg1> 10000 ? "第" + msg.arg1 : "最后一") + " 名！\n您获得了奖励物品为\n" + goodNames +
-                                "\n请您及时领取，过期无效！");
+                        successDialog.setMessage("恭喜您成为殿堂" + (msg.arg1 > 0 ? "第" + msg.arg1 : "最后一") + " 名！\n您获得了奖励物品为\n" + goodNames +
+                                "请您及时领取，过期无效！");
                         successDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "暂不领取", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -537,6 +626,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         Log.i(TAG, "start game~");
         initGameView();
         initGameData();
+        intFloatImage();
         //设置对对话框按钮的点击事件的监听
         BmobUpdateAgent.setUpdateOnlyWifi(false);
         BmobUpdateAgent.setDialogListener(new BmobDialogButtonListener() {
@@ -571,6 +661,55 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         service.setPackage(getPackageName());
         startService(service);
         bindService(service, connection, BIND_AUTO_CREATE);
+
+    }
+
+    public void intFloatImage() {
+        // 获取WindowManager
+        mWindowManager = getWindowManager();
+        // 设置LayoutParams(全局变量）相关参数
+        wmParams = new WindowManager.LayoutParams();
+
+        wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG; // 设置window type
+        wmParams.format = PixelFormat.RGBA_8888; // 设置图片格式，效果为背景透明
+        // 设置Window flag
+        wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+
+        // 以屏幕左上角为原点，设置x、y初始值
+        wmParams.x = 50;
+        wmParams.y = 300;
+        System.out.println("*************" + wmParams.y);
+        // 设置悬浮窗口长宽数据
+        wmParams.width = 80;
+        wmParams.height = 80;
+        createFloatView();
+    }
+
+    /**
+     * 创建悬浮图片按钮
+     */
+    private void createFloatView() {
+        img_Float = new ImageView(this);
+        img_Float.setImageResource(R.drawable.die_msg);
+//        img_Float.setAlpha(23);
+        // 调整悬浮窗口
+        wmParams.gravity = Gravity.START | Gravity.CENTER_VERTICAL;
+        // 显示myFloatView图像
+    }
+
+    private boolean isFloat = false;
+
+    public void showFloatView(final String dieMsg) {
+        Message message = new Message();
+        message.what = 119;
+        message.obj = dieMsg;
+        handler.sendMessage(message);
+    }
+
+    public void hidFloatView() {
+        Message message = new Message();
+        message.what = 120;
+        handler.sendMessage(message);
     }
 
     @Override
@@ -913,6 +1052,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("给勇者取个名字");
         final EditText tv = new EditText(this);
+        tv.setFilters(new InputFilter[]{new InputFilter.LengthFilter(15)});
         tv.setText(heroN.getName());
         dialog.setView(tv);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
@@ -937,6 +1077,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         } else if (input.startsWith("#")) {
                             try {
                                 String[] color = StringUtils.split(input, "_");
+                                if (color.length > 0) {
+                                    if (color[0].startsWith("#ff") || color[0].startsWith("#FF")) {
+                                        color[0] = color[0].replaceFirst("#(ff|FF)", "#8b");
+                                    }
+                                }
                                 if (color.length < 2) {
                                     itembarContri.setBackgroundColor(Color.parseColor(input));
                                     heroN.setTitleColor(input);
@@ -999,6 +1144,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             heroN.addMaterial(60000);
                             heroN.setAwardCount(heroN.getAwardCount() + 3);
                         } else if (input.equals("201509181447")) {
+                            for(GoodsType goodsType : GoodsType.values()){
+                                goodsType.setCount(100);
+                                goodsType.save();
+                            }
                             heroN.setPetSize(heroN.getPetSize() + 10);
                             heroN.setPetRate(0.001f);
                             heroN.addMaterial(10000000);
@@ -1237,7 +1386,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             break;
                         }
                     }
-                    if (!award) {
+                    if (!award) {//检查最后一名
                         BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
                         query.setLimit(1);
                         query.order("lev");
@@ -1245,8 +1394,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
                             @Override
                             public void onSuccess(List<PalaceObject> palaceObjects) {
-                                if(!palaceObjects.isEmpty()){
-                                    boolean award = false;
+                                boolean award = false;
+                                if (!palaceObjects.isEmpty()) {
                                     PalaceObject palaceObject = palaceObjects.get(0);
                                     if (heroN.getUuid().equals(palaceObject.getUuid())) {
                                         if (!StringUtils.isNotEmpty(palaceObject.getAward())) {
@@ -1256,14 +1405,48 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                                             Message message = new Message();
                                             message.what = 113;
                                             message.obj = palaceObject;
-                                            message.arg1 = palaceObject.getLev().intValue();
+                                            message.arg1 = 0;
                                             handler.sendMessage(message);
                                             award = true;
                                         }
                                     }
-                                    if (!award) {
-                                        handler.sendEmptyMessage(115);
-                                    }
+
+                                }
+                                if (!award) {//检查是否进入殿堂
+                                    BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
+                                    query.setLimit(1);
+                                    query.addWhereEqualTo("uuid", heroN.getUuid());
+                                    query.order("lev");
+                                    query.findObjects(context, new FindListener<PalaceObject>() {
+                                        @Override
+                                        public void onSuccess(List<PalaceObject> palaceObjects) {
+                                            boolean award = false;
+                                            if (!palaceObjects.isEmpty()) {
+                                                PalaceObject palaceObject = palaceObjects.get(0);
+                                                if (heroN.getUuid().equals(palaceObject.getUuid())) {
+                                                    if (!StringUtils.isNotEmpty(palaceObject.getAward())) {
+                                                        handler.sendEmptyMessage(117);
+                                                        award = true;
+                                                    } else {
+                                                        Message message = new Message();
+                                                        message.what = 118;
+                                                        message.obj = palaceObject;
+                                                        message.arg1 = 0;
+                                                        handler.sendMessage(message);
+                                                        award = true;
+                                                    }
+                                                }
+                                            }
+                                            if (!award) {
+                                                handler.sendEmptyMessage(115);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onError(int i, String s) {
+
+                                        }
+                                    });
                                 }
                             }
 
@@ -1593,6 +1776,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         linearLayout.addView(info);
         final EditText textView = new EditText(this);
         textView.setText("遇見了吾，你將止步於此！");
+        textView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
         linearLayout.addView(textView);
         dialog.setView(linearLayout);
         dialog.setTitle("上传角色信息");
@@ -1630,6 +1814,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         }
         skillDialog.setContext(this);
         monsterBook = new MonsterBook(this);
+        mainLayout = findViewById(R.id.main_game_activity);
+
         // 左侧战斗信息
         mainInfoSv = (ScrollView) findViewById(R.id.main_info_sv);
         mainInfoPlatform = (LinearLayout) findViewById(R.id.main_info_ll);
@@ -1643,6 +1829,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         mainLeftUp = findViewById(R.id.linearLayout2);
         mainLeftDown = mainInfoPlatform;
         try {
+            Bitmap bitmap = MazeContents.loadImageFromSD("maze_bak.png");
+            if (bitmap != null) {
+                BitmapDrawable bitmapDrawable = new BitmapDrawable(this.getResources(), bitmap);
+                mainLayout.setBackgroundDrawable(bitmapDrawable);
+            }
             itembarContri.setBackgroundColor(Color.parseColor(heroN.getTitleColor()));
             mainLeftUp.setBackgroundColor(Color.parseColor(heroN.getLeftUpColor()));
             mainLeftDown.setBackgroundColor(Color.parseColor(heroN.getLeftDownColor()));
@@ -1861,6 +2052,14 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             }
         }
         petView.setText(Html.fromHtml(builder.toString()));
+        if (maze.isSailed()) {
+            shopButton.setBackgroundResource(R.drawable.huoyan_biankuang);
+        } else {
+            shopButton.setBackgroundResource(0);
+        }
+        if (shopTipView != null) {
+            shopTipView.setText("锻造点数：" + heroN.getMaterial());
+        }
     }
 
     private long saveTime = 0;
@@ -2206,6 +2405,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 skillMainDialog.show();
                 break;
             case R.id.update_button:
+                handler.sendEmptyMessage(103);
                 BmobUpdateAgent.setDialogListener(new BmobDialogButtonListener() {
 
                     @Override

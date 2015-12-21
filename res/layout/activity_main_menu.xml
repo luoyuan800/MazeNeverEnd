@@ -2,16 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainMenuActivity" >
+    tools:context=".MainMenuActivity"
+    android:background="@drawable/feixv">
 
-    <TextView
+    <com.romainpiel.shimmer.ShimmerTextView
         android:id="@+id/menu_title_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="120dp"
         android:text="@string/app_name"
-        android:textSize="50sp" />
+        android:textSize="50sp" android:textStyle="bold" android:textColor="@color/current_item"/>
 
     <TextView
         android:id="@+id/menu_version_tv"
@@ -21,7 +22,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="@string/version"
-        android:textSize="20sp" />
+        android:textSize="20sp" android:textStyle="italic" android:textColor="#09dad6"/>
 
     <Button
         android:id="@+id/menu_start"
@@ -31,18 +32,17 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
         android:text="@string/start_label"
-        android:textSize="40sp" />
+        android:textSize="40sp" android:textStyle="bold" android:alpha="25"/>
 
     <TextView
         android:id="@+id/menu_game_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/menu_start"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="@string/game_menu_tip"
         android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:textSize="12sp" />
+        android:layout_marginTop="80dp"
+        android:textSize="12sp" android:textColor="@color/gray" android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

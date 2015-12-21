@@ -1,9 +1,7 @@
 package cn.gavin.pet.swop;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -42,7 +40,7 @@ public class SwapManager {
 
     public void acknowledge(final Context context, SwapPet pet) {
         pet.setAcknowledge(true);
-        pet.update(context,pet.getObjectId(),new UpdateListener() {
+        pet.update(context, pet.getObjectId(), new UpdateListener() {
             @Override
             public void onSuccess() {
                 Achievement.Changer.enable(MazeContents.hero);
@@ -62,6 +60,7 @@ public class SwapManager {
     /**
      * 从网上拉去自己寄存的pet
      * 当查询完成后finished会被设置为true，并且pets会有值。
+     *
      * @param context
      */
     public void getAllMyOwnInNet(Context context) {
@@ -95,9 +94,9 @@ public class SwapManager {
 
     public void uploadPet(Context context, SwapPet pet, final Pet petO) {
         try {
-            if(!MazeContents.checkPet(petO)){
+            if (!MazeContents.checkPet(petO)) {
                 Toast.makeText(context, "宠物数据异常，无法上传！", Toast.LENGTH_SHORT).show();
-                return ;
+                return;
             }
             finished = false;
             final ProgressDialog progressDialog = new ProgressDialog(context);
@@ -121,37 +120,37 @@ public class SwapManager {
                     finished(null);
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             LogHelper.logException(e);
             e.printStackTrace();
         }
     }
 
-    public void searchPet(Context context, SwapPet pet, int page){
+    public void searchPet(Context context, SwapPet pet, int page) {
         finished = false;
         pets = null;
         BmobQuery<SwapPet> query = new BmobQuery<SwapPet>();
         query.setLimit(9);
-        query.setSkip(9 * (page-1));
-        if(pet.getAskAtk()!=null) {
+        query.setSkip(9 * (page - 1));
+        if (pet.getAskAtk() != null) {
             query.addWhereGreaterThan("atk", pet.getAskAtk());
         }
-        if(pet.getAskDef()!=null) {
+        if (pet.getAskDef() != null) {
             query.addWhereGreaterThan("def", pet.getAskDef());
         }
-        if(pet.getAskHp()!=null) {
+        if (pet.getAskHp() != null) {
             query.addWhereGreaterThan("hp", pet.getAskHp());
         }
-        if(pet.getAskType()!=null) {
+        if (pet.getAskType() != null) {
             query.addWhereEqualTo("type", pet.getAskType());
         }
-        if(pet.getAskName()!=null) {
+        if (pet.getAskName() != null) {
             query.addWhereContains("name", pet.getAskName());
         }
-        if(pet.getAskSkill()!=null){
-            query.addWhereStartsWith("skill",pet.getAskSkill());
+        if (pet.getAskSkill() != null) {
+            query.addWhereStartsWith("skill", pet.getAskSkill());
         }
-        if(pet.getAskSex()!=null){
+        if (pet.getAskSex() != null) {
             query.addWhereEqualTo("sex", pet.getAskSex());
         }
         query.addWhereDoesNotExists("changedPet");
@@ -170,42 +169,56 @@ public class SwapManager {
 
     /**
      * 根据传入的Pet（包含限制条件的SwapPet查询自己的pet中是否有合适的
+     *
      * @param swapPet
      * @return
      */
-    public List<Pet> myAvailablePets(SwapPet swapPet){
+    public List<Pet> myAvailablePets(SwapPet swapPet) {
         List<Pet> aPets = new ArrayList<Pet>();
-        for(Pet p : PetDB.loadPet(null)){
+        for (Pet p : PetDB.loadPet(null)) {
             boolean fix = !MazeContents.hero.petOnUsed(p);
-            if(swapPet.getAskSex()!=null){
-                fix =  fix && p.getSex() == swapPet.getSex();
+            boolean egg = "蛋".equals(p.getType());
+            if (swapPet.getAskSex() != null) {
+                fix = fix && p.getSex() == swapPet.getSex();
             }
-            if(swapPet.getAskAtk()!=null){
-                fix &= p.getMaxAtk() >= swapPet.getAskAtk();
+            if (swapPet.getAskAtk() != null) {
+                if(egg){
+                    fix &= 10>=swapPet.getAskAtk();
+                }else {
+                    fix &= p.getMaxAtk() >= swapPet.getAskAtk();
+                }
             }
-            if(swapPet.getAskHp()!=null){
-                fix &= p.getUHp() >= swapPet.getAskHp();
+            if (swapPet.getAskHp() != null) {
+                if (egg) {
+                    fix &= 10 >= swapPet.getAskHp();
+                }else {
+                    fix &= p.getUHp() >= swapPet.getAskHp();
+                }
             }
-            if(swapPet.getAskDef() != null){
-                fix &= p.getMaxDef() >= swapPet.getAskDef();
+            if (swapPet.getAskDef() != null) {
+                if(egg){
+                    fix &= 10 >= swapPet.getAskDef();
+                }else {
+                    fix &= p.getMaxDef() >= swapPet.getAskDef();
+                }
             }
-            if(swapPet.getAskType() !=null && swapPet.getAskType() < Monster.lastNames.length){
-                fix &= p.getType().equals(Monster.lastNames[swapPet.getAskType()]);
+            if (swapPet.getAskType() != null && swapPet.getAskType() < Monster.lastNames.length) {
+                fix &= egg && p.getType().equals(Monster.lastNames[swapPet.getAskType()]);
             }
-            if(swapPet.getAskSkill() !=null){
-                fix &= p.getAllSkill()!=null && p.getAllSkill().getName().startsWith(swapPet.getAskSkill());
+            if (swapPet.getAskSkill() != null) {
+                fix &= p.getAllSkill() != null && p.getAllSkill().getName().startsWith(swapPet.getAskSkill());
             }
-            if(swapPet.getAskName() !=null){
-                fix &= p.getName().contains(swapPet.getAskName());
+            if (swapPet.getAskName() != null) {
+                fix &= !egg && p.getName().contains(swapPet.getAskName());
             }
-            if(fix){
+            if (fix) {
                 aPets.add(p);
             }
         }
         return aPets;
     }
 
-    public void deleteFromNet(Context context, SwapPet pet){
+    public void deleteFromNet(Context context, SwapPet pet) {
         pet.delete(context);
     }
 

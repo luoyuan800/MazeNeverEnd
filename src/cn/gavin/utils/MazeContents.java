@@ -1,5 +1,9 @@
 package cn.gavin.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
+
 import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.R;
@@ -21,6 +25,11 @@ public class MazeContents {
     public static Maze maze;
     public static SkillDialog skillDialog;
     public static long lastUpload;
+    public static String SD_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze";
+
+public static Bitmap loadImageFromSD(String name){
+    return BitmapFactory.decodeFile(SD_PATH + "/image/" + name);
+}
 
     public static Maze getMaze() {
         return maze;
@@ -30,11 +39,11 @@ public class MazeContents {
 
 
     public static boolean checkCheat(Hero hero) {
-        long point = 4500 * hero.getMaxMazeLev();
+        long point = 4500 * hero.getMaxMazeLev() * (hero.getReincaCount() + 1);
         boolean normal = hero.getStrength() < point && hero.getAgility() < point && hero.getPower() < point;
         boolean normal2 = hero.getBaseAttackValue() < point * hero.ATR_RISE &&
                 hero.getBaseDefense() < point * hero.DEF_RISE && hero.getRealUHP() < point * 10 * hero.MAX_HP_RISE;
-        return normal && normal2 && ((hero.getUpperHp() + hero.getUpperDef() + hero.getUpperAtk()) < (hero.getMaxMazeLev() * 4900000 * (hero.getPay() + 2))) && !(hero.getMaxMazeLev() > 50000 && !Achievement.richer.isEnable());
+        return normal && normal2 && ((hero.getUpperHp() + hero.getUpperDef() + hero.getUpperAtk()) < (hero.getMaxMazeLev() * 4900000 * (hero.getReincaCount() + 1) * (hero.getPay() + 2))) && !(hero.getMaxMazeLev() > 50000 && !Achievement.richer.isEnable());
     }
 
     public static Long reduceLegacyEffect(Effect effect, Long value) {
@@ -112,7 +121,11 @@ public class MazeContents {
                 image = R.drawable.zl;
                 break;
             case 1:
-                image = R.drawable.qy;
+                if (name.contains("红")) {
+                    image = R.drawable.qy_red;
+                } else {
+                    image = R.drawable.qy;
+                }
                 break;
             case 2:
                 image = R.drawable.pc;
@@ -214,7 +227,11 @@ public class MazeContents {
                 image = R.drawable.shankui;
                 break;
             case 28:
-                image = R.drawable.qiongqi;
+                if (name.contains("红")) {
+                    image = R.drawable.qiongqi_red;
+                } else {
+                    image = R.drawable.qiongqi;
+                }
                 break;
             case 29:
                 if (name.contains("红")) {
@@ -245,7 +262,7 @@ public class MazeContents {
         boolean check;
         String name = myPet.getName();
         int nameIndex = Monster.getIndex(name);
-        check = (nameIndex < Monster.lastNames.length && Monster.lastNames[nameIndex].equals(myPet.getType())) || "蛋".equals(myPet.getType());
+        check = nameIndex < Monster.lastNames.length || "蛋".equals(myPet.getType());
         return check;
     }
 }

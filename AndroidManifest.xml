@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.gavin"
-    android:versionCode="180"
-    android:versionName="1.8.0">
+    android:versionCode="185"
+    android:versionName="1.8.5">
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -16,7 +16,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.READ_LOGS" />
-
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -24,6 +25,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainMenuActivity"
+            android:theme="@android:style/Theme.NoTitleBar"
             android:alwaysRetainTaskState="true"
             android:label="@string/app_name">
             <intent-filter>

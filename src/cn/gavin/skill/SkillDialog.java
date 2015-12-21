@@ -224,7 +224,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
                         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "装备", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                skill.setOnUsed(true);
+                                skill.setOnUsed(true, false);
                                 dialogInterface.dismiss();
                                 handler.sendEmptyMessage(0);
                             }
@@ -233,7 +233,7 @@ public class SkillDialog extends GestureDetector.SimpleOnGestureListener {
                         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "卸下", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                skill.setOnUsed(false);
+                                skill.setOnUsed(false, false);
                                 dialogInterface.dismiss();
                                 handler.sendEmptyMessage(0);
                             }

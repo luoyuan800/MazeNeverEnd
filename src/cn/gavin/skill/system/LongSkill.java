@@ -212,7 +212,7 @@ public class LongSkill extends SkillLayout {
             }
         } else if ("觉醒".equalsIgnoreCase(name)) {
             final PropertySkill iskll = new PropertySkill() {
-                public void setOnUsed(boolean use) {
+                public void setOnUsed(boolean use, boolean isLoad) {
                     if (!onUsed && use && MainGameActivity.context != null) {
                         long elementValue = (hero.getAgility() + hero.getStrength() + hero.getPower() + hero.getBaseDefense() + hero.getBaseAttackValue()) / 10;
                         if (hero.getRandom().nextLong(hero.getAttackValue() + 1) < hero.getRandom().nextLong(elementValue + 1)) {
@@ -230,7 +230,7 @@ public class LongSkill extends SkillLayout {
                         }
                         hero.addPoint(-6000);
                     }
-                    super.setOnUsed(use);
+                    super.setOnUsed(use, isLoad);
                 }
             };
             skill = iskll;

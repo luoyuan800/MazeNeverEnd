@@ -15,7 +15,6 @@ import cn.gavin.utils.MazeContents;
 import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.Skill;
-import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.skill.expression.DescExpression;
 import cn.gavin.skill.expression.EnableExpression;
@@ -653,7 +652,7 @@ public class BaseSkill extends SkillLayout {
         } else if (name.equals("传送")) {
             skill = new PropertySkill(0, 0, 0, 0, 0, 0, 0) {
 
-                public void setOnUsed(boolean use) {
+                public void setOnUsed(boolean use, boolean isLoad) {
                     if (MainGameActivity.context != null) {
                         if (use && !onUsed)
                             MazeContents.getMaze().setCsmgl(MazeContents.getMaze().getCsmgl() - Math.round(getProbability()));
@@ -689,7 +688,7 @@ public class BaseSkill extends SkillLayout {
                 }
             });
             if (!skill.load()) {
-                skill.setProbability(60f);
+                skill.setProbability(80f);
             }
             skill.setLevelUp(new EnableExpression() {
                 @Override
@@ -867,13 +866,13 @@ public class BaseSkill extends SkillLayout {
             });
         } else if (name.equals("寻宝")) {
             final PropertySkill iskll = new PropertySkill(0, 0, 0, 0, 0, 0, 0) {
-                public void setOnUsed(boolean use) {
+                public void setOnUsed(boolean use, boolean isLoad) {
                     if (MainGameActivity.context != null && !onUsed && use) {
                         MainGameActivity.context.getMaze().setHunt(MainGameActivity.context.getMaze().getHunt() * 2);
                     } else if (MainGameActivity.context != null && onUsed && !use) {
                         MainGameActivity.context.getMaze().setHunt(MainGameActivity.context.getMaze().getHunt() / 2);
                     }
-                    super.setOnUsed(use);
+                    super.setOnUsed(use, isLoad);
                 }
             };
             skill = iskll;
@@ -967,13 +966,13 @@ public class BaseSkill extends SkillLayout {
             });
         } else if (name.equals("超防御")) {
             final PropertySkill iskll = new PropertySkill(0, 0, 0, 0, 0, 0, 0) {
-                public void setOnUsed(boolean used) {
+                public void setOnUsed(boolean used, boolean isLoad) {
                     if(!onUsed && used){
                         setDef(getHero().getBaseDefense());
                     } if(onUsed && !used){
                         setDef(getHero().getBaseDefense()/2);
                     }
-                    super.setOnUsed(used);
+                    super.setOnUsed(used, isLoad);
                 }
             };
             skill = iskll;

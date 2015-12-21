@@ -159,7 +159,7 @@ public class ForgeDB {
 
     public void upgradeTo1_8(SQLiteDatabase database){
         String base = "REPLACE INTO recipe (name, items, base, addition, found, user, type, color) values ('%s', '%s','%s','%s','false','false','%s','%s')";
-        String sql = String.format(base, "初音的守护<br><font color=\"#FF4500\">天长地久，不离不弃</font>", "龙皮-龙须-紫熏木-紫熏木-紫熏木", "ADD_CLICK_AWARD:60000-ADD_ATK:~700000-ADD_DEF:~100000", "START_BURST:80-ADD_PET_ABE:35-ADD_PER_UPPER_HP:~22", RingBuilder.type, "#FF8C00");
+        String sql = String.format(base, "初音的守护<br><font color=\"#FF4500\">天长地久，不离不弃</font>", "龙皮-龙须-紫熏木-紫熏木-紫熏木", "ADD_CLICK_AWARD:60000-ADD_ATK:~700000-ADD_DEF:~100000", "START_BURST:80-ADD_DODGE_RATE:35-ADD_PER_UPPER_HP:~22", RingBuilder.type, "#FF8C00");
         database.execSQL(sql);
         sql = String.format(base, "蝶祁的眷恋<br><font color=\"#FF4500\">我会在你身后一直默默的陪着你</font>", "龙皮-龙须-紫熏木-龙骨-紫熏木", "ADD_PER_DEF:14-ADD_PER_ATK:10-ADD_CLICK_POINT_AWARD:3", "ADD_HIT_RATE:~10-ADD_PER_UPPER_HP:62", NecklaceBuilder.type, "#FF8C00");
         database.execSQL(sql);

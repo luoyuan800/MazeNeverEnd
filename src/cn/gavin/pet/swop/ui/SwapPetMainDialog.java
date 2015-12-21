@@ -93,14 +93,14 @@ public class SwapPetMainDialog {
                                 }
                             });
                             View uploadView = view.findViewById(R.id.upload_my_pet);
-                            if(MazeContents.hero.getMaterial() < 500000){
+                            if(MazeContents.hero.getMaterial() < 100000){
                                 uploadView.setEnabled(false);
                             }else {
                                 uploadView.setEnabled(true);
                                 uploadView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        MazeContents.hero.addMaterial(-500000);
+                                        MazeContents.hero.addMaterial(-100000);
                                         mainDialog.dismiss();
                                         SwapDialog swapDialog = new SwapDialog(context);
                                         swapDialog.show();

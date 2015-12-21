@@ -106,7 +106,7 @@ public class SkillFactory {
         Skill skill = getSkill(name, MazeContents.hero);
         if (skill.isActive()) {
             if (skill.isOnUsed()) {
-                skill.setOnUsed(false);
+                skill.setOnUsed(false, false);
             }
             skill.setActive(false);
             point++;
@@ -119,7 +119,7 @@ public class SkillFactory {
         for (Skill skill : skillMap.values()) {
             if (skill.isActive()) {
                 if (skill.isOnUsed()) {
-                    skill.setOnUsed(false);
+                    skill.setOnUsed(false, false);
                 }
                 skill.setActive(false);
                 skill.setCount(skill.getCount()/2);

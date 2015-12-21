@@ -6,9 +6,11 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
-
 import cn.gavin.Achievement;
+import cn.gavin.activity.MainGameActivity;
 import cn.gavin.log.LogHelper;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.ui.LoadMoreListView;
@@ -32,8 +34,14 @@ public class ShopDialog {
                     listView.onLoadMoreComplete(true);
                     shopDialog.setView(listView);
                     shopDialog.show();
+                    //透明
+                    Window window = shopDialog.getWindow();
+                    WindowManager.LayoutParams lp = window.getAttributes();
+                    lp.alpha = 0.5f;
+                    window.setAttributes(lp);
                     MazeContents.maze.setSailed(false);
                     Achievement.Shop.enable(MazeContents.hero);
+
                     break;
                 case 1:
                     TextView textView = new TextView(activity);

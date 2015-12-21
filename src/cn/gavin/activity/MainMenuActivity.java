@@ -14,6 +14,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.bmob.pay.tool.BmobPay;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
 
 import cn.bmob.v3.Bmob;
 import cn.gavin.R;
@@ -79,6 +81,8 @@ public class MainMenuActivity extends Activity implements OnClickListener {
             super.handleMessage(msg);
         }
     };
+    private ShimmerTextView titleText;
+    private Shimmer shimmer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +95,9 @@ public class MainMenuActivity extends Activity implements OnClickListener {
         }
         context = this;
         setContentView(R.layout.activity_main_menu);
+        titleText = (ShimmerTextView)findViewById(R.id.menu_title_tv);
+        shimmer = new Shimmer();
+        shimmer.start(titleText);
         Bmob.initialize(this, "4de7673ec85955af7568cfa1494c6498");
         BmobPay.init(MainMenuActivity.this, "4de7673ec85955af7568cfa1494c6498");
         menuStart = (Button) findViewById(R.id.menu_start);
@@ -134,6 +141,7 @@ public class MainMenuActivity extends Activity implements OnClickListener {
             case R.id.menu_start:
                 intent = new Intent(MainMenuActivity.this, MainGameActivity.class);
                 startActivity(intent);
+                shimmer.cancel();
                 MainMenuActivity.this.finish();
                 break;
 

@@ -117,7 +117,7 @@ public class BattleController {
         for (Pet pet : pets) {
             if (pet != null && pet.getHp() > 0 && !"蛋".equals(pet.getType())) {
                 if (pet.gon()) {
-                    if(!monster.isPetSub(hero.getRandom())) {
+                    if(!monster.isPetSub(hero.getRandom(), pet)) {
                         NSkill petSkill = pet.getAtkSkill();
                         long petHarm = 0;
                         if (petSkill != null) {
@@ -208,7 +208,7 @@ public class BattleController {
                     String s = "阿西巴，这怪怎么打不死的？" + hero.getFormatName() + "小声的嘟哝着。";
                     addMessage(context, s);
                     monster.addBattleDesc(s);
-                } else if (count != 0 && count % 21 == 0) {
+                } else if (count != 0 && count % 50 == 0) {
                     String s = "由于战斗时间过长，" + hero.getFormatName() + "和" + monster.getFormatName() + "决定玩一局筛子游戏，谁的筛子数大，谁的当前生命值减半。";
                     addMessage(context, s);
                     monster.addBattleDesc(s);

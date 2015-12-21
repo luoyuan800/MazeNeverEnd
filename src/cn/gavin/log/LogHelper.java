@@ -1,5 +1,7 @@
 package cn.gavin.log;
 
+import android.os.Environment;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.utils.MazeContents;
 
 /**
  * Created by luoyuan on 9/20/15.
@@ -50,7 +53,7 @@ public class LogHelper {
 
     public static void logException(final Exception e) {
         try {
-            File path = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze/log/");
+            File path = new File(MazeContents.SD_PATH + "/log/");
             if (!path.exists()) {
                 path.mkdirs();
             }
