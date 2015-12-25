@@ -373,7 +373,7 @@ public enum GoodsType {
             }
             return null;
         }
-    }, false);
+    }, true);
     private String name;
     private String desc;
     private GoodScript script;
