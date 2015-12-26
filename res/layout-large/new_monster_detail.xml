@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" android:alpha="60">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp">
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent" android:background="@drawable/monster_detail_bak" android:alpha="50"
+            android:layout_gravity="center" android:gravity="center_vertical">
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" android:layout_marginLeft="75dp"
+                android:layout_gravity="top" android:gravity="top">
+            <ImageView
+                    android:layout_width="130dp"
+                    android:layout_height="155dp"
+                    android:id="@+id/head_png" android:src="@drawable/niu" android:layout_row="1"
+                    android:layout_column="0" android:layout_gravity="bottom|left" android:scaleType="centerInside"
+                    />
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp">
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="猼訑"
+                        android:id="@+id/name_text" android:textSize="35dp" android:textColor="@color/gray"
+                        android:textStyle="bold"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="基础生命:100.2W"
+                        android:id="@+id/base_hp" android:layout_marginTop="5dp" android:textSize="20dp"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="基础攻击:100.23W"
+                        android:id="@+id/base_atk" android:textSize="20dp"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="基础防御:100.23W"
+                        android:id="@+id/base_def" android:textSize="20dp"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="捕获率:134"
+                        android:id="@+id/base_pet_rate" android:textSize="20dp"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="生蛋率:123"
+                        android:id="@+id/base_egg_rate" android:textSize="20dp"/>
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+                android:layout_width="312dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="猼訑（bódàn）是古代汉族神话传说中一种样子像羊的怪兽。它有九条尾和四只耳朵，眼睛长在背上。有人说取它的皮披在身上，就不会知道什么是畏惧。"
+                android:id="@+id/desc_text" android:textSize="22sp" android:textIsSelectable="true"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="第一次遇见在第100层"
+                android:id="@+id/first_meet_lev" android:layout_marginLeft="65dp" android:layout_marginTop="5dp"
+                android:textColor="@color/gray" android:textStyle="bold" android:layout_gravity="left"
+                android:textSize="20dp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="第一次捕获在第120层"
+                android:id="@+id/first_catch_lev" android:layout_marginLeft="65dp"
+                android:textColor="@color/gray" android:layout_gravity="left" android:textSize="20dp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="它击败了你10000次"
+                android:id="@+id/beat_count_text" android:textColor="#da002b" android:layout_marginLeft="65dp"
+                android:textStyle="bold" android:layout_marginTop="3dp" android:layout_gravity="left"
+                android:textSize="20dp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="你击败了它100000次"
+                android:id="@+id/defeat_count_text" android:layout_marginLeft="65dp"
+                android:textColor="#0515da" android:textStyle="bold" android:layout_gravity="left"
+                android:textSize="20dp"/>
+    </LinearLayout>
+</LinearLayout>

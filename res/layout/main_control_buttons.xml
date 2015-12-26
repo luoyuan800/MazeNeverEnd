@@ -67,13 +67,13 @@
 
         <Button
                 android:id="@+id/shop_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="fill_horizontal"
                 android:layout_weight="1"
                 android:focusableInTouchMode="false"
-                android:text="商店"
-                android:textSize="12sp"/>
+                android:text="商"
+                android:textSize="12sp" android:background="@drawable/button_sub_action_dark_touch"/>
     </LinearLayout>
     <!--<LinearLayout
             android:layout_width="fill_parent"
