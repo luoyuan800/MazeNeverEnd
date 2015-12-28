@@ -20,10 +20,10 @@
                 android:layout_height="wrap_content" android:layout_marginLeft="75dp"
                 android:layout_gravity="top" android:gravity="top">
             <ImageView
-                    android:layout_width="130dp"
-                    android:layout_height="155dp"
-                    android:id="@+id/head_png" android:src="@drawable/niu" android:layout_row="1"
-                    android:layout_column="0" android:layout_gravity="bottom|left" android:scaleType="centerInside"
+                    android:layout_width="120dp"
+                    android:layout_height="125dp"
+                    android:id="@+id/head_png" android:src="@drawable/fudi" android:layout_row="1"
+                    android:layout_column="0" android:layout_gravity="left|top" android:scaleType="centerCrop"
                     />
             <LinearLayout
                     android:orientation="vertical"
@@ -75,28 +75,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="第一次遇见在第100层"
-                android:id="@+id/first_meet_lev" android:layout_marginLeft="65dp" android:layout_marginTop="5dp"
+                android:id="@+id/first_meet_lev" android:layout_marginLeft="85dp" android:layout_marginTop="5dp"
                 android:textColor="@color/gray" android:textStyle="bold" android:layout_gravity="left"
-                android:textSize="20dp"/>
+                android:textSize="21dp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="第一次捕获在第120层"
-                android:id="@+id/first_catch_lev" android:layout_marginLeft="65dp"
-                android:textColor="@color/gray" android:layout_gravity="left" android:textSize="20dp"/>
+                android:id="@+id/first_catch_lev" android:layout_marginLeft="85dp"
+                android:textColor="@color/gray" android:layout_gravity="left" android:textSize="21dp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="它击败了你10000次"
-                android:id="@+id/beat_count_text" android:textColor="#da002b" android:layout_marginLeft="65dp"
+                android:id="@+id/beat_count_text" android:textColor="#da002b" android:layout_marginLeft="85dp"
                 android:textStyle="bold" android:layout_marginTop="3dp" android:layout_gravity="left"
-                android:textSize="20dp"/>
+                android:textSize="23dp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="你击败了它100000次"
-                android:id="@+id/defeat_count_text" android:layout_marginLeft="65dp"
+                android:id="@+id/defeat_count_text" android:layout_marginLeft="85dp"
                 android:textColor="#0515da" android:textStyle="bold" android:layout_gravity="left"
-                android:textSize="20dp"/>
+                android:textSize="23dp"/>
     </LinearLayout>
 </LinearLayout>
