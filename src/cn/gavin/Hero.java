@@ -64,6 +64,12 @@ public class Hero implements BaseObject {
     private Skill secondSkill;
     private Skill thirdSkill;
     private Skill itemSkill;
+    private Skill fourthSkill;
+    private Skill fifitSkill;
+    private Skill sixthSkill;
+    private boolean fourthSkillEnable = false;
+    private boolean fifitSkillEnable = false;
+    private boolean sixthSkillEnable = false;
     private Long awardCount = 1l;
     private Long lockBox = 0l;
     private Long keyCount = 0l;
@@ -264,15 +270,20 @@ public class Hero implements BaseObject {
     }
 
     public void addSkill(Skill skill) {
-        if (skill.equal(firstSkill) || skill.equal(secondSkill) || skill.equal(thirdSkill)) {
+        if (skill.equal(firstSkill) || skill.equal(secondSkill) || skill.equal(thirdSkill) || skill.equal(fourthSkill) || skill.equal(firstSkill) || skill.equal(sixthSkill)) {
             return;
         }
         if (firstSkill != null && thirdSkill != null && secondSkill != null) {
-            firstSkill.setOnUsed(false, false);
+            if((!fourthSkillEnable || fourthSkill!=null) && (!fifitSkillEnable || fifitSkill!=null) && (!sixthSkillEnable || sixthSkill!=null)) {
+                firstSkill.setOnUsed(false, false);
+            }
         }
         if (firstSkill == null) firstSkill = skill;
         else if (secondSkill == null) secondSkill = skill;
         else if (thirdSkill == null) thirdSkill = skill;
+        else if(fourthSkillEnable && fourthSkill == null) fourthSkill = skill;
+        else if(fifitSkillEnable && firstSkill == null) fifitSkill = skill;
+        else if(sixthSkillEnable && sixthSkill == null) sixthSkill = skill;
     }
 
     private Hero(String name, long hp, long attackValue, long defenseValue, long level) {
@@ -514,7 +525,7 @@ public class Hero implements BaseObject {
                     }
                     if (clickPointAward > 5) {
                         long point1 = random.nextLong(clickPointAward);
-                        if(point1 > 15) point1 = 15;
+                        if (point1 > 15) point1 = 15;
                         addPoint(point1);
                     } else {
                         addPoint(clickPointAward);
@@ -973,17 +984,17 @@ public class Hero implements BaseObject {
                     setPetAbe(petAbe - effect.getValue());
                     break;
                 case START_BURST:
-                    if(getItemSkill()!=null && getItemSkill().getName().equals("星爆")) {
+                    if (getItemSkill() != null && getItemSkill().getName().equals("星爆")) {
                         setItemSkill(null);
                     }
                     break;
                 case ICE_BURST:
-                    if(getItemSkill()!=null && getItemSkill().getName().equals("冰爆")) {
+                    if (getItemSkill() != null && getItemSkill().getName().equals("冰爆")) {
                         setItemSkill(null);
                     }
                     break;
                 case FEN_BURST:
-                    if(getItemSkill()!=null && getItemSkill().getName().equals("令风")) {
+                    if (getItemSkill() != null && getItemSkill().getName().equals("令风")) {
                         setItemSkill(null);
                     }
                     break;
@@ -1126,6 +1137,13 @@ public class Hero implements BaseObject {
                 MainGameActivity.context.addMessage(getFormatName() + "成功转生！");
                 MainGameActivity.context.save();
                 reincaCount++;
+                if (reincaCount == 2) {
+                    fourthSkillEnable = true;
+                } else if (reincaCount == 4) {
+                    fifitSkillEnable = true;
+                } else if (reincaCount == 6) {
+                    sixthSkillEnable = true;
+                }
             }
         } catch (Exception e) {
             Toast.makeText(MainGameActivity.context, "数据异常！！转生失败！", Toast.LENGTH_SHORT).show();

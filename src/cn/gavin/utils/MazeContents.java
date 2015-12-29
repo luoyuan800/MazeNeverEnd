@@ -1,12 +1,15 @@
 package cn.gavin.utils;
 
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 
 import cn.gavin.Achievement;
+import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.R;
+import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
@@ -264,5 +267,13 @@ public static Bitmap loadImageFromSD(String name){
         int nameIndex = Monster.getIndex(name);
         check = nameIndex < Monster.lastNames.length || "蛋".equals(myPet.getType());
         return check;
+    }
+
+    public static int getIndex(String name) {
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT id FROM palace WHERE type = '" + name + "'");
+        if (!cursor.isAfterLast()) {
+            return cursor.getInt(cursor.getColumnIndex("id"));
+        }
+        else return 0;
     }
 }

@@ -9,6 +9,7 @@ import cn.gavin.R;
  * Created by luoyuan on 12/24/15.
  */
 public class MonsterDB {
+    public static final int total = 103;
     public static void createMonsterTable(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("DELETE TABLE IF EXIST monster");
         String createTable = "CREATE TABLE if not exists monster(" +
