@@ -1,12 +1,15 @@
 package cn.gavin.pet;
 
 import android.content.Context;
+import android.database.Cursor;
 
 import cn.gavin.Achievement;
 import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.db.DBHelper;
 import cn.gavin.monster.Monster;
+import cn.gavin.monster.MonsterDB;
 import cn.gavin.palace.Base;
 import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.pet.skill.HealthSkill;
@@ -38,6 +41,8 @@ public class Pet extends Base {
     private long hp_rise = 20;
     private String owner;
     private String ownerId;
+    private float eggRate;
+    private int index;
 
 
     public void click() {
@@ -110,10 +115,10 @@ public class Pet extends Base {
     public static Pet catchPet(Monster monster) {
         Random random = new Random();
         double rate = (((monster.getMaxHP() * 3 - monster.getMaxHP() *
-                MazeContents.hero.getPetRate() * 2) / (monster.getMaxHP() * 3)) * monster.getRate() *
-                (2 - MazeContents.hero.getPetRate())) * 10 / (255 * MazeContents.hero.getPets().size());
+                MazeContents.hero.getPetRate() * 2) / (monster.getMaxHP() * 3 + 1)) * monster.getPetRate() *
+                (2 - MazeContents.hero.getPetRate())) * 10 / (255 * MazeContents.hero.getPets().size() + 1);
         if (rate >= 100) {
-            rate = 98;
+            rate = 90;
         }
         double current = random.nextInt(100) - 1 + random.nextDouble() + random.nextInt(PetDB.getPetCount(null) + 1) / 10;
         if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 17 && rate > current) {
@@ -127,6 +132,9 @@ public class Pet extends Base {
     }
 
     public static Pet cPet(Monster monster, Random random) {
+        if ((MazeContents.hero.ismV() && monster.getIndex() % 2 == 0)|| monster.getIndex() == 25) {
+            return null;
+        }
         if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 15) {
             Pet pet = new Pet();
             pet.setElement(monster.getElement());
@@ -148,20 +156,14 @@ public class Pet extends Base {
             if (pet.getUHp() > MazeContents.hero.getRealUHP()) {
                 pet.setHp(pet.getUHp() / 200 + 20);
             }
-            int index = Monster.getIndex(pet.getName());
-            if (MazeContents.hero.ismV() && index % 2 == 0) {
-                return null;
-            }
-            if (index >= 0 && index < Monster.lastNames.length - 11) {
-                pet.setType(Monster.lastNames[index]);
-            } else {
-                return null;
-            }
+            pet.setType(monster.getLastName());
             pet.setLev(monster.getMazeLev());
             pet.setIntimacy(0l);
+            pet.setEggRate(monster.getEggRate());
             pet.setSex(random.nextInt(2));
             pet.setOwner(MazeContents.hero.getName());
             pet.setOwnerId(MazeContents.hero.getUuid());
+            pet.setIndex(monster.getIndex());
             if ((SkillFactory.getSkill("神赋", MazeContents.hero).isActive() && random.nextInt(100) < 30) || random.nextInt(5000) < 5) {
                 int sindex = random.nextInt(PetSkillList.values().length);
                 if (sindex < 5) {
@@ -188,6 +190,7 @@ public class Pet extends Base {
                 pet.setHp_rise(pet.getHp_rise() * 3);
             }
             PetDB.save(pet);
+            monster.setCatchCount(monster.getCatchCount() + 1);
             return pet;
         } else {
             return null;
@@ -322,8 +325,9 @@ public class Pet extends Base {
 
     public static Pet egg(Pet f, Pet m, long lev, Hero hero) {
         Random random = new Random();
+        float eggRate = f.getEggRate()/3 + m.getEggRate()/2;
         double rate = (((hero.getUpperAtk() * 3 - hero.getUpperAtk() *
-                MazeContents.hero.getPetRate() * 2) / (hero.getUpperHp() * 3)) * hero.getEggRate() *
+                MazeContents.hero.getPetRate() * 2) / (hero.getUpperHp() * 3)) * (hero.getEggRate()+ eggRate) *
                 (2 - MazeContents.hero.getPetRate())) * 20 / 255;
         if (f.getType().equals(m.getType())) {
             rate *= 1.5;
@@ -349,6 +353,7 @@ public class Pet extends Base {
 
     public static Pet getEgg(Pet f, Pet m, long lev, Hero hero, Random random) {
         Pet egg = new Pet();
+        egg.setIndex(m.getIndex());
         String type = m.getType();
         if ("蛋".equals(type) || f.getName().endsWith("蛋") || m.getName().endsWith("蛋")) {
             return null;
@@ -365,8 +370,18 @@ public class Pet extends Base {
         }
         egg.setfName(f.getName());
         egg.setmName(m.getName());
-        egg.setHp(f.getUHp() / 2 + random.nextLong(m.getHp()));
-        egg.setAtk(f.getMaxAtk() / 2 + random.nextLong(m.getMaxAtk()));
+        Cursor fc = DBHelper.getDbHelper().excuseSOL("select atk,hp from monster where id = '" + f.getIndex() + "'");
+        Cursor mc = DBHelper.getDbHelper().excuseSOL("select atk,hp from monster where id = '" + m.getIndex() + "'");
+        if(!fc.isAfterLast()){
+            long batk = (StringUtils.toLong(fc.getString(fc.getColumnIndex("atk"))) + StringUtils.toLong(mc.getString(mc.getColumnIndex("atk"))))/2;
+            long bhp = (StringUtils.toInt(fc.getString(fc.getColumnIndex("hp"))) + StringUtils.toInt(mc.getString(mc.getColumnIndex("hp"))))/2;
+            egg.setHp(bhp);
+            egg.setAtk(batk);
+            fc.close();mc.close();
+        }else {
+            egg.setHp(f.getUHp() / 20 + random.nextLong(m.getHp()) + 1);
+            egg.setAtk(f.getMaxAtk() / 20 + random.nextLong(m.getMaxAtk()) +1);
+        }
         egg.setDef(f.getMaxDef() / 2 + random.nextLong(m.getMaxDef()));
         egg.setAtk_rise((f.getAtk_rise() + m.getAtk_rise()) / 2);
         egg.setDef_rise((f.getDef_rise() + m.getDef_rise()) / 2);
@@ -378,19 +393,24 @@ public class Pet extends Base {
         egg.setOwnerId(hero.getUuid());
         if (!f.getType().equals(m.getType())) {
             if (random.nextInt(10000) + random.nextFloat() < (31.115 + hero.getPetAbe())) {
-                String lastName = Monster.lastNames[random.nextInt(Monster.lastNames.length - 1)];
-                egg.setName("变异的" + lastName);
-                if (lastName.equals("作者")) {
-                    egg.setAtk(egg.getAtk() * 2);
-                    egg.setName("变异的蟑螂");
+                int index = random.nextInt(MonsterDB.total);
+                Cursor cursor = DBHelper.getDbHelper().excuseSOL("select * from monster where id = '" + index + "'");
+                if(!cursor.isAfterLast()){
+                    egg.setName("变异的" + cursor.getString(cursor.getColumnIndex("type")));
+                    if(index == 25){
+                        egg.setElement(Element.无);
+                        egg.color = "#B8860B";
+                        egg.atk_rise = MazeContents.hero.ATR_RISE * 2;
+                        egg.def_rise = MazeContents.hero.DEF_RISE * 2;
+                        egg.hp_rise = MazeContents.hero.MAX_HP_RISE * 2;
+                        egg.setAtk(egg.getMaxAtk() + StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk")))/2);
+                    }
                 }
-                egg.color = "#B8860B";
-                egg.atk_rise = MazeContents.hero.ATR_RISE;
-                egg.def_rise = MazeContents.hero.DEF_RISE;
-                egg.hp_rise = MazeContents.hero.MAX_HP_RISE;
+                cursor.close();
             }
         }
-        if ((SkillFactory.getSkill("恩赐", MazeContents.hero).isActive() && random.nextInt(100) < 45) || random.nextInt(1000) < 5) {
+        if ((SkillFactory.getSkill("恩赐", MazeContents.hero).isActive() &&
+                random.nextInt(100) < 45) || random.nextInt(1000) < 5) {
             int index = random.nextInt(PetSkillList.values().length);
             if (index == 2) index = 1;
             NSkill petS = PetSkillList.values()[index].getSkill(egg);
@@ -493,5 +513,21 @@ public class Pet extends Base {
         }else{
             return "";
         }
+    }
+
+    public float getEggRate() {
+        return eggRate;
+    }
+
+    public void setEggRate(float eggRate) {
+        this.eggRate = eggRate;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

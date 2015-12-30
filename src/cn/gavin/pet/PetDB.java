@@ -26,6 +26,7 @@ import cn.gavin.utils.StringUtils;
 public class PetDB {
 
     public static void createDB(SQLiteDatabase db) {
+        db.execSQL("DELETE TABLE IF EXIST pet");
         String sql = "CREATE TABLE pet(" +
                 "id TEXT NOT NULL PRIMARY KEY," +
                 "name TEXT NOT NULL," +
@@ -47,25 +48,14 @@ public class PetDB {
                 "owner TEXT," +
                 "owner_id TEXT," +
                 "color TEXT," +
+                "index INTEGER," +
+                "egg_rate TEXT," +
                 "farther TEXT," +
                 "mother TEXT" +
                 ")";
 
         db.execSQL(sql);
         db.execSQL("CREATE UNIQUE INDEX pet_index ON pet (id)");
-    }
-
-    public static void upgradeTo1_8(SQLiteDatabase db){
-        try{
-            db.beginTransaction();
-            db.execSQL("ALTER TABLE pet ADD COLUMN color TEXT");
-            db.execSQL("ALTER TABLE pet ADD COLUMN owner_id TEXT");
-            db.setTransactionSuccessful();
-            db.endTransaction();
-        }catch (Exception e){
-            e.printStackTrace();
-            LogHelper.logException(e);
-        }
     }
 
     public static int getPetCount(SQLiteDatabase database) {
@@ -84,9 +74,9 @@ public class PetDB {
 
     public static void save(Pet... pets) {
         String base = "REPLACE INTO pet (id, name, type, intimacy, element, skill, skill_count, " +
-                "death_c, atk, def, hp,u_hp, lev, farther, mother, sex, atk_rise, hp_rise, def_rise, owner, color, owner_id) " +
+                "death_c, atk, def, hp,u_hp, lev, farther, mother, sex, atk_rise, hp_rise, def_rise, owner, color, owner_id, index, egg_rate) " +
                 "values ('%s', '%s', '%s','%s','%s','%s','%s'," +
-                "'%s','%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s','%s', '%s','%s', '%s')";
+                "'%s','%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s','%s', '%s','%s', '%s', '%s', '%s')";
         for (Pet pet : pets) {
             if (!StringUtils.isNotEmpty(pet.getId())) {
                 pet.setId(UUID.randomUUID().toString());
@@ -96,7 +86,7 @@ public class PetDB {
                     pet.getIntimacy(), pet.getElement().name(), skill != null ? skill.getName() : "",
                     skill != null ? skill.getCount() : "0", pet.getDeathCount(), pet.getMaxAtk(),
                     pet.getMaxDef(), pet.getHp(), pet.getUHp(), pet.getLev(), pet.getfName(),
-                    pet.getmName(), pet.getSex(), pet.getAtk_rise(), pet.getHp_rise(), pet.getDef_rise(), pet.getOwner(), pet.getColor(), pet.getOwnerId());
+                    pet.getmName(), pet.getSex(), pet.getAtk_rise(), pet.getHp_rise(), pet.getDef_rise(), pet.getOwner(), pet.getColor(), pet.getOwnerId(), pet.getIndex(), pet.getEggRate());
             DBHelper.getDbHelper().excuseSQLWithoutResult(sql);
             petCatch.put(pet.getId(),pet);
         }
@@ -120,6 +110,8 @@ public class PetDB {
     }
 
     private static void buildPet(Pet pet, Cursor cursor) {
+        pet.setIndex(cursor.getInt(cursor.getColumnIndex("index")));
+        pet.setEggRate(StringUtils.toFloat(cursor.getString(cursor.getColumnIndex("egg_rate"))));
         pet.setName(cursor.getString(cursor.getColumnIndex("name")));
         pet.setType(cursor.getString(cursor.getColumnIndex("type")));
         pet.setHp(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))));

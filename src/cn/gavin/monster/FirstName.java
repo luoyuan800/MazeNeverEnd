@@ -1,4 +1,6 @@
-package cn.gavin.monster.nmonster;
+package cn.gavin.monster;
+
+import cn.gavin.utils.Random;
 
 /**
  * Copyright 2015 luoyuan.
@@ -14,7 +16,14 @@ public enum FirstName {
     magical("神奇",60,40,0 ,-5),
     neural("神经",50,75,1 ,-10),
     legendary("传奇",100,80,1 ,-30),
-    unbeatable("无敌",150,110,5 ,-100)
+    unbeatable("无敌",150,110,5 ,-100),
+    really("真正",150,110,5 ,-100),
+    image("镜像",150,110,5 ,-100),
+    stupid("傻乎乎",150,110,5 ,-100),
+    frailty("心灵脆弱",150,110,5 ,-100),
+    angry("愤怒",150,110,5 ,-100),
+    tire("心好累",150,110,5 ,-100),
+    empty("",150,110,5 ,-100)
     ;
     private float atkPercent;
     private float hpPercent;
@@ -29,11 +38,11 @@ public enum FirstName {
         this.eggRate = eggRate;
     }
     public long getAtkAddition(long atk) {
-        return (long) (atk * atkPercent);
+        return (long) (atk * (double)atkPercent);
     }
 
     public long getHPAddition(long hp) {
-        return (long) (hp * hpPercent);
+        return (long) (hp * (double)hpPercent);
     }
     public float getSilent(){
         return silent;
@@ -43,5 +52,14 @@ public enum FirstName {
     }
     public String getName(){
         return name;
+    }
+
+    public static FirstName getRandom(long lev, Random random){
+        int length = values().length - 7;
+        int first = (int) random.nextLong(lev / 50 < length ? lev / 50 + 1 : length);
+        if(first >= length){
+            first = random.nextInt(length);
+        }
+        return values()[first];
     }
 }

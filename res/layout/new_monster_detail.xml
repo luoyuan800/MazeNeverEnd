@@ -1,99 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent" android:alpha="60">
+    android:id="@+id/monster_book_new"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:alpha="60"
+    android:orientation="vertical">
+
+    <cn.gavin.utils.ui.WheelView
+        android:id="@+id/monster_name_list"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp" />
 
     <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="30dp">
-    </LinearLayout>
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent" android:background="@drawable/monster_detail_bak" android:alpha="50"
-            android:layout_gravity="center" android:gravity="center_vertical">
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:alpha="50"
+        android:background="@drawable/monster_detail_bak"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
         <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" android:layout_marginLeft="35dp"
-                android:layout_gravity="center_vertical|top" android:gravity="top">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|top"
+            android:layout_marginLeft="35dp"
+            android:gravity="top">
+
             <ImageView
-                    android:layout_width="110dp"
-                    android:layout_height="125dp"
-                    android:id="@+id/head_png" android:src="@drawable/fudi" android:layout_row="1"
-                    android:layout_column="0" android:layout_gravity="bottom|left" android:scaleType="centerInside"
-                    />
+                android:id="@+id/head_png"
+                android:layout_width="110dp"
+                android:layout_height="125dp"
+                android:layout_column="0"
+                android:layout_gravity="bottom|left"
+                android:layout_row="1"
+                android:scaleType="centerInside"
+                android:src="@drawable/fudi" />
+
             <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginTop="10dp"
-                    android:layout_marginLeft="20dp">
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
                 <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="猼訑"
-                        android:id="@+id/name_text" android:textSize="25dp" android:textColor="@color/gray"
-                        android:textStyle="bold"/>
+                    android:id="@+id/name_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="猼訑"
+                    android:textColor="@color/gray"
+                    android:textSize="25dp"
+                    android:textStyle="bold" />
+
                 <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="基础生命:100.2W"
-                        android:id="@+id/base_hp" android:layout_marginTop="5dp"/>
+                    android:id="@+id/base_hp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="基础生命:100.2W" />
+
                 <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="基础攻击:100.23W"
-                        android:id="@+id/base_atk"/>
+                    android:id="@+id/base_atk"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="基础攻击:100.23W" />
+
                 <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="基础防御:100.23W"
-                        android:id="@+id/base_def"/>
+                    android:id="@+id/base_pet_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="捕获率:134" />
+
                 <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="捕获率:134"
-                        android:id="@+id/base_pet_rate"/>
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="生蛋率:123"
-                        android:id="@+id/base_egg_rate"/>
+                    android:id="@+id/base_egg_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="生蛋率:123" />
             </LinearLayout>
         </LinearLayout>
+
         <TextView
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="猼訑（bódàn）是古代汉族神话传说中一种样子像羊的怪兽。它有九条尾和四只耳朵，眼睛长在背上。有人说取它的皮披在身上，就不会知道什么是畏惧。"
-                android:id="@+id/desc_text" android:textSize="16sp" android:textIsSelectable="true"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center_horizontal"/>
+            android:id="@+id/desc_text"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:text="猼訑（bódàn）是古代汉族神话传说中一种样子像羊的怪兽。它有九条尾和四只耳朵，眼睛长在背上。有人说取它的皮披在身上，就不会知道什么是畏惧。"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"
+            android:textSize="16sp" />
+
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="第一次遇见在第100层"
-                android:id="@+id/first_meet_lev" android:layout_marginLeft="65dp" android:layout_marginTop="5dp"
-                android:textColor="@color/gray" android:textStyle="bold" android:layout_gravity="left"/>
+            android:id="@+id/first_meet_lev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="65dp"
+            android:layout_marginTop="5dp"
+            android:text="第一次遇见在第100层"
+            android:textColor="@color/gray"
+            android:textStyle="bold" />
+
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="第一次捕获在第120层"
-                android:id="@+id/first_catch_lev" android:layout_marginLeft="65dp"
-                android:textColor="@color/gray" android:layout_gravity="left"/>
+            android:id="@+id/first_catch_lev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="65dp"
+            android:text="第一次捕获在第120层"
+            android:textColor="@color/gray" />
+
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="它击败了你10000次"
-                android:id="@+id/beat_count_text" android:textColor="#da002b" android:layout_marginLeft="65dp"
-                android:textStyle="bold" android:layout_marginTop="3dp" android:layout_gravity="left"/>
+            android:id="@+id/beat_count_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="65dp"
+            android:layout_marginTop="3dp"
+            android:text="它击败了你10000次"
+            android:textColor="#da002b"
+            android:textStyle="bold" />
+
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="你击败了它100000次"
-                android:id="@+id/defeat_count_text" android:layout_marginLeft="65dp"
-                android:textColor="#0515da" android:textStyle="bold" android:layout_gravity="left"/>
+            android:id="@+id/defeat_count_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="65dp"
+            android:text="你击败了它100000次"
+            android:textColor="#0515da"
+            android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

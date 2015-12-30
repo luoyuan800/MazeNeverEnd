@@ -1,13 +1,19 @@
 package cn.gavin.maze;
 
+import android.database.Cursor;
+
+import java.util.List;
+
 import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.db.good.detail.Barrier;
+import cn.gavin.db.DBHelper;
 import cn.gavin.db.good.detail.SafetyRope;
 import cn.gavin.good.GoodsType;
-import cn.gavin.monster.Monster;
+import cn.gavin.log.LogHelper;
 import cn.gavin.monster.MonsterBook;
+import cn.gavin.monster.Monster;
+import cn.gavin.monster.MonsterDB;
 import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
 import cn.gavin.pet.skill.PetSkill;
@@ -17,8 +23,6 @@ import cn.gavin.story.StoryHelper;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
-
-import java.util.List;
 
 /**
  * Created by gluo on 8/26/2015.
@@ -35,7 +39,6 @@ public class Maze {
     private StoryHelper storyHelper;
     protected long lastSave;
     private long hunt = 150;
-    private int petRate = 1;
     private boolean sailed = false;
     private String catchPetNameContains = "";
 
@@ -101,11 +104,27 @@ public class Maze {
                         pet.setDeathCount(pet.getDeathCount() - hero.getEggStep());
                         if (pet.getDeathCount() <= 0) {
                             addMessage(context, pet.getFormatName() + "出生了！");
-                            int index = Monster.getIndex(pet.getName());
-                            if (index < Monster.lastNames.length) {
-                                pet.setType(Monster.lastNames[index]);
-                            } else {
-                                pet.setType(pet.getName());
+                            try{
+                                Cursor cursor = DBHelper.getDbHelper().excuseSOL("select catch meet_lev from monster where id = '" + pet.getIndex() + "'");
+                                if(!cursor.isAfterLast()){
+                                    DBHelper.getDbHelper().excuseSQLWithoutResult("update monster set " +
+                                            "catch = '" + (StringUtils.toLong(cursor.getString(cursor.getColumnIndex("catch"))) + 1) +
+                                            " where id ='" + pet.getIndex() + "'");
+                                    if(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("meet_lev"))) == 0) {
+                                        DBHelper.getDbHelper().excuseSQLWithoutResult("update monster set " +
+                                                "meet_lev = '" + level +
+                                                " where id ='" + pet.getIndex() + "'");
+                                    }
+                                }
+                                cursor.close();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                LogHelper.logException(e);
+                            }
+                            int index = pet.getIndex();
+                            Cursor cursor = DBHelper.getDbHelper().excuseSOL("select type from monster where id = '" + index + "'");
+                            if(cursor!=null && !cursor.isAfterLast()){
+                                pet.setType(cursor.getString(cursor.getColumnIndex("type")));
                             }
                             pet.setLev(level);
                             pet.setDeathCount(0);
@@ -181,14 +200,21 @@ public class Maze {
                     monster = new Monster(hero, this);
                 }
                 monster.setMazeLev(level);
+                if(monster.getMeet_lev()==0){
+                    monster.setMeet_lev(level);
+                }
                 if (BattleController.battle(hero, monster, random, this, context)) {
                     streaking++;
                     if (streaking >= 100) {
                         Achievement.unbeaten.enable(hero);
                     }
+                    monster.setDefeatCount(monster.getDefeatCount() + 1);
                     if(!StringUtils.isNotEmpty(catchPetNameContains) || monster.getName().contains(catchPetNameContains)) {
                         Pet pet = Pet.catchPet(monster);
                         if (pet != null) {
+                            if(monster.getCatch_lev() == 0) {
+                                monster.setCatch_lev(level);
+                            }
                             addMessage(context, hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
                             monster.addBattleDesc(hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
                             if (hero.getPets().size() < hero.getPetSize()) {
@@ -200,6 +226,7 @@ public class Maze {
                     if (level > 25) {
                         context.save();
                     }
+                    monster.setBeatCount(monster.getBeatCount() + 1);
                     GoodsType medallion = GoodsType.Medallion;
                     medallion.load();
                     if (medallion.getCount() > 0) {
@@ -251,7 +278,7 @@ public class Maze {
                     context.showFloatView(monster.getBattleMsg());
                     lastSave = level;
                 }
-                monsterBook.addMonster(monster);
+                MonsterDB.updateMonster(monster);
                 addMessage(context, "-----------------------------");
             } else {
                 switch (random.nextInt(5)) {

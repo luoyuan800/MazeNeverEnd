@@ -1,4 +1,6 @@
-package cn.gavin.monster.nmonster;
+package cn.gavin.monster;
+
+import cn.gavin.utils.Random;
 
 /**
  * Copyright 2015 luoyuan.
@@ -20,6 +22,8 @@ public enum SecondName {
     fat("胖",20,13,1,0),
     red("红色",20,13,1,0),
     green("绿色",20,13,1,0),
+    defender("【守护者】",20,13,1,0),
+    empty("",20,13,1,0)
     ;
     private SecondName(String name, float askPref, float hpPref, int petRate, int silent){
         this.name = name;
@@ -33,4 +37,33 @@ public enum SecondName {
     private float additionAtk;
     private int petRate;
     private float silent;
+
+    public String getName() {
+        return name;
+    }
+
+    public static SecondName getRandom(long mazeLev, Random random) {
+        int length = values().length - 2;
+        int second = (int) random.nextLong(mazeLev < length ? mazeLev + 1 : length);
+        if(second >= length){
+            second = random.nextInt(length);
+        }
+        return values()[second];
+    }
+
+    public long getAtkAddition(long atk) {
+        return (long)(atk * (double)additionAtk);
+    }
+
+    public long getHpAddition(long hp) {
+        return (long)(hp * (double)additionHp);
+    }
+
+    public int getPetRate() {
+        return petRate;
+    }
+
+    public float getSilent() {
+        return silent;
+    }
 }

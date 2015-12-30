@@ -274,18 +274,21 @@ public class BattleController {
                     monster.addBattleDesc(itemmsg);
                 }
             }
-            isJump = true;
+            return true;
         } else if (hero.getHp() <= 0) {
+            if(!atk){//如果是在自己的攻击回合挂掉的（莫名其妙挂掉的补充)
+                String unknownDie = hero.getFormatName() + "在攻击的时候用力过头，摔到楼下去了……";
+                addMessage(context, unknownDie);
+                monster.addBattleDesc(unknownDie);
+            }
             Skill notDieSkill = SkillFactory.getSkill("不死之身", hero);
             if (notDieSkill.isActive() && notDieSkill.perform()) {
-                isJump = notDieSkill.release(monster);
+                return notDieSkill.release(monster);
             } else {
                 monster.setDefeat(false);
-                isJump = false;
+                return false;
             }
-        } else {
-            isJump = true;
         }
-        return isJump;
+        return true;
     }
 }

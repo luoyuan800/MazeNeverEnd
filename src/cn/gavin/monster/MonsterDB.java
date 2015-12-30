@@ -1,7 +1,14 @@
-package cn.gavin.monster.nmonster;
+package cn.gavin.monster;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.gavin.R;
+import cn.gavin.db.DBHelper;
+import cn.gavin.utils.StringUtils;
 
 /**
  * Copyright 2015 luoyuan.
@@ -10,6 +17,39 @@ import cn.gavin.R;
  */
 public class MonsterDB {
     public static final int total = 103;
+
+    private static List<Monster> loadMonster(){
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("select * from monster");
+        List<Monster> monsters = new ArrayList<Monster>();
+        while (!cursor.isAfterLast()){
+            Monster monster = new Monster();
+            monster.setCatch_lev(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("catch_lev"))));
+            monster.setMeet_lev(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("meet_lev"))));
+            monster.setCatchCount(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("catch"))));
+            monster.setIndex(cursor.getInt(cursor.getColumnIndex("id")));
+            monster.setType(cursor.getString(cursor.getColumnIndex("type")));
+            monster.setImageId(cursor.getInt(cursor.getColumnIndex("img")));
+            monster.setDesc(cursor.getString(cursor.getColumnIndex("des")));
+            monster.setPetRate(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("pet_rate"))));
+            monster.setBaseEggRate(StringUtils.toFloat(cursor.getString(cursor.getColumnIndex("egg_rate"))));
+            monster.setBaseAtk(StringUtils.toInt(cursor.getString(cursor.getColumnIndex("atk"))));
+            monster.setBaseHp(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))));
+            monsters.add(monster);
+        }
+        cursor.close();
+        return  monsters;
+    }
+
+    public static void updateMonster(Monster monster){
+        String sql = String.format("replace into monster (" +
+                "id," +
+                "beat, defeat, catch, meet_lev, catch_lev, ) values(" +
+                "%s, " +
+                "'%s', '%s', '%s', '%s', '%s')", monster.getIndex(), monster.getBeatCount(),
+                monster.getDefeatCount(), monster.getCatchCount(), monster.getMeet_lev(), monster.getCatch_lev());
+        DBHelper.getDbHelper().excuseSQLWithoutResult(sql);
+    }
+
     public static void createMonsterTable(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("DELETE TABLE IF EXIST monster");
         String createTable = "CREATE TABLE if not exists monster(" +
@@ -39,7 +79,7 @@ public class MonsterDB {
                 "id, type, atk, hp, pet_rate, drop_item, drop_good, " +
                 "beat, defeat, catch, meet_lev, catch_lev, egg_rate, pet_sub, des, img) values(" +
                 "%s, '%s', '%s', '%s', '%s', '%s', '%s'," +
-                "'0', '0', '0', '0', '0', '%s', '%s', '%s', '%s'";
+                "'0', '0', '0', '0', '0', '%s', '%s', '%s', '%s')";
 
         database.execSQL(String.format(sql, 1, "蟑螂", 1, 8, 300, "原石", "只要有人的地方就有蟑螂，不管你爬得多高，你都可以遇见它们。它们是这个世界上最古老的怪物之一，并且也是繁殖力最高（没有之一）的。", 310,0,"",R.drawable.zl));
         database.execSQL(String.format(sql, 2, "大蚯蚓", 5, 20, 300, "硝石", "", 300, 0,"这并不是普通的蚯蚓，据说它们是基因改造产生的，当然你还是可以抓住它们然后拿去钓鱼，不过你得先找到可以钓鱼的地方。",R.drawable.qy));
