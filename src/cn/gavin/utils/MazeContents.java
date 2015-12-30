@@ -117,7 +117,7 @@ public static Bitmap loadImageFromSD(String name){
         if ("蛋".equals(type)) {
             return R.drawable.egg;
         }
-        int index = Monster.getIndex(name);
+        int index = 1;
         int image = R.drawable.h_4_s;
         switch (index) {
             case 0:
