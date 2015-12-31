@@ -1,634 +1,646 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_game_activity"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/migon_bak"
-    tools:context=".activity.MainGameActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/main_game_activity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/migon_bak"
+                tools:context=".activity.MainGameActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:gravity="center|center_horizontal|fill_vertical"
-        android:orientation="horizontal">
+            android:id="@+id/linearLayout2"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:gravity="center|center_horizontal|fill_vertical"
+            android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+                android:id="@+id/linearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
 
 
             <TextView
-                android:id="@+id/hat_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                android:textSize="12sp" />
+                    android:id="@+id/hat_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:textSize="12sp" android:text="某个名字恨长的帽子"/>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/necklace_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="12sp" />
+                        android:id="@+id/necklace_view"
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="12sp" android:text="某人很牛B的项链"/>
 
                 <Button
-                    android:id="@+id/hero_pic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/h_1"
-                    android:focusableInTouchMode="false"
-                    android:gravity="end"
-                    android:textSize="6sp" />
+                        android:id="@+id/hero_pic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/h_1"
+                        android:focusableInTouchMode="false"
+                        android:gravity="end"
+                        android:textSize="6sp"/>
             </LinearLayout>
 
             <TextView
-                android:id="@+id/hero_pic_click_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textSize="15sp" />
+                    android:id="@+id/hero_pic_click_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="15sp"/>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|left"
-            android:layout_weight="1"
-            android:gravity="bottom"
-            android:orientation="vertical">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|left"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:orientation="vertical">
 
             <TextView
-                android:id="@+id/ring_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="12sp" />
+                    android:id="@+id/ring_view"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="12sp" android:text="某个效果很多的戒指"/>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="12dp" />
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"/>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:gravity="bottom"
-                android:orientation="horizontal">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:gravity="bottom"
+                    android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/local_box"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:drawableTop="@drawable/st"
-                    android:gravity="center"
-                    android:textSize="6sp" />
+                        android:id="@+id/local_box"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:drawableTop="@drawable/st"
+                        android:gravity="center"
+                        android:textSize="6sp" android:text="x100"/>
 
                 <TextView
-                    android:id="@+id/key_count"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:drawableTop="@drawable/ys"
-                    android:gravity="center"
-                    android:textSize="6sp" />
+                        android:id="@+id/key_count"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:drawableTop="@drawable/ys"
+                        android:gravity="center"
+                        android:textSize="6sp" android:text="X1000"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/onuse_pet_list"
-        android:layout_width="170dp"
-        android:layout_height="80dp"
-        android:layout_below="@+id/linearLayout2" />
+    <TextView
+            android:id="@+id/onuse_pet_list"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:text="无敌的红色巨型飞蛾♂(金)
+无敌的红色巨型飞蛾♂(金)
+无敌的红色巨型飞蛾♂(金)
+无敌的红色巨型飞蛾♂(金)
+无敌的红色蛇♂(金)
+无敌的红色巨型飞蛾♂(金)
+无敌的红色巨型飞蛾♂(金)"
+            android:layout_below="@+id/linearLayout2" android:textAlignment="center" android:textSize="13sp"/>
 
     <ScrollView
-        android:id="@+id/main_info_sv"
-        android:layout_width="170dp"
+            android:id="@+id/main_info_sv"
+            android:layout_width="170dp"
 
-        android:layout_height="fill_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/onuse_pet_list"
-        android:fadeScrollbars="false">
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/onuse_pet_list"
+            android:fadeScrollbars="false">
 
         <LinearLayout
-            android:id="@+id/main_info_ll"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="#af11f8ff"
-            android:orientation="vertical"></LinearLayout>
+                android:id="@+id/main_info_ll"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="#af11f8ff"
+                android:orientation="vertical"></LinearLayout>
     </ScrollView>
 
     <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#00000000" />
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#00000000"/>
 
     <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_toRightOf="@id/main_info_sv">
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_toRightOf="@id/main_info_sv">
 
         <LinearLayout
-            android:id="@+id/root_item_character"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/character_itembar"
+                android:id="@+id/root_item_character"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/character_name"
+            <LinearLayout
+                    android:id="@+id/character_itembar"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#8a00acff"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:textSize="15sp" />
+                    android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/character_itembar_contribute"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#8a00acff"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:textSize="12sp" />
+                        android:id="@+id/character_name"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#8a00acff"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:textSize="15sp"/>
+
+                <TextView
+                        android:id="@+id/character_itembar_contribute"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#8a00acff"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:textSize="12sp"/>
 
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/character_item_contribute"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical">
+                    android:id="@+id/character_item_contribute"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_weight="1"
                         android:orientation="horizontal">
 
+                    <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
                         <Button
-                            android:id="@+id/first_skill"
+                                android:id="@+id/first_skill"
+                                android:layout_width="wrap_content"
+                                android:layout_height="52dp"
+                                android:layout_weight="1"
+                                android:alpha="90"
+                                android:focusableInTouchMode="false"
+                                android:gravity="center"
+                                android:textSize="8sp"/>
+
+                        <Button
+                                android:id="@+id/secondary_skill"
+                                android:layout_width="wrap_content"
+                                android:layout_height="52dp"
+                                android:layout_weight="1"
+                                android:alpha="90"
+                                android:gravity="center"
+                                android:textSize="8sp"/>
+
+                        <Button
+                                android:id="@+id/third_skill"
+                                android:layout_width="wrap_content"
+                                android:layout_height="52dp"
+                                android:layout_weight="1"
+                                android:alpha="95"
+                                android:focusableInTouchMode="false"
+                                android:gravity="center"
+                                android:textSize="8sp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    <Button
+                            android:id="@+id/fourth_skill"
                             android:layout_width="wrap_content"
                             android:layout_height="52dp"
                             android:layout_weight="1"
                             android:alpha="90"
                             android:focusableInTouchMode="false"
                             android:gravity="center"
-                            android:textSize="8sp" />
+                            android:text="二转开启"
+                            android:textSize="8sp"/>
 
-                        <Button
-                            android:id="@+id/secondary_skill"
-                            android:layout_width="wrap_content"
-                            android:layout_height="52dp"
-                            android:layout_weight="1"
-                            android:alpha="90"
-                            android:gravity="center"
-                            android:textSize="8sp" />
-
-                        <Button
-                            android:id="@+id/third_skill"
+                    <Button
+                            android:id="@+id/fifit_skill"
+                            android:text="四转开启"
                             android:layout_width="wrap_content"
                             android:layout_height="52dp"
                             android:layout_weight="1"
                             android:alpha="95"
                             android:focusableInTouchMode="false"
                             android:gravity="center"
-                            android:textSize="8sp" />
+                            android:textSize="8sp"/>
 
-                    </LinearLayout>
-
+                    <Button
+                            android:id="@+id/sixth_skill"
+                            android:text="六转开启"
+                            android:layout_width="wrap_content"
+                            android:layout_height="52dp"
+                            android:layout_weight="1"
+                            android:alpha="90"
+                            android:gravity="center"
+                            android:textSize="8sp"/>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/fourth_skill"
-                        android:layout_width="wrap_content"
-                        android:layout_height="52dp"
-                        android:layout_weight="1"
-                        android:alpha="90"
-                        android:focusableInTouchMode="false"
-                        android:gravity="center"
-                        android:text="二转开启"
-                        android:textSize="8sp" />
-
-                    <Button
-                        android:id="@+id/fifit_skill"
-                        android:text="四转开启"
-                        android:layout_width="wrap_content"
-                        android:layout_height="52dp"
-                        android:layout_weight="1"
-                        android:alpha="95"
-                        android:focusableInTouchMode="false"
-                        android:gravity="center"
-                        android:textSize="8sp" />
-
-                    <Button
-                        android:id="@+id/sixth_skill"
-                        android:text="六转开启"
-                        android:layout_width="wrap_content"
-                        android:layout_height="52dp"
-                        android:layout_weight="1"
-                        android:alpha="90"
-                        android:gravity="center"
-                        android:textSize="8sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="horizontal">
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
                         <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="25sp"
-                                android:gravity="center_vertical"
-                                android:text="@string/hp_label"
-                                android:textSize="12sp" />
-
-                            <TextView
-                                android:id="@+id/main_contri_hp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="fill_parent"
-                                android:layout_marginLeft="5dp"
-                                android:gravity="center"
-                                android:text="123.6W"
-                                android:textAlignment="center"
-                                android:textColor="#0000da"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="25sp"
-                                android:gravity="center_vertical"
-                                android:text="@string/atk_name"
-                                android:textSize="12sp" />
-
-                            <TextView
-                                android:id="@+id/main_contri_att"
-                                android:layout_width="wrap_content"
-                                android:layout_height="fill_parent"
-                                android:layout_marginLeft="5dp"
-                                android:gravity="center"
-                                android:text="123.46W"
-                                android:textAlignment="center"
-                                android:textColor="#0000da"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="25sp"
-                                android:gravity="center_vertical"
-                                android:text="@string/def_name"
-                                android:textSize="12sp" />
-
-                            <TextView
-                                android:id="@+id/main_contri_def"
-                                android:layout_width="wrap_content"
-                                android:layout_height="fill_parent"
-                                android:layout_marginLeft="5dp"
-                                android:gravity="center"
-                                android:text="1.234W"
-                                android:textColor="#0000da"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="fill_parent"
-                                android:gravity="center_vertical"
-                                android:text="@string/material_label"
-                                android:textSize="12sp" />
-
-                            <TextView
-                                android:id="@+id/hero_material_count"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="bottom"
-                                android:layout_marginLeft="5dp"
-                                android:gravity="center"
-                                android:text="1234W"
-                                android:textColor="#0000da"
-                                android:textSize="12sp" />
+                                android:orientation="horizontal">
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="25sp"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/hp_label"
+                                    android:textSize="12sp"/>
+
+                            <TextView
+                                    android:id="@+id/main_contri_hp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="fill_parent"
+                                    android:layout_marginLeft="5dp"
+                                    android:gravity="center"
+                                    android:text="123.6W"
+                                    android:textAlignment="center"
+                                    android:textColor="#0000da"
+                                    android:textSize="12sp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="25sp"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/atk_name"
+                                    android:textSize="12sp"/>
+
+                            <TextView
+                                    android:id="@+id/main_contri_att"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="fill_parent"
+                                    android:layout_marginLeft="5dp"
+                                    android:gravity="center"
+                                    android:text="123.46W"
+                                    android:textAlignment="center"
+                                    android:textColor="#0000da"
+                                    android:textSize="12sp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="25sp"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/def_name"
+                                    android:textSize="12sp"/>
+
+                            <TextView
+                                    android:id="@+id/main_contri_def"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="fill_parent"
+                                    android:layout_marginLeft="5dp"
+                                    android:gravity="center"
+                                    android:text="1.234W"
+                                    android:textColor="#0000da"
+                                    android:textSize="12sp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="fill_parent"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/material_label"
+                                    android:textSize="12sp"/>
+
+                            <TextView
+                                    android:id="@+id/hero_material_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="bottom"
+                                    android:layout_marginLeft="5dp"
+                                    android:gravity="center"
+                                    android:text="1234W"
+                                    android:textColor="#0000da"
+                                    android:textSize="12sp"/>
 
                         </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
                         <LinearLayout
-                            android:id="@+id/linearLayout4"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                                android:id="@+id/linearLayout4"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="25sp"
-                                android:gravity="center_vertical"
-                                android:text="体力"
-                                android:textSize="12sp" />
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="25sp"
+                                    android:gravity="center_vertical"
+                                    android:text="体力"
+                                    android:textSize="12sp"/>
 
                             <TextView
-                                android:id="@+id/life_value"
-                                android:layout_width="wrap_content"
-                                android:layout_height="fill_parent"
-                                android:layout_marginLeft="5dp"
-                                android:gravity="center"
-                                android:singleLine="false"
-                                android:text="126.3W"
-                                android:textAlignment="center"
-                                android:textColor="#0000da"
-                                android:textSize="12sp" />
+                                    android:id="@+id/life_value"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="fill_parent"
+                                    android:layout_marginLeft="5dp"
+                                    android:gravity="center"
+                                    android:singleLine="false"
+                                    android:text="126.3W"
+                                    android:textAlignment="center"
+                                    android:textColor="#0000da"
+                                    android:textSize="12sp"/>
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/linearLayout5"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                                android:id="@+id/linearLayout5"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="25sp"
-                                android:gravity="center_vertical"
-                                android:text="力量"
-                                android:textSize="12sp" />
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="25sp"
+                                    android:gravity="center_vertical"
+                                    android:text="力量"
+                                    android:textSize="12sp"/>
 
                             <TextView
-                                android:id="@+id/str_value"
-                                android:layout_width="wrap_content"
-                                android:layout_height="fill_parent"
-                                android:layout_marginLeft="5dp"
-                                android:gravity="center"
-                                android:text="123456"
-                                android:textAlignment="center"
-                                android:textColor="#0000da"
-                                android:textSize="12sp" />
+                                    android:id="@+id/str_value"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="fill_parent"
+                                    android:layout_marginLeft="5dp"
+                                    android:gravity="center"
+                                    android:text="123456"
+                                    android:textAlignment="center"
+                                    android:textColor="#0000da"
+                                    android:textSize="12sp"/>
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/linearLayout6"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                                android:id="@+id/linearLayout6"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="25sp"
-                                android:gravity="center_vertical"
-                                android:text="敏捷"
-                                android:textSize="12sp" />
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="25sp"
+                                    android:gravity="center_vertical"
+                                    android:text="敏捷"
+                                    android:textSize="12sp"/>
 
                             <TextView
-                                android:id="@+id/agi_value"
-                                android:layout_width="wrap_content"
-                                android:layout_height="fill_parent"
-                                android:layout_marginLeft="5dp"
-                                android:gravity="center"
-                                android:text="1.234W"
-                                android:textColor="#0000da"
-                                android:textSize="12sp" />
+                                    android:id="@+id/agi_value"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="fill_parent"
+                                    android:layout_marginLeft="5dp"
+                                    android:gravity="center"
+                                    android:text="1.234W"
+                                    android:textColor="#0000da"
+                                    android:textSize="12sp"/>
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="fill_parent"
-                                android:gravity="center_vertical"
-                                android:text="@string/point_label"
-                                android:textSize="12sp" />
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="fill_parent"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/point_label"
+                                    android:textSize="12sp"/>
 
                             <TextView
-                                android:id="@+id/hero_points"
-                                android:layout_width="wrap_content"
-                                android:layout_height="fill_parent"
-                                android:layout_marginLeft="5dp"
-                                android:gravity="center|center_vertical"
-                                android:text="1234W"
-                                android:textAlignment="center"
-                                android:textColor="#0000da"
-                                android:textSize="12sp" />
+                                    android:id="@+id/hero_points"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="fill_parent"
+                                    android:layout_marginLeft="5dp"
+                                    android:gravity="center|center_vertical"
+                                    android:text="1234W"
+                                    android:textAlignment="center"
+                                    android:textColor="#0000da"
+                                    android:textSize="12sp"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="25sp"
-                        android:text="@string/sword_label"
-                        android:textSize="12sp" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/sword_label"
+                            android:textSize="12sp" android:layout_gravity="center_vertical"/>
 
                     <TextView
-                        android:id="@+id/sword_level"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:layout_marginLeft="5dp"
-                        android:singleLine="false"
-                        android:text="15.34W"
-                        android:textColor="#3506da"
-                        android:textSize="12sp" />
+                            android:id="@+id/sword_level"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:singleLine="false"
+                            android:text="合金剑+15.34W"
+                            android:textColor="#3506da"
+                            android:textSize="12sp" android:layout_gravity="center_vertical"/>
 
                     <ImageButton
-                        android:id="@+id/upgrade_sword_button"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp" />
+                            android:id="@+id/upgrade_sword_button"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:src="@drawable/jiahao_zi"
+                            android:scaleType="centerCrop" android:layout_gravity="right|top"
+                            />
                 </LinearLayout>
                 <LinearLayout
-                    android:id="@+id/linearLayout3"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:orientation="horizontal">
+                        android:id="@+id/linearLayout3"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="25sp"
-                        android:text="@string/armor_label"
-                        android:textSize="12sp" />
+                            android:id="@+id/textView4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/armor_label"
+                            android:textSize="12sp" android:layout_gravity="center_vertical"/>
 
                     <TextView
-                        android:id="@+id/armor_level"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:layout_marginLeft="5dp"
-                        android:text="12.46W"
-                        android:textColor="#0307da"
-                        android:textSize="12sp" />
+                            android:id="@+id/armor_level"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="天使甲+12.46W"
+                            android:textColor="#0307da"
+                            android:textSize="12sp" android:layout_gravity="center_vertical"/>
                     <ImageButton
-                        android:id="@+id/upgrade_armor_button"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp" />
+                            android:id="@+id/upgrade_armor_button"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:src="@drawable/jiahao_zi"
+                            android:scaleType="centerCrop"
+                            android:layout_gravity="right|top"/>
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="horizontal">
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/push_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/bmob_update_btn_check_off_focused_holo_light"
-                        android:text="暂停" />
+                            android:id="@+id/push_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/bmob_update_btn_check_off_focused_holo_light"
+                            android:text="暂停"/>
 
                     <Button
-                        android:id="@+id/save_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/bmob_update_btn_check_off_focused_holo_light"
-                        android:text="存档" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout7"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/rein_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/bmob_update_btn_check_off_focused_holo_light"
-                        android:enabled="false"
-                        android:text="转生" />
-
-                    <Button
-                        android:id="@+id/col_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/bmob_update_btn_check_off_focused_holo_light"
-                        android:text="收集" />
+                            android:id="@+id/save_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/bmob_update_btn_check_off_focused_holo_light"
+                            android:text="存档"/>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+                        android:id="@+id/linearLayout7"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal">
+
+                    <Button
+                            android:id="@+id/rein_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/bmob_update_btn_check_off_focused_holo_light"
+                            android:enabled="false"
+                            android:text="转生"/>
+
+                    <Button
+                            android:id="@+id/col_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/bmob_update_btn_check_off_focused_holo_light"
+                            android:text="收集"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
 
                     <cn.gavin.utils.ui.CircleMenu
-                        android:id="@+id/fenpei_button"
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/button_action_touch"
-                        />
+                            android:id="@+id/fenpei_button"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_action_touch"
+                            />
 
                     <cn.gavin.utils.ui.CircleMenu
-                        android:id="@+id/bag_button"
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/button_action_touch"
-                        />
+                            android:id="@+id/bag_button"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_action_touch"
+                            />
 
 
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
 
                     <cn.gavin.utils.ui.CircleMenu
-                        android:id="@+id/net_button"
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/button_action_touch"
-                        />
+                            android:id="@+id/net_button"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_action_touch"
+                            />
 
                     <cn.gavin.utils.ui.CircleMenu
-                        android:id="@+id/help_button"
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/button_action_touch"
-                        />
+                            android:id="@+id/help_button"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_action_touch"
+                            />
 
 
                 </LinearLayout>
-
 
 
             </LinearLayout>

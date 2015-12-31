@@ -1,16 +1,8 @@
 package cn.gavin.utils.ui;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.DashPathEffect;
-import android.graphics.Paint;
+import android.graphics.*;
 import android.graphics.Paint.Style;
-import android.graphics.PaintFlagsDrawFilter;
-import android.graphics.PathEffect;
-import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -20,15 +12,15 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 
-import cn.gavin.R;
-
 public class CircleMenu extends View {
     private static final String TAG = "circleMenu";
     private int lastX;
     private int lastY;
-    public interface OnCircleItemSelectedListener{
+
+    public interface OnCircleItemSelectedListener {
         public void onItemClickedListener(int index);
     }
+
     private OnCircleItemSelectedListener OnCircleItemSelectedListener;
 
     public void setOnCircleItemSelectedListener(
@@ -121,7 +113,9 @@ public class CircleMenu extends View {
                 default:
                     break;
             }
-        };
+        }
+
+        ;
     };
 
     public CircleMenu(Context context, AttributeSet attrs) {
@@ -134,9 +128,9 @@ public class CircleMenu extends View {
         mPaint.setStrokeWidth(2);
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Style.STROKE);
-        PathEffect effect = new DashPathEffect(new float[] { 5, 5, 5, 5 }, 1);
+        PathEffect effect = new DashPathEffect(new float[]{5, 5, 5, 5}, 1);
         mPaint.setPathEffect(effect);
-        quadrantTouched = new boolean[] { false, false, false, false, false };
+        quadrantTouched = new boolean[]{false, false, false, false, false};
         mGestureDetector = new GestureDetector(context, new MyGestureDetector());
     }
 
@@ -178,12 +172,14 @@ public class CircleMenu extends View {
      */
     private void computeCoordinates() {
         SubMenuHolder subMenuHolder;
-        for (int i = 0; i < mSubMenuHolder.length; i++) {
-            subMenuHolder = mSubMenuHolder[i];
-            subMenuHolder.x = (float) (mPointX + (mRadius * Math.cos(Math
-                    .toRadians(subMenuHolder.angle))));
-            subMenuHolder.y = (float) (mPointY + (mRadius * Math.sin(Math
-                    .toRadians(subMenuHolder.angle))));
+        if (mSubMenuHolder != null) {
+            for (SubMenuHolder aMSubMenuHolder : mSubMenuHolder) {
+                subMenuHolder = aMSubMenuHolder;
+                subMenuHolder.x = (float) (mPointX + (mRadius * Math.cos(Math
+                        .toRadians(subMenuHolder.angle))));
+                subMenuHolder.y = (float) (mPointY + (mRadius * Math.sin(Math
+                        .toRadians(subMenuHolder.angle))));
+            }
         }
     }
 
@@ -198,10 +194,12 @@ public class CircleMenu extends View {
         }
         drawInCenter(canvas, mMainMenuHolder.bitmap, mPointX, mPointY);
 
-        if(!isClose){
-            for (int i = 0; i < mSubMenuHolder.length; i++) {
-                drawInCenter(canvas, mSubMenuHolder[i].bitmap, mSubMenuHolder[i].x,
-                        mSubMenuHolder[i].y);
+        if (!isClose) {
+            if (mSubMenuHolder != null) {
+                for (SubMenuHolder aMSubMenuHolder : mSubMenuHolder) {
+                    drawInCenter(canvas, aMSubMenuHolder.bitmap, aMSubMenuHolder.x,
+                            aMSubMenuHolder.y);
+                }
             }
         }
     }
@@ -227,13 +225,15 @@ public class CircleMenu extends View {
      */
     private void drawInCenter(Canvas canvas, Bitmap bitmap, float left,
                               float top) {
-        Rect dst = new Rect();
-        dst.left = (int) (left - menuRadius);
-        dst.top = (int) (top - menuRadius);
-        dst.right = (int) (left + menuRadius);
-        dst.bottom = (int) (top + menuRadius);
-        canvas.setDrawFilter(mPfd);
-        canvas.drawBitmap(bitmap, null, dst, mPaint);
+        if (bitmap != null) {
+            Rect dst = new Rect();
+            dst.left = (int) (left - menuRadius);
+            dst.top = (int) (top - menuRadius);
+            dst.right = (int) (left + menuRadius);
+            dst.bottom = (int) (top + menuRadius);
+            canvas.setDrawFilter(mPfd);
+            canvas.drawBitmap(bitmap, null, dst, mPaint);
+        }
     }
 
     private double startAngle;
@@ -246,29 +246,29 @@ public class CircleMenu extends View {
             startAngle = computeCurrentAngle(x, y);
             lastX = (int) event.getRawX();
             lastY = (int) event.getRawY();
-            if(isClose&&getInCircle(x, y)!=-2){
+            if (isClose && getInCircle(x, y) != -2) {
                 return false;
             }
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            if(isMove){
-                int dx =(int)event.getRawX() - lastX;
-                int dy =(int)event.getRawY() - lastY;
+            if (isMove) {
+                int dx = (int) event.getRawX() - lastX;
+                int dy = (int) event.getRawY() - lastY;
                 int left = getLeft() + dx;
-                int top =getTop() + dy;
+                int top = getTop() + dy;
                 int right = getRight() + dx;
                 int bottom = getBottom() + dy;
                 this.layout(left, top, right, bottom);
                 lastX = (int) event.getRawX();
                 lastY = (int) event.getRawY();
-            }else{
+            } else {
                 double currentAngle = computeCurrentAngle(x, y);
                 rotateButtons(startAngle - currentAngle);
                 startAngle = currentAngle;
             }
-        }else if(event.getAction()==MotionEvent.ACTION_UP){
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
             isMove = false;
         }
-        if(!isMove){
+        if (!isMove) {
             mGestureDetector.onTouchEvent(event);
         }
         return true;
@@ -341,7 +341,7 @@ public class CircleMenu extends View {
             int y = (int) e.getY();
             int menuIndex = getInCircle(x, y);
             if (menuIndex != -1) {
-                if(OnCircleItemSelectedListener!=null){
+                if (OnCircleItemSelectedListener != null) {
                     OnCircleItemSelectedListener.onItemClickedListener(menuIndex);
                 }
             }
@@ -395,7 +395,7 @@ public class CircleMenu extends View {
     /*
      * 关闭或打开子菜单
      */
-    public void closeOrOpen(){
+    public void closeOrOpen() {
         isClose = !isClose;
         invalidate();
     }

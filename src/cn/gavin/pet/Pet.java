@@ -2,7 +2,6 @@ package cn.gavin.pet;
 
 import android.content.Context;
 import android.database.Cursor;
-
 import cn.gavin.Achievement;
 import cn.gavin.Element;
 import cn.gavin.Hero;
@@ -133,7 +132,7 @@ public class Pet extends Base {
     }
 
     public static Pet cPet(Monster monster, Random random) {
-        if ((MazeContents.hero.ismV() && monster.getIndex() % 2 == 0)|| monster.getIndex() == 25) {
+        if ((MazeContents.hero.ismV() && monster.getIndex() % 2 == 0) || monster.getIndex() == 25) {
             return null;
         }
         if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 15) {
@@ -215,7 +214,11 @@ public class Pet extends Base {
         if ("蛋".equals(getType())) {
             return "蛋";
         } else {
-            return "<font color=\"" + color + "\">" + getName() + (sex == 0 ? "♂" : "♀") + "</font>(" + getElement() + ")";
+            if (getHp() > 0) {
+                return "<font color=\"" + color + "\">" + getName() + (sex == 0 ? "♂" : "♀") + "</font>(" + getElement() + ")";
+            } else {
+                return "<font color=\"#808080\">" + getName() + (sex == 0 ? "♂" : "♀") + "</font>(" + getElement() + ")";
+            }
         }
     }
 
@@ -327,9 +330,9 @@ public class Pet extends Base {
 
     public static Pet egg(Pet f, Pet m, long lev, Hero hero) {
         Random random = new Random();
-        float eggRate = f.getEggRate()/3 + m.getEggRate()/2;
+        float eggRate = f.getEggRate() / 3 + m.getEggRate() / 2;
         double rate = (((hero.getUpperAtk() * 3 - hero.getUpperAtk() *
-                MazeContents.hero.getPetRate() * 2) / (hero.getUpperHp() * 3)) * (hero.getEggRate()+ eggRate) *
+                MazeContents.hero.getPetRate() * 2) / (hero.getUpperHp() * 3)) * (hero.getEggRate() + eggRate) *
                 (2 - MazeContents.hero.getPetRate())) * 20 / 255;
         if (f.getType().equals(m.getType())) {
             rate *= 1.5;
@@ -374,15 +377,16 @@ public class Pet extends Base {
         egg.setmName(m.getName());
         Cursor fc = DBHelper.getDbHelper().excuseSOL("select atk,hp from monster where id = '" + f.getIndex() + "'");
         Cursor mc = DBHelper.getDbHelper().excuseSOL("select atk,hp from monster where id = '" + m.getIndex() + "'");
-        if(!fc.isAfterLast()){
-            long batk = (StringUtils.toLong(fc.getString(fc.getColumnIndex("atk"))) + StringUtils.toLong(mc.getString(mc.getColumnIndex("atk"))))/2;
-            long bhp = (StringUtils.toInt(fc.getString(fc.getColumnIndex("hp"))) + StringUtils.toInt(mc.getString(mc.getColumnIndex("hp"))))/2;
+        if (!fc.isAfterLast()) {
+            long batk = (StringUtils.toLong(fc.getString(fc.getColumnIndex("atk"))) + StringUtils.toLong(mc.getString(mc.getColumnIndex("atk")))) / 2;
+            long bhp = (StringUtils.toInt(fc.getString(fc.getColumnIndex("hp"))) + StringUtils.toInt(mc.getString(mc.getColumnIndex("hp")))) / 2;
             egg.setHp(bhp);
             egg.setAtk(batk);
-            fc.close();mc.close();
-        }else {
+            fc.close();
+            mc.close();
+        } else {
             egg.setHp(f.getUHp() / 20 + random.nextLong(m.getHp()) + 1);
-            egg.setAtk(f.getMaxAtk() / 20 + random.nextLong(m.getMaxAtk()) +1);
+            egg.setAtk(f.getMaxAtk() / 20 + random.nextLong(m.getMaxAtk()) + 1);
         }
         egg.setDef(f.getMaxDef() / 2 + random.nextLong(m.getMaxDef()));
         egg.setAtk_rise((f.getAtk_rise() + m.getAtk_rise()) / 2);
@@ -398,15 +402,15 @@ public class Pet extends Base {
             if (random.nextInt(10000) + random.nextFloat() < (31.115 + hero.getPetAbe())) {
                 int index = random.nextInt(MonsterDB.total);
                 Cursor cursor = DBHelper.getDbHelper().excuseSOL("select * from monster where id = '" + index + "'");
-                if(!cursor.isAfterLast()){
+                if (!cursor.isAfterLast()) {
                     egg.setName("变异的" + cursor.getString(cursor.getColumnIndex("type")));
-                    if(index == 25){
+                    if (index == 25) {
                         egg.setElement(Element.无);
                         egg.color = "#B8860B";
                         egg.atk_rise = MazeContents.hero.ATR_RISE * 2;
                         egg.def_rise = MazeContents.hero.DEF_RISE * 2;
                         egg.hp_rise = MazeContents.hero.MAX_HP_RISE * 2;
-                        egg.setAtk(egg.getMaxAtk() + StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk")))/2);
+                        egg.setAtk(egg.getMaxAtk() + StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk"))) / 2);
                     }
                 }
                 cursor.close();
@@ -502,18 +506,18 @@ public class Pet extends Base {
 
     public String getFirstName() {
         String[] names = StringUtils.split(getName(), "的");
-        if(names.length > 1){
+        if (names.length > 1) {
             return names[0];
-        }else{
+        } else {
             return "";
         }
     }
 
     public String getLastName() {
         String[] names = StringUtils.split(getName(), "的");
-        if(names.length > 1){
+        if (names.length > 1) {
             return names[1];
-        }else{
+        } else {
             return "";
         }
     }

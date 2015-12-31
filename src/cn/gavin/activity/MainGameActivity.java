@@ -13,37 +13,14 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
+import android.os.*;
 import android.text.Html;
 import android.text.InputFilter;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.EnumMap;
-import java.util.List;
-
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.BmobDialogButtonListener;
 import cn.bmob.v3.listener.FindListener;
@@ -56,11 +33,7 @@ import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
-import cn.gavin.forge.Accessory;
-import cn.gavin.forge.HatBuilder;
-import cn.gavin.forge.Item;
-import cn.gavin.forge.NecklaceBuilder;
-import cn.gavin.forge.RingBuilder;
+import cn.gavin.forge.*;
 import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.adapter.RecipeAdapter;
 import cn.gavin.forge.effect.Effect;
@@ -92,6 +65,10 @@ import cn.gavin.utils.StringUtils;
 import cn.gavin.utils.ui.AddPointDialog;
 import cn.gavin.utils.ui.CircleMenu;
 
+import java.util.EnumMap;
+import java.util.List;
+
+@SuppressWarnings("ALL")
 public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener, OnItemClickListener, BaseContext {
     //Constants
     public static final String TAG = "MazeNeverEnd";
@@ -165,6 +142,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private Button fourthSkillButton;
     private Button sixthSkillButton;
     private Button fifthSkillButton;
+    private TextView onUsedPetLists;
+    private Button reniButton;
+    private Button colButton;
 
 
     //Get Function
@@ -213,6 +193,14 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         public void handleMessage(final Message msg) {
             try {
                 switch (msg.what) {
+                    case 123:
+                        String gift = "";
+                        if(heroN.getGift()!=null){
+                        gift = "<" + heroN.getGift().getName() + ">\n";
+                        }
+                        characterName.setText(gift +
+                                heroN.getName() + (heroN.getReincaCount() != 0 ? ("(" + heroN.getReincaCount() + ")") : ""));
+                        break;
                     case 122:
                         if (shopTipView != null) {
                             mWindowManager.removeView(shopTipView);
@@ -336,12 +324,14 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         alreadyGetDialog.show();
                         break;
                     case 116:
-                        for (String goodName : (String[]) msg.obj) {
-                            GoodsType goods = GoodsType.loadByName(goodName);
-                            goods.setCount(goods.getCount() + 1);
-                            goods.save();
-                            Toast.makeText(context, "--获得了" + goods.getName() + "--", Toast.LENGTH_SHORT)
-                                    .show();
+                        if ((String[]) msg.obj != null) {
+                            for (String goodName : (String[]) msg.obj) {
+                                GoodsType goods = GoodsType.loadByName(goodName);
+                                goods.setCount(goods.getCount() + 1);
+                                goods.save();
+                                Toast.makeText(context, "--获得了" + goods.getName() + "--", Toast.LENGTH_SHORT)
+                                        .show();
+                            }
                         }
                         break;
                     case 115:
@@ -573,7 +563,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
     /**
      * SrcollView战斗信息栏滚到最底部
-     *
      */
     public void scrollToBottom(final View scroll, final View inner) {
 
@@ -714,9 +703,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private void initGameView() {
         ImageButton upgradeSword = (ImageButton) findViewById(R.id.upgrade_sword_button);
         ImageButton upgradeArmor = (ImageButton) findViewById(R.id.upgrade_armor_button);
-        final View upgradeSwordView = View.inflate(context, R.layout.add_point_view,
+        final View upgradeSwordView = View.inflate(context, R.layout.upgrade_sword_buttons,
                 (ViewGroup) (context).findViewById(R.id.add_point_root));
-        final View upgradeArmorView = View.inflate(context, R.layout.add_point_view,
+        final View upgradeArmorView = View.inflate(context, R.layout.upgrade_armor_buttons,
                 (ViewGroup) (context).findViewById(R.id.add_point_root));
         upgradeHArmorButton = (Button) upgradeArmorView.findViewById(R.id.up_h_armor);
         upgradeHArmorButton.setOnClickListener(this);
@@ -762,7 +751,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         });
 
         netButton = (CircleMenu) findViewById(R.id.net_button);
-        netButton.initSubMenus(0, new int[]{});
+        netButton.initSubMenus(R.drawable.lian_zi, new int[]{R.drawable.dian_zi, R.drawable.shang_zi_zi, R.drawable.huan_zi});
         netButton.setOnCircleItemSelectedListener(new CircleMenu.OnCircleItemSelectedListener() {
             @Override
             public void onItemClickedListener(int index) {
@@ -785,7 +774,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             }
         });
         CircleMenu helpButton = (CircleMenu) findViewById(R.id.help_button);
-        helpButton.initSubMenus(0, new int[]{});
+        helpButton.initSubMenus(R.drawable.zu_zi, new int[]{R.drawable.shng_zi, R.drawable.zan_zi, R.drawable.geng_zi});
         helpButton.setOnCircleItemSelectedListener(new CircleMenu.OnCircleItemSelectedListener() {
             @Override
             public void onItemClickedListener(int index) {
@@ -837,7 +826,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             }
         });
         CircleMenu bagButton = (CircleMenu) findViewById(R.id.bag_button);
-        bagButton.initSubMenus(0, new int[]{});
+        bagButton.initSubMenus(R.drawable.bao_zi, new int[]{R.drawable.wupin_zi, R.drawable.chong_zi, R.drawable.zhuang_zi});
         bagButton.setOnCircleItemSelectedListener(new CircleMenu.OnCircleItemSelectedListener() {
             @Override
             public void onItemClickedListener(int index) {
@@ -857,7 +846,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             }
         });
         CircleMenu fenpeiButton = (CircleMenu) findViewById(R.id.fenpei_button);
-        fenpeiButton.initSubMenus(0, new int[]{});
+        fenpeiButton.initSubMenus(R.drawable.pei_zi, new int[]{R.drawable.ji_zi, R.drawable.li_zi, R.drawable.ti_zi, R.drawable.min_zi});
         fenpeiButton.setOnCircleItemSelectedListener(new CircleMenu.OnCircleItemSelectedListener() {
             @Override
             public void onItemClickedListener(int index) {
@@ -870,69 +859,72 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         final AddPointDialog addStrPointDialog = new AddPointDialog(context);
                         addStrPointDialog.setTitle("力量");
                         addStrPointDialog.show(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                heroN.addStrength();
-                                handler.sendEmptyMessage(0);
-                                heroN.click(false);
-                                addStrPointDialog.refresh();
-                            }
-                        }, new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                long str = heroN.getRandom().nextLong(heroN.getPoint() + 1);
-                                heroN.addStrength(str);
-                                heroN.addPoint(-str);
-                                handler.sendEmptyMessage(0);
-                                addStrPointDialog.refresh();
-                            }
-                        }, R.drawable.h_4);
+                                                   @Override
+                                                   public void onClick(View v) {
+                                                       heroN.addStrength();
+                                                       handler.sendEmptyMessage(0);
+                                                       heroN.click(false);
+                                                       addStrPointDialog.refresh();
+                                                   }
+                                               }, new OnClickListener() {
+                                                   @Override
+                                                   public void onClick(View v) {
+                                                       long str = heroN.getRandom().nextLong(heroN.getPoint() + 1);
+                                                       heroN.addStrength(str);
+                                                       heroN.addPoint(-str);
+                                                       handler.sendEmptyMessage(0);
+                                                       addStrPointDialog.refresh();
+                                                   }
+                                               }, R.drawable.h_4
+                        );
                         break;
                     case 2:
                         final AddPointDialog addLifePointDialog = new AddPointDialog(context);
                         addLifePointDialog.setTitle("体力");
                         addLifePointDialog.show(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                heroN.addLife();
-                                handler.sendEmptyMessage(0);
-                                heroN.click(false);
-                                addLifePointDialog.refresh();
-                            }
-                        }, new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                long life = heroN.getRandom().nextLong(heroN.getPoint() + 1);
-                                heroN.addLife(life);
-                                heroN.addPoint(-life);
-                                handler.sendEmptyMessage(0);
-                                heroN.click(false);
-                                addLifePointDialog.refresh();
-                            }
-                        }, R.drawable.h_4);
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        heroN.addLife();
+                                                        handler.sendEmptyMessage(0);
+                                                        heroN.click(false);
+                                                        addLifePointDialog.refresh();
+                                                    }
+                                                }, new OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        long life = heroN.getRandom().nextLong(heroN.getPoint() + 1);
+                                                        heroN.addLife(life);
+                                                        heroN.addPoint(-life);
+                                                        handler.sendEmptyMessage(0);
+                                                        heroN.click(false);
+                                                        addLifePointDialog.refresh();
+                                                    }
+                                                }, R.drawable.h_4
+                        );
                         break;
                     case 3:
                         final AddPointDialog addAgiPointDialog = new AddPointDialog(context);
                         addAgiPointDialog.setTitle("敏捷");
                         addAgiPointDialog.show(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                heroN.addAgility();
-                                handler.sendEmptyMessage(0);
-                                heroN.click(false);
-                                addAgiPointDialog.refresh();
-                            }
-                        }, new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                long agi = heroN.getRandom().nextLong(heroN.getPoint() + 1);
-                                heroN.addAgility(agi);
-                                heroN.addPoint(-agi);
-                                handler.sendEmptyMessage(0);
-                                heroN.click(false);
-                                addAgiPointDialog.refresh();
-                            }
-                        }, R.drawable.h_4);
+                                                   @Override
+                                                   public void onClick(View v) {
+                                                       heroN.addAgility();
+                                                       handler.sendEmptyMessage(0);
+                                                       heroN.click(false);
+                                                       addAgiPointDialog.refresh();
+                                                   }
+                                               }, new OnClickListener() {
+                                                   @Override
+                                                   public void onClick(View v) {
+                                                       long agi = heroN.getRandom().nextLong(heroN.getPoint() + 1);
+                                                       heroN.addAgility(agi);
+                                                       heroN.addPoint(-agi);
+                                                       handler.sendEmptyMessage(0);
+                                                       heroN.click(false);
+                                                       addAgiPointDialog.refresh();
+                                                   }
+                                               }, R.drawable.h_4
+                        );
                         break;
                 }
             }
@@ -1015,6 +1007,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     public void onClick(DialogInterface dialog, int which) {
                         heroN.reincarnation();
                         dialog.dismiss();
+                        refreshCharacterName();
                     }
 
                 });
@@ -1070,7 +1063,13 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private void showAchievement() {
         if (achDialog == null) {
             achDialog = new Builder(this).create();
-            achDialog.setTitle("成就");
+            int count = 0;
+            for(Achievement achievement : Achievement.values()){
+                if(achievement.isEnable()){
+                    count ++;
+                }
+            }
+            achDialog.setTitle("成就 " + (count * 100/Achievement.values().length) + "%");
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             achievementDesc = new TextView(this);
@@ -1271,6 +1270,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             String name = input.replaceAll("_", " ");
                             name = name.replaceAll("'", "`");
                             heroN.setName(name);
+                            refreshCharacterName();
                         }
                         dialog.dismiss();
                     }
@@ -1683,9 +1683,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
     private void showRecipe() {
         AlertDialog dialog = new Builder(this).create();
-        dialog.setTitle("已发现的配方列表");
-        ListView listView = new ListView(this);
         RecipeAdapter recipeAdapter = new RecipeAdapter();
+        dialog.setTitle("已发现的配方列表 " + (recipeAdapter.getCount() * 100/Recipe.getTotalCount()) + "%");
+        ListView listView = new ListView(this);
         listView.setAdapter(recipeAdapter);
         dialog.setView(listView);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
@@ -1800,15 +1800,22 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         lockBoxCount = (TextView) findViewById(R.id.local_box);
         lockBoxCount.setOnClickListener(this);
         keyCount = (TextView) findViewById(R.id.key_count);
-        Button itemButton = (Button) findViewById(R.id.accessory_button);
-        itemButton.setOnClickListener(this);
+        reniButton = (Button) findViewById(R.id.rein_button);
+        reniButton.setOnClickListener(this);
         ringTextView = (TextView) findViewById(R.id.ring_view);
         ringTextView.setOnClickListener(this);
         necklaceTextView = (TextView) findViewById(R.id.necklace_view);
         necklaceTextView.setOnClickListener(this);
         hatTextView = (TextView) findViewById(R.id.hat_view);
         hatTextView.setOnClickListener(this);
+        onUsedPetLists = (TextView) findViewById(R.id.onuse_pet_list);
+        colButton = (Button)findViewById(R.id.col_button);
+        colButton.setOnClickListener(this);
         refresh();
+    }
+
+    public void refreshCharacterName(){
+        handler.sendEmptyMessage(123);
     }
 
     private synchronized void refresh() {
@@ -1859,7 +1866,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             upTArmorButton.setEnabled(false);
         }
 
-        characterName.setText(heroN.getName() + (heroN.getReincaCount() != 0 ? ("(" + heroN.getReincaCount() + ")") : ""));
         itembarContri.setText("迷宫到达(当前/记录）层\n" + maze.getLev() + "/" + heroN.getMaxMazeLev());
         if (heroN.getFirstSkill() != null) {
             firstSkillButton.setText(heroN.getFirstSkill().getDisplayName());
@@ -1947,6 +1953,16 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         }
         if (shopTipView != null) {
             shopTipView.setText("锻造点数：" + heroN.getMaterial());
+        }
+        StringBuilder pets = new StringBuilder();
+        for (Pet pet : heroN.getPets()) {
+            pets.append(pet.getFormatName()).append("<br>");
+        }
+        onUsedPetLists.setText(Html.fromHtml(pets.toString()));
+        if((heroN.getReincaCount()+1)%1000 == 0){
+            reniButton.setEnabled(true);
+        }else{
+            reniButton.setEnabled(false);
         }
     }
 
@@ -2078,6 +2094,37 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.wuxin_up:
+                showRecipe();
+                break;
+            case R.id.wuxin_left:
+                //MonsterBook
+                break;
+            case R.id.wuxin_right:
+                showAchievement();
+                break;
+            case R.id.wuxin_down_left:
+                //npc
+                break;
+            case R.id.wuxin_down_right:
+                //?
+                break;
+            case R.id.col_button:
+                AlertDialog colDialog = new Builder(context).create();
+                colDialog.setContentView(R.layout.collection_layout);
+                colDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                colDialog.show();
+                colDialog.findViewById(R.id.wuxin_up).setOnClickListener(this);
+                colDialog.findViewById(R.id.wuxin_left).setOnClickListener(this);
+                colDialog.findViewById(R.id.wuxin_right).setOnClickListener(this);
+                colDialog.findViewById(R.id.wuxin_down_left).setOnClickListener(this);
+                colDialog.findViewById(R.id.wuxin_down_right).setOnClickListener(this);
+                break;
             case R.id.up_h_armor:
                 heroN.upgradeArmor(100);
                 handler.sendEmptyMessage(0);
@@ -2088,7 +2135,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 handler.sendEmptyMessage(0);
                 heroN.click(false);
                 break;
-            case R.id.rebirth_button:
+            case R.id.rein_button:
                 showReincarnationDialog();
                 handler.sendEmptyMessage(0);
                 break;

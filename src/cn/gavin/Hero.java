@@ -16,6 +16,7 @@ import cn.gavin.forge.HatBuilder;
 import cn.gavin.forge.NecklaceBuilder;
 import cn.gavin.forge.RingBuilder;
 import cn.gavin.forge.effect.Effect;
+import cn.gavin.gift.Gift;
 import cn.gavin.log.LogHelper;
 import cn.gavin.monster.Monster;
 import cn.gavin.pet.Pet;
@@ -107,6 +108,7 @@ public class Hero implements BaseObject {
     private String uuid;
     private float petAbe = 0;
     private boolean mV = false;
+    private Gift gift;
 
     public Float getParry() {
         return parry;
@@ -1336,6 +1338,9 @@ public class Hero implements BaseObject {
 
     public void setElement(Element element) {
         this.element = element;
+        if(MainGameActivity.context!=null){
+            MainGameActivity.context.refreshCharacterName();
+        }
     }
 
     public List<Pet> getPets() {
@@ -1533,5 +1538,13 @@ public class Hero implements BaseObject {
 
     public Skill getSixthSkill() {
         return sixthSkill;
+    }
+
+    public Gift getGift() {
+        return gift;
+    }
+
+    public void setGift(Gift gift) {
+        this.gift = gift;
     }
 }

@@ -86,6 +86,16 @@ public class Recipe extends BmobObject {
         return builder.toString();
     }
 
+    public static int getTotalCount(){
+        int count = 1;
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("select count(*) from recipe");
+        if(!cursor.isAfterLast()){
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
+    }
+
     public static List<Recipe> loadRecipes() {
         List<Recipe> recipeList = new ArrayList<Recipe>();
         try {
