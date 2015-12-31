@@ -104,7 +104,7 @@ public class PetSimpleViewAdapter extends BaseAdapter {
                 def.setText("DEF:" + StringUtils.formatNumber(pets[0].getMaxDef()));
                 def.setVisibility(View.VISIBLE);
                 petImage.setVisibility(View.VISIBLE);
-                petImage.setImageResource((MazeContents.getImageByName(pets[0].getType(), pets[0].getType())));
+                petImage.setImageResource(pet.getImage());
             } else {
                 pet = null;
                 name.setText("");

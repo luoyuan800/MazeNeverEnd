@@ -22,8 +22,6 @@ import cn.gavin.R;
 import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;
 import cn.gavin.save.LoadHelper;
-import cn.gavin.skill.Skill;
-import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.utils.MazeContents;
 
@@ -41,35 +39,6 @@ public class MainMenuActivity extends Activity implements OnClickListener {
                     break;
                 case 2:
                     menuStart.setText("加载技能");
-                    boolean isActive = SkillFactory.getSkill("驯兽师", MazeContents.hero).isActive() ||
-                            SkillFactory.getSkill("捕捉术", MazeContents.hero).isActive();
-                    boolean isDetect = SkillFactory.getSkill("培育家", MazeContents.hero).isActive() ||
-                            SkillFactory.getSkill("催化剂",MazeContents.hero).isActive() ||
-                            SkillFactory.getSkill("爱心", MazeContents.hero).isActive() ||
-                            SkillFactory.getSkill("反击", MazeContents.hero).isActive();
-                    if(isActive && isDetect){
-                        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-                        alertDialog.setMessage("系统检测到您同时激活了驯兽师职业技能和培育家职业技能\n系统将会自动帮你重置宠物大师职业并额外赠送2点技能点\n请您稍后重新选择技能树\n抱歉对您造成不便，敬请谅解！");
-                        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "知道了", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        alertDialog.show();
-                        int skillPoint = 2;
-                        skillPoint += SkillFactory.reset("驯兽师");
-                        skillPoint += SkillFactory.reset("捕捉术");
-                        skillPoint += SkillFactory.reset("霸气");
-                        skillPoint += SkillFactory.reset("群殴");
-                        skillPoint += SkillFactory.reset("神赋");
-                        skillPoint += SkillFactory.reset("培育家");
-                        skillPoint += SkillFactory.reset("催化剂");
-                        skillPoint += SkillFactory.reset("爱心");
-                        skillPoint += SkillFactory.reset("反击");
-                        skillPoint += SkillFactory.reset("恩赐");
-                        MazeContents.hero.setSkillPoint(MazeContents.hero.getSkillPoint() + skillPoint);
-                    }
                     break;
                 case 1:
                     menuStart.setText("初始化迷宫");
@@ -81,7 +50,6 @@ public class MainMenuActivity extends Activity implements OnClickListener {
             super.handleMessage(msg);
         }
     };
-    private ShimmerTextView titleText;
     private Shimmer shimmer;
 
     @Override
@@ -95,7 +63,7 @@ public class MainMenuActivity extends Activity implements OnClickListener {
         }
         context = this;
         setContentView(R.layout.activity_main_menu);
-        titleText = (ShimmerTextView)findViewById(R.id.menu_title_tv);
+        ShimmerTextView titleText = (ShimmerTextView) findViewById(R.id.menu_title_tv);
         shimmer = new Shimmer();
         shimmer.start(titleText);
         Bmob.initialize(this, "4de7673ec85955af7568cfa1494c6498");
@@ -109,14 +77,12 @@ public class MainMenuActivity extends Activity implements OnClickListener {
             public void run() {
                 try {
                     DBHelper.init(MainMenuActivity.this);
-                    MazeContents.skillDialog = new SkillDialog();
                     handler.sendEmptyMessage(3);
                     LoadHelper saveHelper = new LoadHelper(context);
                     saveHelper.loadHero();
                     handler.sendEmptyMessage(2);
-                    saveHelper.loadSkill(MazeContents.hero, MazeContents.skillDialog);
+                    saveHelper.loadSkill(MazeContents.hero);
                     handler.sendEmptyMessage(1);
-                    //MonsterBook.init(context);
                     handler.sendEmptyMessage(0);
                 } catch (Exception exp) {
                     Log.e(MainGameActivity.TAG, "Init", exp);

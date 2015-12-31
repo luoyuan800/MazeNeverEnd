@@ -1498,4 +1498,40 @@ public class Hero implements BaseObject {
     public void setLeftUpColor(String leftUpColor) {
         this.leftUpColor = leftUpColor;
     }
+
+    public boolean isFourthSkillEnable() {
+        return fourthSkillEnable;
+    }
+
+    public void setFourthSkillEnable(boolean fourthSkillEnable) {
+        this.fourthSkillEnable = fourthSkillEnable;
+    }
+
+    public boolean isFifitSkillEnable() {
+        return fifitSkillEnable;
+    }
+
+    public void setFifitSkillEnable(boolean fifitSkillEnable) {
+        this.fifitSkillEnable = fifitSkillEnable;
+    }
+
+    public boolean isSixthSkillEnable() {
+        return sixthSkillEnable;
+    }
+
+    public void setSixthSkillEnable(boolean sixthSkillEnable) {
+        this.sixthSkillEnable = sixthSkillEnable;
+    }
+
+    public Skill getFourthSkill() {
+        return fourthSkill;
+    }
+
+    public Skill getFifthSkill() {
+        return fifitSkill;
+    }
+
+    public Skill getSixthSkill() {
+        return sixthSkill;
+    }
 }

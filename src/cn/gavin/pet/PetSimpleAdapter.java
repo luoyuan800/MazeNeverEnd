@@ -405,7 +405,7 @@ public class PetSimpleAdapter extends BaseAdapter {
                 } else {
                     skillName.setText("无");
                 }
-                petPic.setImageResource(MazeContents.getImageByName(pet.getName(), pet.getType()));
+                petPic.setImageResource(pet.getImage());
                 petOwner.setText(pet.getOwner());
                 final Hero hero = MazeContents.hero;
                 if (hero.getPoint() < 1) {
@@ -531,7 +531,7 @@ public class PetSimpleAdapter extends BaseAdapter {
                             }
                         };
                         addPointDialog.setTitle("增加HP");
-                        addPointDialog.show(addListener, addNListener, MazeContents.getImageByName(pet.getName(), pet.getType()));
+                        addPointDialog.show(addListener, addNListener, pet.getImage());
                     }
                 });
                 addAtkButton.setOnClickListener(new View.OnClickListener() {
@@ -558,7 +558,7 @@ public class PetSimpleAdapter extends BaseAdapter {
                             }
                         };
                         addPointDialog.setTitle("增加攻击");
-                        addPointDialog.show(addListener, addNListener, MazeContents.getImageByName(pet.getName(), pet.getType()));
+                        addPointDialog.show(addListener, addNListener, pet.getImage());
                     }
                 });
                 addDefButton.setOnClickListener(new View.OnClickListener() {
@@ -585,7 +585,7 @@ public class PetSimpleAdapter extends BaseAdapter {
                             }
                         };
                         addPointDialog.setTitle("增加防御");
-                        addPointDialog.show(addListener, addNListener, MazeContents.getImageByName(pet.getName(), pet.getType()));
+                        addPointDialog.show(addListener, addNListener, pet.getImage());
                     }
                 });
                 if (pet.isOnUsed()) {

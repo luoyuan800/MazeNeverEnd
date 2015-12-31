@@ -38,6 +38,7 @@ public class MonsterBook {
     private WheelView wheelView;
     private List<Monster> monsters;
 
+
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -60,9 +61,9 @@ public class MonsterBook {
                         baseEggRate.setText("??");
                         basePetRate.setText("??");
                     }
-                    if(monster.getMeet_lev() > 0) {
+                    if (monster.getMeet_lev() > 0) {
                         monsterName.setText(monster.getType());
-                    }else{
+                    } else {
                         monsterName.setText("???");
                     }
                     defeatCount.setText("你击败了它" + StringUtils.formatNumber(monster.getDefeatCount()) + "次");
@@ -100,34 +101,37 @@ public class MonsterBook {
         monsterImg = (ImageView) view.findViewById(R.id.head_png);
         wheelView = (WheelView) view.findViewById(R.id.monster_name_list);
         List<String> names = new ArrayList<String>(monsters.size());
+        int knownCount = 0;
         for (Monster monster : monsters) {
             if (monster.getMeet_lev() > 0) {
                 names.add(monster.getType());
+                knownCount++;
             } else {
                 names.add("???");
             }
-            wheelView.setItems(names);
-            wheelView.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener() {
-                @Override
-                public void onWheelItemChanged(WheelView wheelView, int position) {
-                    handler.sendEmptyMessage(0);
-                }
-
-                @Override
-                public void onWheelItemSelected(WheelView wheelView, int position) {
-
-                }
-            });
-            alertDialog.setView(view);
-            alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    alertDialog.dismiss();
-                }
-            });
-            alertDialog.setTitle("怪物图鉴");
         }
+        alertDialog.setTitle("怪物图鉴 " + (knownCount/monsters.size() * 100) + "%");
+        wheelView.setItems(names);
+        wheelView.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener() {
+            @Override
+            public void onWheelItemChanged(WheelView wheelView, int position) {
+                handler.sendEmptyMessage(0);
+            }
+
+            @Override
+            public void onWheelItemSelected(WheelView wheelView, int position) {
+
+            }
+        });
+        alertDialog.setView(view);
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.setTitle("怪物图鉴");
     }
 
     public void showBook(MainGameActivity context) {

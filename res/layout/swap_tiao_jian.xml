@@ -6,6 +6,7 @@
             android:baselineAligned="false"
             android:orientation="vertical">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swap_tiao_jian_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#0567ff"

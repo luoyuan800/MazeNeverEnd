@@ -238,6 +238,7 @@ public class Monster {
             catchCount = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("catch")));
             meet_lev = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("meet_lev")));
             catch_lev = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("catch_lev")));
+            imageId = cursor.getInt(cursor.getColumnIndex("image"));
         } else {
             //Build boss
         }

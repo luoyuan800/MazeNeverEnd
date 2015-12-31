@@ -24,7 +24,7 @@ public class SwapPet extends BmobObject {
     private Long askAtk;
     private Long askDef;
     private Long askHp;
-    private Integer askType;
+    private String askType;
     private String askName;
     private Integer askSex;
     //-----------------------------
@@ -39,7 +39,7 @@ public class SwapPet extends BmobObject {
     private Long def_rise = 0l;
     private Integer sex = 0;
     private String skill;
-    private Integer type = 0;//不能用int，改成string
+    private String type;//不能用int，改成string
     private String color;
     private String name;
     private SwapPet changedPet;
@@ -47,6 +47,7 @@ public class SwapPet extends BmobObject {
     private String hello;
     private String element;
     private Long lev = 0l;
+    private int image;
 
     public static SwapPet buildSwapPet(Pet pet) {
         SwapPet swapPet = new SwapPet();
@@ -57,7 +58,7 @@ public class SwapPet extends BmobObject {
         swapPet.setDef(pet.getMaxDef());
         swapPet.setHp(pet.getUHp());
         swapPet.setName(pet.getName());
-        swapPet.setType(Monster.getIndex(pet.getType()));
+        swapPet.setType(pet.getType());
         swapPet.setAtk_rise(pet.getAtk_rise());
         swapPet.setDef_rise(pet.getDef_rise());
         swapPet.setHp_rise(pet.getHp_rise());
@@ -77,6 +78,7 @@ public class SwapPet extends BmobObject {
         swapPet.setElement(pet.getElement().name());
         swapPet.setColor(pet.getColor());
         swapPet.setLev(pet.getLev());
+        swapPet.setImage(pet.getImage());
         return swapPet;
     }
 
@@ -152,11 +154,11 @@ public class SwapPet extends BmobObject {
         this.askHp = askHp;
     }
 
-    public Integer getAskType() {
+    public String getAskType() {
         return askType;
     }
 
-    public void setAskType(Integer askType) {
+    public void setAskType(String askType) {
         this.askType = askType;
     }
 
@@ -193,11 +195,11 @@ public class SwapPet extends BmobObject {
         this.skill = skill;
     }
 
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -275,11 +277,8 @@ public class SwapPet extends BmobObject {
 
     public Pet buildPet() {
         Pet pet = new Pet();
-        if (type >= Monster.lastNames.length) {
-            pet.setType("蛋");
-        } else {
-            pet.setType(Monster.lastNames[type]);
-        }
+        pet.setType(type);
+        pet.setImage(image);
         pet.setName(name);
         pet.setHp_rise(hp_rise);
         pet.setAtk_rise(atk_rise);
@@ -351,7 +350,7 @@ public class SwapPet extends BmobObject {
     }
 
     public String getFormateName() {
-        if (type == Integer.MAX_VALUE - 1) {
+        if (type.equals("蛋")) {
             return "蛋";
         } else {
             return "<font color=\"" + color + "\">" + getName() + (sex == 0 ? "♂" : "♀") + "</font>(" + getElement() + ")";
@@ -372,5 +371,13 @@ public class SwapPet extends BmobObject {
 
     public Long getLev(){
         return lev;
+    }
+
+    public int getImage() {
+        return image;
+    }
+
+    public void setImage(int image) {
+        this.image = image;
     }
 }

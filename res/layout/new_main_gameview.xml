@@ -351,29 +351,6 @@
 
                         <LinearLayout
                             android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="25sp"
-                                android:text="@string/sword_label"
-                                android:textSize="12sp" />
-
-                            <TextView
-                                android:id="@+id/main_contri_level"
-                                android:layout_width="wrap_content"
-                                android:layout_height="fill_parent"
-                                android:layout_marginLeft="5dp"
-                                android:singleLine="false"
-                                android:text="15.34W"
-                                android:textColor="#3506da"
-                                android:textSize="12sp" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
@@ -480,30 +457,6 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/linearLayout3"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textView4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="25sp"
-                                android:text="@string/armor_label"
-                                android:textSize="12sp" />
-
-                            <TextView
-                                android:id="@+id/main_armor_level"
-                                android:layout_width="wrap_content"
-                                android:layout_height="fill_parent"
-                                android:layout_marginLeft="5dp"
-                                android:text="12.46W"
-                                android:textColor="#0307da"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
@@ -528,7 +481,59 @@
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="25sp"
+                        android:text="@string/sword_label"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/sword_level"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="5dp"
+                        android:singleLine="false"
+                        android:text="15.34W"
+                        android:textColor="#3506da"
+                        android:textSize="12sp" />
+
+                    <ImageButton
+                        android:id="@+id/upgrade_sword_button"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/linearLayout3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25sp"
+                        android:text="@string/armor_label"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/armor_level"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="5dp"
+                        android:text="12.46W"
+                        android:textColor="#0307da"
+                        android:textSize="12sp" />
+                    <ImageButton
+                        android:id="@+id/upgrade_armor_button"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp" />
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
@@ -579,33 +584,51 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent">
 
-                    <Button
-                        android:id="@+id/button6"
+                    <cn.gavin.utils.ui.CircleMenu
+                        android:id="@+id/fenpei_button"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_weight="1"
                         android:background="@drawable/button_action_touch"
-                        android:text="+" />
+                        />
 
-                    <Button
-                        android:id="@+id/button5"
+                    <cn.gavin.utils.ui.CircleMenu
+                        android:id="@+id/bag_button"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_weight="1"
                         android:background="@drawable/button_action_touch"
-                        android:text="物" />
+                        />
 
-                    <Button
-                        android:id="@+id/button7"
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/button_action_touch"
-                        android:text="联" />
+
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <cn.gavin.utils.ui.CircleMenu
+                        android:id="@+id/net_button"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_action_touch"
+                        />
+
+                    <cn.gavin.utils.ui.CircleMenu
+                        android:id="@+id/help_button"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_action_touch"
+                        />
+
+
+                </LinearLayout>
+
 
 
             </LinearLayout>

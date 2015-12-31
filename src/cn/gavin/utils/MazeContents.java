@@ -6,14 +6,11 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 
 import cn.gavin.Achievement;
-import cn.gavin.Element;
 import cn.gavin.Hero;
-import cn.gavin.R;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
-import cn.gavin.monster.Monster;
 import cn.gavin.pet.Pet;
 import cn.gavin.skill.SkillDialog;
 
@@ -26,13 +23,12 @@ public class MazeContents {
     public static long payTime;
     public static Hero hero;
     public static Maze maze;
-    public static SkillDialog skillDialog;
     public static long lastUpload;
     public static String SD_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze";
 
-public static Bitmap loadImageFromSD(String name){
-    return BitmapFactory.decodeFile(SD_PATH + "/image/" + name);
-}
+    public static Bitmap loadImageFromSD(String name) {
+        return BitmapFactory.decodeFile(SD_PATH + "/image/" + name);
+    }
 
     public static Maze getMaze() {
         return maze;
@@ -55,7 +51,7 @@ public static Bitmap loadImageFromSD(String name){
                 case ADD_DEF:
                     if (hero != null && value > hero.getUpperDef() * 5) {
                         if (hero.getUpperDef() > 0) {
-                            return (long) (hero.getUpperDef() * 5);
+                            return hero.getUpperDef() * 5;
                         } else {
                             return value / 2;
                         }
@@ -63,7 +59,7 @@ public static Bitmap loadImageFromSD(String name){
                 case ADD_ATK:
                     if (hero != null && value > hero.getUpperAtk() * 5) {
                         if (hero.getUpperAtk() > 0) {
-                            return (long) (hero.getUpperAtk() * 5);
+                            return hero.getUpperAtk() * 5;
                         } else {
                             return value / 2;
                         }
@@ -71,7 +67,7 @@ public static Bitmap loadImageFromSD(String name){
                 case ADD_UPPER_HP:
                     if (hero != null && value > hero.getRealUHP() * 5) {
                         if (hero.getRealUHP() > 0) {
-                            return (long) (hero.getRealUHP() * 5);
+                            return hero.getRealUHP() * 5;
                         } else {
                             return value / 2;
                         }
@@ -113,167 +109,27 @@ public static Bitmap loadImageFromSD(String name){
         return value;
     }
 
-    public static int getImageByName(String name, String type) {
-        if ("蛋".equals(type)) {
-            return R.drawable.egg;
-        }
-        int index = 1;
-        int image = R.drawable.h_4_s;
-        switch (index) {
-            case 0:
-                image = R.drawable.zl;
-                break;
-            case 1:
-                if (name.contains("红")) {
-                    image = R.drawable.qy_red;
-                } else {
-                    image = R.drawable.qy;
-                }
-                break;
-            case 2:
-                image = R.drawable.pc;
-                break;
-            case 3:
-                image = R.drawable.feie;
-                break;
-            case 4:
-                image = R.drawable.zz;
-                break;
-            case 5:
-                image = R.drawable.laoshu;
-                break;
-            case 6:
-                if (name.contains("红")) {
-                    image = R.drawable.mayi_red;
-                } else {
-                    image = R.drawable.mayi;
-                }
-                break;
-            case 7:
-                if (name.contains("红")) {
-                    image = R.drawable.laohu_red;
-                } else {
-                    image = R.drawable.laohu;
-                }
-                break;
-            case 8:
-                image = R.drawable.jiao;
-                break;
-            case 9:
-                if (name.contains("红")) {
-                    image = R.drawable.xiezi_red;
-                } else {
-                    image = R.drawable.xiezi;
-                }
-                break;
-            case 10:
-                image = R.drawable.srn;
-                break;
-            case 11:
-                if (name.contains("红")) {
-                    image = R.drawable.bianfu_red;
-                } else {
-                    image = R.drawable.bianfu;
-                }
-                break;
-            case 12:
-                image = R.drawable.se;
-                break;
-            case 13:
-                image = R.drawable.niu;
-                break;
-            case 14:
-                image = R.drawable.wugui;
-                break;
-            case 15:
-                image = R.drawable.santoushe;
-                break;
-            case 16:
-                image = R.drawable.ciwei;
-                break;
-            case 17:
-                image = R.drawable.lan;
-                break;
-            case 18:
-                image = R.drawable.jingling;
-                break;
-            case 19:
-                if (name.contains("红")) {
-                    image = R.drawable.jiangshi_red;
-                } else {
-                    image = R.drawable.jiangshi;
-                }
-                break;
-            case 20:
-                image = R.drawable.fengh;
-                break;
-            case 21:
-                if (name.contains("红")) {
-                    image = R.drawable.long_pet_red;
-                } else {
-                    image = R.drawable.long_pet;
-                }
-                break;
-            case 22:
-                image = R.drawable.kulou;
-                break;
-            case 24:
-                image = R.drawable.xion;
-                break;
-            case 25:
-                image = R.drawable.zhuyan;
-                break;
-            case 26:
-                image = R.drawable.luwu;
-                break;
-            case 27:
-                image = R.drawable.shankui;
-                break;
-            case 28:
-                if (name.contains("红")) {
-                    image = R.drawable.qiongqi_red;
-                } else {
-                    image = R.drawable.qiongqi;
-                }
-                break;
-            case 29:
-                if (name.contains("红")) {
-                    image = R.drawable.jiuweihu_red;
-                } else {
-                    image = R.drawable.jiuweihu;
-                }
-                break;
-            case 30:
-                image = R.drawable.fudi;
-                break;
-            case 31:
-                image = R.drawable.zheng;
-                break;
-            case 32:
-                image = R.drawable.zhuru;
-                break;
-            case 33:
-                image = R.drawable.taowu;
-                break;
-            default:
-                image = R.drawable.h_4_s;
-        }
-        return image;
-    }
-
     public static boolean checkPet(Pet myPet) {
-        boolean check;
-        String name = myPet.getName();
-        int nameIndex = Monster.getIndex(name);
-        check = nameIndex < Monster.lastNames.length || "蛋".equals(myPet.getType());
+        boolean check = true;
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("select type from monster where id = '" + myPet.getIndex() + "'");
+        if (!cursor.isAfterLast()) {
+            check = myPet.getType().equals("蛋") || myPet.getType().equals(cursor.getString(cursor.getColumnIndex("type")));
+        }
+        cursor.close();
         return check;
     }
 
     public static int getIndex(String name) {
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT id FROM palace WHERE type = '" + name + "'");
-        if (!cursor.isAfterLast()) {
-            return cursor.getInt(cursor.getColumnIndex("id"));
+        try {
+            if (!cursor.isAfterLast()) {
+                return cursor.getInt(cursor.getColumnIndex("id"));
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
-        else return 0;
+        return 0;
     }
 }

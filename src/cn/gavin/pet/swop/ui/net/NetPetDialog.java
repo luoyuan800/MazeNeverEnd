@@ -1,19 +1,33 @@
 package cn.gavin.pet.swop.ui.net;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;
-import cn.gavin.monster.Monster;
+import cn.gavin.monster.FirstName;
+import cn.gavin.monster.SecondName;
 import cn.gavin.pet.Pet;
 import cn.gavin.pet.swop.SwapManager;
 import cn.gavin.pet.swop.SwapPet;
@@ -23,10 +37,6 @@ import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
 import cn.gavin.utils.ui.LoadMoreListView;
 import cn.gavin.utils.ui.SlidingMenu;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Copyright 2015 gluo.
@@ -49,23 +59,22 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             try {
+                Button netQueryButton = (Button) dialog.findViewById(R.id.net_query_button);
                 switch (msg.what) {
                     case 0:
                         show();
                         break;
                     case 1:
-                        Button button = (Button) dialog.findViewById(R.id.net_query_button);
-                        button.setEnabled(false);
-                        button.setText("查询中");
+                        netQueryButton.setEnabled(false);
+                        netQueryButton.setText("查询中");
                         loadMore();
                         break;
                     case 2:
                         slidingMenu.closeMenu();
                         break;
                     case 3:
-                        Button button3 = (Button) dialog.findViewById(R.id.net_query_button);
-                        button3.setEnabled(true);
-                        button3.setText("查询");
+                        netQueryButton.setEnabled(true);
+                        netQueryButton.setText("查询");
                         slidingMenu.closeMenu();
                         break;
                     case 4:
@@ -75,7 +84,7 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                         Pet pet = (Pet) msg.obj;
                         AlertDialog newPetDialog = PetInfoDialogBuilder.build(pet, context, "照顾好:" + pet.getFormatName());
                         newPetDialog.show();
-                        for(DialogInterface dialogInterface : shouldCloseDialog){
+                        for (DialogInterface dialogInterface : shouldCloseDialog) {
                             dialogInterface.dismiss();
                         }
                         adapter.clean();
@@ -106,7 +115,7 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
         try {
             dialog = new AlertDialog.Builder(context).create();
             LayoutInflater inflater = LayoutInflater.from(context);
-            View view = inflater.inflate(R.layout.net_pet_simple_view, null);
+            View view = inflater.inflate(R.layout.net_pet_simple_view, (ViewGroup) ((Activity) context).findViewById(R.id.net_pet_root));
             dialog.setView(view);
             dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
                 @Override
@@ -127,6 +136,7 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                 public void run() {
                     try {
                         Thread.sleep(1000);
+                        //noinspection StatementWithEmptyBody
                         while (!swapManager.isFinished()) ;
                         progressDialog.dismiss();
                         pets = swapManager.getResult();
@@ -167,15 +177,27 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
         Spinner fs = (Spinner) alertDialog.findViewById(R.id.first_name);
         Spinner ss = (Spinner) alertDialog.findViewById(R.id.second_name);
         Spinner ls = (Spinner) alertDialog.findViewById(R.id.last_name);
-        List<String> firstNames = new ArrayList<String>(Monster.firstNames.length);
+        List<String> firstNames = new ArrayList<String>(FirstName.values().length);
         firstNames.add("无");
-        Collections.addAll(firstNames, Monster.firstNames);
-        List<String> secondNames = new ArrayList<String>(Monster.secondNames.length);
+        for (FirstName firstName : FirstName.values()) {
+            if (firstName != FirstName.empty) {
+                firstNames.add(firstName.getName());
+            }
+        }
+        List<String> secondNames = new ArrayList<String>(SecondName.values().length);
         secondNames.add("无");
-        Collections.addAll(secondNames, Monster.secondNames);
-        List<String> lastNames = new ArrayList<String>(Monster.lastNames.length);
+        for (SecondName secondName : SecondName.values()) {
+            if (secondName != SecondName.empty) {
+                secondNames.add(secondName.getName());
+            }
+        }
+        List<String> lastNames = new ArrayList<String>();
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("select type from monster");
+        while (!cursor.isAfterLast()) {
+            lastNames.add(cursor.getString(cursor.getColumnIndex("type")));
+        }
+        cursor.close();
         lastNames.add("无");
-        Collections.addAll(lastNames, Monster.lastNames);
         ArrayAdapter fa = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, firstNames);
         fa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         fs.setAdapter(fa);
@@ -209,6 +231,7 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                 @Override
                 public void run() {
                     try {
+                        //noinspection StatementWithEmptyBody
                         while (!swapManager.isFinished()) ;
                         handler.sendEmptyMessage(4);
                     } catch (Exception e) {
@@ -260,7 +283,7 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                             askName += second;
                         }
                         if (last != null && !"无".equals(last)) {
-                            swapPet.setAskType(Monster.getIndex(last));
+                            swapPet.setAskType(last);
                         }
                         if (StringUtils.isNotEmpty(askName)) {
                             swapPet.setAskName(askName);
@@ -300,28 +323,26 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                             myPetDialog.setView(loadMoreListView);
                         } else {
                             StringBuilder condition = new StringBuilder("要求为:<br>");
-                            if(netPet.getAskAtk()!=null) {
+                            if (netPet.getAskAtk() != null) {
                                 condition.append("攻击高于 <i>").append(netPet.getAskAtk()).append("</i><br>");
                             }
-                            if(netPet.getAskDef()!=null) {
+                            if (netPet.getAskDef() != null) {
                                 condition.append("防御高于 <i>").append(netPet.getAskDef()).append("</i><br>");
                             }
-                            if(netPet.getAskHp()!=null) {
+                            if (netPet.getAskHp() != null) {
                                 condition.append("hp高于 <i>").append(netPet.getAskHp()).append("</i><br>");
                             }
-                            if(netPet.getAskType()!=null) {
-                                if( netPet.getAskType() < Monster.lastNames.length) {
-                                    condition.append("种类为 <i>").append(Monster.lastNames[netPet.getAskType()]).append("</i><br>");
-                                }
+                            if (netPet.getAskType() != null) {
+                                condition.append("种类为 <i>").append(netPet.getAskType()).append("</i><br>");
                             }
-                            if(StringUtils.isNotEmpty(netPet.getAskName())) {
+                            if (StringUtils.isNotEmpty(netPet.getAskName())) {
                                 condition.append("前后缀 <i>").append(netPet.getAskName()).append("</i><br>");
                             }
-                            if(netPet.getAskSkill()!=null){
+                            if (netPet.getAskSkill() != null) {
                                 condition.append("技能限定 <i>").append(netPet.getAskSkill()).append("</i><br>");
                             }
-                            if(netPet.getAskSex()!=null){
-                                condition.append("性别限定 <i>").append(netPet.getAskSex()==0?"♂":"♀").append("</i><br>");
+                            if (netPet.getAskSex() != null) {
+                                condition.append("性别限定 <i>").append(netPet.getAskSex() == 0 ? "♂" : "♀").append("</i><br>");
                             }
                             TextView textView = new TextView(context);
                             textView.setText(Html.fromHtml("<font color=\"red\">对不起！您没有符合对方要求的宠物。</font>" + condition));
@@ -337,9 +358,9 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                         shouldCloseDialog.add(myPetDialog);
                     } else if (v.getTag() != null && v.getTag() instanceof PetSimpleViewAdapter.PetViewHolder && netPet != null) {
                         Pet myPet = ((PetSimpleViewAdapter.PetViewHolder) v.getTag()).getPet();
-                        if(!MazeContents.checkPet(myPet)){
+                        if (!MazeContents.checkPet(myPet)) {
                             Toast.makeText(context, "宠物数据异常，无法上传！", Toast.LENGTH_SHORT).show();
-                            return ;
+                            return;
                         }
                         final SwapPet mySwapPet = SwapPet.buildSwapPet(myPet);
                         final Pet netSwapPet = netPet.buildPet();
@@ -354,7 +375,10 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                             public void run() {
                                 try {
                                     Thread.sleep(1000);
-                                    while (!swapManager.isFinished()) ;
+                                    //noinspection StatementWithEmptyBody
+                                    while (!swapManager.isFinished()) {
+                                        //DoNothing
+                                    }
                                     netPet.setChangedPet(mySwapPet);
                                     SwapPet updatePet = new SwapPet();
                                     updatePet.setObjectId(netPet.getObjectId());

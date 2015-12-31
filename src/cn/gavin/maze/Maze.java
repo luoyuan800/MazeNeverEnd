@@ -8,10 +8,8 @@ import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
-import cn.gavin.db.good.detail.SafetyRope;
 import cn.gavin.good.GoodsType;
 import cn.gavin.log.LogHelper;
-import cn.gavin.monster.MonsterBook;
 import cn.gavin.monster.Monster;
 import cn.gavin.monster.MonsterDB;
 import cn.gavin.pet.Pet;
@@ -35,7 +33,6 @@ public class Maze {
     protected long step;
     protected long streaking;
     private float meetRate = 100f;
-    private MonsterBook monsterBook;
     private StoryHelper storyHelper;
     protected long lastSave;
     private long hunt = 150;
@@ -65,15 +62,8 @@ public class Maze {
         storyHelper = new StoryHelper();
     }
 
-    public Maze(Hero hero, MonsterBook monsterBook) {
-        this.hero = hero;
-        this.monsterBook = monsterBook;
-        storyHelper = new StoryHelper();
-    }
-
     public void move(MainGameActivity context) {
-        this.monsterBook = context.getMonsterBook();
-        while (context != null && context.isGameThreadRunning()) {
+        while (context.isGameThreadRunning()) {
             if (context.isPause()) {
                 continue;
             }
@@ -91,7 +81,7 @@ public class Maze {
                 level++;
                 mazeLevelDetect();
                 long point = 1 + level / 10 + random.nextLong(level + 1) / 300;
-                if(hero.getMaxMazeLev() < 500){
+                if (hero.getMaxMazeLev() < 500) {
                     point *= 3;
                 }
                 if (point > 70) {
@@ -104,26 +94,26 @@ public class Maze {
                         pet.setDeathCount(pet.getDeathCount() - hero.getEggStep());
                         if (pet.getDeathCount() <= 0) {
                             addMessage(context, pet.getFormatName() + "出生了！");
-                            try{
+                            try {
                                 Cursor cursor = DBHelper.getDbHelper().excuseSOL("select catch meet_lev from monster where id = '" + pet.getIndex() + "'");
-                                if(!cursor.isAfterLast()){
+                                if (!cursor.isAfterLast()) {
                                     DBHelper.getDbHelper().excuseSQLWithoutResult("update monster set " +
                                             "catch = '" + (StringUtils.toLong(cursor.getString(cursor.getColumnIndex("catch"))) + 1) +
                                             " where id ='" + pet.getIndex() + "'");
-                                    if(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("meet_lev"))) == 0) {
+                                    if (StringUtils.toLong(cursor.getString(cursor.getColumnIndex("meet_lev"))) == 0) {
                                         DBHelper.getDbHelper().excuseSQLWithoutResult("update monster set " +
                                                 "meet_lev = '" + level +
                                                 " where id ='" + pet.getIndex() + "'");
                                     }
                                 }
                                 cursor.close();
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                                 LogHelper.logException(e);
                             }
                             int index = pet.getIndex();
                             Cursor cursor = DBHelper.getDbHelper().excuseSOL("select type from monster where id = '" + index + "'");
-                            if(cursor!=null && !cursor.isAfterLast()){
+                            if (cursor != null && !cursor.isAfterLast()) {
                                 pet.setType(cursor.getString(cursor.getColumnIndex("type")));
                             }
                             pet.setLev(level);
@@ -182,7 +172,7 @@ public class Maze {
                 boolean cheat = false;
                 for (Pet pet : hero.getPets()) {
                     cheat = !MazeContents.checkPet(pet);
-                    if(cheat){
+                    if (cheat) {
                         break;
                     }
                 }
@@ -200,7 +190,7 @@ public class Maze {
                     monster = new Monster(hero, this);
                 }
                 monster.setMazeLev(level);
-                if(monster.getMeet_lev()==0){
+                if (monster.getMeet_lev() == 0) {
                     monster.setMeet_lev(level);
                 }
                 if (BattleController.battle(hero, monster, random, this, context)) {
@@ -209,10 +199,10 @@ public class Maze {
                         Achievement.unbeaten.enable(hero);
                     }
                     monster.setDefeatCount(monster.getDefeatCount() + 1);
-                    if(!StringUtils.isNotEmpty(catchPetNameContains) || monster.getName().contains(catchPetNameContains)) {
+                    if (!StringUtils.isNotEmpty(catchPetNameContains) || monster.getName().contains(catchPetNameContains)) {
                         Pet pet = Pet.catchPet(monster);
                         if (pet != null) {
-                            if(monster.getCatch_lev() == 0) {
+                            if (monster.getCatch_lev() == 0) {
                                 monster.setCatch_lev(level);
                             }
                             addMessage(context, hero.getFormatName() + "收服了宠物 " + monster.getFormatName());
@@ -238,7 +228,7 @@ public class Maze {
                         hero.restoreHalf();
                     } else {
                         GoodsType safetyRope = GoodsType.SafetyRope;
-                        SafetyRope.load();
+                        safetyRope.load();
                         if (safetyRope.getCount() > 0) {
                             safetyRope.getScript().use();
                             long slev = level / 10 + 1;
@@ -284,9 +274,9 @@ public class Maze {
                 switch (random.nextInt(5)) {
                     case 0:
                         addMessage(context, hero.getFormatName() + "思考了一下人生...");
-                        if(hero.getReincaCount() > 0){
+                        if (hero.getReincaCount() > 0) {
                             long point = hero.getReincaCount();
-                            if(point > 10){
+                            if (point > 10) {
                                 point = 10 + hero.getRandom().nextInt(10);
                             }
                             addMessage(context, hero.getFormatName() + "获得了" + point + "点能力点");
@@ -360,7 +350,7 @@ public class Maze {
                         break;
                     case 50000:
                         if (Achievement.maze10000.isEnable()) {
-                            if(!Achievement.maze50000.isEnable()){
+                            if (!Achievement.maze50000.isEnable()) {
                                 GoodsType.RenameAcc.load();
                                 GoodsType.RenameAcc.setCount(GoodsType.RenameAcc.getCount() + 1);
                                 GoodsType.RenameAcc.save();
@@ -443,9 +433,9 @@ public class Maze {
                     xSkill.setActive(true);
                 }
             }
-            if(!isSailed() && (random.nextLong(hero.getAgility()/5000) > random.nextLong(3000)||(hero.getMaxMazeLev() < 200&&hero.getMaterial()<10000000))){
+            if (!isSailed() && (random.nextLong(hero.getAgility() / 5000) > random.nextLong(3000) || (hero.getMaxMazeLev() < 200 && hero.getMaterial() < 10000000))) {
                 setSailed(true);
-                addMessage(MainGameActivity.context,"有商人入驻商店了，你可以去选购物品。");
+                addMessage(MainGameActivity.context, "有商人入驻商店了，你可以去选购物品。");
             }
         }
     }
@@ -481,7 +471,7 @@ public class Maze {
 
     public void setSailed(boolean sailed) {
         this.sailed = sailed;
-        if(!sailed){
+        if (!sailed) {
             addMessage(MainGameActivity.context, "商人离开了商店，请耐心等待下一位商人的到达。");
         }
     }

@@ -17,8 +17,6 @@ public interface BaseContext {
     void addMessage(String... msg);
     boolean isPause();
 
-    SkillDialog getSkillDialog();
-
     long getRefreshInfoSpeed();
 
     boolean isHideBattle();

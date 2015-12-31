@@ -1,24 +1,28 @@
 package cn.gavin.pet.swop.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.text.Html;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import cn.gavin.R;
+import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;
-import cn.gavin.monster.Monster;
+import cn.gavin.monster.FirstName;
+import cn.gavin.monster.SecondName;
 import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
 import cn.gavin.pet.swop.SwapManager;
@@ -113,7 +117,7 @@ public class SwapDialog implements LoadMoreListView.OnRefreshLoadingMoreListener
                 if (pet != null) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     LayoutInflater inflater = LayoutInflater.from(context);
-                    View view = inflater.inflate(R.layout.swap_tiao_jian, null);
+                    View view = inflater.inflate(R.layout.swap_tiao_jian, (ViewGroup) ((Activity) context).findViewById(R.id.swap_tiao_jian_root));
                     builder.setView(view);
                     builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                         @Override
@@ -144,7 +148,7 @@ public class SwapDialog implements LoadMoreListView.OnRefreshLoadingMoreListener
                                         askName += second;
                                     }
                                     if (!"无".equals(last)) {
-                                        swapPet.setAskType(Monster.getIndex(last));
+                                        swapPet.setAskType(last);
                                     }
                                     if (StringUtils.isNotEmpty(askName)) {
                                         swapPet.setAskName(askName);
@@ -184,15 +188,27 @@ public class SwapDialog implements LoadMoreListView.OnRefreshLoadingMoreListener
                     Spinner fs = (Spinner) alertDialog.findViewById(R.id.first_name);
                     Spinner ss = (Spinner) alertDialog.findViewById(R.id.second_name);
                     Spinner ls = (Spinner) alertDialog.findViewById(R.id.last_name);
-                    List<String> firstNames = new ArrayList<String>(Monster.firstNames.length);
+                    List<String> firstNames = new ArrayList<String>(FirstName.values().length);
                     firstNames.add("无");
-                    Collections.addAll(firstNames, Monster.firstNames);
-                    List<String> secondNames = new ArrayList<String>(Monster.secondNames.length);
+                    for (FirstName firstName : FirstName.values()) {
+                        if (firstName != FirstName.empty) {
+                            firstNames.add(firstName.getName());
+                        }
+                    }
+                    List<String> secondNames = new ArrayList<String>(SecondName.values().length);
                     secondNames.add("无");
-                    Collections.addAll(secondNames, Monster.secondNames);
-                    List<String> lastNames = new ArrayList<String>(Monster.lastNames.length);
+                    for (SecondName secondName : SecondName.values()) {
+                        if (secondName != SecondName.empty) {
+                            secondNames.add(secondName.getName());
+                        }
+                    }
+                    List<String> lastNames = new ArrayList<String>();
+                    Cursor cursor = DBHelper.getDbHelper().excuseSOL("select type from monster");
+                    while (!cursor.isAfterLast()) {
+                        lastNames.add(cursor.getString(cursor.getColumnIndex("type")));
+                    }
+                    cursor.close();
                     lastNames.add("无");
-                    Collections.addAll(lastNames, Monster.lastNames);
                     ArrayAdapter fa = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, firstNames);
                     fa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     fs.setAdapter(fa);
@@ -207,7 +223,7 @@ public class SwapDialog implements LoadMoreListView.OnRefreshLoadingMoreListener
                     sexs.setAdapter(sexa);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             LogHelper.logException(e);
         }
     }

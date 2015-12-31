@@ -137,10 +137,10 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
                     case 12:
                         Boolean b = (Boolean)msg.obj;
                         if(b){
-                            findViewById(R.id.palace_bak).setBackgroundResource(R.drawable.long_1);
+                            //findViewById(R.id.palace_bak).setBackgroundResource(R.drawable.long_1);
                             exitButton.setText("骄傲的离开殿堂");
                         }else{
-                            findViewById(R.id.palace_bak).setBackgroundResource(R.drawable.long_bak);
+//                            findViewById(R.id.palace_bak).setBackgroundResource(R.drawable.long_bak);
                             exitButton.setText("灰溜溜的爬出殿堂");
                         }
                         pauseButton.setEnabled(false);
@@ -220,7 +220,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MainGameActivity.context.setPause(true);
-        setContentView(R.layout.palace_game_view);
+//        setContentView(R.layout.palace_game_view);
         context = this;
         Log.i(TAG, "start palace~");
         initGameData();
@@ -287,7 +287,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         heroN = MazeContents.hero;
         maze = new Palace(heroN);
         monsterBook = MainGameActivity.context.getMonsterBook();
-        skillDialog = MainGameActivity.context.getSkillDialog();
+        //skillDialog = MainGameActivity.context.getSkillDialog();
         // 左侧战斗信息
         mainInfoSv = (ScrollView) findViewById(R.id.main_info_sv);
         mainInfoPlatform = (LinearLayout) findViewById(R.id.main_info_ll);
@@ -295,14 +295,14 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         mainContriHp = (TextView) findViewById(R.id.main_contri_hp);
         mainContriAtt = (TextView) findViewById(R.id.main_contri_att);
         mainContriDef = (TextView) findViewById(R.id.main_contri_def);
-        swordLev = (TextView) findViewById(R.id.main_contri_level);
-        armorLev = (TextView) findViewById(R.id.main_armor_level);
+        swordLev = (TextView) findViewById(R.id.sword_level);
+        armorLev = (TextView) findViewById(R.id.armor_level);
         heroPic = (Button) findViewById(R.id.hero_pic);
         heroPic.setOnClickListener(this);
         heroPic.setBackgroundResource(R.drawable.h_1);
         heroPic.setTextColor(getResources().getColor(R.color.red));
         heroPic.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
-        pauseButton = (Button) findViewById(R.id.palace_pause_button);
+//        pauseButton = (Button) findViewById(R.id.palace_pause_button);
         pauseButton.setOnClickListener(this);
         clickCount = (TextView) findViewById(R.id.hero_pic_click_count);
         firstSkillButton = (Button) findViewById(R.id.first_skill);
@@ -317,10 +317,10 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
         necklaceTextView.setOnClickListener(this);
         hatTextView = (TextView) findViewById(R.id.hat_view);
         hatTextView.setOnClickListener(this);
-        exitButton = (Button) findViewById(R.id.exist_palace_button);
+//        exitButton = (Button) findViewById(R.id.exist_palace_button);
         exitButton.setOnClickListener(this);
         pauseButton.setEnabled(true);
-        restoreButton = (Button)findViewById(R.id.restore_palace_button);
+//        restoreButton = (Button)findViewById(R.id.restore_palace_button);
         restoreButton.setOnClickListener(this);
         refresh();
     }
@@ -432,11 +432,11 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
 
     @Override
     public void onClick(View v) {
-        Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
+        /*Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
-            case R.id.restore_palace_button:
-                handler.sendEmptyMessage(13);
-                break;
+//            case R.id.restore_palace_button:
+//                handler.sendEmptyMessage(13);
+//                break;
             case R.id.exist_palace_button:
                 showExitDialog();
                 break;
@@ -478,7 +478,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
                 break;
             default:
                 break;
-        }
+        }*/
     }
 
 }

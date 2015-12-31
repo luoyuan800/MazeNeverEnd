@@ -15,7 +15,9 @@ import cn.gavin.Element;
 import cn.gavin.activity.BaseContext;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
+import cn.gavin.monster.FirstName;
 import cn.gavin.monster.Monster;
+import cn.gavin.monster.SecondName;
 import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.upload.PalaceObject;
 import cn.gavin.utils.StringUtils;
@@ -98,9 +100,10 @@ public class PalaceMonster extends Base {
         if (!cursor.isAfterLast()) {
             long atk = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk")));
             long hp = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))) + StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def")));
-            Monster monster = new Monster("", "【守护者】", cursor.getString(cursor.getColumnIndex("name")), atk, hp);
+            Monster monster = new Monster(FirstName.empty, SecondName.empty, "【守护者】" + cursor.getString(cursor.getColumnIndex("name")), atk, hp);
             monster.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
             monster.setSilent(65);
+            cursor.close();
             return monster;
         }
         return null;

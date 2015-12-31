@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -48,15 +50,23 @@ public class AddPointDialog {
         addN.setOnClickListener(addNListener);
         refresh();
     }
-
-    public void refresh() {
-        Button add = (Button) alertDialog.findViewById(R.id.add_point_1);
-        Button addN = (Button) alertDialog.findViewById(R.id.add_point_n);
-        Hero hero = MazeContents.hero;
-        if(hero.getPoint() < 1){
-            add.setEnabled(false);
-            addN.setEnabled(false);
+Handler handler = new Handler(){
+    public void handleMessage(Message msg){
+        switch (msg.what){
+            case 0:
+                Button add = (Button) alertDialog.findViewById(R.id.add_point_1);
+                Button addN = (Button) alertDialog.findViewById(R.id.add_point_n);
+                Hero hero = MazeContents.hero;
+                if(hero.getPoint() < 1){
+                    add.setEnabled(false);
+                    addN.setEnabled(false);
+                }
+                break;
         }
+    }
+};
+    public void refresh() {
+        handler.sendEmptyMessage(0);
     }
 
     public void setTitle(String title) {

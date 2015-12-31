@@ -202,8 +202,8 @@ public class SwapManager {
                     fix &= p.getMaxDef() >= swapPet.getAskDef();
                 }
             }
-            if (swapPet.getAskType() != null && swapPet.getAskType() < Monster.lastNames.length) {
-                fix &= egg && p.getType().equals(Monster.lastNames[swapPet.getAskType()]);
+            if (swapPet.getAskType() != null) {
+                fix &= egg && p.getType().equals(swapPet.getAskType());
             }
             if (swapPet.getAskSkill() != null) {
                 fix &= p.getAllSkill() != null && p.getAllSkill().getName().startsWith(swapPet.getAskSkill());

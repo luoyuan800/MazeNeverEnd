@@ -253,7 +253,7 @@ public class LoadHelper {
         }
     }
 
-    public void loadSkill(Hero hero, SkillDialog dialog) {
+    public void loadSkill(Hero hero) {
         String sql = "select name from skill";
         try {
             Cursor cursor = DBHelper.getDbHelper().excuseSOL(sql);

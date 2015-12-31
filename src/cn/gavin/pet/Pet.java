@@ -43,6 +43,7 @@ public class Pet extends Base {
     private String ownerId;
     private float eggRate;
     private int index;
+    private int image;
 
 
     public void click() {
@@ -164,6 +165,7 @@ public class Pet extends Base {
             pet.setOwner(MazeContents.hero.getName());
             pet.setOwnerId(MazeContents.hero.getUuid());
             pet.setIndex(monster.getIndex());
+            pet.setImage(monster.getImageId());
             if ((SkillFactory.getSkill("神赋", MazeContents.hero).isActive() && random.nextInt(100) < 30) || random.nextInt(5000) < 5) {
                 int sindex = random.nextInt(PetSkillList.values().length);
                 if (sindex < 5) {
@@ -391,6 +393,7 @@ public class Pet extends Base {
         egg.setElement(Element.values()[random.nextInt(Element.values().length - 1)]);
         egg.setOwner(hero.getName());
         egg.setOwnerId(hero.getUuid());
+        egg.setImage(m.getImage());
         if (!f.getType().equals(m.getType())) {
             if (random.nextInt(10000) + random.nextFloat() < (31.115 + hero.getPetAbe())) {
                 int index = random.nextInt(MonsterDB.total);
@@ -529,5 +532,13 @@ public class Pet extends Base {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public int getImage() {
+        return image;
+    }
+
+    public void setImage(int image) {
+        this.image = image;
     }
 }

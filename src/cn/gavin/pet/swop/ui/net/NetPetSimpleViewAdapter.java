@@ -7,14 +7,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.pet.swop.SwapPet;
-import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -26,7 +23,7 @@ public class NetPetSimpleViewAdapter extends BaseAdapter {
     private NetPetDialog netPetDialog;
     private final ArrayList<SwapPet> pets = new ArrayList<SwapPet>();
 
-    public void clean(){
+    public void clean() {
         pets.clear();
         notifyDataSetChanged();
     }
@@ -116,13 +113,12 @@ public class NetPetSimpleViewAdapter extends BaseAdapter {
                 def.setText("DEF:" + StringUtils.formatNumber(pet.getDef()));
                 def.setVisibility(View.VISIBLE);
                 petImage.setVisibility(View.VISIBLE);
-                if(StringUtils.isNotEmpty(pet.getHello())){
+                if (StringUtils.isNotEmpty(pet.getHello())) {
                     hello.setText(pet.getHello());
-                }else{
+                } else {
                     hello.setText("選我選我吧！");
                 }
-                petImage.setImageResource((MazeContents.getImageByName(pet.getName(),
-                        pet.getType() == Integer.MAX_VALUE-1 ? "蛋" : "")));
+                petImage.setImageResource(pet.getType().equals("蛋") ? R.drawable.egg : pet.getImage());
             } else {
                 this.pet = null;
                 name.setText("");
@@ -132,7 +128,7 @@ public class NetPetSimpleViewAdapter extends BaseAdapter {
                 def.setVisibility(View.GONE);
                 petImage.setVisibility(View.GONE);
             }
-            if ((null == pet.getType()) || (Integer.MAX_VALUE-1 == pet.getType())) {
+            if ((pet.getType() == null) || ("蛋".equals(pet.getType()))) {
                 hp.setVisibility(View.GONE);
                 atk.setVisibility(View.GONE);
                 def.setVisibility(View.GONE);
