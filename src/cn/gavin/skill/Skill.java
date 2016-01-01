@@ -3,7 +3,6 @@ package cn.gavin.skill;
 import android.database.Cursor;
 import android.util.Log;
 import android.widget.Button;
-
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
@@ -59,7 +58,7 @@ public abstract class Skill {
         } else if (this.onUsed && !onUsed) {
             hero.removeSkill(this);
         }
-        if(!isLoad) {
+        if (!isLoad) {
             save();
         }
         this.onUsed = onUsed;
@@ -138,9 +137,6 @@ public abstract class Skill {
 
     public void setHero(Hero hero) {
         this.hero = hero;
-    }
-
-    public void setSkillDialog(SkillDialog skillDialog) {
     }
 
     public float getProbability() {
@@ -243,7 +239,7 @@ public abstract class Skill {
                 count = (StringUtils.toLong(cursor.getString(cursor.getColumnIndex("count"))));
                 cursor.close();
                 return true;
-            }else{
+            } else {
                 cursor.close();
             }
 

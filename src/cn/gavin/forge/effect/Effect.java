@@ -3,6 +3,7 @@ package cn.gavin.forge.effect;
 import cn.gavin.Hero;
 import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
+import cn.gavin.utils.MathUtils;
 import cn.gavin.utils.Random;
 
 /**
@@ -15,7 +16,7 @@ public enum Effect {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
-            long atk = random.nextLong((hero.getStrength() + monster.getMaxHP()) / 3705 + 1);
+            long atk = MathUtils.getAccessoryValue(monster.getMazeLev(),hero.ATR_RISE,random);
             if (atk <= 1800) atk = random.nextLong(hero.getMaxMazeLev() + 1) + 1800;
             return atk;
         }
@@ -24,15 +25,14 @@ public enum Effect {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
-            long hp = random.nextLong((hero.getAgility() + monster.getAtk())/2750) +1900;
-            return hp;
+            return MathUtils.getAccessoryValue(monster.getMazeLev(),hero.MAX_HP_RISE,random);
         }
     }, "增加HP上限"),
     ADD_DEF(new Calculate() {
         @Override
         public Number calculate(Hero hero, Monster monster) {
             Random random = hero.getRandom();
-            long def = random.nextLong((hero.getPower() + monster.getMaterial()) / 3500 + 1);
+            long def = MathUtils.getAccessoryValue(monster.getMazeLev(),hero.DEF_RISE,random);
             if (def <= 1200) def = random.nextLong(hero.getMaxMazeLev() + 1) + 1200;
             return def;
         }
@@ -148,25 +148,8 @@ public enum Effect {
         public Number calculate(Hero hero, Monster monster) {
             return 2;
         }
-    }, "增加宠物变异几率"),
-    START_BURST(new Calculate() {
-        @Override
-        public Number calculate(Hero hero, Monster monster) {
-            return 10;
-        }
-    }, "附带技能星爆(装备技能只能有一个生效)<br>亮瞎敌人的双眼,敌人HP变成一个不大于当前HP的随机数。释放概率"),
-    ICE_BURST(new Calculate() {
-        @Override
-        public Number calculate(Hero hero, Monster monster) {
-            return 10;
-        }
-    }, "附带技能冰爆(装备技能只能有一个生效)<br>冻住敌人随机回合。释放概率"),
-    FEN_BURST(new Calculate() {
-        @Override
-        public Number calculate(Hero hero, Monster monster) {
-            return 22;
-        }
-    }, "附带技能令风(装备技能只能有一个生效)<br>秒杀土属性的敌人。释放概率");
+    }, "增加宠物变异几率")
+    ;
     private Calculate calculate;
     private String name;
 

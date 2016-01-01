@@ -2,6 +2,7 @@ package cn.gavin.monster;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.db.DBHelper;
 import cn.gavin.utils.StringUtils;
 import cn.gavin.utils.ui.WheelView;
 
@@ -100,6 +102,7 @@ public class MonsterBook {
         defeatCount = (TextView) view.findViewById(R.id.defeat_count_text);
         monsterImg = (ImageView) view.findViewById(R.id.head_png);
         wheelView = (WheelView) view.findViewById(R.id.monster_name_list);
+        monsters = MonsterDB.loadMonster();
         List<String> names = new ArrayList<String>(monsters.size());
         int knownCount = 0;
         for (Monster monster : monsters) {
@@ -134,8 +137,27 @@ public class MonsterBook {
         alertDialog.setTitle("怪物图鉴");
     }
 
-    public void showBook(MainGameActivity context) {
+    public void showBook() {
         alertDialog.show();
     }
 
+    public static int getCurrentCount() {
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("select * from monster where catch > 0");
+        int count = 0;
+        if(!cursor.isAfterLast()){
+            count = cursor.getInt(0);
+            cursor.close();
+        }
+        return count;
+    }
+
+    public static int getTotalCount() {
+        int count = 0;
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("select count(*) from monster");
+        if(!cursor.isAfterLast()){
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
+    }
 }

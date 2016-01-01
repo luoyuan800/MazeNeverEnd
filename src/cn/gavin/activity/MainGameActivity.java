@@ -38,6 +38,7 @@ import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.adapter.RecipeAdapter;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.forge.list.ItemName;
+import cn.gavin.gift.GiftDialog;
 import cn.gavin.good.GoodsDialog;
 import cn.gavin.good.GoodsType;
 import cn.gavin.good.ShopDialog;
@@ -195,8 +196,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 switch (msg.what) {
                     case 123:
                         String gift = "";
-                        if(heroN.getGift()!=null){
-                        gift = "<" + heroN.getGift().getName() + ">\n";
+                        if (heroN.getGift() != null) {
+                            gift = "<" + heroN.getGift().getName() + ">\n";
                         }
                         characterName.setText(gift +
                                 heroN.getName() + (heroN.getReincaCount() != 0 ? ("(" + heroN.getReincaCount() + ")") : ""));
@@ -427,6 +428,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         scrollView.addView(welcome);
                         dialog.setView(scrollView);
                         dialog.show();
+                        showGiftChoose();
                         break;
                     case 111:
                         heroN.setAwardCount(heroN.getAwardCount() + 3000);
@@ -621,7 +623,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         });
         try {
             BmobUpdateAgent.update(this);
-            PalaceMonster.getPalaceCount(context);
         } catch (Exception e) {
             LogHelper.logException(e);
         }
@@ -700,6 +701,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         }
     };
 
+    AlertDialog upgradeSwordDialog;
+    AlertDialog upgradeArmorDialog;
+
     private void initGameView() {
         ImageButton upgradeSword = (ImageButton) findViewById(R.id.upgrade_sword_button);
         ImageButton upgradeArmor = (ImageButton) findViewById(R.id.upgrade_armor_button);
@@ -722,213 +726,49 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         upgradeSword.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog upgradeSwordDialog = new Builder(context).create();
-                upgradeSwordDialog.setTitle("升级武器");
-                upgradeSwordDialog.setView(upgradeSwordView);
-                upgradeSwordDialog.setButton(DialogInterface.BUTTON_POSITIVE, "退出", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                if (upgradeSwordDialog == null) {
+                    upgradeSwordDialog = new Builder(context).create();
+                    upgradeSwordDialog.setTitle("升级武器");
+                    upgradeSwordDialog.setView(upgradeSwordView);
+                    upgradeSwordDialog.setButton(DialogInterface.BUTTON_POSITIVE, "退出", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            upgradeSwordDialog.hide();
+                        }
+                    });
+                }
                 upgradeSwordDialog.show();
             }
         });
         upgradeArmor.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog upgradeArmorDialog = new Builder(context).create();
-                upgradeArmorDialog.setTitle("升级护具");
-                upgradeArmorDialog.setView(upgradeArmorView);
-                upgradeArmorDialog.setButton(DialogInterface.BUTTON_POSITIVE, "退出", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                if (upgradeArmorDialog == null) {
+                    upgradeArmorDialog = new Builder(context).create();
+                    upgradeArmorDialog.setTitle("升级护具");
+                    upgradeArmorDialog.setView(upgradeArmorView);
+                    upgradeArmorDialog.setButton(DialogInterface.BUTTON_POSITIVE, "退出", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            upgradeArmorDialog.hide();
+                        }
+                    });
+                }
                 upgradeArmorDialog.show();
             }
         });
 
-        netButton = (CircleMenu) findViewById(R.id.net_button);
-        netButton.initSubMenus(R.drawable.lian_zi, new int[]{R.drawable.dian_zi, R.drawable.shang_zi_zi, R.drawable.huan_zi});
-        netButton.setOnCircleItemSelectedListener(new CircleMenu.OnCircleItemSelectedListener() {
-            @Override
-            public void onItemClickedListener(int index) {
-                switch (index) {
-                    case 0://殿堂
-                        showPalace();
-                        break;
-                    case 1://商店
-                        ShopDialog shopDialog = new ShopDialog(context);
-                        shopDialog.show();
-                        break;
-                    case 2://换宠
-                        try {
-                            new SwapPetMainDialog();
-                        } catch (Exception e) {
-                            LogHelper.logException(e);
-                        }
-                        break;
-                }
-            }
-        });
-        CircleMenu helpButton = (CircleMenu) findViewById(R.id.help_button);
-        helpButton.initSubMenus(R.drawable.zu_zi, new int[]{R.drawable.shng_zi, R.drawable.zan_zi, R.drawable.geng_zi});
-        helpButton.setOnCircleItemSelectedListener(new CircleMenu.OnCircleItemSelectedListener() {
-            @Override
-            public void onItemClickedListener(int index) {
-                switch (index) {
-                    case 3://上传角色
-                        if (!uploading) {
-                            if (MazeContents.lastUpload + 100 <= heroN.getMaxMazeLev()) {
-                                showUpload();
-                            } else {
-                                AlertDialog uploadAlert = new Builder(context).create();
-                                uploadAlert.setMessage("还差" + (100 - heroN.getMaxMazeLev() + MazeContents.lastUpload) + "层");
-                                uploadAlert.setButton(DialogInterface.BUTTON_NEGATIVE, "继续努力", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                                uploadAlert.show();
-                            }
-                        }
-                        break;
-                    case 4://赞
-                        showPayDialog();
-                        break;
-                    case 5://更新
-                        BmobUpdateAgent.setDialogListener(new BmobDialogButtonListener() {
-                            @Override
-                            public void onClick(int status) {
-                                try {
-                                    switch (status) {
-                                        case UpdateStatus.Update:
-                                            save();
-                                            Achievement.updater.enable(heroN);
-                                            break;
-                                        case UpdateStatus.NotNow:
-                                            break;
-                                        case UpdateStatus.Close://只有在强制更新状态下才会在更新对话框的右上方出现close按钮,如果用户不点击”立即更新“按钮，这时候开发者可做些操作，比如直接退出应用等
-                                            save();
-                                            break;
-                                    }
-                                } catch (Exception e) {
-                                    LogHelper.logException(e);
-                                }
-                            }
-                        });
-                        BmobUpdateAgent.forceUpdate(context);
-                        break;
-                }
-            }
-        });
-        CircleMenu bagButton = (CircleMenu) findViewById(R.id.bag_button);
-        bagButton.initSubMenus(R.drawable.bao_zi, new int[]{R.drawable.wupin_zi, R.drawable.chong_zi, R.drawable.zhuang_zi});
-        bagButton.setOnCircleItemSelectedListener(new CircleMenu.OnCircleItemSelectedListener() {
-            @Override
-            public void onItemClickedListener(int index) {
-                switch (index) {
-                    case 0:
-                        GoodsDialog goodsDialog = new GoodsDialog(context);
-                        goodsDialog.show();
-                        break;
-                    case 1:
-                        saveHelper.savePet();
-                        new PetDialog(context).show(heroN);
-                        break;
-                    case 2:
-                        showAccessory();
-                        break;
-                }
-            }
-        });
-        CircleMenu fenpeiButton = (CircleMenu) findViewById(R.id.fenpei_button);
-        fenpeiButton.initSubMenus(R.drawable.pei_zi, new int[]{R.drawable.ji_zi, R.drawable.li_zi, R.drawable.ti_zi, R.drawable.min_zi});
-        fenpeiButton.setOnCircleItemSelectedListener(new CircleMenu.OnCircleItemSelectedListener() {
-            @Override
-            public void onItemClickedListener(int index) {
-                switch (index) {
-                    case 0:
-                        SkillMainDialog skillMainDialog = new SkillMainDialog();
-                        skillMainDialog.show();
-                        break;
-                    case 1:
-                        final AddPointDialog addStrPointDialog = new AddPointDialog(context);
-                        addStrPointDialog.setTitle("力量");
-                        addStrPointDialog.show(new OnClickListener() {
-                                                   @Override
-                                                   public void onClick(View v) {
-                                                       heroN.addStrength();
-                                                       handler.sendEmptyMessage(0);
-                                                       heroN.click(false);
-                                                       addStrPointDialog.refresh();
-                                                   }
-                                               }, new OnClickListener() {
-                                                   @Override
-                                                   public void onClick(View v) {
-                                                       long str = heroN.getRandom().nextLong(heroN.getPoint() + 1);
-                                                       heroN.addStrength(str);
-                                                       heroN.addPoint(-str);
-                                                       handler.sendEmptyMessage(0);
-                                                       addStrPointDialog.refresh();
-                                                   }
-                                               }, R.drawable.h_4
-                        );
-                        break;
-                    case 2:
-                        final AddPointDialog addLifePointDialog = new AddPointDialog(context);
-                        addLifePointDialog.setTitle("体力");
-                        addLifePointDialog.show(new OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        heroN.addLife();
-                                                        handler.sendEmptyMessage(0);
-                                                        heroN.click(false);
-                                                        addLifePointDialog.refresh();
-                                                    }
-                                                }, new OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        long life = heroN.getRandom().nextLong(heroN.getPoint() + 1);
-                                                        heroN.addLife(life);
-                                                        heroN.addPoint(-life);
-                                                        handler.sendEmptyMessage(0);
-                                                        heroN.click(false);
-                                                        addLifePointDialog.refresh();
-                                                    }
-                                                }, R.drawable.h_4
-                        );
-                        break;
-                    case 3:
-                        final AddPointDialog addAgiPointDialog = new AddPointDialog(context);
-                        addAgiPointDialog.setTitle("敏捷");
-                        addAgiPointDialog.show(new OnClickListener() {
-                                                   @Override
-                                                   public void onClick(View v) {
-                                                       heroN.addAgility();
-                                                       handler.sendEmptyMessage(0);
-                                                       heroN.click(false);
-                                                       addAgiPointDialog.refresh();
-                                                   }
-                                               }, new OnClickListener() {
-                                                   @Override
-                                                   public void onClick(View v) {
-                                                       long agi = heroN.getRandom().nextLong(heroN.getPoint() + 1);
-                                                       heroN.addAgility(agi);
-                                                       heroN.addPoint(-agi);
-                                                       handler.sendEmptyMessage(0);
-                                                       heroN.click(false);
-                                                       addAgiPointDialog.refresh();
-                                                   }
-                                               }, R.drawable.h_4
-                        );
-                        break;
-                }
-            }
-        });
+        Button netButton = (Button) findViewById(R.id.net_button);
+        netButton.setOnClickListener(this);
+
+        Button helpButton = (Button) findViewById(R.id.help_button);
+        helpButton.setOnClickListener(this);
+
+        Button bagButton = (Button) findViewById(R.id.bag_button);
+        bagButton.setOnClickListener(this);
+
+        Button fenpeiButton = (Button) findViewById(R.id.fenpei_button);
+        fenpeiButton.setOnClickListener(this);
     }
 
     @Override
@@ -1064,12 +904,12 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         if (achDialog == null) {
             achDialog = new Builder(this).create();
             int count = 0;
-            for(Achievement achievement : Achievement.values()){
-                if(achievement.isEnable()){
-                    count ++;
+            for (Achievement achievement : Achievement.values()) {
+                if (achievement.isEnable()) {
+                    count++;
                 }
             }
-            achDialog.setTitle("成就 " + (count * 100/Achievement.values().length) + "%");
+            achDialog.setTitle("成就 " + (count * 100 / Achievement.values().length) + "%");
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             achievementDesc = new TextView(this);
@@ -1301,10 +1141,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         int[] indexs = {37, 42, 24, 26, 27, 29, 30, 39, 98};
         int i = heroN.getRandom().nextInt(indexs.length);
         int index = indexs[i];
-        Cursor cursor = dbHelper.excuseSOL("select atk, hp, type, egg_rate, image from monster where id = '" + index + "'");
+        Cursor cursor = dbHelper.excuseSOL("select atk, hp, type, egg_rate, image, catch from monster where id = '" + index + "'");
         pet.setType(cursor.getString(cursor.getColumnIndex("type")));
         pet.setAtk(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk"))) + heroN.getBaseAttackValue() / 200 + 20);
         long hp = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))) / 2;
+        cursor.close();
         pet.setDef(hp + heroN.getBaseDefense() / 200 + 10);
         pet.setHp(hp + heroN.getRealHP() / 500 + 10);
         pet.setAtk_rise(heroN.ATR_RISE);
@@ -1684,7 +1525,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private void showRecipe() {
         AlertDialog dialog = new Builder(this).create();
         RecipeAdapter recipeAdapter = new RecipeAdapter();
-        dialog.setTitle("已发现的配方列表 " + (recipeAdapter.getCount() * 100/Recipe.getTotalCount()) + "%");
+        dialog.setTitle("已发现的配方列表 " + (recipeAdapter.getCount() * 100 / Recipe.getTotalCount()) + "%");
         ListView listView = new ListView(this);
         listView.setAdapter(recipeAdapter);
         dialog.setView(listView);
@@ -1741,7 +1582,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         // 英雄
         load();
 
-        monsterBook = new MonsterBook(this);
         View mainLayout = findViewById(R.id.main_game_activity);
 
         // 左侧战斗信息
@@ -1809,12 +1649,13 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         hatTextView = (TextView) findViewById(R.id.hat_view);
         hatTextView.setOnClickListener(this);
         onUsedPetLists = (TextView) findViewById(R.id.onuse_pet_list);
-        colButton = (Button)findViewById(R.id.col_button);
+        colButton = (Button) findViewById(R.id.col_button);
         colButton.setOnClickListener(this);
+        refreshCharacterName();
         refresh();
     }
 
-    public void refreshCharacterName(){
+    public void refreshCharacterName() {
         handler.sendEmptyMessage(123);
     }
 
@@ -1946,22 +1787,14 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             hatTextView.setText("未装备");
         }
 
-        if (maze.isSailed()) {
-            netButton.setBackgroundResource(R.drawable.huoyan_biankuang);
-        } else {
-            netButton.setBackgroundResource(0);
-        }
-        if (shopTipView != null) {
-            shopTipView.setText("锻造点数：" + heroN.getMaterial());
-        }
         StringBuilder pets = new StringBuilder();
         for (Pet pet : heroN.getPets()) {
             pets.append(pet.getFormatName()).append("<br>");
         }
         onUsedPetLists.setText(Html.fromHtml(pets.toString()));
-        if((heroN.getReincaCount()+1)%1000 == 0){
+        if ((heroN.getReincaCount() + 1) % 1000 == 0) {
             reniButton.setEnabled(true);
-        }else{
+        } else {
             reniButton.setEnabled(false);
         }
     }
@@ -2046,7 +1879,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 if (heroN.getAwardCount() < 3000 && alipay.getPayTime() > 0) {
                     handler.sendEmptyMessage(111);
                 } else if (heroN.getAwardCount() == 0) {
-                    handler.sendEmptyMessage(112);
+                    showFirstIn();
                 }
                 while (gameThreadRunning) {
                     try {
@@ -2065,6 +1898,15 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 LogHelper.logException(exp);
             }
         }
+    }
+
+    private void showFirstIn() {
+        handler.sendEmptyMessage(112);
+    }
+
+    public void showGiftChoose() {
+        GiftDialog dialog = new GiftDialog(context);
+        dialog.show();
     }
 
     private class MoveThread extends Thread {
@@ -2094,11 +1936,219 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
+            case R.id.ji_neng_button:
+                SkillMainDialog skillMainDialog = new SkillMainDialog();
+                skillMainDialog.show();
+                break;
+            case R.id.add_li_button:
+                final AddPointDialog addStrPointDialog = new AddPointDialog(context);
+                addStrPointDialog.setTitle("力量");
+                addStrPointDialog.show(new OnClickListener() {
+                                           @Override
+                                           public void onClick(View v) {
+                                               heroN.addStrength();
+                                               handler.sendEmptyMessage(0);
+                                               heroN.click(false);
+                                               addStrPointDialog.refresh();
+                                           }
+                                       }, new OnClickListener() {
+                                           @Override
+                                           public void onClick(View v) {
+                                               long str = heroN.getRandom().nextLong(heroN.getPoint() + 1);
+                                               heroN.addStrength(str);
+                                               heroN.addPoint(-str);
+                                               handler.sendEmptyMessage(0);
+                                               addStrPointDialog.refresh();
+                                           }
+                                       }, R.drawable.h_4
+                );
+                break;
+            case R.id.add_ti_button:
+                final AddPointDialog addLifePointDialog = new AddPointDialog(context);
+                addLifePointDialog.setTitle("体力");
+                addLifePointDialog.show(new OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                heroN.addLife();
+                                                handler.sendEmptyMessage(0);
+                                                heroN.click(false);
+                                                addLifePointDialog.refresh();
+                                            }
+                                        }, new OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                long life = heroN.getRandom().nextLong(heroN.getPoint() + 1);
+                                                heroN.addLife(life);
+                                                heroN.addPoint(-life);
+                                                handler.sendEmptyMessage(0);
+                                                heroN.click(false);
+                                                addLifePointDialog.refresh();
+                                            }
+                                        }, R.drawable.h_4
+                );
+                break;
+            case R.id.add_min_button:
+                final AddPointDialog addAgiPointDialog = new AddPointDialog(context);
+                addAgiPointDialog.setTitle("敏捷");
+                addAgiPointDialog.show(new OnClickListener() {
+                                           @Override
+                                           public void onClick(View v) {
+                                               heroN.addAgility();
+                                               handler.sendEmptyMessage(0);
+                                               heroN.click(false);
+                                               addAgiPointDialog.refresh();
+                                           }
+                                       }, new OnClickListener() {
+                                           @Override
+                                           public void onClick(View v) {
+                                               long agi = heroN.getRandom().nextLong(heroN.getPoint() + 1);
+                                               heroN.addAgility(agi);
+                                               heroN.addPoint(-agi);
+                                               handler.sendEmptyMessage(0);
+                                               heroN.click(false);
+                                               addAgiPointDialog.refresh();
+                                           }
+                                       }, R.drawable.h_4
+                );
+                break;
+            case R.id.fenpei_button:
+                AlertDialog fenpeiDialog = new Builder(context).create();
+                fenpeiDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                fenpeiDialog.show();
+                fenpeiDialog.setContentView(R.layout.shu_xin_fen_pei);
+                fenpeiDialog.findViewById(R.id.ji_neng_button).setOnClickListener(this);
+                fenpeiDialog.findViewById(R.id.add_li_button).setOnClickListener(this);
+                fenpeiDialog.findViewById(R.id.add_min_button).setOnClickListener(this);
+                fenpeiDialog.findViewById(R.id.add_ti_button).setOnClickListener(this);
+                break;
+            case R.id.wu_pin_button:
+                GoodsDialog goodsDialog = new GoodsDialog(context);
+                goodsDialog.show();
+                break;
+            case R.id.chong_wu_button:
+                saveHelper.savePet();
+                new PetDialog(context).show(heroN);
+                break;
+            case R.id.accessory_button:
+                showAccessory();
+                break;
+            case R.id.bag_button:
+                AlertDialog bagDialog = new Builder(context).create();
+                bagDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                bagDialog.show();
+                bagDialog.setContentView(R.layout.bag_layout);
+                bagDialog.findViewById(R.id.chong_wu_button).setOnClickListener(this);
+                bagDialog.findViewById(R.id.build_button).setOnClickListener(this);
+                bagDialog.findViewById(R.id.wu_pin_button).setOnClickListener(this);
+                bagDialog.findViewById(R.id.accessory_button).setOnClickListener(this);
+                break;
+            case R.id.dian_button://殿堂
+                showPalace();
+                break;
+            case R.id.shang_button://商店
+                ShopDialog shopDialog = new ShopDialog(context);
+                shopDialog.show();
+                break;
+            case R.id.swap_pet_button://换宠
+                try {
+                    new SwapPetMainDialog();
+                } catch (Exception e) {
+                    LogHelper.logException(e);
+                }
+                break;
+            case R.id.net_button:
+                AlertDialog netDialog = new Builder(context).create();
+                netDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                netDialog.show();
+                netDialog.setContentView(R.layout.liang_wang);
+                View shopButton = netDialog.findViewById(R.id.shang_button);
+                shopButton.setOnClickListener(this);
+                if(maze.isSailed()){
+                    shopButton.setBackgroundColor(R.drawable.yuanhuan_bak);
+                }else{
+                    shopButton.setBackgroundColor(R.color.toumin);
+                }
+                netDialog.findViewById(R.id.dian_button).setOnClickListener(this);
+                netDialog.findViewById(R.id.swap_pet_button).setOnClickListener(this);
+                break;
+            case R.id.zan_zu_button:
+                showPayDialog();
+                break;
+            case R.id.upload_button:
+                if (!uploading) {
+                    if (MazeContents.lastUpload + 100 <= heroN.getMaxMazeLev()) {
+                        showUpload();
+                    } else {
+                        AlertDialog uploadAlert = new Builder(context).create();
+                        uploadAlert.setMessage("还差" + (100 - heroN.getMaxMazeLev() + MazeContents.lastUpload) + "层");
+                        uploadAlert.setButton(DialogInterface.BUTTON_NEGATIVE, "继续努力", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        uploadAlert.show();
+                    }
+                }
+                break;
+            case R.id.update_button:
+                BmobUpdateAgent.setDialogListener(new BmobDialogButtonListener() {
+                    @Override
+                    public void onClick(int status) {
+                        try {
+                            switch (status) {
+                                case UpdateStatus.Update:
+                                    save();
+                                    Achievement.updater.enable(heroN);
+                                    break;
+                                case UpdateStatus.NotNow:
+                                    break;
+                                case UpdateStatus.Close://只有在强制更新状态下才会在更新对话框的右上方出现close按钮,如果用户不点击”立即更新“按钮，这时候开发者可做些操作，比如直接退出应用等
+                                    save();
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            LogHelper.logException(e);
+                        }
+                    }
+                });
+                BmobUpdateAgent.forceUpdate(context);
+                break;
+            case R.id.help_button:
+                AlertDialog helpDialog = new Builder(context).create();
+                helpDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                helpDialog.show();
+                helpDialog.setContentView(R.layout.zan_zu_layout);
+                helpDialog.findViewById(R.id.zan_zu_button).setOnClickListener(this);
+                helpDialog.findViewById(R.id.upload_button).setOnClickListener(this);
+                helpDialog.findViewById(R.id.update_button).setOnClickListener(this);
+                break;
             case R.id.wuxin_up:
                 showRecipe();
                 break;
             case R.id.wuxin_left:
-                //MonsterBook
+                MonsterBook book = new MonsterBook(context);
+                book.showBook();
                 break;
             case R.id.wuxin_right:
                 showAchievement();
@@ -2111,19 +2161,39 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 break;
             case R.id.col_button:
                 AlertDialog colDialog = new Builder(context).create();
-                colDialog.setContentView(R.layout.collection_layout);
-                colDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出",new DialogInterface.OnClickListener() {
+                colDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
                     }
                 });
                 colDialog.show();
-                colDialog.findViewById(R.id.wuxin_up).setOnClickListener(this);
-                colDialog.findViewById(R.id.wuxin_left).setOnClickListener(this);
-                colDialog.findViewById(R.id.wuxin_right).setOnClickListener(this);
-                colDialog.findViewById(R.id.wuxin_down_left).setOnClickListener(this);
-                colDialog.findViewById(R.id.wuxin_down_right).setOnClickListener(this);
+                colDialog.setContentView(R.layout.collection_layout);
+                View wxu = colDialog.findViewById(R.id.wuxin_up);
+                if (Recipe.getCurrentCount() * 100 / Recipe.getTotalCount() > 80) {
+                    wxu.setBackgroundResource(R.drawable.wuxin_up);
+                } else {
+                    wxu.setBackgroundColor(R.color.toumin);
+                }
+                wxu.setOnClickListener(this);
+                View wxl = colDialog.findViewById(R.id.wuxin_left);
+                wxl.setOnClickListener(this);
+                if (MonsterBook.getCurrentCount() * 100 / MonsterBook.getTotalCount() > 60) {
+                    wxl.setBackgroundResource(R.drawable.wuxin_left);
+                } else {
+                    wxl.setBackgroundColor(R.color.toumin);
+                }
+                View wxr = colDialog.findViewById(R.id.wuxin_right);
+                wxr.setOnClickListener(this);
+                if (Achievement.getCurrentCount() * 100 / Achievement.getTotalCount() > 90) {
+                    wxr.setBackgroundResource(R.drawable.wuxin_right);
+                } else {
+                    wxr.setBackgroundColor(R.color.toumin);
+                }
+                View wxdl = colDialog.findViewById(R.id.wuxin_down_left);
+                wxdl.setOnClickListener(this);
+                View wxdr = colDialog.findViewById(R.id.wuxin_down_right);
+                wxdr.setOnClickListener(this);
                 break;
             case R.id.up_h_armor:
                 heroN.upgradeArmor(100);
@@ -2154,13 +2224,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             case R.id.hat_view:
                 showAccessory();
                 break;
-            case R.id.forge_recipe_button:
-                showRecipe();
-                break;
-            case R.id.achievement_button:
-                showAchievement();
-                break;
-            case R.id.forge_button:
+            case R.id.build_button:
                 handler.sendEmptyMessage(103);
                 Intent intent = new Intent(this, ForgeActivity.class);
                 startActivity(intent);
@@ -2214,16 +2278,12 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 }
                 handler.sendEmptyMessage(0);
                 break;
-            case R.id.buy_button:
-                showPayDialog();
-                heroN.click(false);
-                break;
             case R.id.character_name:
             case R.id.character_itembar_contribute:
                 showNameDialog();
                 heroN.click(false);
                 break;
-            case R.id.pause_button:
+            case R.id.push_button:
                 handler.sendEmptyMessage(1);
                 heroN.click(false);
                 break;

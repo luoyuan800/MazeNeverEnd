@@ -97,7 +97,6 @@ public abstract class Builder {
             }
             addition.put(Effect.ADD_DODGE_RATE, 39);
             addition.put(Effect.ADD_PET_ABE, 0.03);
-            addition.put(Effect.START_BURST,3);
         }
         StringBuilder b = new StringBuilder();
         for (String s : names) {

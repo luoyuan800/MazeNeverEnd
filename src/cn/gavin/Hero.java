@@ -911,21 +911,7 @@ public class Hero implements BaseObject {
                 case ADD_PET_ABE:
                     setPetAbe(petAbe + value.floatValue() / 100f);
                     break;
-                case START_BURST:
-                    Skill startSkill = SkillFactory.getSkill("星爆", this);
-                    startSkill.setProbability(value);
-                    startSkill.setOnUsed(true, false);
-                    break;
-                case ICE_BURST:
-                    Skill iceSkill = SkillFactory.getSkill("冰爆", this);
-                    iceSkill.setProbability(value);
-                    iceSkill.setOnUsed(true, false);
-                    break;
-                case FEN_BURST:
-                    Skill wind = SkillFactory.getSkill("令风", this);
-                    wind.setProbability(value);
-                    wind.setOnUsed(true, false);
-                    break;
+
             }
         }
     }
@@ -985,21 +971,7 @@ public class Hero implements BaseObject {
                 case ADD_PET_ABE:
                     setPetAbe(petAbe - effect.getValue());
                     break;
-                case START_BURST:
-                    if (getItemSkill() != null && getItemSkill().getName().equals("星爆")) {
-                        setItemSkill(null);
-                    }
-                    break;
-                case ICE_BURST:
-                    if (getItemSkill() != null && getItemSkill().getName().equals("冰爆")) {
-                        setItemSkill(null);
-                    }
-                    break;
-                case FEN_BURST:
-                    if (getItemSkill() != null && getItemSkill().getName().equals("令风")) {
-                        setItemSkill(null);
-                    }
-                    break;
+
             }
         }
     }
@@ -1146,6 +1118,8 @@ public class Hero implements BaseObject {
                 } else if (reincaCount == 6) {
                     sixthSkillEnable = true;
                 }
+                gift = null;
+                MainGameActivity.context.showGiftChoose();
             }
         } catch (Exception e) {
             Toast.makeText(MainGameActivity.context, "数据异常！！转生失败！", Toast.LENGTH_SHORT).show();

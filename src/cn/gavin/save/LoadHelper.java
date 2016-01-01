@@ -5,20 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.util.Log;
-
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.util.Map;
-import java.util.UUID;
-
-import cn.gavin.Achievement;
-import cn.gavin.Armor;
-import cn.gavin.Element;
-import cn.gavin.Hero;
-import cn.gavin.Sword;
+import cn.gavin.*;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.activity.MainMenuActivity;
-import cn.gavin.utils.MazeContents;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
 import cn.gavin.forge.effect.Effect;
@@ -26,10 +15,15 @@ import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
-import cn.gavin.skill.SkillDialog;
 import cn.gavin.skill.SkillFactory;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Copyright 2015 gluo.
@@ -90,14 +84,14 @@ public class LoadHelper {
         heroN.setDefenseValue(preferences.getLong("baseDefense", 1));
         heroN.setClick(preferences.getLong("click", 0));
         heroN.setPoint(preferences.getLong("point", 0));
-        if(!preferences.contains("n_material")){
+        if (!preferences.contains("n_material")) {
             //第一次升级到1.8
             SharedPreferences.Editor editor = preferences.edit();
             editor.putLong("n_material", preferences.getLong("material", 0));
-            editor.putLong("o_material", preferences.getLong("material",0));
+            editor.putLong("o_material", preferences.getLong("material", 0));
             heroN.setMaterial(preferences.getLong("material", 0));
             editor.apply();
-        }else {
+        } else {
             heroN.setMaterial(preferences.getLong("n_material", 0));
         }
 
@@ -157,7 +151,7 @@ public class LoadHelper {
         heroN.setClickPointAward(preferences.getLong("clickPointAward", 0));
         heroN.setElement(Element.valueOf(preferences.getString("element", "无")));
         heroN.setPetSize(preferences.getInt("pet_size", 3));
-        if(heroN.getPetSize() > 20) heroN.setPetSize(20);
+        if (heroN.getPetSize() > 20) heroN.setPetSize(20);
         heroN.setPetRate(preferences.getFloat("pet_rate", 1.0f));
         heroN.setEggRate(preferences.getFloat("egg_rate", 200f));
         heroN.setEggStep(preferences.getLong("egg_step", 1));
@@ -181,7 +175,7 @@ public class LoadHelper {
         heroN.setPetAbe(preferences.getFloat("pet_abe", 0));
         heroN.setmV(preferences.getBoolean("mv", new Random().nextBoolean()));
         maze.setCsmgl(preferences.getInt("csm", 9977));
-        maze.setCatchPetNameContains(preferences.getString("filter_pet_name",""));
+        maze.setCatchPetNameContains(preferences.getString("filter_pet_name", ""));
         loadValue(heroN);
         MazeContents.hero = heroN;
         MazeContents.maze = maze;

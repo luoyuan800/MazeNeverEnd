@@ -173,4 +173,18 @@ public enum Achievement {
     public void setUnlockDesc(String unlockDesc) {
         this.unlockDesc = unlockDesc;
     }
+
+    public static int getCurrentCount() {
+        int count = 0;
+        for(Achievement achievement : values()){
+            if(achievement.isEnable()){
+                count ++;
+            }
+        }
+        return count;
+    }
+
+    public static int getTotalCount() {
+        return values().length;
+    }
 }

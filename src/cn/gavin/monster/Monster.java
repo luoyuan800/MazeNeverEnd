@@ -1,10 +1,6 @@
 package cn.gavin.monster;
 
 import android.database.Cursor;
-
-import java.util.Arrays;
-import java.util.List;
-
 import cn.gavin.Achievement;
 import cn.gavin.Element;
 import cn.gavin.Hero;
@@ -16,6 +12,9 @@ import cn.gavin.pet.Pet;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Copyright 2015 luoyuan.
@@ -108,8 +107,8 @@ public class Monster {
     }
 
     private static Monster buildDefaultDefender(Maze maze, Hero hero, Random random) {
-        long hp = (hero.getAttackValue() / 20) * (random.nextLong(maze.getLev() + 1)) + random.nextLong(hero.getUpperHp() + 1) + maze.getLev() * 1000;
-        long atk = (hero.getDefenseValue() + hero.getHp()) / 5 + maze.getLev() * 32 + random.nextLong(hero.getAttackValue() / 3 + maze.getLev() + 1);
+        long hp = (hero.getAttackValue() / 30) * (random.nextLong(maze.getLev() + 1)) + random.nextLong(hero.getUpperHp() + 1) + maze.getLev() * 1000;
+        long atk = (hero.getDefenseValue() + hero.getHp()) / 5 + maze.getLev() * 32 + random.nextLong(hero.getAttackValue() / 6 + maze.getLev() + 1);
         if (hp <= 0) hp = Integer.MAX_VALUE - 10;
         if (atk <= 0) hp = Integer.MAX_VALUE - 100;
         if (atk > hero.getUpperHp() + hero.getDefenseValue()) {
@@ -207,9 +206,10 @@ public class Monster {
         this.lastName = lastName;
     }
 
-    public Monster(){
+    public Monster() {
 
     }
+
     public Monster(Hero hero, Maze maze) {
         Random random = hero.getRandom();
         mazeLev = maze.getLev();
@@ -238,9 +238,22 @@ public class Monster {
             catchCount = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("catch")));
             meet_lev = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("meet_lev")));
             catch_lev = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("catch_lev")));
-            imageId = cursor.getInt(cursor.getColumnIndex("image"));
+            imageId = cursor.getInt(cursor.getColumnIndex("img"));
         } else {
-            //Build boss
+            firstName = FirstName.image;
+            secondName = SecondName.empty;
+            name = hero.getName();
+            hp = hero.getUpperHp() + hero.getUpperDef();
+            atk = hero.getUpperAtk();
+            this.silent = 80;
+            this.petsub = 75;
+            this.element = hero.getElement();
+            this.mazeLev = hero.getMaxMazeLev();
+            this.formatName(MazeContents.hero);
+            if (this.getHp() < 0) {
+                this.hp = Long.MAX_VALUE - 10000;
+            }
+            this.maxHP = this.hp;
         }
         long m1 = random.nextLong(hp + 1) / 180 + 5;
         long m2 = random.nextLong(atk + 1) / 409 + 10;
@@ -430,6 +443,7 @@ public class Monster {
         monster.element = hero.getElement();
         monster.mazeLev = hero.getMaxMazeLev();
         monster.formatName(MazeContents.hero);
+        monster.atk = monster.getAtk() * 2;
         if (monster.getHp() < 0) {
             monster.hp = Long.MAX_VALUE - 10000;
         }

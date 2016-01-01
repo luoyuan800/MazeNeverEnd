@@ -86,26 +86,8 @@ public class DBHelper {
     public void onCreate(SQLiteDatabase db) {
         try {
             db.beginTransaction();
-            String createTable = "CREATE TABLE monster(" +
-                    "name TEXT NOT NULL PRIMARY KEY," +
-                    "max_hp_name TEXT," +
-                    "max_atk_name TEXT," +
-                    "max_hp_defeat CHAR(5)," +
-                    "max_atk_defeat CHAR(5)," +
-                    "max_atk_atk TEXT," +
-                    "max_hp_atk TEXT," +
-                    "max_hp_hp TEXT," +
-                    "max_atk_hp TEXT," +
-                    "max_atk_lev TEXT," +
-                    "max_atk_battle TEXT," +
-                    "max_hp_battle TEXT," +
-                    "max_hp_lev TEXT," +
-                    "defeat TEXT," +
-                    "defeated TEXT" +
-                    ")";
 
-            db.execSQL(createTable);
-            createTable = "CREATE TABLE skill(" +
+            String createTable = "CREATE TABLE skill(" +
                     "name TEXT NOT NULL PRIMARY KEY," +
                     "is_active CHAR(50)," +
                     "is_on_use CHAR(5)," +
@@ -115,7 +97,6 @@ public class DBHelper {
                     "addition_harm TEXT" +
                     ")";
             db.execSQL(createTable);
-            db.execSQL("CREATE UNIQUE INDEX monster_index ON monster (name)");
             createTable = "CREATE TABLE npc(" +
                     "name TEXT NOT NULL PRIMARY KEY," +
                     "atk TEXT," +

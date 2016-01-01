@@ -18,7 +18,7 @@ import cn.gavin.utils.StringUtils;
 public class MonsterDB {
     public static final int total = 103;
 
-    private static List<Monster> loadMonster(){
+    public static List<Monster> loadMonster(){
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("select * from monster");
         List<Monster> monsters = new ArrayList<Monster>();
         while (!cursor.isAfterLast()){
@@ -35,6 +35,7 @@ public class MonsterDB {
             monster.setBaseAtk(StringUtils.toInt(cursor.getString(cursor.getColumnIndex("atk"))));
             monster.setBaseHp(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))));
             monsters.add(monster);
+            cursor.moveToNext();
         }
         cursor.close();
         return  monsters;
@@ -51,7 +52,6 @@ public class MonsterDB {
     }
 
     public static void createMonsterTable(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("DELETE TABLE IF EXIST monster");
         String createTable = "CREATE TABLE if not exists monster(" +
                 "id NUMBER NOT NULL PRIMARY KEY," +
                 "type TEXT," +
@@ -67,11 +67,12 @@ public class MonsterDB {
                 "catch_lev TEXT," +
                 "egg_rate TEXT," +
                 "pet_sub TEXT," +
-                "des TEXT" +
+                "des TEXT," +
                 "img TEXT" +
                 ")";
         sqLiteDatabase.execSQL(createTable);
         sqLiteDatabase.execSQL("CREATE UNIQUE INDEX monster_name_index ON goods (name)");
+        addMonster(sqLiteDatabase);
     }
 
     public static void addMonster(SQLiteDatabase database) {

@@ -26,7 +26,6 @@ import cn.gavin.utils.StringUtils;
 public class PetDB {
 
     public static void createDB(SQLiteDatabase db) {
-        db.execSQL("DELETE TABLE IF EXIST pet");
         String sql = "CREATE TABLE pet(" +
                 "id TEXT NOT NULL PRIMARY KEY," +
                 "name TEXT NOT NULL," +
@@ -48,7 +47,7 @@ public class PetDB {
                 "owner TEXT," +
                 "owner_id TEXT," +
                 "color TEXT," +
-                "index INTEGER," +
+                "monster_index INTEGER," +
                 "egg_rate TEXT," +
                 "image INTEGER," +
                 "farther TEXT," +
@@ -75,7 +74,7 @@ public class PetDB {
 
     public static void save(Pet... pets) {
         String base = "REPLACE INTO pet (id, name, type, intimacy, element, skill, skill_count, " +
-                "death_c, atk, def, hp,u_hp, lev, farther, mother, sex, atk_rise, hp_rise, def_rise, owner, color, owner_id, index, egg_rate, imge) " +
+                "death_c, atk, def, hp,u_hp, lev, farther, mother, sex, atk_rise, hp_rise, def_rise, owner, color, owner_id, monster_index, egg_rate, image) " +
                 "values ('%s', '%s', '%s','%s','%s','%s','%s'," +
                 "'%s','%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s','%s', '%s','%s', '%s', '%s', '%s', '%s')";
         for (Pet pet : pets) {
@@ -111,7 +110,7 @@ public class PetDB {
     }
 
     private static void buildPet(Pet pet, Cursor cursor) {
-        pet.setIndex(cursor.getInt(cursor.getColumnIndex("index")));
+        pet.setIndex(cursor.getInt(cursor.getColumnIndex("monster_index")));
         pet.setEggRate(StringUtils.toFloat(cursor.getString(cursor.getColumnIndex("egg_rate"))));
         pet.setName(cursor.getString(cursor.getColumnIndex("name")));
         pet.setType(cursor.getString(cursor.getColumnIndex("type")));

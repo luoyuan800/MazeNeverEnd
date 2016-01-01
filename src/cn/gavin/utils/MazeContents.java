@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
-
 import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.db.DBHelper;
@@ -12,7 +11,6 @@ import cn.gavin.forge.effect.Effect;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.pet.Pet;
-import cn.gavin.skill.SkillDialog;
 
 /**
  * Copyright 2015 gluo.
@@ -120,7 +118,7 @@ public class MazeContents {
     }
 
     public static int getIndex(String name) {
-        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT id FROM palace WHERE type = '" + name + "'");
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT id FROM monster WHERE type = '" + name + "'");
         try {
             if (!cursor.isAfterLast()) {
                 return cursor.getInt(cursor.getColumnIndex("id"));
