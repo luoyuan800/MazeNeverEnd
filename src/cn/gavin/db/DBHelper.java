@@ -62,7 +62,7 @@ public class DBHelper {
 
     private SQLiteDatabase openOrCreateInnerDB() {
         database = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
-        if(database.getVersion() < 20){
+        if(database.getVersion() != 0 && database.getVersion() < 20){
             context.deleteDatabase(DB_NAME);
             database = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
         }

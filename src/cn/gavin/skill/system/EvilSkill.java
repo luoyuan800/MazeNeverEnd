@@ -22,6 +22,7 @@ import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.EvilHide;
 import cn.gavin.skill.type.EvilReKill;
 import cn.gavin.skill.type.PropertySkill;
+import cn.gavin.utils.MathUtils;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -523,7 +524,10 @@ public class EvilSkill extends SkillLayout {
                     if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 1.1f);
                     }
-                    if (iskll.getAdditionHarm() < hero.getBaseAttackValue() * 100 && iskll.getAdditionHarm() < Integer.MAX_VALUE) {
+                    long maxHp = MathUtils.getMaxValueByRiseAndLev(hero.MAX_HP_RISE, hero.getMaxMazeLev());
+                    long maxDef = MathUtils.getMaxValueByRiseAndLev(hero.DEF_RISE, hero.getMaxMazeLev());
+                    long maxAtk = MathUtils.getAvgValueByRiseAndLev(hero.ATR_RISE, hero.getMaxMazeLev());
+                    if (iskll.getAdditionHarm() < (maxAtk + maxHp + maxDef) * 2 && iskll.getAdditionHarm() < Integer.MAX_VALUE) {
                         iskll.setBaseHarm(iskll.getBaseHarm() * 2 + 2000);
                         iskll.setAdditionHarm(iskll.getAdditionHarm() * 2 + 4000);
                     }

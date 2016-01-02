@@ -115,12 +115,13 @@ public class Pet extends Base {
     public static Pet catchPet(Monster monster) {
         Random random = new Random();
         double rate = (((monster.getMaxHP() * 3 - monster.getMaxHP() *
-                MazeContents.hero.getPetRate() * 2) / (monster.getMaxHP() * 3 + 1)) * monster.getPetRate() *
+                MazeContents.hero.getPetRate() * 2) / (monster.getMaxHP() * 3 + 1))
+                * monster.getPetRate() *
                 (2 - MazeContents.hero.getPetRate())) * 10 / (255 * MazeContents.hero.getPets().size() + 1);
         if (rate >= 100) {
             rate = 90;
         }
-        double current = random.nextInt(100) - 1 + random.nextDouble() + random.nextInt(PetDB.getPetCount(null) + 1) / 10;
+        double current = random.nextInt(100) + random.nextDouble() + random.nextInt(PetDB.getPetCount(null) + 1) / 10;
         if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 17 && rate > current) {
             Pet pet = cPet(monster, random);
             if (pet == null) return null;

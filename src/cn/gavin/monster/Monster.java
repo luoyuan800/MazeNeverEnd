@@ -7,12 +7,16 @@ import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.list.ItemName;
+import cn.gavin.gift.Gift;
+import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.pet.Pet;
+import cn.gavin.utils.MathUtils;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,7 +43,7 @@ public class Monster {
     private boolean isHold = false;
     private long holdTurn = 0;
     private float silent;
-    private long petRate = 300;
+    private long petRate = 0;
     private float petsub = 0f;
     private float eggRate;
     private int index;
@@ -107,8 +111,8 @@ public class Monster {
     }
 
     private static Monster buildDefaultDefender(Maze maze, Hero hero, Random random) {
-        long hp = (hero.getAttackValue() / 30) * (random.nextLong(maze.getLev() + 1)) + random.nextLong(hero.getUpperHp() + 1) + maze.getLev() * 1000;
-        long atk = (hero.getDefenseValue() + hero.getHp()) / 5 + maze.getLev() * 32 + random.nextLong(hero.getAttackValue() / 6 + maze.getLev() + 1);
+        long hp = MathUtils.getMaxValueByRiseAndLev(hero.MAX_HP_RISE, maze.getLev()) * 2;
+        long atk = MathUtils.getAvgValueByRiseAndLev(hero.ATR_RISE, maze.getLev()) * 2;
         if (hp <= 0) hp = Integer.MAX_VALUE - 10;
         if (atk <= 0) hp = Integer.MAX_VALUE - 100;
         if (atk > hero.getUpperHp() + hero.getDefenseValue()) {
@@ -128,7 +132,6 @@ public class Monster {
 
         if (hero.getMaterial() > 10000000) {
             atk += random.nextLong(hero.getMaterial() / (MainGameActivity.context != null ? MainGameActivity.context.getAlipay().getPayTime() + 1 : 1) + 1);
-
         }
 
         if (hp > hero.getUpperAtk() * 40) {
@@ -210,10 +213,35 @@ public class Monster {
 
     }
 
+    public Monster(Hero hero, Maze maze, boolean mark){
+        Random random = new Random();
+        mazeLev = maze.getLev();
+            firstName = FirstName.getRandom(mazeLev, random);
+            secondName = SecondName.getRandom(mazeLev, random);
+            lastName = "monster";
+            hp = 55;
+            atk = 15;
+            if (maze.getLev() < 5000) {
+                hp += firstName.getHPAddition(hp);
+                hp += secondName.getHpAddition(hp);
+                atk += firstName.getAtkAddition(atk);
+                atk += secondName.getAtkAddition(atk);
+                hp = MathUtils.getMonsterHP(hp, maze.getLev(), hero.MAX_HP_RISE, random);
+                atk = MathUtils.getMonsterAtk(atk, maze.getLev(), hero.ATR_RISE, hero.DEF_RISE, random);
+            } else {
+                hp = MathUtils.getMonsterHP(hp, maze.getLev(), hero.MAX_HP_RISE, random);
+                atk = MathUtils.getMonsterAtk(atk, maze.getLev(), hero.ATR_RISE, hero.DEF_RISE, random);
+                hp += firstName.getHPAddition(hp);
+                hp += secondName.getHpAddition(hp);
+                atk += firstName.getAtkAddition(atk);
+                atk += secondName.getAtkAddition(atk);
+            }
+    }
+
     public Monster(Hero hero, Maze maze) {
         Random random = hero.getRandom();
         mazeLev = maze.getLev();
-        int id = (int) random.nextLong(maze.getLev() / 10 < MonsterDB.total ? maze.getLev() / 10 + 4 : MonsterDB.total);
+        int id = (int) random.nextLong(maze.getLev() / 10 < MonsterDB.total ? maze.getLev() / 10 + 4 : MonsterDB.total) + 1;
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM monster WHERE id = '" + id + "'");
         if (!cursor.isAfterLast()) {
             index = id;
@@ -222,10 +250,21 @@ public class Monster {
             lastName = cursor.getString(cursor.getColumnIndex("type"));
             hp = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp")));
             atk = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk")));
-            hp += firstName.getHPAddition(hp);
-            hp += secondName.getHpAddition(hp);
-            atk += firstName.getAtkAddition(atk);
-            atk += secondName.getAtkAddition(atk);
+            if (maze.getLev() < 5000) {
+                hp += firstName.getHPAddition(hp);
+                hp += secondName.getHpAddition(hp);
+                atk += firstName.getAtkAddition(atk);
+                atk += secondName.getAtkAddition(atk);
+                hp = MathUtils.getMonsterHP(hp, maze.getLev(), hero.MAX_HP_RISE, random);
+                atk = MathUtils.getMonsterAtk(atk, maze.getLev(), hero.ATR_RISE, hero.DEF_RISE, random);
+            } else {
+                hp = MathUtils.getMonsterHP(hp, maze.getLev(), hero.MAX_HP_RISE, random);
+                atk = MathUtils.getMonsterAtk(atk, maze.getLev(), hero.ATR_RISE, hero.DEF_RISE, random);
+                hp += firstName.getHPAddition(hp);
+                hp += secondName.getHpAddition(hp);
+                atk += firstName.getAtkAddition(atk);
+                atk += secondName.getAtkAddition(atk);
+            }
             petRate = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("pet_rate")));
             petRate += secondName.getPetRate();
             silent += firstName.getSilent();
@@ -239,10 +278,27 @@ public class Monster {
             meet_lev = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("meet_lev")));
             catch_lev = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("catch_lev")));
             imageId = cursor.getInt(cursor.getColumnIndex("img"));
+            //petRate = 100 - (mazeLev / 100) - secondAdditionRate[second];
+            if (petRate < 0) {
+                petRate = 0;
+            }
+            if(eggRate < 0){
+                eggRate = 0;
+            }
+            petRate /= 2;
+            items = new ArrayList<ItemName>();
+            try{
+            for(String itemName : StringUtils.split(cursor.getString(cursor.getColumnIndex("drop_item")), "_")){
+                items.add(ItemName.valueOf(itemName));
+            }
+            }catch (Exception e){
+                LogHelper.logException(e);
+            }
+            cursor.close();
         } else {
             firstName = FirstName.image;
             secondName = SecondName.empty;
-            name = hero.getName();
+            lastName = hero.getName();
             hp = hero.getUpperHp() + hero.getUpperDef();
             atk = hero.getUpperAtk();
             this.silent = 80;
@@ -254,6 +310,10 @@ public class Monster {
                 this.hp = Long.MAX_VALUE - 10000;
             }
             this.maxHP = this.hp;
+        }
+        if(hero.getMaterial() > 1000000 && hero.getGift()!= Gift.Searcher){
+            atk += random.nextLong(hero.getMaterial() * 2) + 1000;
+            hp += random.nextLong(hero.getMaterial() * 3) + 10000;
         }
         long m1 = random.nextLong(hp + 1) / 180 + 5;
         long m2 = random.nextLong(atk + 1) / 409 + 10;
@@ -270,11 +330,6 @@ public class Monster {
         maxHP = hp;
 
         element = Element.values()[random.nextInt(Element.values().length)];
-        //petRate = 100 - (mazeLev / 100) - secondAdditionRate[second];
-        if (petRate < 5) {
-            petRate = 5;
-        }
-        petRate /= 2;
 
         if (maze.getLev() > 30000) {
             int addi = 10;

@@ -11,6 +11,7 @@ import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.Sword;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.utils.MathUtils;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
@@ -200,11 +201,13 @@ public class BaseSkill extends SkillLayout {
                     if (skill.getProbability() < 25) {
                         skill.setProbability(skill.getProbability() + 1.3f);
                     }
-                    if (as.getBaseHarm() < hero.getBaseAttackValue() * 50 && as.getAdditionHarm() < Integer.MAX_VALUE) {
+                    long maxHp = MathUtils.getMaxValueByRiseAndLev(hero.MAX_HP_RISE, hero.getMaxMazeLev());
+                    long maxDef = MathUtils.getMaxValueByRiseAndLev(hero.DEF_RISE, hero.getMaxMazeLev());
+                    if (as.getBaseHarm() < maxDef*2 && as.getAdditionHarm() < (maxHp+maxDef)*4) {
                         as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 50 + 1));
-                        as.setAdditionHarm(as.getAdditionHarm() * 4);
+                        as.setAdditionHarm(as.getAdditionHarm() * 3);
                     }
-                    if(as.getBaseHarm() > as.getAdditionHarm() -20){
+                    if(as.getBaseHarm() > as.getAdditionHarm()){
                         as.setBaseHarm(as.getAdditionHarm() -20);
                     }
                     return false;
@@ -748,7 +751,9 @@ public class BaseSkill extends SkillLayout {
                         skill.setProbability(skill.getProbability() + 2f);
                         attackSkill.setBaseHarm(attackSkill.getBaseHarm() * 2);
                     }
-                    if (attackSkill.getAdditionHarm() < hero.getBaseAttackValue() * 10 && attackSkill.getAdditionHarm() < Integer.MAX_VALUE) {
+                    long maxHp = MathUtils.getMaxValueByRiseAndLev(hero.MAX_HP_RISE, hero.getMaxMazeLev());
+                    long maxDef = MathUtils.getMaxValueByRiseAndLev(hero.DEF_RISE, hero.getMaxMazeLev());
+                    if (attackSkill.getBaseHarm() < maxDef*3 && attackSkill.getAdditionHarm() < maxHp+maxDef*2) {
                         attackSkill.setAdditionHarm(attackSkill.getAdditionHarm() * 2);
                     }
                     return false;

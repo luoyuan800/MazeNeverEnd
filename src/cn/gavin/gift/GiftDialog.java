@@ -19,15 +19,16 @@ public class GiftDialog {
 
     public GiftDialog(MainGameActivity context) {
         mainDialog = new AlertDialog.Builder(context).create();
-        mainDialog.setTitle("选择一个天赋");
-        mainDialog.setCancelable(false);
-        mainDialog.setCanceledOnTouchOutside(false);
+
         this.context = context;
     }
 
     public void show() {
         mainDialog.show();
         mainDialog.setContentView(R.layout.gift_list);
+        mainDialog.setTitle("选择一个天赋");
+        mainDialog.setCancelable(false);
+        mainDialog.setCanceledOnTouchOutside(false);
         Button giftButton = (Button) mainDialog.findViewById(R.id.hero_heart);
         if (giftButton != null) {
             giftButton.setOnClickListener(buildDetailAction(Gift.HeroHeart, new DialogInterface.OnClickListener() {

@@ -38,11 +38,11 @@ public enum FirstName {
         this.eggRate = eggRate;
     }
     public long getAtkAddition(long atk) {
-        return (long) (atk * (double)atkPercent);
+        return (long) (atk * (double)atkPercent/100);
     }
 
     public long getHPAddition(long hp) {
-        return (long) (hp * (double)hpPercent);
+        return (long) (hp * (double)hpPercent/100);
     }
     public float getSilent(){
         return silent;

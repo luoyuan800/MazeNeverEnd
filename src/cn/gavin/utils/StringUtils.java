@@ -8,11 +8,15 @@ public class StringUtils {
         Double value = 0d;
         if(num > 100000000){
             value = num/100000000d;
-            return String.format("%.5f", value) + "亿";
+            return String.format("%.1f", value) + "亿";
+        }
+        if(num > 10000000){
+            value = num/10000000d;
+            return String.format("%.1f", value) + "千万";
         }
         if(num > 10000){
             value = num/10000d;
-            return String.format("%.3f", value) + "万";
+            return String.format("%.1f", value) + "万";
         }
         return num + "";
     }

@@ -17,6 +17,7 @@ import android.os.*;
 import android.text.Html;
 import android.text.InputFilter;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
@@ -62,6 +63,7 @@ import cn.gavin.upload.CdKey;
 import cn.gavin.upload.PalaceObject;
 import cn.gavin.upload.Upload;
 import cn.gavin.utils.MazeContents;
+import cn.gavin.utils.ScreenUtils;
 import cn.gavin.utils.StringUtils;
 import cn.gavin.utils.ui.AddPointDialog;
 import cn.gavin.utils.ui.CircleMenu;
@@ -146,6 +148,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private TextView onUsedPetLists;
     private Button reniButton;
     private Button colButton;
+    private TextView mainContriAgi;
+    private TextView mainContriStr;
+    private TextView mainContriLife;
 
 
     //Get Function
@@ -1614,6 +1619,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         mainContriHp = (TextView) findViewById(R.id.main_contri_hp);
         mainContriAtt = (TextView) findViewById(R.id.main_contri_att);
         mainContriDef = (TextView) findViewById(R.id.main_contri_def);
+        mainContriLife = (TextView) findViewById(R.id.life_value);
+        mainContriStr = (TextView) findViewById(R.id.str_value);
+        mainContriAgi = (TextView) findViewById(R.id.agi_value);
         swordLev = (TextView) findViewById(R.id.sword_level);
         armorLev = (TextView) findViewById(R.id.armor_level);
         heroPointValue = (TextView) findViewById(R.id.hero_points);
@@ -1670,6 +1678,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 StringUtils.formatNumber(heroN.getUpperHp()));
         mainContriAtt.setText(StringUtils.formatNumber(heroN.getUpperAtk()));
         mainContriDef.setText(StringUtils.formatNumber(heroN.getUpperDef()));
+        mainContriLife.setText(StringUtils.formatNumber(heroN.getPower()));
+        mainContriStr.setText(StringUtils.formatNumber(heroN.getStrength()));
+        mainContriAgi.setText(StringUtils.formatNumber(heroN.getAgility()));
         swordLev.setText(heroN.getSword() + "+" + heroN.getSwordLev());
         armorLev.setText(heroN.getArmor() + "+" + heroN.getArmorLev());
         mainContriCurMaterial.setText(StringUtils.formatNumber(heroN.getMaterial()));
@@ -2019,8 +2030,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         dialogInterface.dismiss();
                     }
                 });
+                View shuxunView = View.inflate(context, R.layout.shu_xin_fen_pei, (ViewGroup) context.findViewById(R.id.shu_xin_den_pei_root));
+                fenpeiDialog.setView(shuxunView);
                 fenpeiDialog.show();
-                fenpeiDialog.setContentView(R.layout.shu_xin_fen_pei);
+                //fixDialogSize(fenpeiDialog, 320, 300);
                 fenpeiDialog.findViewById(R.id.ji_neng_button).setOnClickListener(this);
                 fenpeiDialog.findViewById(R.id.add_li_button).setOnClickListener(this);
                 fenpeiDialog.findViewById(R.id.add_min_button).setOnClickListener(this);
@@ -2045,8 +2058,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         dialogInterface.dismiss();
                     }
                 });
+                View bagView = View.inflate(context, R.layout.bag_layout, (ViewGroup) context.findViewById(R.id.bag_root));
+                bagDialog.setView(bagView);
                 bagDialog.show();
-                bagDialog.setContentView(R.layout.bag_layout);
+                //fixDialogSize(bagDialog, 200, 200);
                 bagDialog.findViewById(R.id.chong_wu_button).setOnClickListener(this);
                 bagDialog.findViewById(R.id.build_button).setOnClickListener(this);
                 bagDialog.findViewById(R.id.wu_pin_button).setOnClickListener(this);
@@ -2074,8 +2089,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         dialogInterface.dismiss();
                     }
                 });
+                View netView = View.inflate(context, R.layout.liang_wang, (ViewGroup) context.findViewById(R.id.lian_wang_root));
+                netDialog.setView(netView);
                 netDialog.show();
-                netDialog.setContentView(R.layout.liang_wang);
+                //fixDialogSize(netDialog, 200, 200);
                 View shopButton = netDialog.findViewById(R.id.shang_button);
                 shopButton.setOnClickListener(this);
                 if(maze.isSailed()){
@@ -2137,8 +2154,10 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         dialogInterface.dismiss();
                     }
                 });
+                View helpView = View.inflate(context, R.layout.zan_zu_layout, (ViewGroup) context.findViewById(R.id.zan_zu_root));
+                helpDialog.setView(helpView);
                 helpDialog.show();
-                helpDialog.setContentView(R.layout.zan_zu_layout);
+                //fixDialogSize(helpDialog, 200, 200);
                 helpDialog.findViewById(R.id.zan_zu_button).setOnClickListener(this);
                 helpDialog.findViewById(R.id.upload_button).setOnClickListener(this);
                 helpDialog.findViewById(R.id.update_button).setOnClickListener(this);
@@ -2161,14 +2180,16 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 break;
             case R.id.col_button:
                 AlertDialog colDialog = new Builder(context).create();
+                View colView = View.inflate(context, R.layout.collection_layout, (ViewGroup) context.findViewById(R.id.collection_root));
                 colDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
                     }
                 });
+                colDialog.setView(colView);
                 colDialog.show();
-                colDialog.setContentView(R.layout.collection_layout);
+                //fixDialogSize(colDialog, 233, 233);
                 View wxu = colDialog.findViewById(R.id.wuxin_up);
                 if (Recipe.getCurrentCount() * 100 / Recipe.getTotalCount() > 80) {
                     wxu.setBackgroundResource(R.drawable.wuxin_up);
@@ -2308,6 +2329,18 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             default:
                 break;
         }
+    }
+
+    private void fixDialogSize(AlertDialog colDialog, int width, int height) {
+        WindowManager.LayoutParams params =
+
+                colDialog.getWindow().getAttributes();
+
+        params.width = ScreenUtils.getRawSize(TypedValue.COMPLEX_UNIT_DIP, width, context);
+
+        params.height = ScreenUtils.getRawSize(TypedValue.COMPLEX_UNIT_DIP, height, context);
+
+        colDialog.getWindow().setAttributes(params);
     }
 
     @Override

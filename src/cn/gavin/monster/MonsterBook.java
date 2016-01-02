@@ -51,17 +51,17 @@ public class MonsterBook {
                         monsterName.setText(monster.getType());
                         monsterDesc.setText(monster.getDesc());
                         monsterImg.setImageResource(monster.getImageId());
-                        baseAtk.setText(StringUtils.formatNumber(monster.getBaseAtk()));
-                        basehp.setText(StringUtils.formatNumber(monster.getBaseHp()));
-                        baseEggRate.setText(monster.getEggRate() + "");
-                        basePetRate.setText(monster.getPetRate() + "");
+                        baseAtk.setText("基础攻击：" + StringUtils.formatNumber(monster.getBaseAtk()));
+                        basehp.setText("基础HP：" + StringUtils.formatNumber(monster.getBaseHp()));
+                        baseEggRate.setText("生蛋率：" + monster.getEggRate());
+                        basePetRate.setText("捕获率：" + monster.getPetRate());
                     } else {
                         monsterDesc.setText("???");
-                        monsterImg.setImageResource(0);
-                        baseAtk.setText("???");
-                        basehp.setText("???");
-                        baseEggRate.setText("??");
-                        basePetRate.setText("??");
+                        monsterImg.setImageResource(R.drawable.wenhao);
+                        baseAtk.setText("基础攻击：???");
+                        basehp.setText("基础HP：???");
+                        baseEggRate.setText("生蛋率：??");
+                        basePetRate.setText("捕获率：??");
                     }
                     if (monster.getMeet_lev() > 0) {
                         monsterName.setText(monster.getType());
@@ -102,18 +102,17 @@ public class MonsterBook {
         defeatCount = (TextView) view.findViewById(R.id.defeat_count_text);
         monsterImg = (ImageView) view.findViewById(R.id.head_png);
         wheelView = (WheelView) view.findViewById(R.id.monster_name_list);
-        monsters = MonsterDB.loadMonster();
-        List<String> names = new ArrayList<String>(monsters.size());
+        List<Monster> allMonster = MonsterDB.loadMonster();
+        monsters = new ArrayList<Monster>(allMonster.size());
+        List<String> names = new ArrayList<String>(allMonster.size());
         int knownCount = 0;
-        for (Monster monster : monsters) {
+        for (Monster monster : allMonster) {
             if (monster.getMeet_lev() > 0) {
                 names.add(monster.getType());
+                monsters.add(monster);
                 knownCount++;
-            } else {
-                names.add("???");
             }
         }
-        alertDialog.setTitle("怪物图鉴 " + (knownCount/monsters.size() * 100) + "%");
         wheelView.setItems(names);
         wheelView.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener() {
             @Override
@@ -127,6 +126,7 @@ public class MonsterBook {
             }
         });
         alertDialog.setView(view);
+        alertDialog.setTitle("怪物图鉴 " + (knownCount/allMonster.size() * 100) + "%");
         alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
 
             @Override
@@ -134,11 +134,11 @@ public class MonsterBook {
                 alertDialog.dismiss();
             }
         });
-        alertDialog.setTitle("怪物图鉴");
     }
 
     public void showBook() {
         alertDialog.show();
+        handler.sendEmptyMessage(0);
     }
 
     public static int getCurrentCount() {

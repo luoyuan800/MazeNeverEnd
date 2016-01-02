@@ -25,6 +25,43 @@ public class MathUtils {
         if (levR > 0) {
             randomValue /= levR;
         }
+        if (lev < 1000) {
+            switch ((int)lev / 50) {
+                case 0:
+                    randomValue/=30;
+                    break;
+                case 1:
+                    randomValue/=25;
+                    break;
+                case 2:
+                    randomValue/=20;
+                    break;
+                case 3:
+                    randomValue/=20;
+                    break;
+                case 4:
+                    randomValue/=20;
+                    break;
+                case 5:
+                    randomValue/=15;
+                    break;
+                case 6:
+                    randomValue/=15;
+                    break;
+                case 7:
+                    randomValue/=10;
+                    break;
+                case 8:
+                    randomValue/=5;
+                    break;
+                case 9:
+                    randomValue/=5;
+                    break;
+                case 10:
+                    randomValue/=2;
+                    break;
+            }
+        }
         if (randomValue > 0) {
             return randomValue;
         } else {
@@ -42,37 +79,37 @@ public class MathUtils {
         if (lev < 1000) {
             switch ((int)lev / 50) {
                 case 0:
-                    randomValue/=20;
+                    randomValue/=60;
                     break;
                 case 1:
-                    randomValue/=15;
+                    randomValue/=50;
                     break;
                 case 2:
-                    randomValue/=10;
+                    randomValue/=50;
                     break;
                 case 3:
-                    randomValue/=10;
+                    randomValue/=45;
                     break;
                 case 4:
-                    randomValue/=10;
+                    randomValue/=30;
                     break;
                 case 5:
-                    randomValue/=5;
+                    randomValue/=30;
                     break;
                 case 6:
-                    randomValue/=5;
+                    randomValue/=20;
                     break;
                 case 7:
-                    randomValue/=5;
+                    randomValue/=10;
                     break;
                 case 8:
-                    randomValue/=5;
+                    randomValue/=10;
                     break;
                 case 9:
-                    randomValue/=2;
+                    randomValue/=5;
                     break;
                 case 10:
-                    randomValue/=2;
+                    randomValue/=5;
                     break;
             }
         }

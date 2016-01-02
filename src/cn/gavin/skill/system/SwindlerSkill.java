@@ -19,6 +19,7 @@ import cn.gavin.skill.expression.UseExpression;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.PropertySkill;
+import cn.gavin.utils.MathUtils;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -315,12 +316,17 @@ public class SwindlerSkill extends SkillLayout {
             final AttackSkill iskll = new AttackSkill() {
                 public void setActive(boolean active) {
                     if (active) {
-                        long baseHarm = getHero().getRandom().nextLong((hero.getClick() + hero.getBaseDefense()) * hero.getMaxMazeLev() + 1) + 100;
+                        long maxHp = MathUtils.getMaxValueByRiseAndLev(hero.MAX_HP_RISE, hero.getMaxMazeLev());
+                        long maxDef = MathUtils.getMaxValueByRiseAndLev(hero.DEF_RISE, hero.getMaxMazeLev());
+                        long maxAtk = MathUtils.getAvgValueByRiseAndLev(hero.ATR_RISE, hero.getMaxMazeLev());
+                        long baseHarm = getHero().getRandom().nextLong((hero.getClick() +  (maxDef + maxAtk + maxHp)/3
+                                + 1) + 100);
                         if (baseHarm < 0) {
                             baseHarm = Integer.MAX_VALUE / 100;
                         }
                         setBaseHarm(baseHarm);
-                        long additionHarm = getHero().getRandom().nextLong((hero.getClick() + hero.getBaseAttackValue()) * hero.getMaxMazeLev() + 1) + 100;
+                        long additionHarm = getHero().getRandom().nextLong((hero.getClick() + maxAtk + maxHp + maxDef
+                                + 1) + 100);
                         if (additionHarm < 0) {
                             additionHarm = Integer.MAX_VALUE / 2;
                         }
