@@ -53,8 +53,8 @@ public class MonsterBook {
                         monsterImg.setImageResource(monster.getImageId());
                         baseAtk.setText("基础攻击：" + StringUtils.formatNumber(monster.getBaseAtk()));
                         basehp.setText("基础HP：" + StringUtils.formatNumber(monster.getBaseHp()));
-                        baseEggRate.setText("生蛋率：" + monster.getEggRate());
-                        basePetRate.setText("捕获率：" + monster.getPetRate());
+                        baseEggRate.setText("生蛋率：" + monster.getBaseEggRate());
+                        basePetRate.setText("捕获率：" + monster.getBasePetRate());
                     } else {
                         monsterDesc.setText("???");
                         monsterImg.setImageResource(R.drawable.wenhao);

@@ -707,6 +707,13 @@ public class Hero implements BaseObject {
             thirdSkill = null;
         } else if (skill.equal(thirdSkill)) {
             thirdSkill = null;
+        } else
+        if(fourthSkillEnable && fourthSkill.equal(skill)){
+            fourthSkill = null;
+        }else if(fifitSkillEnable && fifitSkill.equal(skill)){
+            fifitSkill = null;
+        }else if(sixthSkillEnable && sixthSkill.equal(skill)){
+            sixthSkill = null;
         }
     }
 
@@ -1483,6 +1490,9 @@ public class Hero implements BaseObject {
     }
 
     public void setFourthSkillEnable(boolean fourthSkillEnable) {
+        if(!fourthSkillEnable && fourthSkill!=null){
+            fourthSkill.setOnUsed(false, false);
+        }
         this.fourthSkillEnable = fourthSkillEnable;
     }
 
@@ -1491,6 +1501,9 @@ public class Hero implements BaseObject {
     }
 
     public void setFifitSkillEnable(boolean fifitSkillEnable) {
+        if(!fifitSkillEnable && fifitSkill!=null){
+            fifitSkill.setOnUsed(false, false);
+        }
         this.fifitSkillEnable = fifitSkillEnable;
     }
 
@@ -1499,6 +1512,9 @@ public class Hero implements BaseObject {
     }
 
     public void setSixthSkillEnable(boolean sixthSkillEnable) {
+        if(!sixthSkillEnable && sixthSkill!=null){
+            sixthSkill.setOnUsed(false, false);
+        }
         this.sixthSkillEnable = sixthSkillEnable;
     }
 

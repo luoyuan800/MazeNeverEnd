@@ -47,13 +47,13 @@ public class BattleController {
                 }
             }
             boolean skillJump = false;
-            if(skill!=null && monster.isSilent(random)){
+            if (skill != null && monster.isSilent(random)) {
                 addMessage(context, hero.getFormatName() + "想要使用技能" + skill.getName());
                 addMessage(context, monster.getFormatName() + "打断了" + hero.getFormatName() + "的技能");
                 skillJump = true;
             }
             if (skill != null && !skillJump) {
-                    isJump = skill.release(monster);
+                isJump = skill.release(monster);
             } else if (monster.getName().contains("龙") && SkillFactory.getSkill("龙裔", hero).isActive()) {
                 addMessage(context, hero.getFormatName() + "激发龙裔效果，免疫龙系怪物的伤害！");
             } else {
@@ -117,7 +117,7 @@ public class BattleController {
         for (Pet pet : pets) {
             if (pet != null && pet.getHp() > 0 && !"蛋".equals(pet.getType())) {
                 if (pet.gon()) {
-                    if(!monster.isPetSub(hero.getRandom(), pet)) {
+                    if (!monster.isPetSub(hero.getRandom(), pet)) {
                         NSkill petSkill = pet.getAtkSkill();
                         long petHarm = 0;
                         if (petSkill != null) {
@@ -139,7 +139,7 @@ public class BattleController {
                         monster.addHp(-petHarm);
                         addMessage(context, petAtk);
                         monster.addBattleDesc(petAtk);
-                    }else{
+                    } else {
                         String petsub = monster.getFormatName() + "吓得" + pet.getFormatName() + "不敢出手。";
                         addMessage(context, petsub);
                         monster.addBattleDesc(petsub);
@@ -253,6 +253,14 @@ public class BattleController {
             return true;
         }
         if (monster.getHp() <= 0) {
+            if (monster.getElement() == hero.getElement()) {
+                if (SkillFactory.getSkill("元素吸收", hero).isActive()) {
+                    String skillMsg = hero.getFormatName() + "因为技能<元素吸收>恢复了生命。";
+                    context.addMessage(skillMsg);
+                    monster.addBattleDesc(skillMsg);
+                    hero.addHp(hero.getUpperAtk()/10);
+                }
+            }
             String defeatmsg = hero.getFormatName() + "击败了" + monster.getFormatName() + "， 获得了<font color=\"blue\">" + monster.getMaterial() + "</font>份锻造点数。";
             addMessage(context, defeatmsg);
             monster.addBattleDesc(defeatmsg);
@@ -276,7 +284,7 @@ public class BattleController {
             }
             return true;
         } else if (hero.getHp() <= 0) {
-            if(!atk){//如果是在自己的攻击回合挂掉的（莫名其妙挂掉的补充)
+            if (!atk) {//如果是在自己的攻击回合挂掉的（莫名其妙挂掉的补充)
                 String unknownDie = hero.getFormatName() + "在攻击的时候用力过头，摔到楼下去了……";
                 addMessage(context, unknownDie);
                 monster.addBattleDesc(unknownDie);

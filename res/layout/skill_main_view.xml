@@ -40,9 +40,9 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="元素使(1.9)"
+                android:text="元素使"
                 android:id="@+id/element_skill" android:layout_weight="1" android:textStyle="bold" android:textSize="20sp"
-                android:enabled="false" android:textColor="#dab907"/>
+                android:enabled="true" android:textColor="#dab907"/>
     </LinearLayout>
     <Space
             android:layout_width="20px"

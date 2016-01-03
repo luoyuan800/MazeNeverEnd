@@ -30,7 +30,7 @@ public class MonsterDB {
             monster.setType(cursor.getString(cursor.getColumnIndex("type")));
             monster.setImageId(cursor.getInt(cursor.getColumnIndex("img")));
             monster.setDesc(cursor.getString(cursor.getColumnIndex("des")));
-            monster.setPetRate(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("pet_rate"))));
+            monster.setBasePetRate(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("pet_rate"))));
             monster.setBaseEggRate(StringUtils.toFloat(cursor.getString(cursor.getColumnIndex("egg_rate"))));
             monster.setBaseAtk(StringUtils.toInt(cursor.getString(cursor.getColumnIndex("atk"))));
             monster.setBaseHp(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))));

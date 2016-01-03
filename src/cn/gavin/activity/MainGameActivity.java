@@ -936,17 +936,15 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     }
 
     public void showResetSkillPointDialog() {
-        final long resetSkillValue = 799988 + 69988 * heroN.getResetSkillCount();
         AlertDialog resetSkillPointDialog;
         resetSkillPointDialog = new Builder(this).create();
-        resetSkillPointDialog.setTitle("消耗" + resetSkillValue + "锻造点数重置技能");
+        resetSkillPointDialog.setTitle("重置技能");
         resetSkillPointDialog.setMessage("重置技能后技能的使用/点击(熟练度)次数会减半。返回激活消耗的技能点，但是升级消耗的技能点不会返回。");
         resetSkillPointDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        heroN.addMaterial(-resetSkillValue);
                         heroN.setOnSkill(false);
                         heroN.setOnChange(false);
                         heroN.setSkillAdditionHp(0l);
@@ -969,11 +967,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
                 });
         resetSkillPointDialog.show();
-        if (heroN.getMaterial() > resetSkillValue) {
-            resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
-        } else {
-            resetSkillPointDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
-        }
     }
 
     /*
@@ -1020,6 +1013,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                                     switch (StringUtils.toInt(color[1])) {
                                         case 1:
                                             mainLeftUp.setBackgroundColor(Color.parseColor(color[0]));
+                                            onUsedPetLists.setBackgroundColor(Color.parseColor(color[0]));
                                             heroN.setLeftUpColor(color[0]);
                                             break;
                                         case 2:
@@ -1601,6 +1595,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         mainRightDown = findViewById(R.id.character_item_contribute);
         mainLeftUp = findViewById(R.id.linearLayout2);
         mainLeftDown = mainInfoPlatform;
+        onUsedPetLists = (TextView) findViewById(R.id.onuse_pet_list);
         try {
             Bitmap bitmap = MazeContents.loadImageFromSD("maze_bak.png");
             if (bitmap != null) {
@@ -1610,6 +1605,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             }
             itembarContri.setBackgroundColor(Color.parseColor(heroN.getTitleColor()));
             mainLeftUp.setBackgroundColor(Color.parseColor(heroN.getLeftUpColor()));
+            onUsedPetLists.setBackgroundColor(Color.parseColor(heroN.getLeftUpColor()));
             mainLeftDown.setBackgroundColor(Color.parseColor(heroN.getLeftDownColor()));
             mainRightDown.setBackgroundColor(Color.parseColor(heroN.getRightDownColor()));
         } catch (Exception e) {
@@ -1656,7 +1652,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         necklaceTextView.setOnClickListener(this);
         hatTextView = (TextView) findViewById(R.id.hat_view);
         hatTextView.setOnClickListener(this);
-        onUsedPetLists = (TextView) findViewById(R.id.onuse_pet_list);
         colButton = (Button) findViewById(R.id.col_button);
         colButton.setOnClickListener(this);
         refreshCharacterName();
@@ -1743,41 +1738,35 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         if (heroN.isFourthSkillEnable()) {
             if (heroN.getFourthSkill() != null) {
                 fourthSkillButton.setText(heroN.getFourthSkill().getDisplayName());
-                if (!fourthSkillButton.isEnabled()) {
-                    fourthSkillButton.setEnabled(true);
-                }
+                fourthSkillButton.setEnabled(true);
             } else {
                 fourthSkillButton.setText("");
-                if (fourthSkillButton.isEnabled()) {
-                    fourthSkillButton.setEnabled(false);
-                }
+                fourthSkillButton.setEnabled(false);
             }
+        }else{
+            fourthSkillButton.setEnabled(false);
         }
         if (heroN.isFifitSkillEnable()) {
             if (heroN.getFifthSkill() != null) {
                 fifthSkillButton.setText(heroN.getFifthSkill().getDisplayName());
-                if (!fifthSkillButton.isEnabled()) {
-                    fifthSkillButton.setEnabled(true);
-                }
+                fifthSkillButton.setEnabled(true);
             } else {
                 fifthSkillButton.setText("");
-                if (fifthSkillButton.isEnabled()) {
-                    fifthSkillButton.setEnabled(false);
-                }
+                fifthSkillButton.setEnabled(false);
             }
+        }else{
+            fifthSkillButton.setEnabled(false);
         }
         if (heroN.isSixthSkillEnable()) {
             if (heroN.getSixthSkill() != null) {
                 sixthSkillButton.setText(heroN.getSixthSkill().getDisplayName());
-                if (!sixthSkillButton.isEnabled()) {
-                    sixthSkillButton.setEnabled(true);
-                }
+                sixthSkillButton.setEnabled(true);
             } else {
                 sixthSkillButton.setText("");
-                if (sixthSkillButton.isEnabled()) {
-                    sixthSkillButton.setEnabled(false);
-                }
+                sixthSkillButton.setEnabled(false);
             }
+        }else{
+            sixthSkillButton.setEnabled(false);
         }
 
         lockBoxCount.setText("" + heroN.getLockBox());
@@ -2095,9 +2084,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 //fixDialogSize(netDialog, 200, 200);
                 View shopButton = netDialog.findViewById(R.id.shang_button);
                 shopButton.setOnClickListener(this);
-                if(maze.isSailed()){
-                    shopButton.setBackgroundColor(R.drawable.yuanhuan_bak);
-                }else{
+                if (maze.isSailed()) {
+                    shopButton.setBackgroundResource(R.drawable.yuanhuan_bak);
+                } else {
                     shopButton.setBackgroundColor(R.color.toumin);
                 }
                 netDialog.findViewById(R.id.dian_button).setOnClickListener(this);

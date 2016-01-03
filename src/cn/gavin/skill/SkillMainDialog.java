@@ -74,6 +74,9 @@ public class SkillMainDialog implements View.OnClickListener {
                 skillLayout = new PetSkill(context);
                 skillLayout.setTag("宠物大师");
                 break;
+            case R.id.element_skill:
+                skillLayout = new Elementalist(context);
+                skillLayout.setTag("元素使");
         }
         if (skillLayout != null) {
             View skillView = buildSkillView(skillLayout);

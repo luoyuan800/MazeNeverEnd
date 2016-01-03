@@ -39,6 +39,9 @@ public class SkillFactory {
                 if (skill == null) {
                     skill = PetSkill.getSkill(name, hero);
                 }
+                if(skill == null){
+                    skill = Elementalist.getSkill(name, hero);
+                }
                 if (skill != null && hero != null) {
                     skill.setPerform(new EnableExpression() {
                         @Override

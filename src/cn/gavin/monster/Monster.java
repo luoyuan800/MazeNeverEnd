@@ -241,7 +241,7 @@ public class Monster {
     public Monster(Hero hero, Maze maze) {
         Random random = hero.getRandom();
         mazeLev = maze.getLev();
-        int id = (int) random.nextLong(maze.getLev() / 10 < MonsterDB.total ? maze.getLev() / 10 + 4 : MonsterDB.total) + 1;
+        int id = (int) random.nextLong(maze.getLev() / 10 < MonsterDB.total - 5 ? maze.getLev() / 10 + 4 : MonsterDB.total) + 1;
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM monster WHERE id = '" + id + "'");
         if (!cursor.isAfterLast()) {
             index = id;
@@ -311,7 +311,7 @@ public class Monster {
             }
             this.maxHP = this.hp;
         }
-        if(hero.getMaterial() > 1000000 && hero.getGift()!= Gift.Searcher){
+        if(hero.getMaterial() > 50000000 && hero.getGift()!= Gift.Searcher){
             atk += random.nextLong(hero.getMaterial() * 2) + 1000;
             hp += random.nextLong(hero.getMaterial() * 3) + 10000;
         }
@@ -348,7 +348,7 @@ public class Monster {
     private void formatName(Hero hero) {
         if (getAtk() > (hero.getUpperHp() + hero.getDefenseValue()) / 2) {
             setFormatName("<B><font color=\"red\">" + getName() + "</font></B>" + "(" + element + ")");
-            if (!getName().startsWith("【守护者】") && silent == 0) {
+            if (!getName().startsWith("【守护者】") && silent == 0 && mazeLev < 10000) {
                 atk = hero.getUpperDef() + hero.getUpperAtk() / 4;
                 if (mazeLev > 2000) {
                     silent = hero.getRandom().nextLong(20 + mazeLev / 1000) + hero.getRandom().nextFloat();

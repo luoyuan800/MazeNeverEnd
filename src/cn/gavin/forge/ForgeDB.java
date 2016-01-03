@@ -128,15 +128,15 @@ public class ForgeDB {
         database.execSQL(sql);
         sql = String.format(base, "Soi●残缺(皇冠)", "食人鸟毛-鼠筋-鼠筋-鼠筋-鼠筋", "ADD_PER_ATK:3", "ADD_STR:2000-ADD_PARRY:~2", HatBuilder.type, "#FF8C00");
         database.execSQL(sql);
-        sql = String.format(base, "Soi●残缺(帝镯)", "鼠骨-鼠筋-鼠骨-鼠骨-鼠骨", "ADD_PER_DEF:3", "ADD_POWER:20000-ADD_PARRY:~5", NecklaceBuilder.type, "#FF8C00");
+        sql = String.format(base, "Soi●残缺(帝镯)", "鼠骨-鼠筋-鼠骨-鼠骨-鼠骨", "ADD_PER_DEF:3", "ADD_POWER:2000-ADD_PARRY:~5", NecklaceBuilder.type, "#FF8C00");
         database.execSQL(sql);
         sql = String.format(base, "Soi●残缺(霸戒)", "硝石-紫熏木-紫熏木-紫熏木-紫熏木", "ADD_PER_UPPER_HP:3", "ADD_AGI:3000-ADD_DODGE_RATE:~15", RingBuilder.type, "#FF8C00");
         database.execSQL(sql);
-        sql = String.format(base, "乐枫", "龙须木-虎皮-蛟筋-钢石-萤石", "ADD_POWER:30000-ADD_AGI:~3000", "ADD_PER_DEF:10", HatBuilder.type, "#FF8C00");
+        sql = String.format(base, "乐枫", "龙须木-虎皮-蛟筋-钢石-萤石", "ADD_POWER:3000-ADD_AGI:~3000", "ADD_PER_DEF:10", HatBuilder.type, "#FF8C00");
         database.execSQL(sql);
-        sql = String.format(base, "(乐枫)蔚蓝项链", "龙筋-龙皮-青檀木-白云石-食人鸟毛", "ADD_AGI:30000-ADD_POWER:~5000", "ADD_PER_UPPER_HP:15", NecklaceBuilder.type, "#FF8C00");
+        sql = String.format(base, "(乐枫)蔚蓝项链", "龙筋-龙皮-青檀木-白云石-食人鸟毛", "ADD_AGI:3000-ADD_POWER:~5000", "ADD_PER_UPPER_HP:15", NecklaceBuilder.type, "#FF8C00");
         database.execSQL(sql);
-        sql = String.format(base, "(乐枫)云戒", "龙骨-硝石-银矿石-龙须木-原石", "ADD_AGI:30000-ADD_POWER:~5000", "ADD_PER_UPPER_HP:15", RingBuilder.type, "#FF8C00");
+        sql = String.format(base, "(乐枫)云戒", "龙骨-硝石-银矿石-龙须木-原石", "ADD_AGI:3000-ADD_POWER:~5000", "ADD_PER_UPPER_HP:15", RingBuilder.type, "#FF8C00");
         database.execSQL(sql);
     }
 
@@ -167,11 +167,11 @@ public class ForgeDB {
         database.execSQL(sql);
         sql = String.format(base, "赵日天的裤腰带", "龙皮-龙须-龙须-龙骨-紫熏木", "ADD_PER_ATK:24", "ADD_HIT_RATE:30-ADD_PARRY:30-ADD_DODGE_RATE:10-ADD_CLICK_AWARD:5-ADD_CLICK_POINT_AWARD:1", RingBuilder.type, "#FF8C00");
         database.execSQL(sql);
-        sql = String.format(base, "仙剑メ天道链", "蚁须-龙须-龙须-龙骨-紫熏木", "ADD_AGI:240000", "ADD_HIT_RATE:60-ADD_PARRY:~10-ADD_CLICK_POINT_AWARD:1", NecklaceBuilder.type, "#FF8C00");
+        sql = String.format(base, "仙剑メ天道链", "蚁须-龙须-龙须-龙骨-紫熏木", "ADD_AGI:24000", "ADD_HIT_RATE:60-ADD_PARRY:~10-ADD_CLICK_POINT_AWARD:1", NecklaceBuilder.type, "#FF8C00");
         database.execSQL(sql);
         sql = String.format(base, "仙剑メ天道冠", "蚁须-龙须-龙须-龙骨-紫熏木", "ADD_PER_DEF:24", "ADD_HIT_RATE:~10-ADD_PARRY:60-ADD_CLICK_AWARD:65", HatBuilder.type, "#FF8C00");
         database.execSQL(sql);
-        sql = String.format(base, "仙剑メ天道戒", "蚁须-鼠骨-龙须-龙骨-紫熏木", "ADD_ATK:640000", "ADD_HIT_RATE:30-ADD_PARRY:30-ADD_DODGE_RATE:10", RingBuilder.type, "#FF8C00");
+        sql = String.format(base, "仙剑メ天道戒", "蚁须-鼠骨-龙须-龙骨-紫熏木", "ADD_ATK:64000", "ADD_HIT_RATE:30-ADD_PARRY:30-ADD_DODGE_RATE:10", RingBuilder.type, "#FF8C00");
         database.execSQL(sql);
     }
 }

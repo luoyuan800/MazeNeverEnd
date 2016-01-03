@@ -350,7 +350,7 @@ public enum GoodsType {
     }, false),
     Filter("过滤器", "使用后可以设计一个捕捉条件，那么只有符合条件的怪物被打败之后才可以捕捉。" +
             "比如你只想捕捉’龙‘，那么可以在弹出窗口中输入’龙‘之后确定；如果你只想捕捉前缀为’无敌‘的怪物，那么在设定过滤条件为’无敌的‘即可。" +
-            "修改时候永久生效，如果要更改需要重新使用一个过滤器进行设置", new GoodScript() {
+            "修改之后永久生效，如果要更改需要重新使用一个过滤器进行设置", new GoodScript() {
         @Override
         public Object use() {
             if (Filter.count > 0) {
@@ -370,6 +370,18 @@ public enum GoodsType {
                 });
                 filterDialog.setView(filterText);
                 filterDialog.show();
+            }
+            return null;
+        }
+    }, true),
+    ResetSkill("易筋经", "使用后可以重置技能点。技能重置后悔返回激活的点数并且降低一半的点击/使用次数（熟练度），升级消耗的技能点不会返还。"
+            , new GoodScript() {
+        @Override
+        public Object use() {
+            if (ResetSkill.count > 0) {
+                GoodsType.ResetSkill.count--;
+                GoodsType.ResetSkill.save();
+                MainGameActivity.context.showResetSkillPointDialog();
             }
             return null;
         }
