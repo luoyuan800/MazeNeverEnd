@@ -109,6 +109,7 @@ public class Hero implements BaseObject {
     private float petAbe = 0;
     private boolean mV = false;
     private Gift gift;
+    private Element rejectElement;
 
     public Float getParry() {
         return parry;
@@ -1536,5 +1537,13 @@ public class Hero implements BaseObject {
 
     public void setGift(Gift gift) {
         this.gift = gift;
+    }
+
+    public void setRejectElement(Element rejectElement) {
+        this.rejectElement = rejectElement;
+    }
+
+    public Element getRejectElement() {
+        return rejectElement;
     }
 }

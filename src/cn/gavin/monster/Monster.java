@@ -134,6 +134,17 @@ public class Monster {
             atk += random.nextLong(hero.getMaterial() / (MainGameActivity.context != null ? MainGameActivity.context.getAlipay().getPayTime() + 1 : 1) + 1);
         }
 
+        if(maze.getLev() < 50){
+            hp/=50;
+            atk/=50;
+        }else if(maze.getLev() < 100){
+            hp /=10;
+            atk/=10;
+        }else if(maze.getLev() < 500){
+            hp/=5;
+            atk/=5;
+        }
+
         if (hp > hero.getUpperAtk() * 40) {
             hp = hero.getAttackValue() * 40;
         }
@@ -346,6 +357,9 @@ public class Monster {
     }
 
     private void formatName(Hero hero) {
+        if(getAtk() > (hero.getUpperHp() + hero.getDefenseValue()) && mazeLev < 50){
+            atk = atk/5;
+        }
         if (getAtk() > (hero.getUpperHp() + hero.getDefenseValue()) / 2) {
             setFormatName("<B><font color=\"red\">" + getName() + "</font></B>" + "(" + element + ")");
             if (!getName().startsWith("【守护者】") && silent == 0 && mazeLev < 10000) {

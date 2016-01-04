@@ -11,6 +11,7 @@ import cn.gavin.activity.MainMenuActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
 import cn.gavin.forge.effect.Effect;
+import cn.gavin.gift.Gift;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.pet.Pet;
@@ -174,6 +175,11 @@ public class LoadHelper {
         heroN.setOnSkill(false);
         heroN.setPetAbe(preferences.getFloat("pet_abe", 0));
         heroN.setmV(preferences.getBoolean("mv", new Random().nextBoolean()));
+        heroN.setRejectElement(Element.valueOf(preferences.getString("reject_element", "无")));
+        String gift = preferences.getString("gift", null);
+        if(gift!=null) {
+            heroN.setGift(Gift.valueOf(gift));
+        }
         maze.setCsmgl(preferences.getInt("csm", 9977));
         maze.setCatchPetNameContains(preferences.getString("filter_pet_name", ""));
         loadValue(heroN);

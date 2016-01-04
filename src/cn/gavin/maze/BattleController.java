@@ -1,9 +1,11 @@
 package cn.gavin.maze;
 
+import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.activity.BaseContext;
 import cn.gavin.forge.Item;
 import cn.gavin.forge.list.ItemName;
+import cn.gavin.gift.Gift;
 import cn.gavin.monster.Monster;
 import cn.gavin.palace.Base;
 import cn.gavin.palace.nskill.NSkill;
@@ -196,8 +198,15 @@ public class BattleController {
         String msg = hero.getFormatName() + "遇到了" + monster.getFormatName();
         addMessage(context, msg);
         monster.addBattleDesc(msg);
+
         boolean atk = random.nextLong(hero.getAgility() + 100) > monster.getHp() / 2 || random.nextBoolean();
         boolean isJump = false;
+        if(hero.getGift() == Gift.ElementReject && hero.getElement() == Element.无 && hero.getRejectElement() == monster.getElement() && random.nextInt(100) < 55){
+            String rejectString = hero.getFormatName() + "因为元素抗拒天赋秒杀了" + monster.getFormatName();
+            addMessage(context, rejectString);
+            monster.addBattleDesc(msg);
+            monster.addHp(-monster.getHp());
+        }
         while (!isJump && monster.getHp() > 0 && hero.getHp() > 0) {
             if (context.isPause()) {
                 continue;

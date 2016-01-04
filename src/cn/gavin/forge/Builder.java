@@ -13,6 +13,7 @@ import java.util.Set;
 
 import cn.gavin.Element;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.gift.Gift;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.utils.Random;
@@ -365,9 +366,15 @@ public abstract class Builder {
             if (a1 != null && a2 != null) {
                 if ("#FF8C00".equalsIgnoreCase(a1.getColor())) {
                     a1.setPro(a1.getPro() / 2);
+                    if(MazeContents.hero.getGift() == Gift.Maker) {
+                        a1.setPro(a1.getPro() + 15);
+                    }
                 }
                 if ("#FF8C00".equalsIgnoreCase(a2.getColor())) {
                     a2.setPro(a2.getPro() / 2);
+                    if(MazeContents.hero.getGift() == Gift.Maker) {
+                        a2.setPro(a2.getPro() + 15);
+                    }
                 }
                 if ((a1.getPro() + a2.getPro()) >= 100) {
                     if (a1.getPro() >= a2.getPro()) {

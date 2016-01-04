@@ -1931,7 +1931,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         return false;
     }
 
-
     @Override
     public void onClick(View v) {
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");

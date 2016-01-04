@@ -5,6 +5,7 @@ import android.widget.Button;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
+import cn.gavin.gift.Gift;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.skill.expression.EnableExpression;
@@ -47,7 +48,7 @@ public class SkillFactory {
                         @Override
                         public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                             Random random = hero.getRandom();
-                            long r = skill.diejia(hero.getAgility());
+                            long r = skill.diejia(hero.getAgility()) + (hero.getGift() == Gift.SkillMaster ? 10 : 0);
                             return random.nextLong(100) + random.nextFloat() < skill.getProbability() + random.nextLong(r + 1);
                         }
                     });

@@ -168,6 +168,10 @@ public class SaveHelper {
         editor.putString("uuid", heroN.getUuid());
         editor.putFloat("pet_abe", heroN.getPetAbe());
         editor.putString("filter_pet_name",maze.getCatchPetNameContains());
+        editor.putString("reject_element", heroN.getRejectElement().name());
+        if(heroN.getGift()!=null){
+            editor.putString("gift", heroN.getGift().name());
+        }
         editor.apply();
     }
 

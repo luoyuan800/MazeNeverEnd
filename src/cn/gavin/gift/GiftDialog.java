@@ -3,9 +3,13 @@ package cn.gavin.gift;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+
+import cn.gavin.Element;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.skill.SkillFactory;
 import cn.gavin.utils.MazeContents;
 
 /**
@@ -19,16 +23,16 @@ public class GiftDialog {
 
     public GiftDialog(MainGameActivity context) {
         mainDialog = new AlertDialog.Builder(context).create();
-
+        View giftView = View.inflate(context,R.layout.gift_list, (ViewGroup) context.findViewById(R.id.gift_root));
+        mainDialog.setView(giftView);
+        mainDialog.setTitle("选择一个天赋");
+        mainDialog.setCancelable(false);
+        mainDialog.setCanceledOnTouchOutside(false);
         this.context = context;
     }
 
     public void show() {
         mainDialog.show();
-        mainDialog.setContentView(R.layout.gift_list);
-        mainDialog.setTitle("选择一个天赋");
-        mainDialog.setCancelable(false);
-        mainDialog.setCanceledOnTouchOutside(false);
         Button giftButton = (Button) mainDialog.findViewById(R.id.hero_heart);
         if (giftButton != null) {
             giftButton.setOnClickListener(buildDetailAction(Gift.HeroHeart, new DialogInterface.OnClickListener() {
@@ -67,6 +71,109 @@ public class GiftDialog {
                     dialogInterface.dismiss();
                     mainDialog.dismiss();
                     MazeContents.hero.setGift(Gift.Warrior);
+                }
+            }));
+        }
+        giftButton = (Button) mainDialog.findViewById(R.id.Searcher);
+        if (giftButton != null) {
+            giftButton.setOnClickListener(buildDetailAction(Gift.Searcher, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    mainDialog.dismiss();
+                    MazeContents.hero.setGift(Gift.Searcher);
+                }
+            }));
+        }
+        giftButton = (Button) mainDialog.findViewById(R.id.Long);
+        if (giftButton != null) {
+            giftButton.setOnClickListener(buildDetailAction(Gift.Long, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    SkillFactory.getSkill("龙裔", MazeContents.hero).setActive(true);
+                    dialogInterface.dismiss();
+                    mainDialog.dismiss();
+                    MazeContents.hero.setGift(Gift.Long);
+                }
+            }));
+        }
+        giftButton = (Button) mainDialog.findViewById(R.id.Element);
+        if (giftButton != null) {
+            giftButton.setOnClickListener(buildDetailAction(Gift.Element, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    mainDialog.dismiss();
+                    MazeContents.hero.setGift(Gift.Element);
+                }
+            }));
+        }
+        giftButton = (Button) mainDialog.findViewById(R.id.Pokemon);
+        if (giftButton != null) {
+            giftButton.setOnClickListener(buildDetailAction(Gift.Pokemon, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    mainDialog.dismiss();
+                    MazeContents.hero.setGift(Gift.Pokemon);
+                    MazeContents.hero.setPetRate(MazeContents.hero.getPetRate() - 0.5f);
+                }
+            }));
+        }
+        giftButton = (Button) mainDialog.findViewById(R.id.FireBody);
+        if (giftButton != null) {
+            giftButton.setOnClickListener(buildDetailAction(Gift.FireBody, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    mainDialog.dismiss();
+                    MazeContents.hero.setGift(Gift.FireBody);
+                    MazeContents.hero.setEggRate(MazeContents.hero.getEggRate() + 120);
+                }
+            }));
+        }
+        giftButton = (Button) mainDialog.findViewById(R.id.SkillMaster);
+        if (giftButton != null) {
+            giftButton.setOnClickListener(buildDetailAction(Gift.SkillMaster, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    mainDialog.dismiss();
+                    MazeContents.hero.setGift(Gift.SkillMaster);
+                }
+            }));
+        }
+        giftButton = (Button) mainDialog.findViewById(R.id.RandomMaster);
+        if (giftButton != null) {
+            giftButton.setOnClickListener(buildDetailAction(Gift.RandomMaster, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    mainDialog.dismiss();
+                    MazeContents.hero.setGift(Gift.RandomMaster);
+                }
+            }));
+        }
+        giftButton = (Button) mainDialog.findViewById(R.id.ElementReject);
+        if (giftButton != null) {
+            giftButton.setOnClickListener(buildDetailAction(Gift.ElementReject, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    mainDialog.dismiss();
+                    MazeContents.hero.setGift(Gift.ElementReject);
+                    MazeContents.hero.setRejectElement(Element.values()[MazeContents.hero.getRandom().nextInt(Element.values().length)]);
+                }
+            }));
+        }
+        giftButton = (Button) mainDialog.findViewById(R.id.Maker);
+        if (giftButton != null) {
+            giftButton.setOnClickListener(buildDetailAction(Gift.Maker, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    mainDialog.dismiss();
+                    MazeContents.hero.setGift(Gift.Maker);
                 }
             }));
         }
