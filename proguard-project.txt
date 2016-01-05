@@ -27,7 +27,8 @@
 -keepattributes Signature
 -keep class cn.bmob.v3.** {*;}
 -keep class cn.bmob.push.** {*;}
--keep class cn.gavin.upload.PalaceObject{*;}
+-keep class cn.gavin.story.PalaceObject{*;}
+-keep class cn.gavin.story.NPC{*;}
 -keep class cn.gavin.upload.CdKey{*;}
 -keep class cn.gavin.pet.swop.SwapPet{*;}
 -keep class cn.gavin.db.good.Good{*;}

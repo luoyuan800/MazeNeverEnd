@@ -5,6 +5,7 @@
               android:layout_width="wrap_content"
               android:id="@+id/shu_xin_den_pei_root"
               android:layout_height="wrap_content"
+    android:background="#00000000"
               android:baselineAligned="false" android:gravity="center">
 
     <RelativeLayout

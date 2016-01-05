@@ -1,6 +1,14 @@
-package cn.gavin.upload;
+package cn.gavin.story;
+
+import android.database.Cursor;
+import android.os.Message;
+
+import java.util.List;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
+import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.utils.StringUtils;
 
@@ -17,8 +25,6 @@ public class PalaceObject extends BmobObject {
     private String parry;
     private String hitRate;
     private String skill;
-    private String skill1;
-    private String skill2;
     private String pay;
     private Long lev;
     private String hello;
@@ -29,19 +35,41 @@ public class PalaceObject extends BmobObject {
     private Integer sort;
     private String award;
 
-    public PalaceObject(){
+    public PalaceObject() {
         setTableName("uploader");
     }
 
+    public static void updatePalace(final MainGameActivity context) {
+        BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
+        query.setLimit(150);
+        query.findObjects(context, new FindListener<PalaceObject>() {
+            @Override
+            public void onSuccess(final List<PalaceObject> palaceObjects) {
+                for (PalaceObject object : palaceObjects) {
+                    object.save();
+                }
+                context.getHandler().sendEmptyMessage(106);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Message message = new Message();
+                message.what = 106;
+                message.obj = s;
+                context.getHandler().sendEmptyMessage(106);
+            }
+        });
+    }
+
     public String getName() {
-        if(name.startsWith("0x")){
+        if (name.startsWith("0x")) {
             name = StringUtils.toStringHex(name);
         }
         return name;
     }
 
     public void setName(String name) {
-        if(name.startsWith("0x")){
+        if (name.startsWith("0x")) {
             name = StringUtils.toStringHex(name);
         }
         this.name = name;
@@ -95,22 +123,6 @@ public class PalaceObject extends BmobObject {
         this.skill = skill;
     }
 
-    public String getSkill1() {
-        return skill1;
-    }
-
-    public void setSkill1(String skill1) {
-        this.skill1 = skill1;
-    }
-
-    public String getSkill2() {
-        return skill2;
-    }
-
-    public void setSkill2(String skill2) {
-        this.skill2 = skill2;
-    }
-
     public String getPay() {
         return pay;
     }
@@ -127,10 +139,16 @@ public class PalaceObject extends BmobObject {
         this.lev = lev;
     }
 
-    public void save(){
-        DBHelper.getDbHelper().excuseSQLWithoutResult(String.format(
-                "REPLACE INTO palace ( id,name, atk, hp, lev, def, parry, hit_rate,skill, skill1, skill2, hello, pay, element, re_count) " +
-                        "values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",getObjectId(),getName(), atk,hp,lev,def,parry,hitRate,skill,skill1,skill2, hello, pay, element, reCount));
+    public void save() {
+        DBHelper dbHelper = DBHelper.getDbHelper();
+        Cursor cursor = dbHelper.excuseSOL("select uuid from npc where type = " + NPC.PALACE_NPC + " and lev = '" + lev);
+        if (!cursor.isAfterLast()) {
+            dbHelper.excuseSQLWithoutResult("delete from table where uuid = '" + cursor.getString(0) + "'");
+        }
+        cursor.close();
+        dbHelper.excuseSQLWithoutResult(String.format(
+                "REPLACE INTO npc ( uuid, name, atk, hp, lev, def, parry, hit_rate,skill, desc, pay, element, re_count, defeat, meet) " +
+                        "values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s', 0, 0)", uuid, name, atk, hp, lev, def, parry, hitRate, skill, hello, pay, element, reCount));
     }
 
     public void setHello(String hello) {

@@ -5,11 +5,11 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent" android:alpha="60">
 
-    <LinearLayout
+    <cn.gavin.utils.ui.WheelView
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="60dp">
-    </LinearLayout>
+            android:layout_height="20dp"/>
+
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"

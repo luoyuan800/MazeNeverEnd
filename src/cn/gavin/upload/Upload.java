@@ -14,6 +14,7 @@ import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.log.LogHelper;
 import cn.gavin.skill.Skill;
+import cn.gavin.story.PalaceObject;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
 
@@ -42,9 +43,26 @@ public class Upload {
                     object.setHp(hero.getUpperHp().toString());
                     object.setName(hero.getName());
                     object.setParry(hero.getParry().toString());
-                    object.setSkill(hero.getFirstSkill() != null ? hero.getFirstSkill().getName() + "_" + hero.getFirstSkill().getCount() : "");
-                    object.setSkill1(hero.getSecondSkill() != null ? hero.getSecondSkill().getName() + "_" + hero.getSecondSkill().getCount() : "");
-                    object.setSkill2(hero.getThirdSkill() != null ? hero.getThirdSkill().getName() + "_" + hero.getThirdSkill().getCount() : "");
+                    StringBuilder skill = new StringBuilder();
+                    if(hero.getFirstSkill()!=null){
+                        skill.append(hero.getFirstSkill().getName()).append("-");
+                    }
+                    if(hero.getSecondSkill()!=null){
+                        skill.append(hero.getSecondSkill().getName()).append("-");
+                    }
+                    if(hero.getThirdSkill()!=null){
+                        skill.append(hero.getThirdSkill().getName()).append("-");
+                    }
+                    if(hero.getFourthSkill()!=null){
+                        skill.append(hero.getFourthSkill().getName()).append("-");
+                    }
+                    if(hero.getFifthSkill()!=null){
+                        skill.append(hero.getFifthSkill().getName()).append("-");
+                    }
+                    if(hero.getSixthSkill()!=null){
+                        skill.append(hero.getSixthSkill().getName()).append("-");
+                    }
+                    object.setSkill(skill.toString());
                     object.setPay(hero.getPay().toString());
                     object.setLev(hero.getMaxMazeLev());
                     object.setElement(hero.getElement().name());

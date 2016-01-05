@@ -1,5 +1,7 @@
 package cn.gavin.maze;
 
+import java.util.List;
+
 import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.activity.BaseContext;
@@ -15,8 +17,6 @@ import cn.gavin.skill.SkillFactory;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
-import java.util.List;
-
 /**
  * Copyright 2015 gluo.
  * ALL RIGHTS RESERVED.
@@ -24,90 +24,97 @@ import java.util.List;
  */
 public class BattleController {
     public static boolean heroDef(BaseContext context, Hero hero, Monster monster, Random random) {
-        Skill skill = hero.useDefendSkill(monster);
-        boolean isJump = false;
-        if (!monster.isHold()) {
-            List<Pet> pets = hero.getPets();
-            for (Pet pet : pets) {
-                if (pet != null && pet.getHp() > 0 && !pet.getType().equals("蛋") && pet.dan()) {
-                    pet.setContext(context);
-                    long harm = monster.getAtk() - pet.getDef();
-                    if (harm < 0) {
+        if (hero.getGift() == Gift.ElementReject && hero.getElement() != null && monster.getElement() == hero.getRejectElement() && random.nextInt(100) < 80) {
+            String rejectmsg = hero.getFormatName() + "的" + hero.getGift().getName() + "天赋免疫了" + monster.getFormatName() + "的攻击";
+            addMessage(context, rejectmsg);
+            monster.addBattleDesc(rejectmsg);
+            return false;
+        } else {
+            Skill skill = hero.useDefendSkill(monster);
+            boolean isJump = false;
+            if (!monster.isHold()) {
+                List<Pet> pets = hero.getPets();
+                for (Pet pet : pets) {
+                    if (pet != null && pet.getHp() > 0 && !pet.getType().equals("蛋") && pet.dan()) {
+                        pet.setContext(context);
+                        long harm = monster.getAtk() - pet.getDef();
+                        if (harm < 0) {
+                            harm = random.nextLong(hero.getMaxMazeLev());
+                        }
+                        String petMsg = pet.getFormatName() + "舍身救主，挡下了一次攻击伤害（<font color=\"red\">" + StringUtils.formatNumber(harm) + "</font>点)!";
+                        addMessage(context, petMsg);
+                        monster.addBattleDesc(petMsg);
+                        if (harm < 0) harm = 0;
+                        pet.addHp(-harm);
+                        if (pet.getHp() <= 0) {
+                            String petDie = pet.getFormatName() + "牺牲了！";
+                            addMessage(context, petDie);
+                            monster.addBattleDesc(petDie);
+                        }
+                        return false;
+                    }
+                }
+                boolean skillJump = false;
+                if (skill != null && monster.isSilent(random)) {
+                    addMessage(context, hero.getFormatName() + "想要使用技能" + skill.getName());
+                    addMessage(context, monster.getFormatName() + "打断了" + hero.getFormatName() + "的技能");
+                    skillJump = true;
+                }
+                if (skill != null && !skillJump) {
+                    isJump = skill.release(monster);
+                } else if (monster.getName().contains("龙") && SkillFactory.getSkill("龙裔", hero).isActive()) {
+                    addMessage(context, hero.getFormatName() + "激发龙裔效果，免疫龙系怪物的伤害！");
+                } else {
+                    long harm = monster.getAtk() - hero.getDefenseValue();
+                    //相克，伤害1.5倍
+                    if (monster.getElement().restriction(hero.getElement())) {
+                        harm *= 1.5;
+                    } else if (hero.getElement().restriction(monster.getElement())) {
+                        //被克，伤害减低一半
+                        harm /= 2;
+                    }
+                    if (harm <= 0 || hero.getRandom().nextInt(100) > monster.getHitRate()) {
                         harm = random.nextLong(hero.getMaxMazeLev());
                     }
-                    String petMsg = pet.getFormatName() + "舍身救主，挡下了一次攻击伤害（<font color=\"red\">" + StringUtils.formatNumber(harm) + "</font>点)!";
-                    addMessage(context, petMsg);
-                    monster.addBattleDesc(petMsg);
-                    if (harm < 0) harm = 0;
-                    pet.addHp(-harm);
-                    if (pet.getHp() <= 0) {
-                        String petDie = pet.getFormatName() + "牺牲了！";
-                        addMessage(context, petDie);
-                        monster.addBattleDesc(petDie);
+                    if (hero.getRandom().nextInt(100) > monster.getHitRate()) {
+                        harm = random.nextLong(hero.getMaxMazeLev() + 1);
+                        String s = monster.getFormatName() + "攻击打偏了";
+                        addMessage(context, s);
+                        monster.addBattleDesc(s);
                     }
-                    return false;
-                }
-            }
-            boolean skillJump = false;
-            if (skill != null && monster.isSilent(random)) {
-                addMessage(context, hero.getFormatName() + "想要使用技能" + skill.getName());
-                addMessage(context, monster.getFormatName() + "打断了" + hero.getFormatName() + "的技能");
-                skillJump = true;
-            }
-            if (skill != null && !skillJump) {
-                isJump = skill.release(monster);
-            } else if (monster.getName().contains("龙") && SkillFactory.getSkill("龙裔", hero).isActive()) {
-                addMessage(context, hero.getFormatName() + "激发龙裔效果，免疫龙系怪物的伤害！");
-            } else {
-                long harm = monster.getAtk() - hero.getDefenseValue();
-                //相克，伤害1.5倍
-                if (monster.getElement().restriction(hero.getElement())) {
-                    harm *= 1.5;
-                } else if (hero.getElement().restriction(monster.getElement())) {
-                    //被克，伤害减低一半
-                    harm /= 2;
-                }
-                if (harm <= 0 || hero.getRandom().nextInt(100) > monster.getHitRate()) {
-                    harm = random.nextLong(hero.getMaxMazeLev());
-                }
-                if (hero.getRandom().nextInt(100) > monster.getHitRate()) {
-                    harm = random.nextLong(hero.getMaxMazeLev() + 1);
-                    String s = monster.getFormatName() + "攻击打偏了";
-                    addMessage(context, s);
-                    monster.addBattleDesc(s);
-                }
 
-                if (harm >= hero.getHp()) {
-                    Skill sy = SkillFactory.getSkill("瞬间移动", hero);
-                    if (sy.isActive() && sy.perform()) {
-                        return sy.release(monster);
-                    } else {
-                        sy = SkillFactory.getSkill("反杀", hero);
+                    if (harm >= hero.getHp()) {
+                        Skill sy = SkillFactory.getSkill("瞬间移动", hero);
                         if (sy.isActive() && sy.perform()) {
                             return sy.release(monster);
+                        } else {
+                            sy = SkillFactory.getSkill("反杀", hero);
+                            if (sy.isActive() && sy.perform()) {
+                                return sy.release(monster);
+                            }
                         }
                     }
-                }
 
-                if (random.nextLong(100) + hero.getDodgeRate() + random.nextLong(hero.getAgility() + 1) / 5000 > 97 + random.nextInt(100) + random.nextLong(hero.getPower() + 1) / 5000) {
-                    String dodgeMsg = hero.getFormatName() + "身手敏捷的闪开了" + monster.getFormatName() + "的攻击";
-                    addMessage(context, dodgeMsg);
-                    monster.addBattleDesc(dodgeMsg);
-                } else {
-                    if (hero.isParry()) {
-                        String parrymsg = hero.getFormatName() + "成功进行了一次格挡，减少了受到的伤害！";
-                        addMessage(context, parrymsg);
-                        monster.addBattleDesc(parrymsg);
+                    if (random.nextLong(100) + hero.getDodgeRate() + random.nextLong(hero.getAgility() + 1) / 5000 > 97 + random.nextInt(100) + random.nextLong(hero.getPower() + 1) / 5000) {
+                        String dodgeMsg = hero.getFormatName() + "身手敏捷的闪开了" + monster.getFormatName() + "的攻击";
+                        addMessage(context, dodgeMsg);
+                        monster.addBattleDesc(dodgeMsg);
+                    } else {
+                        if (hero.isParry()) {
+                            String parrymsg = hero.getFormatName() + "成功进行了一次格挡，减少了受到的伤害！";
+                            addMessage(context, parrymsg);
+                            monster.addBattleDesc(parrymsg);
+                        }
+                        hero.addHp(-harm);
+                        String defmsg = monster.getFormatName() + "攻击了" + hero.getFormatName() +
+                                "，造成了<font color=\"red\">" + StringUtils.formatNumber(harm) + "</font>点伤害。";
+                        addMessage(context, defmsg);
+                        monster.addBattleDesc(defmsg);
                     }
-                    hero.addHp(-harm);
-                    String defmsg = monster.getFormatName() + "攻击了" + hero.getFormatName() +
-                            "，造成了<font color=\"red\">" + StringUtils.formatNumber(harm) + "</font>点伤害。";
-                    addMessage(context, defmsg);
-                    monster.addBattleDesc(defmsg);
                 }
             }
+            return isJump;
         }
-        return isJump;
     }
 
     public static boolean heroAtk(BaseContext context, Hero hero, Monster monster) {
@@ -201,7 +208,7 @@ public class BattleController {
 
         boolean atk = random.nextLong(hero.getAgility() + 100) > monster.getHp() / 2 || random.nextBoolean();
         boolean isJump = false;
-        if(hero.getGift() == Gift.ElementReject && hero.getElement() == Element.无 && hero.getRejectElement() == monster.getElement() && random.nextInt(100) < 55){
+        if (hero.getGift() == Gift.ElementReject && hero.getElement() == Element.无 && hero.getRejectElement() == monster.getElement() && random.nextInt(100) < 55) {
             String rejectString = hero.getFormatName() + "因为元素抗拒天赋秒杀了" + monster.getFormatName();
             addMessage(context, rejectString);
             monster.addBattleDesc(msg);
@@ -267,7 +274,7 @@ public class BattleController {
                     String skillMsg = hero.getFormatName() + "因为技能<元素吸收>恢复了生命。";
                     context.addMessage(skillMsg);
                     monster.addBattleDesc(skillMsg);
-                    hero.addHp(hero.getUpperAtk()/10);
+                    hero.addHp(hero.getUpperAtk() / 10);
                 }
             }
             String defeatmsg = hero.getFormatName() + "击败了" + monster.getFormatName() + "， 获得了<font color=\"blue\">" + monster.getMaterial() + "</font>份锻造点数。";

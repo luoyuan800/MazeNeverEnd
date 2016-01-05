@@ -87,8 +87,8 @@ public class WheelView extends View implements GestureDetector.OnGestureListener
 		mMarkTextColor = 0xFF666666;
 		mMarkColor = 0xFFEEEEEE;
 		mCursorSize = density * 18;
-		mCenterTextSize = density * 22;
-		mNormalTextSize = density * 18;
+		mCenterTextSize = density * 15;
+		mNormalTextSize = density * 10;
 		mBottomSpace = density * 6;
 
 		TypedArray ta = attrs == null ? null : getContext().obtainStyledAttributes(attrs, R.styleable.lwvWheelView);

@@ -19,7 +19,7 @@ import cn.gavin.monster.FirstName;
 import cn.gavin.monster.Monster;
 import cn.gavin.monster.SecondName;
 import cn.gavin.palace.nskill.NSkill;
-import cn.gavin.upload.PalaceObject;
+import cn.gavin.story.PalaceObject;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -28,28 +28,6 @@ import cn.gavin.utils.StringUtils;
  * Created by gluo on 10/9/2015.
  */
 public class PalaceMonster extends Base {
-    public static void updatePalace(final MainGameActivity context) {
-        BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
-        query.setLimit(context.getPalaceCount());
-        query.findObjects(context, new FindListener<PalaceObject>() {
-            @Override
-            public void onSuccess(final List<PalaceObject> palaceObjects) {
-                DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM palace");
-                for (PalaceObject object : palaceObjects) {
-                    object.save();
-                }
-                context.getHandler().sendEmptyMessage(106);
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                Message message = new Message();
-                message.what = 106;
-                message.obj = s;
-                context.getHandler().sendEmptyMessage(106);
-            }
-        });
-    }
 
     public static void getPalaceCount(final BaseContext context) {
         BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();

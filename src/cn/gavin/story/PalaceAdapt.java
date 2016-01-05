@@ -1,4 +1,4 @@
-package cn.gavin.monster;
+package cn.gavin.story;
 
 import android.text.Html;
 import android.view.View;
@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.List;
 import java.util.Stack;
 
 import cn.gavin.activity.MainGameActivity;
@@ -22,7 +23,7 @@ public class PalaceAdapt extends BaseAdapter{
         TextView name1;
     }
 
-    private final Stack<String> adapterData = PalaceMonster.getPalaceListString();
+    private final List<NPC> adapterData = NPC.loadNPCByType(NPC.PALACE_NPC);
 
     @Override
     public int getCount() {
@@ -30,7 +31,7 @@ public class PalaceAdapt extends BaseAdapter{
     }
 
     @Override
-    public String getItem(int position) {
+    public NPC getItem(int position) {
         if (position >= getCount()) position = 0;
         return adapterData.get(position);
     }
@@ -51,9 +52,9 @@ public class PalaceAdapt extends BaseAdapter{
         } else {
             holder = (PalaceViewHolder) convertView.getTag();
         }
-        String item = getItem(position);
+        NPC item = getItem(position);
         if (item != null) {
-            holder.name1.setText(Html.fromHtml(item));
+            holder.name1.setText(Html.fromHtml(item.getSimpleHTMLDesc()));
         } else {
             holder.name1.setText("");
         }

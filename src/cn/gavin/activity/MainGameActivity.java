@@ -48,8 +48,7 @@ import cn.gavin.maze.Maze;
 import cn.gavin.maze.MazeService;
 import cn.gavin.monster.Monster;
 import cn.gavin.monster.MonsterBook;
-import cn.gavin.monster.PalaceAdapt;
-import cn.gavin.palace.PalaceMonster;
+import cn.gavin.story.PalaceAdapt;
 import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
 import cn.gavin.pet.PetDialog;
@@ -60,7 +59,7 @@ import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.skill.SkillMainDialog;
 import cn.gavin.upload.CdKey;
-import cn.gavin.upload.PalaceObject;
+import cn.gavin.story.PalaceObject;
 import cn.gavin.upload.Upload;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.ScreenUtils;
@@ -129,7 +128,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private Button upgradeHSwordButton;
     private Button upgradeHArmorButton;
     private boolean isHidBattle;
-    private int palaceCount;
     private boolean updatePalace;
     private TextView characterName;
     private View mainRightDown;
@@ -470,10 +468,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         break;
                     case 106:
                         updatePalace = false;
-                        palaceCount = 0;
                         break;
                     case 203:
-                        palaceCount = msg.arg1;
                         break;
                     case 105:
                         Toast.makeText(context, "--上传失败!" + msg.obj + "--", Toast.LENGTH_LONG)
@@ -1401,68 +1397,42 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
     }
 
-    private void showPalace() {
-        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT count(*) FROM palace");
 
-        if (palaceCount == 0 || cursor.getLong(0) == palaceCount) {
-            handler.sendEmptyMessage(107);
-        } else {
-            AlertDialog updateAlert = new Builder(this).create();
-            updateAlert.setTitle("殿堂更新了，是否下载数据？");
-            updateAlert.setButton(DialogInterface.BUTTON_NEGATIVE, "不更新",
-                    new DialogInterface.OnClickListener() {
+    private void updatePalace(){
+        updatePalace = true;
+        new Thread() {
+            @Override
+            public void run() {
+                PalaceObject.updatePalace(context);
+            }
+        }.start();
 
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            handler.sendEmptyMessage(107);
-                        }
-
-                    });
-            updateAlert.setButton(DialogInterface.BUTTON_POSITIVE, "更新殿堂",
-                    new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            updatePalace = true;
-                            new Thread() {
-                                @Override
-                                public void run() {
-                                    PalaceMonster.updatePalace(context);
-                                }
-                            }.start();
-
-                            final ProgressDialog progressDialog = new ProgressDialog(context);
-                            progressDialog.setTitle("正在更新殿堂数据");
-                            progressDialog.show();
-                            new Thread() {
-                                @Override
-                                public void run() {
-                                    int count = 0;
-                                    try {
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException e) {
-                                        LogHelper.logException(e);
-                                        e.printStackTrace();
-                                    }
-                                    while (updatePalace && count < 100000) {
-                                        try {
-                                            Thread.sleep(refreshInfoSpeed);
-                                        } catch (InterruptedException e) {
-                                            Thread.currentThread().interrupt();
-                                            e.printStackTrace();
-                                        }
-                                        count++;
-                                    }
-                                    progressDialog.dismiss();
-                                    handler.sendEmptyMessage(107);
-                                }
-                            }.start();
-                        }
-                    });
-            updateAlert.show();
-        }
+        final ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle("正在更新殿堂数据");
+        progressDialog.show();
+        new Thread() {
+            @Override
+            public void run() {
+                int count = 0;
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    LogHelper.logException(e);
+                    e.printStackTrace();
+                }
+                while (updatePalace && count < 100000) {
+                    try {
+                        Thread.sleep(refreshInfoSpeed);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        e.printStackTrace();
+                    }
+                    count++;
+                }
+                progressDialog.dismiss();
+                handler.sendEmptyMessage(107);
+            }
+        }.start();
     }
 
     private void showLockBox() {
@@ -1858,14 +1828,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         save();
     }
 
-    public int getPalaceCount() {
-        return palaceCount;
-    }
-
-    public void setPalaceCount(int palaceCount) {
-        this.palaceCount = palaceCount;
-    }
-
     public void setHidBattle(boolean isHidBattle) {
         this.isHidBattle = isHidBattle;
     }
@@ -2056,7 +2018,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 bagDialog.findViewById(R.id.accessory_button).setOnClickListener(this);
                 break;
             case R.id.dian_button://殿堂
-                showPalace();
+                updatePalace();
                 break;
             case R.id.shang_button://商店
                 ShopDialog shopDialog = new ShopDialog(context);

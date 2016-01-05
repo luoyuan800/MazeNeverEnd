@@ -1,10 +1,7 @@
 package cn.gavin.forge;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.database.Cursor;
-import android.os.Message;
 import android.util.Log;
 
 import cn.bmob.v3.BmobObject;
@@ -13,7 +10,6 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
-import cn.gavin.upload.PalaceObject;
 import cn.gavin.utils.StringUtils;
 
 import java.util.ArrayList;
