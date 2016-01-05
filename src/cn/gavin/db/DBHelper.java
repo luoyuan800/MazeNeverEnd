@@ -17,6 +17,7 @@ import cn.gavin.log.LogHelper;
 import cn.gavin.monster.MonsterDB;
 import cn.gavin.palace.PalaceMonster;
 import cn.gavin.pet.PetDB;
+import cn.gavin.story.NPC;
 
 /**
  * Created by gluo on 9/14/2015.
@@ -97,14 +98,7 @@ public class DBHelper {
                     "addition_harm TEXT" +
                     ")";
             db.execSQL(createTable);
-            createTable = "CREATE TABLE npc(" +
-                    "name TEXT NOT NULL PRIMARY KEY," +
-                    "atk TEXT," +
-                    "hp TEXT," +
-                    "lev TEXT" +
-                    ")";
-            db.execSQL(createTable);
-            db.execSQL("CREATE UNIQUE INDEX npc_index ON npc (name,lev)");
+            NPC.createTable(db);
             ForgeDB forgeDB = new ForgeDB();
             forgeDB.createTable(db);
             PalaceMonster.createDB(db);

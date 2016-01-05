@@ -7,10 +7,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.Stack;
 
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.palace.PalaceMonster;
 
 /**
  * Copyright 2015 gluo.
@@ -23,7 +21,7 @@ public class PalaceAdapt extends BaseAdapter{
         TextView name1;
     }
 
-    private final List<NPC> adapterData = NPC.loadNPCByType(NPC.PALACE_NPC);
+    private final List<NPC> adapterData = NPC.loadNPCByType(NPC.getPalaceNpc());
 
     @Override
     public int getCount() {

@@ -141,7 +141,7 @@ public class PalaceObject extends BmobObject {
 
     public void save() {
         DBHelper dbHelper = DBHelper.getDbHelper();
-        Cursor cursor = dbHelper.excuseSOL("select uuid from npc where type = " + NPC.PALACE_NPC + " and lev = '" + lev);
+        Cursor cursor = dbHelper.excuseSOL("select uuid from npc where type = " + NPC.getPalaceNpc() + " and lev = '" + lev);
         if (!cursor.isAfterLast()) {
             dbHelper.excuseSQLWithoutResult("delete from table where uuid = '" + cursor.getString(0) + "'");
         }
