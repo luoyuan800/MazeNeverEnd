@@ -18,7 +18,9 @@ import cn.gavin.forge.RingBuilder;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.gift.Gift;
 import cn.gavin.log.LogHelper;
+import cn.gavin.monster.FirstName;
 import cn.gavin.monster.Monster;
+import cn.gavin.monster.SecondName;
 import cn.gavin.pet.Pet;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;
@@ -110,7 +112,13 @@ public class Hero implements BaseObject {
     private boolean mV = false;
     private Gift gift;
     private Element rejectElement;
-
+    private int hold;
+    public void setHold(int hold){
+        this.hold = hold;
+    }
+    public boolean isHold(){
+        return hold != 0 && hold-- > 0;
+    }
     public Float getParry() {
         return parry;
     }
@@ -555,7 +563,16 @@ public class Hero implements BaseObject {
     }
 
     public Skill useAttackSkill(Monster monster) {
-        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill, itemSkill);
+        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill, fourthSkill, fifitSkill, sixthSkill);
+        for (Skill skill : existSkill) {
+            if (skill != null && skill instanceof AttackSkill && skill.perform()) {
+                return skill;
+            }
+        }
+        return null;
+    }
+    public Skill useAtkSkill() {
+        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill, fourthSkill, fifitSkill, sixthSkill);
         for (Skill skill : existSkill) {
             if (skill != null && skill instanceof AttackSkill && skill.perform()) {
                 return skill;
@@ -565,7 +582,19 @@ public class Hero implements BaseObject {
     }
 
     public Skill useDefendSkill(Monster monster) {
-        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill, itemSkill);
+        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill, fourthSkill, fifitSkill, sixthSkill);
+        for (Skill skill : existSkill) {
+            if (skill != null && skill instanceof DefendSkill) {
+                if (skill.perform()) {
+                    return skill;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Skill useDefSkill() {
+        List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill, fourthSkill, fifitSkill, sixthSkill);
         for (Skill skill : existSkill) {
             if (skill != null && skill instanceof DefendSkill) {
                 if (skill.perform()) {
@@ -1546,4 +1575,22 @@ public class Hero implements BaseObject {
     public Element getRejectElement() {
         return rejectElement;
     }
+
+    public Skill getPropertySkill(String name){
+        return SkillFactory.getSkill(name, this);
+    }
+
+    public boolean isPetSub(){
+        return random.nextBoolean();
+    }
+
+    public boolean isSilent(Random random) {
+        return random.nextBoolean();
+    }
+
+    public Monster formatAsMonster() {
+        return new Monster(FirstName.empty, SecondName.empty,name,getHp(),getAttackValue());
+    }
+
+
 }

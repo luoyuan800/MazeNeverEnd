@@ -21,7 +21,7 @@ public class PalaceAdapt extends BaseAdapter{
         TextView name1;
     }
 
-    private final List<NPC> adapterData = NPC.loadNPCByType(NPC.getPalaceNpc());
+    private final List<NPC> adapterData = NPC.loadNPCByType(NPC.PALACE_NPC);
 
     @Override
     public int getCount() {

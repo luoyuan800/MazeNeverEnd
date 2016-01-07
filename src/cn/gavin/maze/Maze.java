@@ -14,6 +14,7 @@ import cn.gavin.pet.PetDB;
 import cn.gavin.pet.skill.PetSkill;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;
+import cn.gavin.story.NPC;
 import cn.gavin.story.StoryHelper;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
@@ -191,9 +192,17 @@ public class Maze {
                         isBoss = true;
                     }
                     if (monster == null && random.nextLong(1000) > 899) {
-                        monster = Monster.getBoss(this, hero);
-                        isBoss = true;
                         step += 21;
+                        NPC boss = NPC.build(level);
+                        if(boss!=null){
+                            if(NPCBattleController.battle(hero,boss,random,this,context)){
+                                beatJudge(context, boss.formatAsMonster());
+                            }
+                            continue;
+                        }else {
+                            monster = Monster.getBoss(this, hero);
+                            isBoss = true;
+                        }
                     }
                     if (monster == null) {
                         monster = new Monster(hero, this);
@@ -223,61 +232,7 @@ public class Maze {
                             }
                         }
                     } else {
-                        if (level > 25) {
-                            context.save();
-                        }
-                        monster.setBeatCount(monster.getBeatCount() + 1);
-                        GoodsType medallion = GoodsType.Medallion;
-                        medallion.load();
-                        if (medallion.getCount() > 0) {
-                            medallion.getScript().use();
-                            String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
-                                    "打败了。<br>" + hero.getFormatName() + "掏出金晃晃的" + medallion.getName() + "晃瞎了大家的双眼。<br>" + hero.getFormatName() + "和他的宠物们原地复活了。";
-                            addMessage(context, notDie);
-                            monster.addBattleDesc(notDie);
-                            hero.restoreHalf();
-                        } else {
-                            GoodsType safetyRope = GoodsType.SafetyRope;
-                            safetyRope.load();
-                            if (safetyRope.getCount() > 0) {
-                                safetyRope.getScript().use();
-                                long slev = level / 10 + 1;
-                                String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
-                                        "打败了。<br>" + hero.getFormatName() + "因为" + safetyRope.getName() + "护体掉到了" + slev;
-                                addMessage(context, notDie);
-                                monster.addBattleDesc(notDie);
-                                hero.restoreHalf();
-                                streaking = 0;
-                                step = 0;
-                                this.level = slev;
-                            } else {
-                                GoodsType halfSail = GoodsType.HalfSafe;
-                                halfSail.load();
-                                if (halfSail.getCount() > 0) {
-                                    halfSail.getScript().use();
-                                    long slev = level / 2 + 1;
-                                    String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
-                                            "打败了。<br>" + hero.getFormatName() + "因为" + halfSail.getName() + "护体掉到了" + slev;
-                                    addMessage(context, notDie);
-                                    monster.addBattleDesc(notDie);
-                                    hero.restoreHalf();
-                                    streaking = 0;
-                                    step = 0;
-                                    this.level = slev;
-                                } else {
-                                    streaking = 0;
-                                    step = 0;
-                                    String defeatedmsg = hero.getFormatName() + "被" + monster.getFormatName() + "打败了，掉回到迷宫第一层。";
-                                    addMessage(context, defeatedmsg);
-                                    monster.addBattleDesc(defeatedmsg);
-                                    this.level = 1;
-                                    hero.restore();
-                                }
-                            }
-                        }
-                        context.showFloatView(monster.getBattleMsg());
-                        lastSave = level;
-                        isBoss = true;
+                        isBoss = beatJudge(context, monster);
                     }
                     MonsterDB.updateMonster(monster);
                     addMessage(context, "-----------------------------");
@@ -325,6 +280,66 @@ public class Maze {
         }
 
         moving = false;
+    }
+
+    private boolean beatJudge(MainGameActivity context, Monster monster) {
+        boolean isBoss;
+        if (level > 25) {
+            context.save();
+        }
+        monster.setBeatCount(monster.getBeatCount() + 1);
+        GoodsType medallion = GoodsType.Medallion;
+        medallion.load();
+        if (medallion.getCount() > 0) {
+            medallion.getScript().use();
+            String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
+                    "打败了。<br>" + hero.getFormatName() + "掏出金晃晃的" + medallion.getName() + "晃瞎了大家的双眼。<br>" + hero.getFormatName() + "和他的宠物们原地复活了。";
+            addMessage(context, notDie);
+            monster.addBattleDesc(notDie);
+            hero.restoreHalf();
+        } else {
+            GoodsType safetyRope = GoodsType.SafetyRope;
+            safetyRope.load();
+            if (safetyRope.getCount() > 0) {
+                safetyRope.getScript().use();
+                long slev = level / 10 + 1;
+                String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
+                        "打败了。<br>" + hero.getFormatName() + "因为" + safetyRope.getName() + "护体掉到了" + slev;
+                addMessage(context, notDie);
+                monster.addBattleDesc(notDie);
+                hero.restoreHalf();
+                streaking = 0;
+                step = 0;
+                this.level = slev;
+            } else {
+                GoodsType halfSail = GoodsType.HalfSafe;
+                halfSail.load();
+                if (halfSail.getCount() > 0) {
+                    halfSail.getScript().use();
+                    long slev = level / 2 + 1;
+                    String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
+                            "打败了。<br>" + hero.getFormatName() + "因为" + halfSail.getName() + "护体掉到了" + slev;
+                    addMessage(context, notDie);
+                    monster.addBattleDesc(notDie);
+                    hero.restoreHalf();
+                    streaking = 0;
+                    step = 0;
+                    this.level = slev;
+                } else {
+                    streaking = 0;
+                    step = 0;
+                    String defeatedmsg = hero.getFormatName() + "被" + monster.getFormatName() + "打败了，掉回到迷宫第一层。";
+                    addMessage(context, defeatedmsg);
+                    monster.addBattleDesc(defeatedmsg);
+                    this.level = 1;
+                    hero.restore();
+                }
+            }
+        }
+        context.showFloatView(monster.getBattleMsg());
+        lastSave = level;
+        isBoss = true;
+        return isBoss;
     }
 
     private void addMessage(MainGameActivity context, String msg) {

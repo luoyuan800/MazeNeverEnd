@@ -3,6 +3,9 @@ package cn.gavin.skill;
 import android.database.Cursor;
 import android.util.Log;
 import android.widget.Button;
+
+import java.lang.reflect.Method;
+
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
@@ -12,6 +15,9 @@ import cn.gavin.monster.Monster;
 import cn.gavin.skill.expression.DescExpression;
 import cn.gavin.skill.expression.EnableExpression;
 import cn.gavin.skill.expression.UseExpression;
+import cn.gavin.skill.type.AttackSkill;
+import cn.gavin.skill.type.DefendSkill;
+import cn.gavin.skill.type.PropertySkill;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -270,4 +276,42 @@ public abstract class Skill {
     public boolean equal(Skill skill) {
         return skill != null && name.equalsIgnoreCase(skill.getName());
     }
+
+    public Skill copy() {
+        if(this instanceof AttackSkill){
+            AttackSkill skill = new AttackSkill();
+            AttackSkill thisSkill = (AttackSkill) this;
+            skill.setName(thisSkill.getName());
+            skill.setProbability(thisSkill.getProbability());
+            skill.setBaseHarm(thisSkill.getBaseHarm());
+            skill.setAdditionHarm(thisSkill.getAdditionHarm());
+            skill.setCount(thisSkill.getCount());
+            return skill;
+        }else if(this instanceof DefendSkill){
+            DefendSkill skill = new DefendSkill();
+            DefendSkill thisSkill = (DefendSkill) this;
+            skill.setName(this.getName());
+            skill.setProbability(thisSkill.getProbability());
+            skill.setCount(thisSkill.getCount());
+            return skill;
+        } else if(this instanceof PropertySkill){
+            PropertySkill skill = new PropertySkill();
+            PropertySkill thisSkill = (PropertySkill) this;
+            skill.setName(this.getName());
+            skill.setHp(thisSkill.getHp());
+            skill.setPetSize(thisSkill.getPetSize());
+            skill.setProbability(thisSkill.getProbability());
+            skill.setDef(thisSkill.getDef());
+            skill.setAgi(thisSkill.getAgi());
+            skill.setAtk(thisSkill.getAtk());
+            skill.setClickAward(thisSkill.getClickAward());
+            skill.setEggRate(thisSkill.getEggRate());
+            skill.setEggStep(thisSkill.getEggStep());
+            skill.setLife(thisSkill.getLife());
+            skill.setPetRate(thisSkill.getPetRate());
+            return skill;
+        }
+        return null;
+    }
+
 }

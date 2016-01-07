@@ -79,17 +79,7 @@ public class Monster {
 
     public static Monster getBoss(Maze maze, Hero hero) {
         Random random = new Random();
-        Monster monster;
-        Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM palace WHERE lev = '" + maze.getLev() + "'");
-        if (!cursor.isAfterLast()) {
-            long atk = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk")));
-            long hp = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))) + StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def")));
-            monster = new Monster(FirstName.empty, SecondName.defender, cursor.getString(cursor.getColumnIndex("name")), atk, hp);
-            monster.setElement(Element.valueOf(cursor.getString(cursor.getColumnIndex("element"))));
-            monster.setSilent(65);
-        } else {
-            monster = buildDefaultDefender(maze, hero, random);
-        }
+        Monster monster = buildDefaultDefender(maze, hero, random);
         if (monster.material == 0) {
             monster.material = random.nextLong(maze.getLev() * monster.atk + 1) / 3115 + 55;
         }

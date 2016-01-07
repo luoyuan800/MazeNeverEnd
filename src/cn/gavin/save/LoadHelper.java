@@ -43,7 +43,7 @@ public class LoadHelper {
     }
 
     public void loadValue(Hero hero) {
-        SharedPreferences preferences = context.getSharedPreferences("preValueForHat", Context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences("preValueForHat2.0", Context.MODE_PRIVATE);
         boolean save = preferences.getBoolean("exist", false);
         if (save) {
             for (Map.Entry<String, ?> entry : preferences.getAll().entrySet()) {
@@ -53,7 +53,7 @@ public class LoadHelper {
             }
         }
 
-        preferences = context.getSharedPreferences("preValueForNet", Context.MODE_PRIVATE);
+        preferences = context.getSharedPreferences("preValueForNet2.0", Context.MODE_PRIVATE);
         save = preferences.getBoolean("exist", false);
         if (save) {
             for (Map.Entry<String, ?> entry : preferences.getAll().entrySet()) {
@@ -63,7 +63,7 @@ public class LoadHelper {
             }
         }
 
-        preferences = context.getSharedPreferences("preValueForRing", Context.MODE_PRIVATE);
+        preferences = context.getSharedPreferences("preValueForRing2.0", Context.MODE_PRIVATE);
         save = preferences.getBoolean("exist", false);
         if (save) {
             for (Map.Entry<String, ?> entry : preferences.getAll().entrySet()) {
@@ -77,7 +77,7 @@ public class LoadHelper {
     public void loadHero() {
         Hero heroN = new Hero("勇者");
         Maze maze = new Maze(heroN);
-        SharedPreferences preferences = context.getSharedPreferences("hero", Context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences("hero2.0", Context.MODE_PRIVATE);
         heroN.setName(preferences.getString("name", "勇者"));
         heroN.setHp(preferences.getLong("hp", 20));
         heroN.setUpperHp(preferences.getLong("upperHp", 20));
@@ -85,17 +85,7 @@ public class LoadHelper {
         heroN.setDefenseValue(preferences.getLong("baseDefense", 1));
         heroN.setClick(preferences.getLong("click", 0));
         heroN.setPoint(preferences.getLong("point", 0));
-        if (!preferences.contains("n_material")) {
-            //第一次升级到1.8
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putLong("n_material", preferences.getLong("material", 0));
-            editor.putLong("o_material", preferences.getLong("material", 0));
-            heroN.setMaterial(preferences.getLong("material", 0));
-            editor.apply();
-        } else {
-            heroN.setMaterial(preferences.getLong("n_material", 0));
-        }
-
+        heroN.setMaterial(preferences.getLong("material", 0));
         heroN.setSwordLev(preferences.getLong("swordLev", 0));
         heroN.setArmorLev(preferences.getLong("armorLev", 0));
         heroN.setMaxMazeLev(preferences.getLong("maxMazeLev", 1));
@@ -110,6 +100,10 @@ public class LoadHelper {
         MazeContents.lastUpload = preferences.getLong("lastUploadLev", 1);
         maze.setLevel(preferences.getLong("currentMazeLev", 1));
         String ach = preferences.getString("achievement", "0");
+        if(ach.equals("0")){
+            SharedPreferences preferences0 = context.getSharedPreferences("hero", Context.MODE_PRIVATE);
+            ach = preferences0.getString("achievement", "0");
+        }
         for (int i = 0; i < ach.length() && i < Achievement.values().length; i++) {
             int enable = StringUtils.toInt(ach.charAt(i) + "");
             if (enable == 1) {

@@ -6,12 +6,15 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.gavin.Achievement;
 import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.db.DBHelper;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;
-import cn.gavin.skill.type.PropertySkill;
+import cn.gavin.skill.type.AttackSkill;
+import cn.gavin.skill.type.DefendSkill;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -43,15 +46,15 @@ public class NPC extends Hero {
         db.execSQL("CREATE UNIQUE INDEX npc_index ON npc (uuid)");
     }
 
+    public void insertNPC(){
+        String sql = "replace into npc values('%s', '%s', %s, %s, %s, '%s', '%s', '%s', '%s', 0, '%s', '%s', %s)";
+    }
+
     private String name;
     private Element element;
     private long lev;
-    private long atk;
-    private long def;
-    private long hp;
-    private long maxHp;
     private List<Skill> skillList;
-    private Skill propertySkill;
+    private List<Skill> propertySkillList;
     private String desc;
     private boolean defeat;
     private String accName;
@@ -82,8 +85,8 @@ public class NPC extends Hero {
     private static NPC buildNpc(Cursor cursor) {
         NPC npc = new NPC();
         npc.setHp(cursor.getLong(cursor.getColumnIndex("hp")));
-        npc.setAtk(cursor.getLong(cursor.getColumnIndex("atk")));
-        npc.setDef(cursor.getLong(cursor.getColumnIndex("def")));
+        npc.setAttackValue(cursor.getLong(cursor.getColumnIndex("atk")));
+        npc.setDefenseValue(cursor.getLong(cursor.getColumnIndex("def")));
         npc.setSkill(cursor.getString(cursor.getColumnIndex("skill")));
         npc.setAccName(cursor.getString(cursor.getColumnIndex("acc")));
         npc.setAchName(cursor.getString(cursor.getColumnIndex("ach")));
@@ -127,41 +130,9 @@ public class NPC extends Hero {
         this.lev = lev;
     }
 
-    public long getAtk() {
-        return atk;
-    }
-
-    public void setAtk(long atk) {
-        this.atk = atk;
-    }
-
-    public long getDef() {
-        return def;
-    }
-
-    public void setDef(long def) {
-        this.def = def;
-    }
-
-    public Long getHp() {
-        return hp;
-    }
-
     public void setHp(long hp) {
-        this.hp = hp;
-        this.maxHp = hp;
-    }
-
-    public void addHp(long hp){
-        this.hp += hp;
-    }
-
-    public long getMaxHp() {
-        return maxHp;
-    }
-
-    public void setMaxHp(long maxHp) {
-        this.maxHp = maxHp;
+        super.setHp(hp);
+        super.setUpperHp(hp);
     }
 
     public List<Skill> getSkillList() {
@@ -174,6 +145,8 @@ public class NPC extends Hero {
         for (String name : skillNames) {
             Skill s = SkillFactory.getSkill(name, this);
             if (s != null) {
+                s = s.copy();
+                s.setHero(this);
                 skillList.add(s);
             }
         }
@@ -183,12 +156,24 @@ public class NPC extends Hero {
         this.skillList = skillList;
     }
 
-    public Skill getPropertySkill() {
-        return propertySkill;
+    public Skill getPropertySkill(String name) {
+        for(Skill skill : propertySkillList){
+            if(skill.getName().equals(name)){
+                return skill;
+            }
+        }
+        return null;
     }
 
     public void setPropertySkill(String propertySkill) {
-        this.propertySkill = SkillFactory.getSkill(propertySkill, this);
+        for(String name : StringUtils.split(propertySkill, "_")) {
+            Skill skill = SkillFactory.getSkill(name, this);
+            if(skill!=null){
+                skill = skill.copy();
+                skill.setHero(this);
+                propertySkillList.add(skill);
+            }
+        }
     }
 
     public String getDesc() {
@@ -219,7 +204,44 @@ public class NPC extends Hero {
         return achName;
     }
 
+    public void defeat(){
+        if(StringUtils.isNotEmpty(accName)){
+            DBHelper.getDbHelper().excuseSOL("UPDATE recipe set found = '" + Boolean.TRUE + "' WHERE name = '" + accName + "'");
+        }
+        if(StringUtils.isNotEmpty(achName)){
+            Achievement.valueOf(achName).enable(MazeContents.hero);
+        }
+    }
+
     public void setAchName(String achName) {
         this.achName = achName;
+    }
+
+    public Skill useAtkSkill(){
+        for(Skill skill : skillList){
+            if(skill instanceof AttackSkill && skill.perform()){
+                return skill;
+            }
+        }
+        return null;
+    }
+
+    public Skill useDefSkill() {
+        for(Skill skill : skillList){
+            if(skill instanceof DefendSkill && skill.perform()){
+                return skill;
+            }
+        }
+        return null;
+    }
+
+    public static NPC build(long level) {
+        NPC npc = null;
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("select * from npc where lev = " + level + " and found = 0");
+        if(!cursor.isAfterLast()){
+            npc= buildNpc(cursor);
+        }
+        cursor.close();
+        return npc;
     }
 }

@@ -33,7 +33,7 @@ public class SaveHelper {
 
     public void savePreValue() {
         Hero hero = MazeContents.hero;
-        SharedPreferences preferences = context.getSharedPreferences("preValueForHat", Context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences("preValueForHat2.0", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         boolean save = false;
         if (!hero.preValueForHat.isEmpty()) {
@@ -45,7 +45,7 @@ public class SaveHelper {
         editor.putBoolean("exist", save);
         editor.apply();
 
-        preferences = context.getSharedPreferences("preValueForNet", Context.MODE_PRIVATE);
+        preferences = context.getSharedPreferences("preValueForNet2.0", Context.MODE_PRIVATE);
         editor = preferences.edit();
         save = false;
         if (!hero.preValueForNek.isEmpty()) {
@@ -57,7 +57,7 @@ public class SaveHelper {
         editor.putBoolean("exist", save);
         editor.apply();
 
-        preferences = context.getSharedPreferences("preValueForRing", Context.MODE_PRIVATE);
+        preferences = context.getSharedPreferences("preValueForRing2.0", Context.MODE_PRIVATE);
         editor = preferences.edit();
         save = false;
         if (!hero.preValueForRing.isEmpty()) {
@@ -73,7 +73,7 @@ public class SaveHelper {
     public void saveHero() {
         Hero heroN = context.getHero();
         Maze maze = context.getMaze();
-        SharedPreferences preferences = context.getSharedPreferences("hero", Context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences("hero2.0", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("name", heroN.getName());
         editor.putLong("hp", heroN.getRealHP());
@@ -82,7 +82,7 @@ public class SaveHelper {
         editor.putLong("baseDefense", heroN.getBaseDefense());
         editor.putLong("click", heroN.getClick());
         editor.putLong("point", heroN.getPoint());
-        editor.putLong("n_material", heroN.getMaterial());
+        editor.putLong("material", heroN.getMaterial());
         editor.putLong("swordLev", heroN.getSwordLev());
         editor.putLong("armorLev", heroN.getArmorLev());
         editor.putString("swordName", heroN.getSword());
