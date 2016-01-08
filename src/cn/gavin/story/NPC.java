@@ -233,6 +233,7 @@ public class NPC extends Hero {
         npc.setHitRate(cursor.getLong(cursor.getColumnIndex("hit_rate")));
         npc.setParry(cursor.getFloat(cursor.getColumnIndex("parry")));
         npc.setElement(cursor.getString(cursor.getColumnIndex("element")));
+        npc.setUuid(cursor.getString(cursor.getColumnIndex("uuid")));
         return npc;
     }
 
@@ -346,11 +347,12 @@ public class NPC extends Hero {
 
     public void defeat() {
         if (StringUtils.isNotEmpty(accName)) {
-            DBHelper.getDbHelper().excuseSOL("UPDATE recipe set found = '" + Boolean.TRUE + "' WHERE name = '" + accName + "'");
+            DBHelper.getDbHelper().excuseSQLWithoutResult("UPDATE recipe set found = '" + Boolean.TRUE + "' WHERE name = '" + accName + "'");
         }
         if (StringUtils.isNotEmpty(achName)) {
             Achievement.valueOf(achName).enable(MazeContents.hero);
         }
+        DBHelper.getDbHelper().excuseSQLWithoutResult("UPDATE npc set found = 1 , defeat = " + (defeat ? 1 : 0) + " WHERE uuid = '" + getUuid() + "'");
     }
 
     public void setAchName(String achName) {
