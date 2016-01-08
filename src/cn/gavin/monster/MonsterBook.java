@@ -107,7 +107,7 @@ public class MonsterBook {
         List<String> names = new ArrayList<String>(allMonster.size());
         int knownCount = 0;
         for (Monster monster : allMonster) {
-            if (monster.getMeet_lev() > 0) {
+            if (monster.getCatch_lev() > 0) {
                 names.add(monster.getType());
                 monsters.add(monster);
                 knownCount++;
@@ -126,7 +126,7 @@ public class MonsterBook {
             }
         });
         alertDialog.setView(view);
-        alertDialog.setTitle("怪物图鉴 " + (knownCount/allMonster.size() * 100) + "%");
+        alertDialog.setTitle("怪物图鉴 " + (knownCount*100/allMonster.size() ) + "%");
         alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
 
             @Override

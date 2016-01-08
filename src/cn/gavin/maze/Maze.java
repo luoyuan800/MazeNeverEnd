@@ -196,7 +196,7 @@ public class Maze {
                         NPC boss = NPC.build(level);
                         if(boss!=null){
                             if(NPCBattleController.battle(hero,boss,random,this,context)){
-                                beatJudge(context, boss.formatAsMonster());
+                                beatJudge(context, boss.formatAsMonster(), true);
                             }
                             continue;
                         }else {
@@ -232,7 +232,7 @@ public class Maze {
                             }
                         }
                     } else {
-                        isBoss = beatJudge(context, monster);
+                        isBoss = beatJudge(context, monster, isBoss);
                     }
                     MonsterDB.updateMonster(monster);
                     addMessage(context, "-----------------------------");
@@ -282,8 +282,7 @@ public class Maze {
         moving = false;
     }
 
-    private boolean beatJudge(MainGameActivity context, Monster monster) {
-        boolean isBoss;
+    private boolean beatJudge(MainGameActivity context, Monster monster, boolean isBoss) {
         if (level > 25) {
             context.save();
         }
@@ -338,7 +337,6 @@ public class Maze {
         }
         context.showFloatView(monster.getBattleMsg());
         lastSave = level;
-        isBoss = true;
         return isBoss;
     }
 

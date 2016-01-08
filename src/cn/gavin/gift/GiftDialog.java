@@ -21,13 +21,20 @@ public class GiftDialog {
     private AlertDialog mainDialog;
     private MainGameActivity context;
 
-    public GiftDialog(MainGameActivity context) {
+    public GiftDialog(final MainGameActivity context) {
         mainDialog = new AlertDialog.Builder(context).create();
         View giftView = View.inflate(context,R.layout.gift_list, (ViewGroup) context.findViewById(R.id.gift_root));
         mainDialog.setView(giftView);
         mainDialog.setTitle("选择一个天赋");
         mainDialog.setCancelable(false);
         mainDialog.setCanceledOnTouchOutside(false);
+        mainDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                context.getHandler().sendEmptyMessage(123);
+                dialog.dismiss();
+            }
+        });
         this.context = context;
     }
 

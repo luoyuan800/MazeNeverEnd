@@ -278,40 +278,48 @@ public abstract class Skill {
     }
 
     public Skill copy() {
+        Skill skill = null;
         if(this instanceof AttackSkill){
-            AttackSkill skill = new AttackSkill();
+            AttackSkill attackSkill = new AttackSkill();
             AttackSkill thisSkill = (AttackSkill) this;
-            skill.setName(thisSkill.getName());
-            skill.setProbability(thisSkill.getProbability());
-            skill.setBaseHarm(thisSkill.getBaseHarm());
-            skill.setAdditionHarm(thisSkill.getAdditionHarm());
-            skill.setCount(thisSkill.getCount());
-            return skill;
+            attackSkill.setName(thisSkill.getName());
+            attackSkill.setProbability(thisSkill.getProbability());
+            attackSkill.setBaseHarm(thisSkill.getBaseHarm());
+            attackSkill.setAdditionHarm(thisSkill.getAdditionHarm());
+            attackSkill.setCount(thisSkill.getCount());
+            skill = attackSkill;
         }else if(this instanceof DefendSkill){
-            DefendSkill skill = new DefendSkill();
+            DefendSkill defendSkill = new DefendSkill();
             DefendSkill thisSkill = (DefendSkill) this;
-            skill.setName(this.getName());
-            skill.setProbability(thisSkill.getProbability());
-            skill.setCount(thisSkill.getCount());
-            return skill;
+            defendSkill.setName(this.getName());
+            defendSkill.setProbability(thisSkill.getProbability());
+            defendSkill.setCount(thisSkill.getCount());
+            skill =  defendSkill;
         } else if(this instanceof PropertySkill){
-            PropertySkill skill = new PropertySkill();
+            PropertySkill propertySkill = new PropertySkill();
             PropertySkill thisSkill = (PropertySkill) this;
-            skill.setName(this.getName());
-            skill.setHp(thisSkill.getHp());
-            skill.setPetSize(thisSkill.getPetSize());
-            skill.setProbability(thisSkill.getProbability());
-            skill.setDef(thisSkill.getDef());
-            skill.setAgi(thisSkill.getAgi());
-            skill.setAtk(thisSkill.getAtk());
-            skill.setClickAward(thisSkill.getClickAward());
-            skill.setEggRate(thisSkill.getEggRate());
-            skill.setEggStep(thisSkill.getEggStep());
-            skill.setLife(thisSkill.getLife());
-            skill.setPetRate(thisSkill.getPetRate());
-            return skill;
+            propertySkill.setName(this.getName());
+            propertySkill.setHp(thisSkill.getHp());
+            propertySkill.setPetSize(thisSkill.getPetSize());
+            propertySkill.setProbability(thisSkill.getProbability());
+            propertySkill.setDef(thisSkill.getDef());
+            propertySkill.setAgi(thisSkill.getAgi());
+            propertySkill.setAtk(thisSkill.getAtk());
+            propertySkill.setClickAward(thisSkill.getClickAward());
+            propertySkill.setEggRate(thisSkill.getEggRate());
+            propertySkill.setEggStep(thisSkill.getEggStep());
+            propertySkill.setLife(thisSkill.getLife());
+            propertySkill.setPetRate(thisSkill.getPetRate());
+            skill = propertySkill;
         }
-        return null;
+        if(skill!=null){
+            skill.setPerform(perform);
+            skill.setRelease(release);
+            skill.setEnableExpression(enableExpression);
+            skill.setLevelUp(levelUp);
+            skill.setDescription(description);
+        }
+        return skill;
     }
 
 }

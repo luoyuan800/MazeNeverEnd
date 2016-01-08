@@ -1,11 +1,15 @@
 package cn.gavin.utils;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import cn.gavin.Achievement;
 import cn.gavin.Hero;
+import cn.gavin.R;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.log.LogHelper;
@@ -128,5 +132,41 @@ public class MazeContents {
             }
         }
         return 0;
+    }
+
+    public static Drawable getHeroPic(int index, Context context){
+        Bitmap bitmap;
+        switch (index){
+            case 1:
+                bitmap = loadImageFromSD("h1.png");
+                if(bitmap!=null){
+                    return new BitmapDrawable(context.getResources(), bitmap);
+                }else{
+                    return context.getResources().getDrawable(R.drawable.h_1);
+                }
+            case 2:
+                bitmap = loadImageFromSD("h2.png");
+                if(bitmap!=null){
+                    return new BitmapDrawable(context.getResources(), bitmap);
+                }else{
+                    return context.getResources().getDrawable(R.drawable.h_2);
+                }
+            case 3:
+                bitmap = loadImageFromSD("h3.png");
+                if(bitmap!=null){
+                    return new BitmapDrawable(context.getResources(), bitmap);
+                }else{
+                    return context.getResources().getDrawable(R.drawable.h_3);
+                }
+            case 4:
+                bitmap = loadImageFromSD("h4.png");
+                if(bitmap!=null){
+                    return new BitmapDrawable(context.getResources(), bitmap);
+                }else{
+                    return context.getResources().getDrawable(R.drawable.h_4);
+                }
+            default:
+                return context.getResources().getDrawable(R.drawable.h_1);
+        }
     }
 }

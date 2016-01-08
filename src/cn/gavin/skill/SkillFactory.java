@@ -102,6 +102,9 @@ public class SkillFactory {
             public String toString() {
                 return "";
             }
+            public String getName(){
+                return "empty";
+            }
         };
     }
 

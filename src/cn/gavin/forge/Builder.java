@@ -309,6 +309,7 @@ public abstract class Builder {
                     itemNames.add(item.getName().name());
                 }
                 boolean isUser = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("user")));
+                boolean isFound = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("found")));
                 String color = cursor.getString(cursor.getColumnIndex("color"));
                 if (itemNames.size() == recipeItemList.size()) {
                     for (int i = 0; i < itemNames.size(); i++) {
@@ -345,6 +346,9 @@ public abstract class Builder {
                     if (isUser) {
                         pro /= 2;
                     }
+                    if(!isFound){
+                        pro /= 2;
+                    }
                     a1.setPro(pro);
                     a1.setName(cursor.getString(cursor.getColumnIndex("name")));
                     a1.setColor(color);
@@ -353,6 +357,9 @@ public abstract class Builder {
                 } else if (a2 == null || a2.getPro() < pro) {
                     a2 = new Accessory();
                     if (isUser) {
+                        pro /= 2;
+                    }
+                    if(!isFound){
                         pro /= 2;
                     }
                     a2.setPro(pro);

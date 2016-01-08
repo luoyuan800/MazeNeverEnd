@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Queue;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import cn.gavin.activity.MainGameActivity;
@@ -27,6 +28,7 @@ import cn.gavin.skill.SkillFactory;
 import cn.gavin.skill.type.AttackSkill;
 import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.RestoreSkill;
+import cn.gavin.story.NPC;
 import cn.gavin.utils.Random;
 
 public class Hero implements BaseObject {
@@ -1165,10 +1167,8 @@ public class Hero implements BaseObject {
     }
 
     private void addReincarnation(String name, long hp, long atk, long lev) {
-        String sql = String.format("REPLACE INTO npc(name, lev, hp, atk) " +
-                        "values('%s','%s','%s','%s')",
-                name, lev, hp, atk);
-        DBHelper.getDbHelper().excuseSQLWithoutResult(sql);
+        NPC.insertNPC(UUID.randomUUID().toString(),name,atk,hp,getUpperDef(),hitRate,parry,
+                "这个是转生前的你！",element.name(),firstSkill!=null? firstSkill.getName() : "","","","",lev,null);
     }
 
     public void setAccessory(Accessory accessory) {
@@ -1589,7 +1589,9 @@ public class Hero implements BaseObject {
     }
 
     public Monster formatAsMonster() {
-        return new Monster(FirstName.empty, SecondName.empty,name,getHp(),getAttackValue());
+        Monster monster = new Monster(FirstName.empty, SecondName.empty, name, getHp(), getAttackValue());
+        monster.setElement(element);
+        return monster;
     }
 
 

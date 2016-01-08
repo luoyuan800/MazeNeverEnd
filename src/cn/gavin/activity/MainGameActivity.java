@@ -13,15 +13,41 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.*;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.text.Html;
 import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.*;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.BmobDialogButtonListener;
 import cn.bmob.v3.listener.FindListener;
@@ -34,7 +60,12 @@ import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.alipay.Alipay;
 import cn.gavin.db.DBHelper;
-import cn.gavin.forge.*;
+import cn.gavin.forge.Accessory;
+import cn.gavin.forge.HatBuilder;
+import cn.gavin.forge.Item;
+import cn.gavin.forge.NecklaceBuilder;
+import cn.gavin.forge.Recipe;
+import cn.gavin.forge.RingBuilder;
 import cn.gavin.forge.adapter.AccessoryAdapter;
 import cn.gavin.forge.adapter.RecipeAdapter;
 import cn.gavin.forge.effect.Effect;
@@ -48,7 +79,6 @@ import cn.gavin.maze.Maze;
 import cn.gavin.maze.MazeService;
 import cn.gavin.monster.Monster;
 import cn.gavin.monster.MonsterBook;
-import cn.gavin.story.PalaceAdapt;
 import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
 import cn.gavin.pet.PetDialog;
@@ -58,17 +88,16 @@ import cn.gavin.save.LoadHelper;
 import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.skill.SkillMainDialog;
-import cn.gavin.upload.CdKey;
+import cn.gavin.story.NPC;
+import cn.gavin.story.PalaceAdapt;
 import cn.gavin.story.PalaceObject;
+import cn.gavin.upload.CdKey;
 import cn.gavin.upload.Upload;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.ScreenUtils;
 import cn.gavin.utils.StringUtils;
 import cn.gavin.utils.ui.AddPointDialog;
 import cn.gavin.utils.ui.CircleMenu;
-
-import java.util.EnumMap;
-import java.util.List;
 
 @SuppressWarnings("ALL")
 public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener, OnItemClickListener, BaseContext {
@@ -520,11 +549,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         }
                     case 4:
                         clickCount.setText("点击\n" + heroN.getClick());
-                        heroPic.setBackgroundResource(R.drawable.h_1);
+                        heroPic.setBackgroundDrawable(MazeContents.getHeroPic(1, context));
                         break;
                     case 5:
                         clickCount.setText("点击\n" + heroN.getClick());
-                        heroPic.setBackgroundResource(R.drawable.h_4);
+                        heroPic.setBackgroundDrawable(MazeContents.getHeroPic(4, context));
                         break;
                     case 10:
                         if (!isHidBattle) {
@@ -533,11 +562,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                                 String[] messages = bundle.getStringArray("msg");
                                 for (String str : messages) {
                                     if (str.matches(".*遇到了.*")) {
-                                        heroPic.setBackgroundResource(R.drawable.h_3);
+                                        heroPic.setBackgroundDrawable(MazeContents.getHeroPic(3, context));
                                     } else if (str.matches(".*击败了.*")) {
-                                        heroPic.setBackgroundResource(R.drawable.h_2);
+                                        heroPic.setBackgroundDrawable(MazeContents.getHeroPic(2, context));
                                     } else if (str.matches(".*被.*打败了.*")) {
-                                        heroPic.setBackgroundResource(R.drawable.h_1);
+                                        heroPic.setBackgroundDrawable(MazeContents.getHeroPic(1, context));
                                     }
                                     TextView oneKickInfo = new TextView(MainGameActivity.this);
                                     // 将一次信息数据显示到页面中
@@ -1398,7 +1427,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     }
 
 
-    private void updatePalace(){
+    private void updatePalace() {
         updatePalace = true;
         new Thread() {
             @Override
@@ -1713,7 +1742,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 fourthSkillButton.setText("");
                 fourthSkillButton.setEnabled(false);
             }
-        }else{
+        } else {
             fourthSkillButton.setEnabled(false);
         }
         if (heroN.isFifitSkillEnable()) {
@@ -1724,7 +1753,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 fifthSkillButton.setText("");
                 fifthSkillButton.setEnabled(false);
             }
-        }else{
+        } else {
             fifthSkillButton.setEnabled(false);
         }
         if (heroN.isSixthSkillEnable()) {
@@ -1735,7 +1764,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 sixthSkillButton.setText("");
                 sixthSkillButton.setEnabled(false);
             }
-        }else{
+        } else {
             sixthSkillButton.setEnabled(false);
         }
 
@@ -2124,9 +2153,42 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 break;
             case R.id.wuxin_down_left:
                 //npc
+                AlertDialog npcDialog = new Builder(context).create();
+                ListView listView = new ListView(context);
+                ArrayList<Spanned> npcdescs = new ArrayList<Spanned>();
+                int found = 0;
+                List<NPC> npcList = NPC.loadNPCByType(NPC.ALL_TYPE);
+                int total =  npcList.size();
+                for(NPC npc : npcList){
+                    if(npc.getFound()) {
+                        found ++;
+                        npcdescs.add(Html.fromHtml(npc.getDetailDesc()));
+                    }
+                }
+                TextView view = new TextView(context);
+                ArrayAdapter<Spanned> npcAdapter = new ArrayAdapter<Spanned>(context, view.getId(),npcdescs);
+                listView.setAdapter(npcAdapter);
+                npcDialog.setView(listView);
+                npcDialog.setTitle("NPC  " + (found*100/total) + "%");
+                npcDialog.setButton(DialogInterface.BUTTON_POSITIVE, "退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                npcDialog.show();
                 break;
             case R.id.wuxin_down_right:
                 //?
+                AlertDialog ssDialog = new Builder(context).create();
+                ssDialog.setButton(DialogInterface.BUTTON_POSITIVE, "退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                ssDialog.setMessage("敬请期待，神秘功能~");
+                ssDialog.show();
                 break;
             case R.id.col_button:
                 AlertDialog colDialog = new Builder(context).create();
