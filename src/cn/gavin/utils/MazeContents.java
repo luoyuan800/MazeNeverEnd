@@ -7,6 +7,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
+
+import java.io.File;
+
 import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.R;
@@ -29,7 +32,11 @@ public class MazeContents {
     public static String SD_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze";
 
     public static Bitmap loadImageFromSD(String name) {
-        return BitmapFactory.decodeFile(SD_PATH + "/image/" + name);
+        if(new File(SD_PATH + "/image/" + name).exists()) {
+            return BitmapFactory.decodeFile(SD_PATH + "/image/" + name);
+        }else{
+            return null;
+        }
     }
 
     public static Maze getMaze() {
