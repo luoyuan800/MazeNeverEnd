@@ -30,19 +30,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -89,8 +78,8 @@ import cn.gavin.save.SaveHelper;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.skill.SkillMainDialog;
 import cn.gavin.story.NPC;
+import cn.gavin.story.NPCPlaceObject;
 import cn.gavin.story.PalaceAdapt;
-import cn.gavin.story.PalaceObject;
 import cn.gavin.upload.CdKey;
 import cn.gavin.upload.Upload;
 import cn.gavin.utils.MazeContents;
@@ -106,7 +95,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     public static final String APK_PATH = Environment.getExternalStorageDirectory() + "/maze";
 
     // 战斗刷新速度
-    private long refreshInfoSpeed = 520;
+    private long refreshInfoSpeed = 550;
 
     // 战斗信息
     private ScrollView mainInfoSv;
@@ -303,7 +292,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         break;
                     case 118:
                         AlertDialog inDialog = new Builder(context).create();
-                        final PalaceObject palaceObjectIn = (PalaceObject) msg.obj;
+                        final NPCPlaceObject palaceObjectIn = (NPCPlaceObject) msg.obj;
                         final String[] goodsAwardIn = StringUtils.split(palaceObjectIn.getAward(), "-");
                         StringBuilder goodNamesIn = new StringBuilder();
                         for (String good : goodsAwardIn) {
@@ -321,11 +310,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         inDialog.setButton(DialogInterface.BUTTON_POSITIVE, "领取", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                PalaceObject palaceObject1 = new PalaceObject();
+                                NPCPlaceObject palaceObject1 = new NPCPlaceObject();
                                 palaceObject1.setValue("award", " ");
                                 palaceObject1.setObjectId(palaceObjectIn.getObjectId());
                                 palaceObject1.setAward(" ");
-                                palaceObject1.setTableName("PalaceObject");
+                                palaceObject1.setTableName("NPCPlaceObject");
                                 palaceObject1.update(context, palaceObjectIn.getObjectId(), new UpdateListener() {
                                     @Override
                                     public void onSuccess() {
@@ -392,7 +381,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         break;
                     case 113:
                         AlertDialog successDialog = new Builder(context).create();
-                        final PalaceObject palaceObject = (PalaceObject) msg.obj;
+                        final NPCPlaceObject palaceObject = (NPCPlaceObject) msg.obj;
                         final String[] goodsAward = StringUtils.split(palaceObject.getAward(), "-");
                         StringBuilder goodNames = new StringBuilder();
                         for (String good : goodsAward) {
@@ -410,11 +399,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         successDialog.setButton(DialogInterface.BUTTON_POSITIVE, "领取", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                PalaceObject palaceObject1 = new PalaceObject();
+                                NPCPlaceObject palaceObject1 = new NPCPlaceObject();
                                 palaceObject1.setValue("award", " ");
                                 palaceObject1.setObjectId(palaceObject.getObjectId());
                                 palaceObject1.setAward(" ");
-                                palaceObject1.setTableName("PalaceObject");
+                                palaceObject1.setTableName("NPCPlaceObject");
                                 palaceObject1.update(context, palaceObject.getObjectId(), new UpdateListener() {
                                     @Override
                                     public void onSuccess() {
@@ -586,7 +575,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 refresh();
                 super.handleMessage(msg);
             } catch (Exception exp) {
-                Log.e(TAG, "MainGameActivity.Handler", exp);
                 LogHelper.logException(exp);
             }
         }
@@ -1278,16 +1266,16 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setTitle("正在校验殿堂排名");
         progressDialog.show();
-        BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
+        BmobQuery<NPCPlaceObject> query = new BmobQuery<NPCPlaceObject>();
         query.setLimit(5);
         query.order("-lev");
-        query.findObjects(context, new FindListener<PalaceObject>() {
+        query.findObjects(context, new FindListener<NPCPlaceObject>() {
             @Override
-            public void onSuccess(List<PalaceObject> palaceObjects) {
+            public void onSuccess(List<NPCPlaceObject> palaceObjects) {
                 if (!palaceObjects.isEmpty()) {
                     boolean award = false;
                     for (int i = 0; i < palaceObjects.size(); i++) {
-                        PalaceObject palaceObject = palaceObjects.get(i);
+                        NPCPlaceObject palaceObject = palaceObjects.get(i);
                         if (heroN.getUuid().equals(palaceObject.getUuid())) {
                             if (!StringUtils.isNotEmpty(palaceObject.getAward())) {
                                 handler.sendEmptyMessage(117);
@@ -1304,16 +1292,16 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         }
                     }
                     if (!award) {//检查最后一名
-                        BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
+                        BmobQuery<NPCPlaceObject> query = new BmobQuery<NPCPlaceObject>();
                         query.setLimit(1);
                         query.order("lev");
-                        query.findObjects(context, new FindListener<PalaceObject>() {
+                        query.findObjects(context, new FindListener<NPCPlaceObject>() {
 
                             @Override
-                            public void onSuccess(List<PalaceObject> palaceObjects) {
+                            public void onSuccess(List<NPCPlaceObject> palaceObjects) {
                                 boolean award = false;
                                 if (!palaceObjects.isEmpty()) {
-                                    PalaceObject palaceObject = palaceObjects.get(0);
+                                    NPCPlaceObject palaceObject = palaceObjects.get(0);
                                     if (heroN.getUuid().equals(palaceObject.getUuid())) {
                                         if (!StringUtils.isNotEmpty(palaceObject.getAward())) {
                                             handler.sendEmptyMessage(117);
@@ -1330,16 +1318,16 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
                                 }
                                 if (!award) {//检查是否进入殿堂
-                                    BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
+                                    BmobQuery<NPCPlaceObject> query = new BmobQuery<NPCPlaceObject>();
                                     query.setLimit(1);
                                     query.addWhereEqualTo("uuid", heroN.getUuid());
                                     query.order("lev");
-                                    query.findObjects(context, new FindListener<PalaceObject>() {
+                                    query.findObjects(context, new FindListener<NPCPlaceObject>() {
                                         @Override
-                                        public void onSuccess(List<PalaceObject> palaceObjects) {
+                                        public void onSuccess(List<NPCPlaceObject> palaceObjects) {
                                             boolean award = false;
                                             if (!palaceObjects.isEmpty()) {
-                                                PalaceObject palaceObject = palaceObjects.get(0);
+                                                NPCPlaceObject palaceObject = palaceObjects.get(0);
                                                 if (heroN.getUuid().equals(palaceObject.getUuid())) {
                                                     if (!StringUtils.isNotEmpty(palaceObject.getAward())) {
                                                         handler.sendEmptyMessage(117);
@@ -1432,7 +1420,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         new Thread() {
             @Override
             public void run() {
-                PalaceObject.updatePalace(context);
+                NPCPlaceObject.updatePalace(context);
             }
         }.start();
 
@@ -1791,7 +1779,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             pets.append(pet.getFormatName()).append("<br>");
         }
         onUsedPetLists.setText(Html.fromHtml(pets.toString()));
-        if ((heroN.getReincaCount() + 1) % 1000 == 0) {
+        if (heroN.getMaxMazeLev()  > 500) {
             reniButton.setEnabled(true);
         } else {
             reniButton.setEnabled(false);
@@ -1924,6 +1912,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
     @Override
     public void onClick(View v) {
+        try{
         Log.i(TAG, "onClick() -- " + v.getId() + " -- 被点击了");
         switch (v.getId()) {
             case R.id.ji_neng_button:
@@ -2165,8 +2154,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         npcdescs.add(Html.fromHtml(npc.getDetailDesc()));
                     }
                 }
-                TextView view = new TextView(context);
-                ArrayAdapter<Spanned> npcAdapter = new ArrayAdapter<Spanned>(context, view.getId(),npcdescs);
+                ArrayAdapter<Spanned> npcAdapter = new ArrayAdapter<Spanned>(context, android.R.layout.simple_list_item_1,npcdescs);
                 listView.setAdapter(npcAdapter);
                 npcDialog.setView(listView);
                 npcDialog.setTitle("NPC  " + (found*100/total) + "%");
@@ -2340,6 +2328,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 break;
             default:
                 break;
+        }
+        }catch (Exception e){
+            LogHelper.logException(e);
         }
     }
 

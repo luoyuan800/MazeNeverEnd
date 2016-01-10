@@ -374,7 +374,7 @@ public enum GoodsType {
             return null;
         }
     }, true),
-    ResetSkill("易筋经", "使用后可以重置技能点。技能重置后悔返回激活的点数并且降低一半的点击/使用次数（熟练度），升级消耗的技能点不会返还。"
+    ResetSkill("易筋经", "使用后可以重置技能点。技能重置后返回激活的点数，升级消耗的技能点不会返还。"
             , new GoodScript() {
         @Override
         public Object use() {

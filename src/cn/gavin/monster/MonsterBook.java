@@ -10,15 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.utils.StringUtils;
 import cn.gavin.utils.ui.WheelView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * gluo on 9/8/2015.
@@ -107,10 +106,12 @@ public class MonsterBook {
         List<String> names = new ArrayList<String>(allMonster.size());
         int knownCount = 0;
         for (Monster monster : allMonster) {
-            if (monster.getCatch_lev() > 0) {
+            if (monster.getMeet_lev() > 0) {
                 names.add(monster.getType());
                 monsters.add(monster);
-                knownCount++;
+                if (monster.getCatch_lev() > 0) {
+                    knownCount++;
+                }
             }
         }
         wheelView.setItems(names);
@@ -126,7 +127,7 @@ public class MonsterBook {
             }
         });
         alertDialog.setView(view);
-        alertDialog.setTitle("怪物图鉴 " + (knownCount*100/allMonster.size() ) + "%");
+        alertDialog.setTitle("怪物图鉴 " + (knownCount * 100 / allMonster.size()) + "%");
         alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
 
             @Override
@@ -144,7 +145,7 @@ public class MonsterBook {
     public static int getCurrentCount() {
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("select * from monster where catch > 0");
         int count = 0;
-        if(!cursor.isAfterLast()){
+        if (!cursor.isAfterLast()) {
             count = cursor.getInt(0);
             cursor.close();
         }
@@ -154,7 +155,7 @@ public class MonsterBook {
     public static int getTotalCount() {
         int count = 0;
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("select count(*) from monster");
-        if(!cursor.isAfterLast()){
+        if (!cursor.isAfterLast()) {
             count = cursor.getInt(0);
         }
         cursor.close();

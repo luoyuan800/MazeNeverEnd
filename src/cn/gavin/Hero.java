@@ -295,7 +295,7 @@ public class Hero implements BaseObject {
         else if (secondSkill == null) secondSkill = skill;
         else if (thirdSkill == null) thirdSkill = skill;
         else if(fourthSkillEnable && fourthSkill == null) fourthSkill = skill;
-        else if(fifitSkillEnable && firstSkill == null) fifitSkill = skill;
+        else if(fifitSkillEnable && fifitSkill == null) fifitSkill = skill;
         else if(sixthSkillEnable && sixthSkill == null) sixthSkill = skill;
     }
 
@@ -1168,7 +1168,9 @@ public class Hero implements BaseObject {
 
     private void addReincarnation(String name, long hp, long atk, long lev) {
         NPC.insertNPC(UUID.randomUUID().toString(),name,atk,hp,getUpperDef(),hitRate,parry,
-                "这个是转生前的你！",element.name(),firstSkill!=null? firstSkill.getName() : "","","","",lev,null);
+                "这个是转生前的你！",element.name(),
+                firstSkill!=null? firstSkill.getName() :
+                        "","","","",lev,NPC.IMAGE_NPC,null);
     }
 
     public void setAccessory(Accessory accessory) {
@@ -1590,6 +1592,7 @@ public class Hero implements BaseObject {
 
     public Monster formatAsMonster() {
         Monster monster = new Monster(FirstName.empty, SecondName.empty, name, getHp(), getAttackValue());
+        monster.setFormatName(name);
         monster.setElement(element);
         return monster;
     }

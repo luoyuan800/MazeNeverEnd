@@ -81,23 +81,24 @@ public class NPCBattleController {
                         //被克，伤害减低一半
                         harm /= 2;
                     }
-                    if (harm <= 0 || hero.getRandom().nextInt(100) > monster.getHitRate()) {
+                    boolean b = hero.getRandom().nextInt(100) < monster.getHitRate();
+                    if (harm <= 0 || b) {
                         harm = random.nextLong(hero.getMaxMazeLev());
                     }
-                    if (hero.getRandom().nextInt(100) > monster.getHitRate()) {
+                    if (b) {
                         harm = random.nextLong(hero.getMaxMazeLev() + 1);
                         String s = monster.getFormatName() + "攻击打偏了";
                         addMessage(context, s);
                         addBattleMsg(s);
                     }
 
-                    if (harm >= hero.getHp()) {
+                    if (!(hero instanceof  NPC) && harm >= hero.getHp()) {
                         Skill sy = SkillFactory.getSkill("瞬间移动", hero);
                         if (sy.isActive() && sy.perform()) {
                             return sy.release(new Monster());
                         } else {
                             sy = hero.getPropertySkill("反杀");
-                            if ((hero instanceof NPC || sy.isActive()) && sy.perform()) {
+                            if (sy !=null && sy.isActive() && sy.perform()) {
                                 monster.setHp(0);
                                 return sy.release(new Monster());
 
@@ -195,7 +196,6 @@ public class NPCBattleController {
                 addMessage(context, target.getFormatName() + "打断了" + hero.getFormatName() + "的技能");
             }
         } else {
-
            heroDef(context,target,hero);
         }
         return isJump;
@@ -290,6 +290,7 @@ public class NPCBattleController {
             addMessage(context, defeatmsg);
             addBattleMsg(defeatmsg);
             hero.addMaterial(monster.getLev() * 3);
+            monster.setDefeat(true);
             monster.defeat();
             return true;
         } else if (hero.getHp() <= 0) {
@@ -303,6 +304,7 @@ public class NPCBattleController {
                 return notDieSkill.release(new Monster());
             } else {
                 monster.setDefeat(false);
+                monster.defeat();
                 return false;
             }
         }

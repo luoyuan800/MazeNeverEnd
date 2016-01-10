@@ -151,7 +151,7 @@ public class BaseSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (skill.isActive() || hero.getSkillPoint() > 0) && !SkillFactory.getSkill("魔王天赋", hero).isActive();
+                    return (skill.isActive() || hero.getSkillPoint() > 0) && !SkillFactory.getSkill("魔王天赋", hero).isActive()&& !SkillFactory.getSkill("元素变换", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -163,7 +163,7 @@ public class BaseSkill extends SkillLayout {
                     builder.append(attackSkill.getProbability()).append("%概率释放<br>");
                     builder.append("造成额外的").append(StringUtils.formatNumber(attackSkill.getBaseHarm())).append(" - ").
                             append(StringUtils.formatNumber(attackSkill.getBaseHarm() + attackSkill.getAdditionHarm())).append("伤害").append("<br>").
-                            append("不可与魔王技能同时激活");
+                            append("不可与魔王、元素使技能同时激活");
                     return builder.toString();
                 }
             });
@@ -207,7 +207,7 @@ public class BaseSkill extends SkillLayout {
                         as.setBaseHarm(as.getBaseHarm() + hero.getRandom().nextLong(hero.getDefenseValue() / 50 + 1));
                         as.setAdditionHarm(as.getAdditionHarm() * 3);
                     }
-                    if(as.getBaseHarm() > as.getAdditionHarm()){
+                    if(as.getBaseHarm() >= as.getAdditionHarm()){
                         as.setBaseHarm(as.getAdditionHarm() -20);
                     }
                     return false;

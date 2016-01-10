@@ -206,6 +206,7 @@ public class SwapDialog implements LoadMoreListView.OnRefreshLoadingMoreListener
                     Cursor cursor = DBHelper.getDbHelper().excuseSOL("select type from monster");
                     while (!cursor.isAfterLast()) {
                         lastNames.add(cursor.getString(cursor.getColumnIndex("type")));
+                        cursor.moveToNext();
                     }
                     cursor.close();
                     lastNames.add("无");

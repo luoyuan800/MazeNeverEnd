@@ -60,7 +60,6 @@ public class SkillFactory {
             return skill;
         } catch (Exception e) {
             Log.e(MainGameActivity.TAG, "BuildSkill", e);
-            LogHelper.writeLog();
             throw new RuntimeException(e);
         }
     }
@@ -129,7 +128,6 @@ public class SkillFactory {
                     skill.setOnUsed(false, false);
                 }
                 skill.setActive(false);
-                skill.setCount(skill.getCount()/2);
                 point++;
             }
         }

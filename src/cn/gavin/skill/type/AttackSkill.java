@@ -46,7 +46,7 @@ public class AttackSkill extends Skill implements LevelAble {
                 if (baseHarm == 0 || base_harm > baseHarm) {
                     load = true;
                     baseHarm = base_harm;
-                    setOnUsed(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_on_use"))), false);
+                    setOnUsed(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_on_use"))), true);
                     active = (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_active"))));
                     setProbability(StringUtils.toFloat(cursor.getString(cursor.getColumnIndex("probability"))));
                     count = (StringUtils.toLong(cursor.getString(cursor.getColumnIndex("count"))));

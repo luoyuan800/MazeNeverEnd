@@ -172,7 +172,7 @@ public class EvilSkill extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return hero.getSkillPoint() > 0 && !SkillFactory.getSkill("勇者之击", hero).isActive();
+                    return hero.getSkillPoint() > 0 && !SkillFactory.getSkill("勇者之击", hero).isActive()&& !SkillFactory.getSkill("元素变换", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -183,7 +183,7 @@ public class EvilSkill extends SkillLayout {
                     builder.append("魔本天性，吾欲入魔，谁人可挡。<br>").
                             append("被攻击的时候有").append(defendSkill.getProbability()).
                             append("%概率将伤害转换为HP恢复。").
-                            append("不可与勇者技能同时激活");
+                            append("不可与勇者、元素使技能同时激活");
                     return builder.toString();
                 }
             });

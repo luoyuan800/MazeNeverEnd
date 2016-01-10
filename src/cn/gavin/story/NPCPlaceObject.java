@@ -2,9 +2,6 @@ package cn.gavin.story;
 
 import android.database.Cursor;
 import android.os.Message;
-
-import java.util.List;
-
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
@@ -12,12 +9,14 @@ import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.utils.StringUtils;
 
+import java.util.List;
+
 /**
  * Copyright 2015 gluo.
  * ALL RIGHTS RESERVED.
  * Created by gluo on 10/14/2015.
  */
-public class PalaceObject extends BmobObject {
+public class NPCPlaceObject extends BmobObject {
     private String name;
     private String atk;
     private String hp;
@@ -35,17 +34,17 @@ public class PalaceObject extends BmobObject {
     private Integer sort;
     private String award;
 
-    public PalaceObject() {
+    public NPCPlaceObject() {
         setTableName("uploader");
     }
 
     public static void updatePalace(final MainGameActivity context) {
-        BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
+        BmobQuery<NPCPlaceObject> query = new BmobQuery<NPCPlaceObject>();
         query.setLimit(150);
-        query.findObjects(context, new FindListener<PalaceObject>() {
+        query.findObjects(context, new FindListener<NPCPlaceObject>() {
             @Override
-            public void onSuccess(final List<PalaceObject> palaceObjects) {
-                for (PalaceObject object : palaceObjects) {
+            public void onSuccess(final List<NPCPlaceObject> palaceObjects) {
+                for (NPCPlaceObject object : palaceObjects) {
                     object.save();
                 }
                 context.getHandler().sendEmptyMessage(106);
@@ -141,14 +140,15 @@ public class PalaceObject extends BmobObject {
 
     public void save() {
         DBHelper dbHelper = DBHelper.getDbHelper();
-        Cursor cursor = dbHelper.excuseSOL("select uuid from npc where type = " + NPC.PALACE_NPC + " and lev = '" + lev);
+        Cursor cursor = dbHelper.excuseSOL("select uuid from npc where type = " + NPC.PALACE_NPC + " and lev = " + lev);
         if (!cursor.isAfterLast()) {
             dbHelper.excuseSQLWithoutResult("delete from table where uuid = '" + cursor.getString(0) + "'");
         }
         cursor.close();
-        dbHelper.excuseSQLWithoutResult(String.format(
-                "REPLACE INTO npc ( uuid, name, atk, hp, lev, def, parry, hit_rate,skill, desc, pay, element, re_count, defeat, meet) " +
-                        "values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s', 0, 0)", uuid, name, atk, hp, lev, def, parry, hitRate, skill, hello, pay, element, reCount));
+        NPC.insertNPC(uuid, name, StringUtils.toLong(atk), StringUtils.toLong(hp), StringUtils.toLong(def),
+                StringUtils.toLong(hitRate),
+                StringUtils.toFloat(parry), hello, element, skill,
+                "", "", "", lev, NPC.PALACE_NPC, null);
     }
 
     public void setHello(String hello) {

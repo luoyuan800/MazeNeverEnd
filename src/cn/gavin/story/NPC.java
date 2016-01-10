@@ -43,12 +43,13 @@ public class NPC extends Hero {
                 "p_skill TEXT," +
                 "defeat INTEGER," +
                 "found INTEGER," +
+                "type INTEGER," +
                 "acc TEXT," +
                 "ach TEXT," +
                 "lev NUMBER" +
                 ")");
         db.execSQL("CREATE UNIQUE INDEX npc_index ON npc (uuid)");
-        insertNPC(db);
+//        insertNPC(db);
     }
 
     public static void insertNPC(SQLiteDatabase db) {
@@ -155,7 +156,6 @@ public class NPC extends Hero {
         insertNPC("b413a932-9c06-469c-97e0-2a5af4e0ea96","幽幽(2)",8999687l, 2787315l,17065618l,90,-10.0f,"上一个版本的殿堂守护者<br>&nbsp;遇見了吾，你將止步於此！","金","勇者之击-浮生百刃-错位","","","",1032l, db);
         insertNPC("2544f469-1425-4e07-b820-346236071387","阿尔托莉雅(4)",8717523l, 174649100l,150018007l,90,33.0f,"上一个版本的殿堂守护者<br>&nbsp;遇見了吾，你將止步於此！","无","欺诈游戏-多重攻击-浮生百刃","","","",2623l, db);
         insertNPC("d6ac0f9f-da4a-4110-a6fb-bd37e73531ed","初音公主殿下",454125l, 7132305l,3204306l,0,0.0f,"上一个版本的殿堂守护者<br>&nbsp;我就是我，无人可替，我就是初音未来","金","勇者之击-浮生百刃-咆哮","","","",10445l, db);
-        insertNPC("e26e8fee-912d-4a06-a3d5-5fa666c438e1","勇者",16874l, 58060l,13488l,0,0.0f,"上一个版本的殿堂守护者<br>&nbsp;本大爷在此，想上就开干","无","魔王天赋-腐蚀-强化","","","",121l, db);
         insertNPC("be89832e-42b3-4c5c-86f8-b5817c656bb0","肏(1)",1035878l, 8688122723l,5557034115l,0,78.0f,"上一个版本的殿堂守护者<br>&nbsp;遇見了吾，你將止步於此！","金","反弹-浮生百刃-斩击","","","",50000l, db);
         insertNPC("a2a22f9b-d24c-4de6-9b51-d7c8504c7a1d","#神?#传说中的🐮魔王(7)",200230356366l, 5319205839691l,271622489141l,50,60.0f,"上一个版本的殿堂守护者<br>&nbsp;遇見了吾，你將止步於此！","火","生命吸收-魔王天赋-多重攻击","","","",201153l, db);
         insertNPC("7d50743a-ffbd-44d4-9a45-eb7c56b342b6","💞💕(1)",11822l, 5676054l,23357l,90,91.0f,"上一个版本的殿堂守护者<br>&nbsp;遇見了吾，你將止步於此！","无","反弹-勇者之击-斩击","","","",14323l, db);
@@ -173,8 +173,15 @@ public class NPC extends Hero {
     public static void insertNPC(String id, String name, long atk, long hp, long def, long hit,
                                  float parry, String desc, String element, String skill,
                                  String pskill, String acc, String ach, long lev, SQLiteDatabase database) {
-        String sql = String.format("replace into npc values('%s', '%s', %s, %s, %s, %s, %s, '%s', '%s', '%s', '%s', 0, 0,'%s', '%s', %s)",
-                id, name,atk,hp,def, hit,parry,desc,element,skill,pskill,acc, ach, lev);
+        insertNPC(id,  name, atk,  hp, def, hit,
+         parry,  desc,  element,  skill,
+                 pskill,  acc,  ach,  lev,  STORY_NPC,database);
+    }
+    public static void insertNPC(String id, String name, long atk, long hp, long def, long hit,
+                                 float parry, String desc, String element, String skill,
+                                 String pskill, String acc, String ach, long lev, int type,SQLiteDatabase database) {
+        String sql = String.format("replace into npc values('%s', '%s', %s, %s, %s, %s, %s, '%s', '%s', '%s', '%s', 0, 0,%s,'%s', '%s', %s)",
+                id, name,atk,hp,def, hit,parry,desc,element,skill,pskill,type,acc, ach, lev);
         if(database==null){
             DBHelper.getDbHelper().excuseSQLWithoutResult(sql);
         }else{
@@ -284,10 +291,12 @@ public class NPC extends Hero {
         skillList = new ArrayList<Skill>(skillNames.length);
         for (String name : skillNames) {
             Skill s = SkillFactory.getSkill(name, this);
-            if (s != null) {
+            if (s != null && !s.getName().equals("empty")) {
                 s = s.copy();
+                if(s!=null){
                 s.setHero(this);
                 skillList.add(s);
+                }
             }
         }
     }
@@ -311,8 +320,10 @@ public class NPC extends Hero {
             Skill skill = SkillFactory.getSkill(name, this);
             if (skill != null && !skill.getName().equals("empty")) {
                 skill = skill.copy();
+                if(skill!=null){
                 skill.setHero(this);
                 propertySkillList.add(skill);
+                }
             }
         }
     }
@@ -389,10 +400,10 @@ public class NPC extends Hero {
 
     public String getDetailDesc() {
         StringBuilder builder = new StringBuilder("<b>");
-        builder.append(name).append("</b><br>");
-        builder.append("生命:").append(StringUtils.formatNumber(getHp())).append("&nbsp;");
-        builder.append("攻击:").append(StringUtils.formatNumber(getBaseAttackValue())).append("&nbsp;");
-        builder.append("防御:").append(StringUtils.formatNumber(getBaseDefense())).append("&nbsp;");
+        builder.append(name).append("</b> ").append(element).append("<br>");
+        builder.append("生命:<font color=\"blue\">").append(StringUtils.formatNumber(getHp())).append("</font>&nbsp;");
+        builder.append("攻击:<font color=\"blue\">").append(StringUtils.formatNumber(getBaseAttackValue())).append("</font>&nbsp;");
+        builder.append("防御:<font color=\"blue\">").append(StringUtils.formatNumber(getBaseDefense())).append("</font>&nbsp;");
         builder.append("<br>");
         if (defeat) {
             builder.append("在第").append(lev).append("层被你打败。");
@@ -401,7 +412,6 @@ public class NPC extends Hero {
         }
         builder.append("<br>");
         builder.append("&nbsp;");
-        builder.append(desc);
         builder.append(desc);
         return builder.toString();
     }

@@ -52,6 +52,7 @@ public class LogHelper {
     }
 
     public static void logException(final Exception e) {
+        e.printStackTrace();
         try {
             File path = new File(MazeContents.SD_PATH + "/log/");
             if (!path.exists()) {

@@ -72,6 +72,7 @@ public class Maze {
             }
             moving = true;
             step++;
+            final String sque = "<br>-------------------------";
             if (random.nextLong(10000) > 9985 || step > random.nextLong(22) || random.nextLong(streaking + 1) > 50 + level) {
                 if ((level - lastSave) > 50) {
                     lastSave = level;
@@ -82,10 +83,10 @@ public class Maze {
                 mazeLevelDetect();
                 long point = 1 + level / 10 + random.nextLong(level + 1) / 300;
                 if (hero.getMaxMazeLev() < 500) {
-                    point *= 3;
+                    point *= 4;
                 }
-                if (point > 70) {
-                    point = 40 + random.nextInt(70);
+                if (point > 100) {
+                    point = 60 + random.nextInt(70);
                 }
                 String msg = hero.getFormatName() + "进入了" + level + "层迷宫， 获得了<font color=\"#FF8C00\">" + point + "</font>点数奖励";
                 for (Pet pet : hero.getPets()) {
@@ -136,7 +137,7 @@ public class Maze {
                 hero.addPoint(point);
                 hero.addHp(random.nextLong(hero.getUpperHp() / 10 + 1) + random.nextLong(hero.getPower() / 500));
 
-                addMessage(context, "-------------------");
+                addMessage(context, sque);
             } else if (random.nextLong(850 + hunt) > 993 && random.nextLong(hero.getAgility()) > random.nextLong(6971)) {
                 long mate = random.nextLong(level * 30 + 1) + random.nextLong(hero.getAgility() / 10000 + 10) + 58;
                 if (mate > 10000) {
@@ -144,7 +145,7 @@ public class Maze {
                 }
                 addMessage(context, hero.getFormatName() + "找到了一个宝箱， 获得了<font color=\"#FF8C00\">" + mate + "</font>锻造点数");
                 hero.addMaterial(mate);
-                addMessage(context, "-------------------");
+                addMessage(context, sque);
             } else if (hero.getHp() < hero.getUpperHp() && random.nextLong(1000) > 989) {
                 long hel = random.nextLong(hero.getUpperHp() / 5 + 1) + random.nextLong(hero.getPower() / 300);
                 if (hel > hero.getUpperHp() / 2) {
@@ -152,7 +153,7 @@ public class Maze {
                 }
                 addMessage(context, hero.getFormatName() + "休息了一会，恢复了<font color=\"#556B2F\">" + hel + "</font>点HP");
                 hero.addHp(hel);
-                addMessage(context, "-------------------");
+                addMessage(context, sque);
             } else if (random.nextLong(9000) > csmgl) {
                 step = 0;
                 long levJ = random.nextLong(hero.getMaxMazeLev() + 15) + 1;
@@ -162,12 +163,12 @@ public class Maze {
                     hero.setMaxMazeLev(level);
                 }
                 mazeLevelDetect();
-                addMessage(context, "-------------------");
+                addMessage(context, sque);
             } else if (random.nextBoolean()) {
-                int maxMonsterCount = 3;
+                int maxMonsterCount = 2;
                 maxMonsterCount += 2 *(level/300);
-                if(maxMonsterCount > 25){
-                    maxMonsterCount = 25;
+                if(maxMonsterCount > 15){
+                    maxMonsterCount = 15;
                 }
                 maxMonsterCount = 1 + random.nextInt(maxMonsterCount);
                 for (int i = 0; i < maxMonsterCount; i++) {
@@ -195,8 +196,10 @@ public class Maze {
                         step += 21;
                         NPC boss = NPC.build(level);
                         if(boss!=null){
-                            if(NPCBattleController.battle(hero,boss,random,this,context)){
+                            if(!NPCBattleController.battle(hero,boss,random,this,context)){
                                 beatJudge(context, boss.formatAsMonster(), true);
+                            }else {
+                                addMessage(context, sque);
                             }
                             continue;
                         }else {
@@ -235,7 +238,7 @@ public class Maze {
                         isBoss = beatJudge(context, monster, isBoss);
                     }
                     MonsterDB.updateMonster(monster);
-                    addMessage(context, "-----------------------------");
+                    addMessage(context, sque);
                     if(isBoss) break;
                 }
             } else {
@@ -303,7 +306,7 @@ public class Maze {
                 safetyRope.getScript().use();
                 long slev = level / 10 + 1;
                 String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
-                        "打败了。<br>" + hero.getFormatName() + "因为" + safetyRope.getName() + "护体掉到了" + slev;
+                        "打败了。<br>" + hero.getFormatName() + "因为" + safetyRope.getName() + "护体掉到了" + slev+ "层";
                 addMessage(context, notDie);
                 monster.addBattleDesc(notDie);
                 hero.restoreHalf();
@@ -317,7 +320,7 @@ public class Maze {
                     halfSail.getScript().use();
                     long slev = level / 2 + 1;
                     String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
-                            "打败了。<br>" + hero.getFormatName() + "因为" + halfSail.getName() + "护体掉到了" + slev;
+                            "打败了。<br>" + hero.getFormatName() + "因为" + halfSail.getName() + "护体掉到了" + slev+ "层"                       ;
                     addMessage(context, notDie);
                     monster.addBattleDesc(notDie);
                     hero.restoreHalf();

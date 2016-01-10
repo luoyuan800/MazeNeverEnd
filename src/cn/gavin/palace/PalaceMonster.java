@@ -5,21 +5,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Message;
 
-import java.util.List;
 import java.util.Stack;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.CountListener;
-import cn.bmob.v3.listener.FindListener;
 import cn.gavin.Element;
 import cn.gavin.activity.BaseContext;
-import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.monster.FirstName;
 import cn.gavin.monster.Monster;
 import cn.gavin.monster.SecondName;
 import cn.gavin.palace.nskill.NSkill;
-import cn.gavin.story.PalaceObject;
+import cn.gavin.story.NPCPlaceObject;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -30,8 +27,8 @@ import cn.gavin.utils.StringUtils;
 public class PalaceMonster extends Base {
 
     public static void getPalaceCount(final BaseContext context) {
-        BmobQuery<PalaceObject> query = new BmobQuery<PalaceObject>();
-        query.count((Context) context, PalaceObject.class, new CountListener() {
+        BmobQuery<NPCPlaceObject> query = new BmobQuery<NPCPlaceObject>();
+        query.count((Context) context, NPCPlaceObject.class, new CountListener() {
             @Override
             public void onSuccess(int i) {
                 Message message = new Message();

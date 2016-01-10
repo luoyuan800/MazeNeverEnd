@@ -122,7 +122,6 @@ public class SwapManager {
             });
         } catch (Exception e) {
             LogHelper.logException(e);
-            e.printStackTrace();
         }
     }
 

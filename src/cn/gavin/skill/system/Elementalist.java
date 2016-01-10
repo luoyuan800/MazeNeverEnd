@@ -121,7 +121,8 @@ public class Elementalist extends SkillLayout {
             skill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return (hero.getElement() != Element.无 && hero.getReincaCount() > 0) || hero.getGift() == Gift.Element;
+                    return ((hero.getElement() != Element.无 && hero.getReincaCount() > 0) || hero.getGift() == Gift.Element)
+                            && !SkillFactory.getSkill("魔王天赋", hero).isActive()&& !SkillFactory.getSkill("勇者之击", hero).isActive();
                 }
             });
             skill.setDescription(new DescExpression() {
@@ -129,7 +130,7 @@ public class Elementalist extends SkillLayout {
                 public String buildDescription(Skill skill) {
                     AttackSkill attackSkill = (AttackSkill) skill;
                     StringBuilder builder = new StringBuilder();
-                    builder.append("随心所欲，想换就换。转换自己的五行属性。所有元素使职业的技能都需要具有五行属性并且是一转之后才可以激活。<br>");
+                    builder.append("随心所欲，想换就换。转换自己的五行属性。所有元素使职业的技能都需要具有五行属性并且是一转之后才可以激活，并且不可以和勇者魔王技能同时激活。<br>");
                     builder.append(attackSkill.getProbability()).append("%概率释放");
                     return builder.toString();
                 }
@@ -218,7 +219,9 @@ public class Elementalist extends SkillLayout {
             iskill.setEnableExpression(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
-                    return ((hero.getElement() != Element.无 && hero.getReincaCount() > 0) || hero.getGift() == Gift.Element) && SkillFactory.getSkill("元素变换", hero).isActive();
+                    return ((hero.getElement() != Element.无 && hero.getReincaCount() > 0) ||
+                            hero.getGift() == Gift.Element)
+                            && SkillFactory.getSkill("元素变换", hero).isActive();
                 }
             });
             iskill.setDescription(new DescExpression() {
@@ -254,7 +257,7 @@ public class Elementalist extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return ((hero.getElement() != Element.无 && hero.getReincaCount() > 0) || hero.getGift() == Gift.Element)
-                            && SkillFactory.getSkill("元素防御", hero).isActive()
+                            && !SkillFactory.getSkill("元素防御", hero).isActive()
                             && SkillFactory.getSkill("元素控制", hero).isActive();
                 }
             });
@@ -404,7 +407,7 @@ public class Elementalist extends SkillLayout {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     return ((hero.getElement() != Element.无 && hero.getReincaCount() > 0) || hero.getGift() == Gift.Element)
-                            && SkillFactory.getSkill("元素压制", hero).isActive()
+                            && !SkillFactory.getSkill("元素压制", hero).isActive()
                             && SkillFactory.getSkill("元素变换", hero).isActive();
                 }
             });
@@ -702,6 +705,7 @@ public class Elementalist extends SkillLayout {
                     return false;
                 }
             });
+            return iskill;
         }
         return null;
     }

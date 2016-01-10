@@ -203,7 +203,6 @@ public class PetDB {
                 }
                 cursor.close();
             } catch (Exception e) {
-                e.printStackTrace();
                 LogHelper.logException(e);
             }
             return pets;

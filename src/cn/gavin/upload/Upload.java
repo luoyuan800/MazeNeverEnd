@@ -14,7 +14,7 @@ import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.log.LogHelper;
 import cn.gavin.skill.Skill;
-import cn.gavin.story.PalaceObject;
+import cn.gavin.story.NPCPlaceObject;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
 
@@ -35,7 +35,7 @@ public class Upload {
             public void run() {
                 boolean check = MazeContents.checkCheat(hero);
                 if (check) {
-                    PalaceObject object = new PalaceObject();
+                    NPCPlaceObject object = new NPCPlaceObject();
                     object.setHello(hero.getHello());
                     object.setAtk(hero.getUpperAtk().toString());
                     object.setDef(hero.getUpperDef().toString());
