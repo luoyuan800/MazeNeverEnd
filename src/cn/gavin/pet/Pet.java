@@ -400,7 +400,7 @@ public class Pet extends Base {
         egg.setOwnerId(hero.getUuid());
         egg.setImage(m.getImage());
         if (!f.getType().equals(m.getType())) {
-            if (random.nextInt(10000) + random.nextFloat() < (31.115 + hero.getPetAbe())) {
+            if (random.nextInt(10000) + random.nextFloat() < (5.115 + hero.getPetAbe())) {
                 int index = random.nextInt(MonsterDB.total);
                 Cursor cursor = DBHelper.getDbHelper().excuseSOL("select * from monster where id = '" + index + "'");
                 if (!cursor.isAfterLast()) {
@@ -411,6 +411,7 @@ public class Pet extends Base {
                         egg.atk_rise = MazeContents.hero.ATR_RISE * 2;
                         egg.def_rise = MazeContents.hero.DEF_RISE * 2;
                         egg.hp_rise = MazeContents.hero.MAX_HP_RISE * 2;
+                        egg.setImage(cursor.getInt(cursor.getColumnIndex("img")));
                         egg.setAtk(egg.getMaxAtk() + StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk"))) / 2);
                     }
                 }

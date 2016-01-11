@@ -202,7 +202,7 @@ public class SwapManager {
                 }
             }
             if (swapPet.getAskType() != null) {
-                fix &= egg && p.getType().equals(swapPet.getAskType());
+                fix &= p.getType().equals(swapPet.getAskType());
             }
             if (swapPet.getAskSkill() != null) {
                 fix &= p.getAllSkill() != null && p.getAllSkill().getName().startsWith(swapPet.getAskSkill());

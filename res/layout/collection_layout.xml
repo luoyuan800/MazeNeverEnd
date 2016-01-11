@@ -9,42 +9,47 @@
               tools:context=".activity.MainGameActivity">
 
     <RelativeLayout
-            android:layout_width="233dp"
-            android:layout_height="233dp" android:id="@+id/re_root" android:layout_gravity="center"
-            android:background="@drawable/wuxin">
-        <ImageButton
-                android:layout_width="233dp"
-                android:layout_height="70dp"
-                android:id="@+id/wuxin_up" android:background="@color/toumin" android:layout_gravity="center"
-                android:layout_alignParentTop="false"/>
+            android:layout_width="320dp"
+            android:layout_height="300dp" android:id="@+id/re_root" android:layout_gravity="center"
+            android:background="@drawable/yuanhuan_bak">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/wuxin_up" android:layout_gravity="center"
+                android:layout_alignParentTop="false" android:text="配" android:textSize="45dp"
+                android:layout_centerHorizontal="true" android:background="@color/toumin"/>
         <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:layout_gravity="center"
                 android:layout_alignParentBottom="false" android:layout_alignWithParentIfMissing="false"
                 android:layout_centerVertical="true"
-                android:layout_below="@+id/wuxin_up">
-            <ImageButton
-                    android:layout_width="118dp"
-                    android:layout_height="73dp"
-                    android:id="@+id/wuxin_left" android:background="@drawable/wuxin_left"/>
-            <ImageButton
-                    android:layout_width="115dp"
-                    android:layout_height="73dp"
-                    android:id="@+id/wuxin_right" android:background="@drawable/wuxin_right"/>
+                android:layout_alignParentTop="false">
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/wuxin_left" android:text="怪" android:textSize="45dp"
+                    android:background="@color/toumin" android:layout_marginLeft="5dp"/>
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/wuxin_right" android:textSize="45dp" android:text="成"
+                    android:layout_marginLeft="170dp" android:background="@color/toumin"/>
         </LinearLayout>
         <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:layout_gravity="center" android:orientation="horizontal"
-                android:layout_alignParentStart="false" android:layout_alignParentBottom="true">
-            <ImageButton
-                    android:layout_width="117dp"
-                    android:layout_height="89dp"
-                    android:id="@+id/wuxin_down_left" android:background="@drawable/wuxin_down_left"/>
-            <ImageButton
-                    android:layout_width="116dp"
-                    android:layout_height="89dp"
-                    android:id="@+id/wuxin_down_right" android:background="@drawable/wuxin_down_right"
-                    />
+                android:layout_alignParentStart="false" android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="false" android:layout_centerHorizontal="true">
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/wuxin_down_left" android:text="人" android:textSize="45dp"
+                    android:layout_marginLeft="55dp" android:background="@color/toumin"/>
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/wuxin_down_right"
+                    android:background="@color/toumin"/>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

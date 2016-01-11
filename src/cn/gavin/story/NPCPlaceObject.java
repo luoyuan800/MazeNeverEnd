@@ -44,6 +44,7 @@ public class NPCPlaceObject extends BmobObject {
         query.findObjects(context, new FindListener<NPCPlaceObject>() {
             @Override
             public void onSuccess(final List<NPCPlaceObject> palaceObjects) {
+                NPC.deleteNPC(NPC.PALACE_NPC);
                 for (NPCPlaceObject object : palaceObjects) {
                     object.save();
                 }

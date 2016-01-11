@@ -192,7 +192,7 @@ public class Maze {
                         monster = Monster.copy(hero);
                         isBoss = true;
                     }
-                    if (monster == null && random.nextLong(1000) > 899) {
+                    if (monster == null && random.nextLong(1000) > 909) {
                         step += 21;
                         NPC boss = NPC.build(level);
                         if(boss!=null){

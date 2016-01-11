@@ -131,6 +131,7 @@ public class LoadHelper {
         heroN.ATR_RISE = preferences.getLong("ATR_RISE", 2);
         heroN.DEF_RISE = preferences.getLong("DEF_RISE", 1);
         heroN.setReincaCount(preferences.getLong("reincaCount", 0));
+        heroN.detectAdditionSkill();
         heroN.setHitRate(preferences.getLong("hitRate", 0));
         heroN.setParry(preferences.getFloat("parry", 0));
         heroN.setDodgeRate(preferences.getFloat("dodgeRate", 0));

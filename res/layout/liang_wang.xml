@@ -9,28 +9,28 @@
               android:baselineAligned="false" tools:context=".activity.MainGameActivity" android:gravity="center">
 
     <RelativeLayout
-            android:layout_width="200dp"
-            android:layout_height="200dp" android:background="@drawable/sanjiao_bak"
+            android:layout_width="320dp"
+            android:layout_height="300dp" android:background="@drawable/yuanhuan_bak"
             android:layout_gravity="center_horizontal">
         <ImageButton
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:id="@+id/dian_button" android:src="@drawable/dian_zi"
                 android:scaleType="fitXY" android:background="@drawable/yuanhuan_bak" android:layout_gravity="center_horizontal|top"
                 android:layout_centerHorizontal="true"/>
         <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" android:layout_gravity="bottom" android:gravity="bottom|left"
-                android:layout_below="@+id/dian_button"
-                android:layout_alignParentBottom="false">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_gravity="bottom" android:gravity="bottom|left"
+                android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp">
             <ImageButton
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
                     android:id="@+id/swap_pet_button" android:src="@drawable/chong_zi" android:scaleType="centerInside"
                     android:background="@drawable/yuanhuan_bak" android:layout_marginBottom="20dp"/>
             <ImageButton
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
                     android:id="@+id/shang_button" android:src="@drawable/shang_zi_zi" android:scaleType="centerInside"
                     android:layout_marginBottom="20dp" android:layout_marginLeft="130dp"
                     android:background="#00000000"/>

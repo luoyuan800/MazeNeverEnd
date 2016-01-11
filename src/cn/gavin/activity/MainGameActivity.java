@@ -1153,7 +1153,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         int[] indexs = {37, 42, 24, 26, 27, 29, 30, 39, 98};
         int i = heroN.getRandom().nextInt(indexs.length);
         int index = indexs[i];
-        Cursor cursor = dbHelper.excuseSOL("select atk, hp, type, egg_rate, image, catch from monster where id = '" + index + "'");
+        Cursor cursor = dbHelper.excuseSOL("select atk, hp, type, egg_rate, img, catch from monster where id = '" + index + "'");
         pet.setType(cursor.getString(cursor.getColumnIndex("type")));
         pet.setAtk(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk"))) + heroN.getBaseAttackValue() / 200 + 20);
         long hp = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))) / 2;
@@ -2191,26 +2191,14 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 colDialog.show();
                 //fixDialogSize(colDialog, 233, 233);
                 View wxu = colDialog.findViewById(R.id.wuxin_up);
-                if (Recipe.getCurrentCount() * 100 / Recipe.getTotalCount() > 80) {
-                    wxu.setBackgroundResource(R.drawable.wuxin_up);
-                } else {
-                    wxu.setBackgroundColor(R.color.toumin);
-                }
+
                 wxu.setOnClickListener(this);
                 View wxl = colDialog.findViewById(R.id.wuxin_left);
                 wxl.setOnClickListener(this);
-                if (MonsterBook.getCurrentCount() * 100 / MonsterBook.getTotalCount() > 60) {
-                    wxl.setBackgroundResource(R.drawable.wuxin_left);
-                } else {
-                    wxl.setBackgroundColor(R.color.toumin);
-                }
+
                 View wxr = colDialog.findViewById(R.id.wuxin_right);
                 wxr.setOnClickListener(this);
-                if (Achievement.getCurrentCount() * 100 / Achievement.getTotalCount() > 90) {
-                    wxr.setBackgroundResource(R.drawable.wuxin_right);
-                } else {
-                    wxr.setBackgroundColor(R.color.toumin);
-                }
+
                 View wxdl = colDialog.findViewById(R.id.wuxin_down_left);
                 wxdl.setOnClickListener(this);
                 View wxdr = colDialog.findViewById(R.id.wuxin_down_right);

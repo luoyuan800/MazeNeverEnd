@@ -1148,21 +1148,27 @@ public class Hero implements BaseObject {
                 Achievement.reBird.enable(this);
                 dbHelper.endTransaction();
                 MainGameActivity.context.addMessage(getFormatName() + "成功转生！");
-                MainGameActivity.context.save();
                 reincaCount++;
-                if (reincaCount == 2) {
-                    fourthSkillEnable = true;
-                } else if (reincaCount == 4) {
-                    fifitSkillEnable = true;
-                } else if (reincaCount == 6) {
-                    sixthSkillEnable = true;
-                }
+                detectAdditionSkill();
                 gift = null;
                 MainGameActivity.context.showGiftChoose();
+                MainGameActivity.context.save();
             }
         } catch (Exception e) {
             Toast.makeText(MainGameActivity.context, "数据异常！！转生失败！", Toast.LENGTH_SHORT).show();
             LogHelper.logException(e);
+        }
+    }
+
+    public void detectAdditionSkill() {
+        if (reincaCount >= 2) {
+            fourthSkillEnable = true;
+        }
+        if (reincaCount >= 4) {
+            fifitSkillEnable = true;
+        }
+        if (reincaCount >= 6) {
+            sixthSkillEnable = true;
         }
     }
 
@@ -1454,8 +1460,8 @@ public class Hero implements BaseObject {
     }
 
     public void setPetAbe(float petAbe) {
-        if (petAbe > 30) {
-            petAbe = 30f;
+        if (petAbe > 40) {
+            petAbe = 40f;
         }
         this.petAbe = petAbe;
     }

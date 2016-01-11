@@ -9,27 +9,31 @@
               android:baselineAligned="false" android:gravity="center">
 
     <RelativeLayout
-            android:layout_width="200dp"
-            android:layout_height="200dp" android:background="@drawable/sanjiao_bak">
-        <ImageButton
-                android:layout_width="60dp"
-                android:layout_height="55dp"
-                android:id="@+id/upload_button" android:layout_gravity="center|top" android:src="@drawable/shng_zi"
-                android:scaleType="fitXY" android:layout_marginTop="15dp" android:layout_centerHorizontal="true"/>
+            android:layout_width="320dp"
+            android:layout_height="300dp" android:background="@drawable/yuanhuan_bak">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/upload_button" android:layout_gravity="center|top"
+                android:layout_centerHorizontal="true" android:text="上传" android:textSize="45dp"
+                android:background="@color/toumin"/>
         <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" android:layout_gravity="bottom" android:gravity="bottom|left"
-                android:layout_alignParentBottom="true">
-            <ImageButton
-                    android:layout_width="60dp"
-                    android:layout_height="55dp"
-                    android:id="@+id/zan_zu_button" android:src="@drawable/zan_zi" android:scaleType="centerInside"
-                    android:layout_marginBottom="25dp"/>
-            <ImageButton
-                    android:layout_width="60dp"
-                    android:layout_height="55dp"
-                    android:id="@+id/update_button" android:src="@drawable/geng_zi" android:scaleType="centerInside"
-                    android:layout_marginBottom="25dp" android:layout_marginLeft="80dp"/>
+                android:layout_alignParentBottom="true" android:layout_marginBottom="55dp"
+                android:background="@color/toumin">
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/zan_zu_button"
+                    android:text="点赞"
+                    android:textSize="45dp" android:background="@color/toumin" android:layout_marginLeft="15dp"/>
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/update_button"
+                    android:text="更新"
+                    android:textSize="45dp" android:layout_marginLeft="105dp" android:background="@color/toumin"/>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

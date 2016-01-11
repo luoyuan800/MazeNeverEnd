@@ -126,12 +126,16 @@ public class NPC extends Hero {
         super("");
     }
 
+    public static void deleteNPC(int type){
+        DBHelper.getDbHelper().excuseSQLWithoutResult("delete from npc where type = " + type);
+    }
+
     public static List<NPC> loadNPCByType(int type) {
         Cursor cursor;
         if (type == -1) {
             cursor = DBHelper.getDbHelper().excuseSOL("select * from npc order by lev");
         } else {
-            cursor = DBHelper.getDbHelper().excuseSOL("select * from npc where type = " + type);
+            cursor = DBHelper.getDbHelper().excuseSOL("select * from npc where type = " + type + " order by lev DESC");
         }
         List<NPC> npcs = new ArrayList<NPC>(cursor.getCount());
         while (!cursor.isAfterLast()) {
@@ -166,7 +170,7 @@ public class NPC extends Hero {
     }
 
     public String getSimpleHTMLDesc() {
-        return lev + " - <font color=\"red\">" + name + "</font> (" + element + ")<br>&nbsp;&nbsp;" + desc;
+        return lev + " - <font color=\"red\"><b>" + name + "</b></font> (" + element + ")<br><font color=\"#FAFAD2\">&nbsp;&nbsp;" + desc + "</font>";
     }
 
     public String getName() {
@@ -312,6 +316,10 @@ public class NPC extends Hero {
     public static NPC build(long level) {
         NPC npc = null;
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("select * from npc where lev = " + level + " and found = 0");
+        if(cursor.isAfterLast()){
+            cursor.close();
+            cursor = DBHelper.getDbHelper().excuseSOL("select * from npc where lev = " + level);
+        }
         if (!cursor.isAfterLast()) {
             npc = buildNpc(cursor);
         }
@@ -333,7 +341,7 @@ public class NPC extends Hero {
         }
         builder.append("<br>");
         builder.append("&nbsp;");
-        builder.append(desc);
+        builder.append("<font color=\"#87CEFA\">").append(desc).append("</font>");
         return builder.toString();
     }
 
