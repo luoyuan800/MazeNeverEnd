@@ -97,6 +97,8 @@ public class Monster {
             monster.silent = 18.8f;
         }
         monster.setPetRate(0);
+        monster.setBasePetRate(0);
+        monster.setBaseEggRate(0);
         return monster;
     }
 

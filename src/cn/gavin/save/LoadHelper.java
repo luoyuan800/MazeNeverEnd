@@ -3,6 +3,7 @@ package cn.gavin.save;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.util.Log;
 import cn.gavin.*;
@@ -99,17 +100,7 @@ public class LoadHelper {
         heroN.setSkillPoint(preferences.getLong("skillPoint", 1));
         MazeContents.lastUpload = preferences.getLong("lastUploadLev", 1);
         maze.setLevel(preferences.getLong("currentMazeLev", 1));
-        String ach = preferences.getString("achievement", "0");
-        if(ach.equals("0")){
-            SharedPreferences preferences0 = context.getSharedPreferences("hero", Context.MODE_PRIVATE);
-            ach = preferences0.getString("achievement", "0");
-        }
-        for (int i = 0; i < ach.length() && i < Achievement.values().length; i++) {
-            int enable = StringUtils.toInt(ach.charAt(i) + "");
-            if (enable == 1) {
-                Achievement.values()[i].enable();
-            }
-        }
+
         MazeContents.payTime = preferences.getLong("payTime", 0);
         heroN.setAwardCount(preferences.getLong("awardCount", 0));
         heroN.setLockBox(preferences.getLong("lockBox", 1));
@@ -179,6 +170,29 @@ public class LoadHelper {
         loadValue(heroN);
         MazeContents.hero = heroN;
         MazeContents.maze = maze;
+        String ach = preferences.getString("achievement", "0");
+        int versionCode = 210;
+        try {
+            versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        if(ach.equals("0") || versionCode == 210){
+            SharedPreferences preferences0 = context.getSharedPreferences("hero", Context.MODE_PRIVATE);
+            String acho = preferences0.getString("achievement", "0");
+            for (int i = 0; i < acho.length() && i < Achievement.values().length; i++) {
+                int enable = StringUtils.toInt(acho.charAt(i) + "");
+                if (enable == 1) {
+                    Achievement.values()[i].enable(heroN);
+                }
+            }
+        }
+        for (int i = 0; i < ach.length() && i < Achievement.values().length; i++) {
+            int enable = StringUtils.toInt(ach.charAt(i) + "");
+            if (enable == 1) {
+                Achievement.values()[i].enable();
+            }
+        }
 
     }
 

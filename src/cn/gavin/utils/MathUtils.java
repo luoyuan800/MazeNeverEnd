@@ -121,21 +121,52 @@ public class MathUtils {
     }
 
     public static long getAccessoryValue(long lev, long rise, Random random){
-        return random.nextLong(getMaxValueByRiseAndLev(rise,lev)  - getAvgValueByRiseAndLev(rise, lev));
+        long randomValue = random.nextLong(getMaxValueByRiseAndLev(rise, lev) - getAvgValueByRiseAndLev(rise, lev));
+        if (lev < 1000) {
+            switch ((int)lev / 50) {
+                case 0:
+                    randomValue/=120;
+                    break;
+                case 1:
+                    randomValue/=100;
+                    break;
+                case 2:
+                    randomValue/=60;
+                    break;
+                case 3:
+                    randomValue/=50;
+                    break;
+                case 4:
+                    randomValue/=30;
+                    break;
+                case 5:
+                    randomValue/=30;
+                    break;
+                case 6:
+                    randomValue/=20;
+                    break;
+                case 7:
+                    randomValue/=10;
+                    break;
+                case 8:
+                    randomValue/=10;
+                    break;
+                case 9:
+                    randomValue/=5;
+                    break;
+                case 10:
+                    randomValue/=5;
+                    break;
+            }
+        }
+        return randomValue;
     }
 
     public static void main(String... args) {
         Random random = new Random();
-        System.out.println(getMonsterAtk(10, 10, 4, 1, random));
-        System.out.println(getMonsterAtk(10, 10, 4, 1, random));
-        System.out.println(getMonsterAtk(10, 100, 4, 1, random));
-        System.out.println(getMonsterAtk(10, 100, 4, 1, random));
-        System.out.println(getMonsterAtk(10, 500, 4, 1, random));
-        System.out.println(getMonsterAtk(10, 1000, 4, 1, random));
-        System.out.println(getMonsterAtk(10, 500, 4, 1, random));
-        System.out.println(getMonsterAtk(10, 1000, 4, 1, random));
-        System.out.println(getMonsterAtk(10, 2000, 4, 1, random));
-        System.out.println(getMonsterAtk(10, 10000, 4, 1, random));
-        System.out.println(getMonsterAtk(10, 10000, 4, 1, random));
+        System.out.println(getAccessoryValue(10, 1, random));
+        System.out.println(getAccessoryValue(10, 2, random));
+        System.out.println(getAccessoryValue(10, 5, random));
+
     }
 }

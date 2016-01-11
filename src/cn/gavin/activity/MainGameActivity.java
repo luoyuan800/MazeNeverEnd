@@ -952,7 +952,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         AlertDialog resetSkillPointDialog;
         resetSkillPointDialog = new Builder(this).create();
         resetSkillPointDialog.setTitle("重置技能");
-        resetSkillPointDialog.setMessage("重置技能后技能的使用/点击(熟练度)次数会减半。返回激活消耗的技能点，但是升级消耗的技能点不会返回。");
+        resetSkillPointDialog.setMessage("重置技能返回激活消耗的技能点，但是升级消耗的技能点不会返回。");
         resetSkillPointDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
 

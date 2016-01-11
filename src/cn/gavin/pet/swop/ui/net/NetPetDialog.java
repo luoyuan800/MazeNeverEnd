@@ -55,11 +55,11 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
     int page = 1;
     SlidingMenu slidingMenu;
     SwapPet netPet;
+    Button netQueryButton;
     List<DialogInterface> shouldCloseDialog = new ArrayList<DialogInterface>();
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             try {
-                Button netQueryButton = (Button) dialog.findViewById(R.id.net_query_button);
                 switch (msg.what) {
                     case 0:
                         show();
@@ -113,16 +113,7 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
 
     public NetPetDialog() {
         try {
-            dialog = new AlertDialog.Builder(context).create();
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View view = inflater.inflate(R.layout.net_pet_simple_view, (ViewGroup) ((Activity) context).findViewById(R.id.net_pet_root));
-            dialog.setView(view);
-            dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+
             swapManager = new SwapManager();
             query = new SwapPet();
             swapManager.searchPet(context, query, 1);
@@ -158,10 +149,22 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
     }
 
     public void show() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setNegativeButton("退出", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.net_pet_simple_view, (ViewGroup) ((Activity) context).findViewById(R.id.net_pet_root));
+        builder.setView(view);
+        dialog = builder.create();
+        dialog.show();
+        netQueryButton = (Button) dialog.findViewById(R.id.net_query_button);
         adapter = new NetPetSimpleViewAdapter();
         adapter.setNetPetDialog(this);
         adapter.addPets(pets.toArray(new SwapPet[pets.size()]));
-        dialog.show();
         listView = (LoadMoreListView) dialog.findViewById(R.id.net_pet_list);
         listView.setAdapter(adapter);
         listView.setOnLoadListener(this);
@@ -195,6 +198,7 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("select type from monster");
         while (!cursor.isAfterLast()) {
             lastNames.add(cursor.getString(cursor.getColumnIndex("type")));
+            cursor.moveToNext();
         }
         cursor.close();
         lastNames.add("无");

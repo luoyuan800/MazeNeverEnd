@@ -133,7 +133,7 @@ public class Pet extends Base {
     }
 
     public static Pet cPet(Monster monster, Random random) {
-        if ((MazeContents.hero.ismV() && monster.getIndex() % 2 == 0) || monster.getIndex() == 25) {
+        if ((MazeContents.hero.ismV() && monster.getIndex() % 2 == 0) || monster.getIndex() == 25 || monster.getPetRate() <= 0) {
             return null;
         }
         if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 15) {
