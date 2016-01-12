@@ -1154,6 +1154,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         pet.setAtk_rise(heroN.ATR_RISE);
         pet.setHp_rise(heroN.MAX_HP_RISE);
         pet.setDef_rise(heroN.DEF_RISE);
+        pet.setImage(cursor.getInt(cursor.getColumnIndex("img")));
         if (heroN.getElement() != Element.无) {
             pet.setElement(heroN.getElement());
         } else {

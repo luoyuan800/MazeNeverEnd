@@ -50,7 +50,7 @@ public class MonsterDB {
                 " where id = '%s'",
                monster.getBeatCount(),
                 monster.getDefeatCount(), monster.getCatchCount(), monster.getMeet_lev(), monster.getCatch_lev(), monster.getIndex());
-        if(monster.getName().contains("龙") && monster.getBeatCount() > 1000){
+        if(monster.getName().contains("龙") && monster.getDefeatCount() > 1000){
             Achievement.dragon.enable(MazeContents.hero);
         }
         DBHelper.getDbHelper().excuseSQLWithoutResult(sql);
