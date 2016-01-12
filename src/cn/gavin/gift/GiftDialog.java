@@ -28,11 +28,10 @@ public class GiftDialog {
         mainDialog.setTitle("选择一个天赋");
         mainDialog.setCancelable(false);
         mainDialog.setCanceledOnTouchOutside(false);
-        mainDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+        mainDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
-            public void onCancel(DialogInterface dialog) {
+            public void onDismiss(DialogInterface dialog) {
                 context.getHandler().sendEmptyMessage(123);
-                dialog.dismiss();
             }
         });
         this.context = context;

@@ -197,7 +197,9 @@ public class Maze {
                         NPC boss = NPC.build(level);
                         if(boss!=null){
                             if(!NPCBattleController.battle(hero,boss,random,this,context)){
-                                beatJudge(context, boss.formatAsMonster(), true);
+                                Monster asMonster = boss.formatAsMonster();
+                                asMonster.setBattleMsg(NPCBattleController.getLastBattle());
+                                beatJudge(context, asMonster, true);
                             }else {
                                 addMessage(context, sque);
                             }

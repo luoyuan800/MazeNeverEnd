@@ -970,15 +970,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     }
 
                 });
-        resetSkillPointDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-
-                });
         resetSkillPointDialog.show();
     }
 
@@ -2197,7 +2188,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 if (Recipe.getCurrentCount() * 100 / Recipe.getTotalCount() > 80) {
                     wxu.setBackgroundResource(R.drawable.yuanhuan_bak);
                 } else {
-                    wxu.setBackgroundColor(R.color.toumin);
+                    wxu.setBackgroundResource(0);
                 }
                 wxu.setOnClickListener(this);
                 View wxl = colDialog.findViewById(R.id.wuxin_left);
@@ -2205,21 +2196,21 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 if (MonsterBook.getCurrentCount() * 100 / MonsterBook.getTotalCount() > 60) {
                     wxl.setBackgroundResource(R.drawable.yuanhuan_bak);
                 } else {
-                    wxl.setBackgroundColor(R.color.toumin);
+                    wxl.setBackgroundResource(0);
                 }
                 View wxr = colDialog.findViewById(R.id.wuxin_right);
                 wxr.setOnClickListener(this);
                 if (Achievement.getCurrentCount() * 100 / Achievement.getTotalCount() > 90) {
                     wxr.setBackgroundResource(R.drawable.yuanhuan_bak);
                 } else {
-                    wxr.setBackgroundColor(R.color.toumin);
+                    wxr.setBackgroundResource(0);
                 }
                 View wxdl = colDialog.findViewById(R.id.wuxin_down_left);
                 wxdl.setOnClickListener(this);
                 if (NPC.foundPrce() > 98) {
                     wxdl.setBackgroundResource(R.drawable.yuanhuan_bak);
                 } else {
-                    wxdl.setBackgroundColor(R.color.toumin);
+                    wxdl.setBackgroundResource(0);
                 }
                 View wxdr = colDialog.findViewById(R.id.wuxin_down_right);
                 wxdr.setOnClickListener(this);

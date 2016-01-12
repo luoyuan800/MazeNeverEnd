@@ -133,7 +133,7 @@ public class SaveHelper {
         editor.putFloat("parry", heroN.getParry());
         editor.putFloat("dodgeRate", heroN.getDodgeRate());
         editor.putLong("clickPointAward", heroN.getClickPointAward());
-        editor.putString("element", heroN.getElement().name());
+        editor.putString("element", heroN.getTrueElement().name());
         editor.putInt("pet_size", heroN.getPetSize());
         editor.putFloat("pet_rate", heroN.getPetRate());
         editor.putFloat("egg_rate", heroN.getEggRate());

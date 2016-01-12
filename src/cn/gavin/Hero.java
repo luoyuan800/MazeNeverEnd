@@ -777,7 +777,7 @@ public class Hero implements BaseObject {
         if (onChange) {
             return "<font color=\"#800080\">" + changeName + "</font>";
         } else {
-            return "<font color=\"#800080\">" + getName() + "</font>(" + element + ")";
+            return "<font color=\"#800080\">" + getName() + "</font>(" + getElement() + ")";
 
         }
     }
@@ -1352,6 +1352,18 @@ public class Hero implements BaseObject {
     }
 
     public Element getElement() {
+        if(pElement!=null){
+            return pElement;
+        }else {
+            return element;
+        }
+    }
+
+    private Element pElement;
+    public void setPElement(Element element){
+        pElement = element;
+    }
+    public Element getTrueElement(){
         return element;
     }
 

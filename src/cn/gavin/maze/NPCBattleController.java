@@ -129,7 +129,7 @@ public class NPCBattleController {
     }
 
     private static StringBuilder battleMsg;
-    public String getLastBattle(){
+    public static String getLastBattle(){
         try {
             if (battleMsg != null) {
                 return battleMsg.toString();

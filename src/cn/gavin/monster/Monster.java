@@ -448,6 +448,10 @@ public class Monster {
         builder.append("<br><font color=\"#8B0000\">").append(desc).append("</font>");
     }
 
+    public void setBattleMsg(String str){
+        builder = new StringBuilder(str);
+    }
+
     public String getBattleMsg() {
         return builder.toString();
     }

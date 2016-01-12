@@ -5,14 +5,17 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.text.Html;
 import android.text.InputFilter;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cn.gavin.Element;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Item;
@@ -382,6 +385,48 @@ public enum GoodsType {
                 GoodsType.ResetSkill.count--;
                 GoodsType.ResetSkill.save();
                 MainGameActivity.context.showResetSkillPointDialog();
+            }
+            return null;
+        }
+    }, true),
+    Pretend("伪装", "使用后选择一个五行属性，可以在一段时间变化自己的五行属性为选择的那个。退出游戏会导致这个效果消失。"
+            , new GoodScript() {
+        @Override
+        public Object use() {
+            if (Pretend.count > 0) {
+                GoodsType.Pretend.count--;
+                GoodsType.Pretend.save();
+                AlertDialog pretendDialog = new AlertDialog.Builder(MainGameActivity.context).create();
+                pretendDialog.setTitle("选择五行属性");
+                final Spinner spinner = new Spinner(MainGameActivity.context);
+                List<String> elements = new ArrayList<String>(5);
+                for(Element e : Element.values()){
+                    elements.add(e.name());
+                }
+                ArrayAdapter fa = new ArrayAdapter<String>(MainGameActivity.context, android.R.layout.simple_spinner_item, elements);
+                fa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(fa);
+                pretendDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        MazeContents.hero.setPElement(Element.values()[spinner.getSelectedItemPosition()]);
+                        dialog.dismiss();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Thread.sleep(1000 * 60 * 5);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                MazeContents.hero.setPElement(null);
+                                MainGameActivity.context.addMessage("伪装的效果消失了");
+                            }
+                        }).start();
+                    }
+                });
+                pretendDialog.setView(spinner);
+                pretendDialog.show();
             }
             return null;
         }
