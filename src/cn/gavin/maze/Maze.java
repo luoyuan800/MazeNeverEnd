@@ -224,7 +224,7 @@ public class Maze {
                         if (!StringUtils.isNotEmpty(catchPetNameContains) || monster.getName().contains(catchPetNameContains)) {
                             Pet pet = Pet.catchPet(monster);
                             if (pet != null) {
-                                if (monster.getCatch_lev() == 0) {
+                                if (monster.getCatch_lev() <= 0) {
                                     monster.setCatch_lev(level);
                                 }
                                 addMessage(context, hero.getFormatName() + "收服了宠物 " + monster.getFormatName());

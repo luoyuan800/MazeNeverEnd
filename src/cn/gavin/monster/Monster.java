@@ -96,7 +96,7 @@ public class Monster {
         if (monster.silent < 1 && maze.getLev() > 500 && random.nextBoolean()) {
             monster.silent = 18.8f;
         }
-        monster.setPetRate(0);
+        monster.setPetRate(-1);
         monster.setBasePetRate(0);
         monster.setBaseEggRate(0);
         return monster;
@@ -251,6 +251,7 @@ public class Monster {
             firstName = FirstName.getRandom(mazeLev, random);
             secondName = SecondName.getRandom(mazeLev, random);
             lastName = cursor.getString(cursor.getColumnIndex("type"));
+            type = lastName;
             hp = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp")));
             atk = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk")));
             if (maze.getLev() < 5000) {
@@ -350,7 +351,7 @@ public class Monster {
 
     private void formatName(Hero hero) {
         if(getAtk() > (hero.getUpperHp() + hero.getDefenseValue()) && mazeLev < 50){
-            atk = atk/5;
+            atk = atk/10;
         }
         if (getAtk() > (hero.getUpperHp() + hero.getDefenseValue()) / 2) {
             setFormatName("<B><font color=\"red\">" + getName() + "</font></B>" + "(" + element + ")");

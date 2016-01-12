@@ -640,7 +640,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:background="@drawable/bmob_update_btn_check_off_focused_holo_light"
-                            android:text="上传"
+                            android:text="互动"
                             />
 
 

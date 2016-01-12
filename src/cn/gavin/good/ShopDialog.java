@@ -35,10 +35,10 @@ public class ShopDialog {
                     shopDialog.setView(listView);
                     shopDialog.show();
                     //透明
-                    Window window = shopDialog.getWindow();
-                    WindowManager.LayoutParams lp = window.getAttributes();
-                    lp.alpha = 0.5f;
-                    window.setAttributes(lp);
+//                    Window window = shopDialog.getWindow();
+//                    WindowManager.LayoutParams lp = window.getAttributes();
+//                    lp.alpha = 0.4f;
+//                    window.setAttributes(lp);
                     MazeContents.maze.setSailed(false);
                     Achievement.Shop.enable(MazeContents.hero);
 

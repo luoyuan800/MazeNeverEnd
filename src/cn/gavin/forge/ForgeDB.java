@@ -159,7 +159,7 @@ public class ForgeDB {
 
     public void upgradeTo1_8(SQLiteDatabase database){
         String base = "REPLACE INTO recipe (name, items, base, addition, found, user, type, color) values ('%s', '%s','%s','%s','false','false','%s','%s')";
-        String sql = String.format(base, "初音的守护<br><font color=\"#FF4500\">天长地久，不离不弃</font>", "龙皮-龙须-紫熏木-紫熏木-紫熏木", "ADD_CLICK_AWARD:60000-ADD_ATK:~700000-ADD_DEF:~100000", "START_BURST:80-ADD_DODGE_RATE:35-ADD_PER_UPPER_HP:~22", RingBuilder.type, "#FF8C00");
+        String sql = String.format(base, "初音的守护<br><font color=\"#FF4500\">天长地久，不离不弃</font>", "龙皮-龙须-紫熏木-紫熏木-紫熏木", "ADD_CLICK_AWARD:60000-ADD_ATK:~700000-ADD_DEF:~100000", "ADD_DODGE_RATE:35-ADD_PER_UPPER_HP:~22", RingBuilder.type, "#FF8C00");
         database.execSQL(sql);
         sql = String.format(base, "蝶祁的眷恋<br><font color=\"#FF4500\">我会在你身后一直默默的陪着你</font>", "龙皮-龙须-紫熏木-龙骨-紫熏木", "ADD_PER_DEF:14-ADD_PER_ATK:10-ADD_CLICK_POINT_AWARD:3", "ADD_HIT_RATE:~10-ADD_PER_UPPER_HP:62", NecklaceBuilder.type, "#FF8C00");
         database.execSQL(sql);
@@ -172,6 +172,10 @@ public class ForgeDB {
         sql = String.format(base, "仙剑メ天道冠", "蚁须-龙须-龙须-龙骨-紫熏木", "ADD_PER_DEF:24", "ADD_HIT_RATE:~10-ADD_PARRY:60-ADD_CLICK_AWARD:65", HatBuilder.type, "#FF8C00");
         database.execSQL(sql);
         sql = String.format(base, "仙剑メ天道戒", "蚁须-鼠骨-龙须-龙骨-紫熏木", "ADD_ATK:64000", "ADD_HIT_RATE:30-ADD_PARRY:30-ADD_DODGE_RATE:10", RingBuilder.type, "#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base, "雪儿的启示<br><font color=\"#FF4500\">(｡•́︿•̀｡)</font>", "龙筋-龙筋-龙须-龙骨-紫熏木", "ADD_PARRY:55-ADD_POWER:10000", "ADD_STR:100000-ADD_PARRY:~25-ADD_PER_DEF:30-ADD_CLICK_AWARD:40", NecklaceBuilder.type, "#FF8C00");
+        database.execSQL(sql);
+        sql = String.format(base, "传说中的🐮魔王<br><font color=\"\"#FF4500\"\">唯一</font>", "龙筋-龙筋-玄石-龙骨-紫熏木", "ADD_PER_ATK:65-ADD_PER_UPPER_HP:65", "ADD_CLICK_AWARD:~1000000-ADD_DODGE_RATE:50-ADD_PARRY:50-ADD_HIT_RATE:50-ADD_PER_DEF:65", HatBuilder.type, "#FF8C00");
         database.execSQL(sql);
     }
 }

@@ -83,13 +83,15 @@ public class NPC extends Hero {
         insertNPC("869c5f10-03ff-45e4-b46c-58a1abca93c4","谜离的你迷离的眼(2)",6595615l, 976204262l,120660420l,90,0.0f,"上一个版本的殿堂守护者<br>&nbsp;💀","金","勇者之击-原能力-浮生百刃","","","",24909l,STORY_NPC, db);
         insertNPC("d6ac0f9f-da4a-4110-a6fb-bd37e73531ed","初音公主殿下",454125l, 7132305l,3204306l,0,0.0f,"上一个版本的殿堂守护者<br>&nbsp;我就是我，无人可替，我就是初音未来","金","勇者之击-浮生百刃-咆哮","","","",10445l,STORY_NPC, db);
         insertNPC("e26e8fee-912d-4a06-a3d5-5fa666c438e1","勇者",16874l, 58060l,13488l,0,0.0f,"上一个版本的殿堂守护者<br>&nbsp;本大爷在此，想上就开干","无","魔王天赋-腐蚀-强化","","","",121l,STORY_NPC, db);
-        insertNPC("a2a22f9b-d24c-4de6-9b51-d7c8504c7a1d","#神?#传说中的🐮魔王(7)",200230356366l, 5319205839691l,271622489141l,50,60.0f,"人生一场虚空大梦，韶华白首，不过转瞬。惟有天道恒在，往复循环，不曾更改！","火","生命吸收-魔王天赋-多重攻击","","","",201153l,STORY_NPC, db);
+        insertNPC("a2a22f9b-d24c-4de6-9b51-d7c8504c7a1d","#神?#传说中的🐮魔王(7)",200230356366l, 5319205839691l,271622489141l,50,60.0f,"人生一场虚空大梦，韶华白首，不过转瞬。惟有天道恒在，往复循环，不曾更改！","火","生命吸收-魔王天赋-多重攻击","","传说中的🐮魔王<br><font color=\"\"#FF4500\"\">唯一</font>","",201153l,STORY_NPC, db);
         insertNPC("bfed85a8-d030-42b6-b78c-0c052e3480e6","云动",7454834l, 78542073l,9137628l,90,90.0f,"上一个版本的殿堂守护者<br>&nbsp;逗比大作战","金","--","","","",18678l,STORY_NPC, db);
         insertNPC("815ce416-d569-41b3-9305-3a9ecf0fdd96","HERO(1)",7507689l, 48988996l,75951l,17,0.0f,"上一个版本的殿堂守护者<br>&nbsp;德玛西亚！","火","群殴-浮生百刃-勇者之击","","","",6629l,STORY_NPC, db);
         insertNPC("2ea4de7d-589b-45be-b447-9e3670885a43","爱吃肉的土豆",18125461l, 795403416l,3543562l,0,1.0f,"上一个版本的殿堂守护者<br>&nbsp;下次应该是3000层了！","火","强化-水波-生命吸收","","","",2365l,STORY_NPC, db);
         insertNPC("f93f67c7-5857-4991-8b64-eb27dcac5d56","🙌🙏🙅🙆",198775l, 5789935l,39463l,4,0.0f,"上一个版本的殿堂守护者<br>&nbsp;😘","无","错位-裂空剑-重击","","","",1090l,STORY_NPC, db);
         insertNPC("a6408316-5b6e-47f0-8b20-1ee00abba337","飘逸风尘(2)",119846197l, 23106467398l,118912211l,90,90.0f,"上一个版本的殿堂守护者<br>&nbsp;😨上面都是20万以上怎么玩","火","浮生百刃-原能力-勇者之击","","","",69704l,STORY_NPC, db);
-        insertNPC("cd363cd9-6a29-4044-b21f-a9760ee03071","赤いの魔王さま(3)",41436094448l, 256104936956l,57482088891l,86,92.0f,"上一个版本的殿堂守护者<br>&nbsp;吃屎啦","火","多重攻击-水波-生命吸收","","","",117345l,STORY_NPC, db);}
+        insertNPC("cd363cd9-6a29-4044-b21f-a9760ee03071","赤いの魔王さま(3)",41436094448l, 256104936956l,57482088891l,86,92.0f,"上一个版本的殿堂守护者<br>&nbsp;吃屎啦","火","多重攻击-水波-生命吸收","","","",117345l,STORY_NPC, db);
+        insertNPC("cd363cd9-6a29-4044-b21f-a9760ee03071","沁玟",141436094448l, 22256104936956l,57482088l,96,92.0f,"&nbsp;传说中的群主，无法捕获，外号包租婆，绝招是发红包！击败他之后你就可以调戏他了。","火","多重攻击-水波-生命吸收","","","Master",517345l,STORY_NPC, db);
+    }
 
     public static void insertNPC(String id, String name, long atk, long hp, long def, long hit,
                                  float parry, String desc, String element, String skill,
@@ -108,6 +110,24 @@ public class NPC extends Hero {
         }else{
             database.execSQL(sql);
         }
+    }
+
+    public static int foundPrce(){
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("select count(*) from npc where type = 0");
+        int prec = 0;
+        if(!cursor.isAfterLast()){
+            int total = cursor.getInt(0);
+            cursor.close();
+            cursor = DBHelper.getDbHelper().excuseSOL("select count(*) from npc where type = 0 and found = 1");
+            if(!cursor.isAfterLast()){
+                int found = cursor.getInt(0);
+                prec = found * 100 / total;
+            }
+        }
+        if(!cursor.isClosed()){
+            cursor.close();
+        }
+        return prec;
     }
 
     private String name;
@@ -170,7 +190,7 @@ public class NPC extends Hero {
     }
 
     public String getSimpleHTMLDesc() {
-        return lev + " - <font color=\"red\"><b>" + name + "</b></font> (" + element + ")<br><font color=\"#FAFAD2\">&nbsp;&nbsp;" + desc + "</font>";
+        return lev + " - <font color=\"red\"><b>" + name + "</b></font> (" + element + ")<br><font color=\"#87CEEB\">&nbsp;&nbsp;" + desc + "</font><br>";
     }
 
     public String getName() {
@@ -341,7 +361,14 @@ public class NPC extends Hero {
         }
         builder.append("<br>");
         builder.append("&nbsp;");
-        builder.append("<font color=\"#87CEFA\">").append(desc).append("</font>");
+        builder.append("<font color=\"#87CEFA\">").append(desc);
+        if(StringUtils.isNotEmpty(accName)) {
+            builder.append("<br>").append("可以获得装备‘").append(accName).append("’的配方");
+        }
+        if(StringUtils.isNotEmpty(achName)){
+            builder.append("<br>").append("可以获得成就").append(achName);
+        }
+        builder.append("</font>");
         return builder.toString();
     }
 

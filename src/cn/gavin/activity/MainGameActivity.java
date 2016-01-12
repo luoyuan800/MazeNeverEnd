@@ -1860,6 +1860,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 } else if (heroN.getAwardCount() == 0) {
                     showFirstIn();
                 }
+                if(alipay.getOldPayTime() > 0){
+                    showAwardPet("您是老玩家，感谢您的继续支持！");
+                }
                 while (gameThreadRunning) {
                     try {
                         Thread.sleep(refreshInfoSpeed);
@@ -2191,16 +2194,33 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 colDialog.show();
                 //fixDialogSize(colDialog, 233, 233);
                 View wxu = colDialog.findViewById(R.id.wuxin_up);
-
+                if (Recipe.getCurrentCount() * 100 / Recipe.getTotalCount() > 80) {
+                    wxu.setBackgroundResource(R.drawable.yuanhuan_bak);
+                } else {
+                    wxu.setBackgroundColor(R.color.toumin);
+                }
                 wxu.setOnClickListener(this);
                 View wxl = colDialog.findViewById(R.id.wuxin_left);
                 wxl.setOnClickListener(this);
-
+                if (MonsterBook.getCurrentCount() * 100 / MonsterBook.getTotalCount() > 60) {
+                    wxl.setBackgroundResource(R.drawable.yuanhuan_bak);
+                } else {
+                    wxl.setBackgroundColor(R.color.toumin);
+                }
                 View wxr = colDialog.findViewById(R.id.wuxin_right);
                 wxr.setOnClickListener(this);
-
+                if (Achievement.getCurrentCount() * 100 / Achievement.getTotalCount() > 90) {
+                    wxr.setBackgroundResource(R.drawable.yuanhuan_bak);
+                } else {
+                    wxr.setBackgroundColor(R.color.toumin);
+                }
                 View wxdl = colDialog.findViewById(R.id.wuxin_down_left);
                 wxdl.setOnClickListener(this);
+                if (NPC.foundPrce() > 98) {
+                    wxdl.setBackgroundResource(R.drawable.yuanhuan_bak);
+                } else {
+                    wxdl.setBackgroundColor(R.color.toumin);
+                }
                 View wxdr = colDialog.findViewById(R.id.wuxin_down_right);
                 wxdr.setOnClickListener(this);
                 break;

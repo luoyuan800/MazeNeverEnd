@@ -178,8 +178,8 @@ public class LoadHelper {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+        SharedPreferences preferences0 = context.getSharedPreferences("hero", Context.MODE_PRIVATE);
         if(ach.equals("0") || versionCode == 210){
-            SharedPreferences preferences0 = context.getSharedPreferences("hero", Context.MODE_PRIVATE);
             String acho = preferences0.getString("achievement", "0");
             for (int i = 0; i < acho.length() && i < Achievement.values().length; i++) {
                 int enable = StringUtils.toInt(acho.charAt(i) + "");
@@ -194,7 +194,6 @@ public class LoadHelper {
                 Achievement.values()[i].enable();
             }
         }
-
     }
 
     public void loadSkill(Hero hero) {

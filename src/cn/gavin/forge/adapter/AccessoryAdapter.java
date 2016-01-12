@@ -198,6 +198,21 @@ public class AccessoryAdapter extends BaseAdapter {
                     alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "装备", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            for(Number num : a.getEffects().values()){
+                                if(num.longValue() > MazeContents.hero.getUpperAtk() + MazeContents.hero.getUpperDef() + MazeContents.hero.getRealUHP()){
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(MainGameActivity.context);
+                                    builder.setMessage(Html.fromHtml(a.getFormatName()+ "属性太高，现在无法装备！请提高" +  MazeContents.hero.getFormatName() + "的属性！"));
+                                    builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    AlertDialog dialog = builder.create();
+                                    dialog.show();
+                                    return;
+                                }
+                            }
                             switch (a.getType()) {
                                 case RingBuilder.type:
                                     MazeContents.hero.setRing(a);

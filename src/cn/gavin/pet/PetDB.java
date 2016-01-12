@@ -137,10 +137,9 @@ public class PetDB {
         String color = cursor.getString(cursor.getColumnIndex("color"));
         if(StringUtils.isNotEmpty(color)) {
             pet.setColor(color);
-        }else{
-            if(pet.getName().startsWith("变异的") && StringUtils.isNotEmpty(pet.getfName()) && !pet.getfName().startsWith("变异的")){
-                pet.setColor("#B8860B");
-            }
+        }
+        if (pet.getName().startsWith("变异的") && StringUtils.isNotEmpty(pet.getfName()) && !pet.getfName().startsWith("变异的")) {
+            pet.setColor("#B8860B");
         }
         String skill = cursor.getString(cursor.getColumnIndex("skill"));
         long skillCount = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("skill_count")));

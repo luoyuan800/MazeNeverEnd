@@ -2,6 +2,7 @@ package cn.gavin.pet;
 
 import android.content.Context;
 import android.database.Cursor;
+
 import cn.gavin.Achievement;
 import cn.gavin.Element;
 import cn.gavin.Hero;
@@ -133,7 +134,7 @@ public class Pet extends Base {
     }
 
     public static Pet cPet(Monster monster, Random random) {
-        if ((MazeContents.hero.ismV() && monster.getIndex() % 2 == 0) || monster.getIndex() == 25 || monster.getPetRate() <= 0) {
+        if ((MazeContents.hero.ismV() && monster.getIndex() % 2 == 0) || monster.getIndex() == 25 || monster.getPetRate() < 0) {
             return null;
         }
         if (PetDB.getPetCount(null) < MazeContents.hero.getPetSize() + 15) {
@@ -405,21 +406,21 @@ public class Pet extends Base {
                 Cursor cursor = DBHelper.getDbHelper().excuseSOL("select * from monster where id = '" + index + "'");
                 if (!cursor.isAfterLast()) {
                     egg.setName("变异的" + cursor.getString(cursor.getColumnIndex("type")));
-                    if (index == 25) {
+                    if(index == 25) {
                         egg.setElement(Element.无);
-                        egg.color = "#B8860B";
-                        egg.atk_rise = MazeContents.hero.ATR_RISE * 2;
-                        egg.def_rise = MazeContents.hero.DEF_RISE * 2;
-                        egg.hp_rise = MazeContents.hero.MAX_HP_RISE * 2;
-                        egg.setImage(cursor.getInt(cursor.getColumnIndex("img")));
-                        egg.setAtk(egg.getMaxAtk() + StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk"))) / 2);
                     }
+                    egg.color = "#B8860B";
+                    egg.atk_rise = MazeContents.hero.ATR_RISE * 2;
+                    egg.def_rise = MazeContents.hero.DEF_RISE * 2;
+                    egg.hp_rise = MazeContents.hero.MAX_HP_RISE * 2;
+                    egg.setImage(cursor.getInt(cursor.getColumnIndex("img")));
+                    egg.setAtk(egg.getMaxAtk() + StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk"))) / 2);
                 }
                 cursor.close();
             }
         }
         if ((SkillFactory.getSkill("恩赐", MazeContents.hero).isActive() &&
-                random.nextInt(100) < 45) || random.nextInt(1000) < 5) {
+                random.nextInt(100) < 45) || random.nextInt(1000) < 5 || egg.getName().startsWith("变异的")) {
             int index = random.nextInt(PetSkillList.values().length);
             if (index == 2) index = 1;
             NSkill petS = PetSkillList.values()[index].getSkill(egg);
@@ -428,9 +429,10 @@ public class Pet extends Base {
             } else {
                 egg.addSkill(petS);
             }
-        }
-        if (random.nextInt(1000) < 10) {
-            egg.setSkill(new HealthSkill());
+        }else {
+            if (random.nextInt(1000) < 10) {
+                egg.setSkill(new HealthSkill());
+            }
         }
         NSkill pSkill = egg.getAllSkill();
         if (pSkill == null) {

@@ -6,8 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.gavin.Achievement;
 import cn.gavin.R;
 import cn.gavin.db.DBHelper;
+import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
 
 /**
@@ -48,6 +50,9 @@ public class MonsterDB {
                 " where id = '%s'",
                monster.getBeatCount(),
                 monster.getDefeatCount(), monster.getCatchCount(), monster.getMeet_lev(), monster.getCatch_lev(), monster.getIndex());
+        if(monster.getName().contains("龙") && monster.getBeatCount() > 1000){
+            Achievement.dragon.enable(MazeContents.hero);
+        }
         DBHelper.getDbHelper().excuseSQLWithoutResult(sql);
     }
 

@@ -1,6 +1,8 @@
 package cn.gavin.alipay;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.Toast;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.utils.MazeContents;
@@ -12,6 +14,7 @@ import com.bmob.pay.tool.PayListener;
  */
 public class Alipay {
     private long payTime;
+    private long oldPayTime;
     private MainGameActivity context;
     private BmobPay bmobPay;
     private ProgressDialog dialog;
@@ -102,5 +105,20 @@ public class Alipay {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+    }
+
+    public long getOldPayTime() {
+        SharedPreferences preferences0 = context.getSharedPreferences("hero", Context.MODE_PRIVATE);
+        long payTime = preferences0.getLong("payTime", 0);
+        if(payTime > 0){
+            SharedPreferences.Editor editor = preferences0.edit();
+            editor.putLong("payTime", 0);
+            editor.apply();
+        }
+        return payTime;
+    }
+
+    public void setOldPayTime(long oldPayTime) {
+        this.oldPayTime = oldPayTime;
     }
 }
