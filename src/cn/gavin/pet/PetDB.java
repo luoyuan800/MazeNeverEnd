@@ -28,7 +28,7 @@ public class PetDB {
     public static void createDB(SQLiteDatabase db) {
         String sql = "CREATE TABLE pet(" +
                 "id TEXT NOT NULL PRIMARY KEY," +
-                "n ame TEXT NOT NULL," +
+                "name TEXT NOT NULL," +
                 "type TEXT NOT NULL," +
                 "element TEXT NOT NULL," +
                 "skill TEXT NOT NULL," +

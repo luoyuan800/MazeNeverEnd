@@ -8,6 +8,7 @@ import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
+import cn.gavin.log.LogHelper;
 import cn.gavin.monster.Monster;
 import cn.gavin.monster.MonsterDB;
 import cn.gavin.palace.Base;
@@ -551,16 +552,22 @@ public class Pet extends Base {
     }
 
     public void updateMonster() {
-        Cursor cursor = DBHelper.getDbHelper().excuseSOL("select catch_lev, catch from monster where id = '" + index + "'");
-        if(!cursor.isAfterLast()){
-            long catch_lev = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("catch_lev")));
-            long catch_count = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("catch")));
-            if(catch_lev <= 0){
-                catch_lev = MazeContents.maze.getLev();
+        try {
+            Cursor cursor = DBHelper.getDbHelper().excuseSOL("select catch_lev, catch from monster where id = '" + index + "'");
+            if (!cursor.isAfterLast()) {
+                long catch_lev = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("catch_lev")));
+                long catch_count = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("catch")));
+                if (catch_lev <= 0) {
+                    catch_lev = MazeContents.maze.getLev();
+                }
+                catch_count++;
+                DBHelper.getDbHelper().excuseSQLWithoutResult("update monster set catch_lev = '" +
+                        catch_lev + "', " +
+                        "catch = '" + catch_count + "' where id = '" + index + "'");
             }
-            catch_count ++;
-            DBHelper.getDbHelper().excuseSQLWithoutResult("update monster set catch_lev = '" + catch_lev + "', " +
-                    "catch = '" + catch_count + "' where id = '" + index + "'");
+            cursor.close();
+        }catch (Exception e){
+            LogHelper.logException(e);
         }
-    }
+        }
 }
