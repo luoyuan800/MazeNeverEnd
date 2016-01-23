@@ -130,13 +130,12 @@ public class NPCBattleController {
 
     private static StringBuilder battleMsg;
     public static String getLastBattle(){
-        try {
-            if (battleMsg != null) {
-                return battleMsg.toString();
-            } else return "";
-        }finally {
-            battleMsg = null;
+        String result = "";
+        if (battleMsg != null) {
+                result = battleMsg.toString();
         }
+        battleMsg = null;
+        return result;
     }
 
     private static void addBattleMsg(String msg) {
@@ -196,7 +195,7 @@ public class NPCBattleController {
                 addMessage(context, target.getFormatName() + "打断了" + hero.getFormatName() + "的技能");
             }
         } else {
-           heroDef(context,target,hero);
+           isJump = heroDef(context,target,hero);
         }
         return isJump;
     }
@@ -219,7 +218,7 @@ public class NPCBattleController {
         if (hero.getGift() == Gift.ElementReject && hero.getElement() == Element.无 && hero.getRejectElement() == monster.getElement() && random.nextInt(100) < 55) {
             String rejectString = hero.getFormatName() + "因为元素抗拒天赋秒杀了" + monster.getFormatName();
             addMessage(context, rejectString);
-           addBattleMsg(msg);
+           addBattleMsg(rejectString);
             monster.addHp(-monster.getHp());
         }
         while (!isJump && monster.getHp() > 0 && hero.getHp() > 0) {
@@ -256,7 +255,7 @@ public class NPCBattleController {
                         addBattleMsg(s);
                     }
                 }
-                isJump = NPCBattleController.heroAtk(context, hero, monster);
+                isJump = heroAtk(context, hero, monster);
             } else {
                 if (count == 20) {
                     String s = "阿西巴，这家伙怎打不死的？" + monster.getFormatName() + "小声的嘟哝着。";

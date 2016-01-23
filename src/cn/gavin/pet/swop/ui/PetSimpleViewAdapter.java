@@ -118,6 +118,7 @@ public class PetSimpleViewAdapter extends BaseAdapter {
                 hp.setVisibility(View.GONE);
                 atk.setVisibility(View.GONE);
                 def.setVisibility(View.GONE);
+                pet.setImage(R.drawable.egg);
             }
         }
 
