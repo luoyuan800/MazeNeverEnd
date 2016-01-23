@@ -207,7 +207,7 @@ public class NPCBattleController {
     }
 
 
-    public static boolean battle(Hero hero, NPC monster, Random random, Maze maze, BaseContext context) {
+    public synchronized static boolean battle(Hero hero, NPC monster, Random random, Maze maze, BaseContext context) {
         int count = 0;
         String msg = hero.getFormatName() + "遇到了" + monster.getFormatName();
         addMessage(context, msg);
@@ -285,7 +285,8 @@ public class NPCBattleController {
                     hero.addHp(hero.getUpperAtk() / 10);
                 }
             }
-            String defeatmsg = hero.getFormatName() + "击败了" + monster.getFormatName() + "， 获得了<font color=\"blue\">" + monster.getMaterial() + "</font>份锻造点数。";
+            String defeatmsg = hero.getFormatName() + "击败了" + monster.getFormatName() +
+                    "， 获得了<font color=\"blue\">" + monster.getMaterial() + "</font>份锻造点数。";
             addMessage(context, defeatmsg);
             addBattleMsg(defeatmsg);
             hero.addMaterial(monster.getLev() * 3);
@@ -306,6 +307,10 @@ public class NPCBattleController {
                 monster.defeat();
                 return false;
             }
+        }else if(hero.getHp() > 0 && monster.getHp() > 0){
+            String nmsg = hero.getFormatName() + "用魅力征服了" +  monster.getFormatName() + "。两人握手言和，不进行你死我活的战斗了。";
+            addBattleMsg(nmsg);
+            addMessage(context,nmsg);
         }
         return true;
     }

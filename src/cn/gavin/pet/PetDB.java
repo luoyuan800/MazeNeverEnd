@@ -28,7 +28,7 @@ public class PetDB {
     public static void createDB(SQLiteDatabase db) {
         String sql = "CREATE TABLE pet(" +
                 "id TEXT NOT NULL PRIMARY KEY," +
-                "name TEXT NOT NULL," +
+                "n ame TEXT NOT NULL," +
                 "type TEXT NOT NULL," +
                 "element TEXT NOT NULL," +
                 "skill TEXT NOT NULL," +
@@ -128,7 +128,17 @@ public class PetDB {
         pet.setAtk_rise(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk_rise"))));
         pet.setDef_rise(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def_rise"))));
         pet.setHp_rise(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp_rise"))));
-        pet.setImage(cursor.getInt(cursor.getColumnIndex("image")));
+        int image = cursor.getInt(cursor.getColumnIndex("image"));
+        if(image == 0){
+            if(DBHelper.getDbHelper()!=null){
+                Cursor cursor1 = DBHelper.getDbHelper().excuseSOL("select img from monster where id = '" + pet.getIndex() + "'");
+                if(!cursor1.isAfterLast()){
+                    image = cursor1.getInt(cursor.getColumnIndex("img"));
+                }
+                cursor1.close();
+            }
+        }
+        pet.setImage(image);
         pet.setOwner(cursor.getString(cursor.getColumnIndex("owner")));
         String ownerId = cursor.getString(cursor.getColumnIndex("owner_id"));
         if(StringUtils.isNotEmpty(ownerId)) {

@@ -5,16 +5,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.text.Html;
 import android.text.InputFilter;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import android.widget.*;
 import cn.gavin.Element;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
@@ -28,6 +19,10 @@ import cn.gavin.pet.PetAdapter;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Copyright 2015 luoyuan.
  * ALL RIGHTS RESERVED
@@ -37,64 +32,68 @@ public enum GoodsType {
     Aphrodisiac("奴隶", "使用后随机选择队伍中的两个宠物进行生蛋，宠物亲密度会大幅度降低。",
             new GoodScript() {
                 public Pet use() {
-                    if (Aphrodisiac.count > 0) {
-                        AlertDialog alertDialog = new AlertDialog.Builder(MainGameActivity.context).create();
-                        alertDialog.setTitle("你获得了一个蛋");
-                        List<Pet> pets = MazeContents.hero.getPets();
-                        Random random = MazeContents.hero.getRandom();
-                        Pet f = null;
-                        Pet m = null;
-                        for (Pet pet : pets) {
-                            if (!"蛋".equals(pet.getType()) && random.nextBoolean() && pet.getSex() == 0) {
-                                f = pet;
-                                break;
-                            }
-                            if (!"蛋".equals(pet.getType()) && pet.getSex() == 1 && random.nextBoolean()) {
-                                m = pet;
-                                break;
-                            }
-                        }
-                        if (f == null) {
+                    try {
+                        if (Aphrodisiac.count > 0) {
+                            AlertDialog alertDialog = new AlertDialog.Builder(MainGameActivity.context).create();
+                            alertDialog.setTitle("你获得了一个蛋");
+                            List<Pet> pets = MazeContents.hero.getPets();
+                            Random random = MazeContents.hero.getRandom();
+                            Pet f = null;
+                            Pet m = null;
                             for (Pet pet : pets) {
-                                if (!"蛋".equals(pet.getType()) && pet.getSex() == 0) {
+                                if (!"蛋".equals(pet.getType()) && random.nextBoolean() && pet.getSex() == 0) {
                                     f = pet;
                                     break;
                                 }
-                            }
-                        }
-
-                        if (m == null) {
-                            for (Pet pet : pets) {
-                                if (!"蛋".equals(pet.getType()) && pet.getSex() == 1) {
+                                if (!"蛋".equals(pet.getType()) && pet.getSex() == 1 && random.nextBoolean()) {
                                     m = pet;
                                     break;
                                 }
                             }
-                        }
-                        TextView textView = new TextView(MainGameActivity.context);
-                        if (f == null || m == null) {
-                            textView.setText("你队伍中的宠物性别不符！无法使用这个物品!");
-                        } else {
-                            Pet egg = Pet.getEgg(f, m, MazeContents.maze.getLev(), MazeContents.hero, MazeContents.hero.getRandom());
-                            if (egg == null) {
-                                textView.setText("使用物品失败！");
+                            if (f == null) {
+                                for (Pet pet : pets) {
+                                    if (!"蛋".equals(pet.getType()) && pet.getSex() == 0) {
+                                        f = pet;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (m == null) {
+                                for (Pet pet : pets) {
+                                    if (!"蛋".equals(pet.getType()) && pet.getSex() == 1) {
+                                        m = pet;
+                                        break;
+                                    }
+                                }
+                            }
+                            TextView textView = new TextView(MainGameActivity.context);
+                            if (f == null || m == null) {
+                                textView.setText("你队伍中的宠物性别不符！无法使用这个物品!");
                             } else {
-                                textView.setText(Html.fromHtml(f.getFormatName() + "和" + m.getFormatName() + "生了一个蛋"));
-                                f.setIntimacy(f.getIntimacy() / 3);
-                                m.setIntimacy(m.getIntimacy() / 4);
-                                GoodsType.Aphrodisiac.count--;
-                                GoodsType.Aphrodisiac.save();
-                                egg.save();
+                                Pet egg = Pet.getEgg(f, m, MazeContents.maze.getLev(), MazeContents.hero, MazeContents.hero.getRandom());
+                                if (egg == null) {
+                                    textView.setText("使用物品失败！");
+                                } else {
+                                    textView.setText(Html.fromHtml(f.getFormatName() + "和" + m.getFormatName() + "生了一个蛋"));
+                                    f.setIntimacy(f.getIntimacy() / 3);
+                                    m.setIntimacy(m.getIntimacy() / 4);
+                                    GoodsType.Aphrodisiac.count--;
+                                    GoodsType.Aphrodisiac.save();
+                                    egg.save();
+                                }
                             }
+                            alertDialog.setView(textView);
+                            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            alertDialog.show();
                         }
-                        alertDialog.setView(textView);
-                        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        alertDialog.show();
+                    } catch (Exception e) {
+                        LogHelper.logException(e);
                     }
                     return null;
                 }
@@ -400,7 +399,7 @@ public enum GoodsType {
                 pretendDialog.setTitle("选择五行属性");
                 final Spinner spinner = new Spinner(MainGameActivity.context);
                 List<String> elements = new ArrayList<String>(5);
-                for(Element e : Element.values()){
+                for (Element e : Element.values()) {
                     elements.add(e.name());
                 }
                 ArrayAdapter fa = new ArrayAdapter<String>(MainGameActivity.context, android.R.layout.simple_spinner_item, elements);
@@ -430,7 +429,19 @@ public enum GoodsType {
             }
             return null;
         }
-    }, true);
+    }, true),
+    HPM("小红药", "生命值低于50%的时候会自动使用立即恢复30%的生命值。", new GoodScript() {
+        @Override
+        public Object use() {
+            if (HPM.count > 0) {
+                GoodsType.HPM.count--;
+                GoodsType.HPM.save();
+                MazeContents.hero.addHp((long)(MazeContents.hero.getUpperHp() * 0.3));
+                MainGameActivity.context.addMessage("使用了小红药恢复了30%的生命值。");
+            }
+            return null;
+        }
+    }, false);
     private String name;
     private String desc;
     private GoodScript script;
@@ -458,6 +469,10 @@ public enum GoodsType {
 
     public GoodScript getScript() {
         return script;
+    }
+
+    public Object use(){
+        return script.use();
     }
 
     public void save() {

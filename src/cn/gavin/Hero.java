@@ -1,15 +1,6 @@
 package cn.gavin;
 
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Queue;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.Accessory;
@@ -18,6 +9,7 @@ import cn.gavin.forge.NecklaceBuilder;
 import cn.gavin.forge.RingBuilder;
 import cn.gavin.forge.effect.Effect;
 import cn.gavin.gift.Gift;
+import cn.gavin.good.GoodsType;
 import cn.gavin.log.LogHelper;
 import cn.gavin.monster.FirstName;
 import cn.gavin.monster.Monster;
@@ -30,6 +22,9 @@ import cn.gavin.skill.type.DefendSkill;
 import cn.gavin.skill.type.RestoreSkill;
 import cn.gavin.story.NPC;
 import cn.gavin.utils.Random;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Hero implements BaseObject {
     private static final String TAG = "Hero";
@@ -115,12 +110,15 @@ public class Hero implements BaseObject {
     private Gift gift;
     private Element rejectElement;
     private int hold;
-    public void setHold(int hold){
+
+    public void setHold(int hold) {
         this.hold = hold;
     }
-    public boolean isHold(){
+
+    public boolean isHold() {
         return hold != 0 && hold-- > 0;
     }
+
     public Float getParry() {
         return parry;
     }
@@ -216,6 +214,12 @@ public class Hero implements BaseObject {
             }
             if (this.hp > upperHp) this.hp = upperHp;
         }
+        if (getHp() < getUpperHp() / 2) {
+            GoodsType hpm = GoodsType.HPM;
+            hpm.load();
+            if (hpm.getCount() > 0)
+                hpm.use();
+        }
     }
 
     public Long getBaseAttackValue() {
@@ -287,16 +291,16 @@ public class Hero implements BaseObject {
             return;
         }
         if (firstSkill != null && thirdSkill != null && secondSkill != null) {
-            if((!fourthSkillEnable || fourthSkill!=null) && (!fifitSkillEnable || fifitSkill!=null) && (!sixthSkillEnable || sixthSkill!=null)) {
+            if ((!fourthSkillEnable || fourthSkill != null) && (!fifitSkillEnable || fifitSkill != null) && (!sixthSkillEnable || sixthSkill != null)) {
                 firstSkill.setOnUsed(false, false);
             }
         }
         if (firstSkill == null) firstSkill = skill;
         else if (secondSkill == null) secondSkill = skill;
         else if (thirdSkill == null) thirdSkill = skill;
-        else if(fourthSkillEnable && fourthSkill == null) fourthSkill = skill;
-        else if(fifitSkillEnable && fifitSkill == null) fifitSkill = skill;
-        else if(sixthSkillEnable && sixthSkill == null) sixthSkill = skill;
+        else if (fourthSkillEnable && fourthSkill == null) fourthSkill = skill;
+        else if (fifitSkillEnable && fifitSkill == null) fifitSkill = skill;
+        else if (sixthSkillEnable && sixthSkill == null) sixthSkill = skill;
     }
 
     private Hero(String name, long hp, long attackValue, long defenseValue, long level) {
@@ -573,6 +577,7 @@ public class Hero implements BaseObject {
         }
         return null;
     }
+
     public Skill useAtkSkill() {
         List<Skill> existSkill = Arrays.asList(firstSkill, secondSkill, thirdSkill, fourthSkill, fifitSkill, sixthSkill);
         for (Skill skill : existSkill) {
@@ -739,12 +744,11 @@ public class Hero implements BaseObject {
             thirdSkill = null;
         } else if (skill.equal(thirdSkill)) {
             thirdSkill = null;
-        } else
-        if(fourthSkillEnable && fourthSkill.equal(skill)){
+        } else if (fourthSkillEnable && fourthSkill.equal(skill)) {
             fourthSkill = null;
-        }else if(fifitSkillEnable && fifitSkill.equal(skill)){
+        } else if (fifitSkillEnable && fifitSkill.equal(skill)) {
             fifitSkill = null;
-        }else if(sixthSkillEnable && sixthSkill.equal(skill)){
+        } else if (sixthSkillEnable && sixthSkill.equal(skill)) {
             sixthSkill = null;
         }
     }
@@ -1173,10 +1177,10 @@ public class Hero implements BaseObject {
     }
 
     private void addReincarnation(String name, long hp, long atk, long lev) {
-        NPC.insertNPC(UUID.randomUUID().toString(),name,atk,hp,getUpperDef(),hitRate,parry,
-                "这个是转生前的你！",element.name(),
-                firstSkill!=null? firstSkill.getName() :
-                        "","","","",lev,NPC.IMAGE_NPC,null);
+        NPC.insertNPC(UUID.randomUUID().toString(), name, atk, hp, getUpperDef(), hitRate, parry,
+                "这个是转生前的你！", element.name(),
+                firstSkill != null ? firstSkill.getName() :
+                        "", "", "", "", lev, NPC.IMAGE_NPC, null);
     }
 
     public void setAccessory(Accessory accessory) {
@@ -1352,24 +1356,26 @@ public class Hero implements BaseObject {
     }
 
     public Element getElement() {
-        if(pElement!=null){
+        if (pElement != null) {
             return pElement;
-        }else {
+        } else {
             return element;
         }
     }
 
     private Element pElement;
-    public void setPElement(Element element){
+
+    public void setPElement(Element element) {
         pElement = element;
     }
-    public Element getTrueElement(){
+
+    public Element getTrueElement() {
         return element;
     }
 
     public void setElement(Element element) {
         this.element = element;
-        if(MainGameActivity.context!=null){
+        if (MainGameActivity.context != null) {
             MainGameActivity.context.refreshCharacterName();
         }
     }
@@ -1540,7 +1546,7 @@ public class Hero implements BaseObject {
     }
 
     public void setFourthSkillEnable(boolean fourthSkillEnable) {
-        if(!fourthSkillEnable && fourthSkill!=null){
+        if (!fourthSkillEnable && fourthSkill != null) {
             fourthSkill.setOnUsed(false, false);
         }
         this.fourthSkillEnable = fourthSkillEnable;
@@ -1551,7 +1557,7 @@ public class Hero implements BaseObject {
     }
 
     public void setFifitSkillEnable(boolean fifitSkillEnable) {
-        if(!fifitSkillEnable && fifitSkill!=null){
+        if (!fifitSkillEnable && fifitSkill != null) {
             fifitSkill.setOnUsed(false, false);
         }
         this.fifitSkillEnable = fifitSkillEnable;
@@ -1562,7 +1568,7 @@ public class Hero implements BaseObject {
     }
 
     public void setSixthSkillEnable(boolean sixthSkillEnable) {
-        if(!sixthSkillEnable && sixthSkill!=null){
+        if (!sixthSkillEnable && sixthSkill != null) {
             sixthSkill.setOnUsed(false, false);
         }
         this.sixthSkillEnable = sixthSkillEnable;
@@ -1596,11 +1602,11 @@ public class Hero implements BaseObject {
         return rejectElement;
     }
 
-    public Skill getPropertySkill(String name){
+    public Skill getPropertySkill(String name) {
         return SkillFactory.getSkill(name, this);
     }
 
-    public boolean isPetSub(){
+    public boolean isPetSub() {
         return random.nextBoolean();
     }
 

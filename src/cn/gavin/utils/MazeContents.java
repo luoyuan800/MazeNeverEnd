@@ -126,6 +126,11 @@ public class MazeContents {
         cursor.close();
         return check;
     }
+    public static boolean checkPetUpload(Pet myPet) {
+        boolean check = checkPet(myPet);
+        check &= (myPet.getUHp() + myPet.getMaxAtk() + myPet.getMaxDef() < (hero.getUpperAtk() + hero.getUpperDef() + hero.getUpperHp()) * 10);
+        return check;
+    }
 
     public static int getIndex(String name) {
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT id FROM monster WHERE type = '" + name + "'");
@@ -145,28 +150,28 @@ public class MazeContents {
         Bitmap bitmap;
         switch (index){
             case 1:
-                bitmap = loadImageFromSD("h1.png");
+                bitmap = loadImageFromSD("h_1.png");
                 if(bitmap!=null){
                     return new BitmapDrawable(context.getResources(), bitmap);
                 }else{
                     return context.getResources().getDrawable(R.drawable.h_1);
                 }
             case 2:
-                bitmap = loadImageFromSD("h2.png");
+                bitmap = loadImageFromSD("h_2.png");
                 if(bitmap!=null){
                     return new BitmapDrawable(context.getResources(), bitmap);
                 }else{
                     return context.getResources().getDrawable(R.drawable.h_2);
                 }
             case 3:
-                bitmap = loadImageFromSD("h3.png");
+                bitmap = loadImageFromSD("h_3.png");
                 if(bitmap!=null){
                     return new BitmapDrawable(context.getResources(), bitmap);
                 }else{
                     return context.getResources().getDrawable(R.drawable.h_3);
                 }
             case 4:
-                bitmap = loadImageFromSD("h4.png");
+                bitmap = loadImageFromSD("h_4.png");
                 if(bitmap!=null){
                     return new BitmapDrawable(context.getResources(), bitmap);
                 }else{

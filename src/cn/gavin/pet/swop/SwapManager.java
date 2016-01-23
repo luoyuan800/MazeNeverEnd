@@ -94,7 +94,7 @@ public class SwapManager {
 
     public void uploadPet(Context context, SwapPet pet, final Pet petO) {
         try {
-            if (!MazeContents.checkPet(petO)) {
+            if (!MazeContents.checkPetUpload(petO)) {
                 Toast.makeText(context, "宠物数据异常，无法上传！", Toast.LENGTH_SHORT).show();
                 return;
             }

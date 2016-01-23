@@ -57,6 +57,7 @@ public class SwapPetMainDialog {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                         myPet.save();
+                                        myPet.updateMonster();
                                         swapManager.acknowledge(context, pet);
                                         Toast.makeText(context, "--取回了" + pet.getName() + "，请好好照顾--", Toast.LENGTH_SHORT)
                                                 .show();
