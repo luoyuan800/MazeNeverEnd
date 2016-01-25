@@ -536,6 +536,9 @@ public class Pet extends Base {
     }
 
     public int getIndex() {
+        if(index <=0){
+//todo
+        }
         return index;
     }
 
@@ -552,6 +555,7 @@ public class Pet extends Base {
     }
 
     public void updateMonster() {
+        int index = getIndex();
         try {
             Cursor cursor = DBHelper.getDbHelper().excuseSOL("select catch_lev, catch from monster where id = '" + index + "'");
             if (!cursor.isAfterLast()) {

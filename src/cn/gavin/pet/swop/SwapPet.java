@@ -48,6 +48,11 @@ public class SwapPet extends BmobObject {
     private String element;
     private Long lev = 0l;
     private int image;
+    private int index;
+
+    public int getIndex(){
+        return index;
+    }
 
     public static SwapPet buildSwapPet(Pet pet) {
         SwapPet swapPet = new SwapPet();
@@ -79,6 +84,7 @@ public class SwapPet extends BmobObject {
         swapPet.setColor(pet.getColor());
         swapPet.setLev(pet.getLev());
         swapPet.setImage(pet.getImage());
+        swapPet.setIndex(pet.getIndex());
         return swapPet;
     }
 
@@ -306,6 +312,7 @@ public class SwapPet extends BmobObject {
         pet.setOwner(ownerName);
         pet.setOwnerId(ownerId);
         pet.setLev(lev);
+        pet.setIndex(index);
         return pet;
     }
 
@@ -379,5 +386,9 @@ public class SwapPet extends BmobObject {
 
     public void setImage(int image) {
         this.image = image;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }
