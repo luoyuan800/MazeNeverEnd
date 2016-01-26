@@ -536,10 +536,11 @@ public class Pet extends Base {
     }
 
     public int getIndex() {
+        try{
         if(index <=0){
           String[] names = StringUtils.split(getName(), "的");
             if(names.length > 1){
-                Cursor cursor = DBHelper.getDbHelper().excuseSOL("select id, name from monster");
+                Cursor cursor = DBHelper.getDbHelper().excuseSOL("select id, type from monster");
                 while(!cursor.isAfterLast()){
                     if(names[1].contains(cursor.getString(cursor.getColumnIndex("name")))){
                         index = cursor.getInt(cursor.getColumnIndex("id"));
@@ -548,6 +549,9 @@ public class Pet extends Base {
                 }
                 cursor.close();
             }
+        }
+        }catch (Exception e){
+            LogHelper.logException(e);
         }
         return index;
     }
