@@ -537,7 +537,10 @@ public class Pet extends Base {
 
     public int getIndex() {
         if(index <=0){
-//todo
+          String[] names = StringUtils.split(getName(), "的");
+            if(names.length > 1){
+                Cursor
+            }
         }
         return index;
     }
