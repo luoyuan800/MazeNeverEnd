@@ -539,7 +539,7 @@ public class Pet extends Base {
         if(index <=0){
           String[] names = StringUtils.split(getName(), "的");
             if(names.length > 1){
-                Cursor
+                Cursor cursor = DBHelper.getDbHelper().excuseSOL("select id, name from monster");
             }
         }
         return index;
