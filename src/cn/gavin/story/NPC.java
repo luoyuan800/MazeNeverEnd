@@ -10,6 +10,7 @@ import cn.gavin.Achievement;
 import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.db.DBHelper;
+import cn.gavin.log.LogHelper;
 import cn.gavin.skill.Skill;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.skill.type.AttackSkill;
@@ -159,7 +160,9 @@ public class NPC extends Hero {
         List<NPC> npcs = new ArrayList<NPC>(cursor.getCount());
         while (!cursor.isAfterLast()) {
             NPC npc = buildNpc(cursor);
+            if(npc!=null){
             npcs.add(npc);
+            }
             cursor.moveToNext();
         }
         cursor.close();
@@ -167,6 +170,7 @@ public class NPC extends Hero {
     }
 
     private static NPC buildNpc(Cursor cursor) {
+        try{
         NPC npc = new NPC();
         npc.setName(cursor.getString(cursor.getColumnIndex("name")));
         npc.setHp(cursor.getLong(cursor.getColumnIndex("hp")));
@@ -186,6 +190,10 @@ public class NPC extends Hero {
         npc.setElement(cursor.getString(cursor.getColumnIndex("element")));
         npc.setUuid(cursor.getString(cursor.getColumnIndex("uuid")));
         return npc;
+        }catch (Exception e){
+            LogHelper.logException(e);
+        }
+        return null;
     }
 
     public String getSimpleHTMLDesc() {

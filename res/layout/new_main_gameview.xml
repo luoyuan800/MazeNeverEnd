@@ -4,7 +4,7 @@
                 android:id="@+id/main_game_activity"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".activity.MainGameActivity">
+                tools:context=".activity.MainGameActivity" android:background="@drawable/migon_bak">
 
     <LinearLayout
             android:id="@+id/linearLayout2"

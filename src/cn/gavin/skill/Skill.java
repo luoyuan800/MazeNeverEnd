@@ -10,6 +10,7 @@ import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
+import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.monster.Monster;
 import cn.gavin.skill.expression.DescExpression;
@@ -204,8 +205,13 @@ public abstract class Skill {
      * @return
      */
     public boolean release(Monster monster) {
+        try{
         addCount();
         return release.release(hero, monster, MainGameActivity.context, this);
+        }catch (Exception e){
+            LogHelper.logException(e);
+        }
+        return false;
     }
 
     public void setRelease(UseExpression release) {

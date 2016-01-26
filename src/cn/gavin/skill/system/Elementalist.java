@@ -277,10 +277,14 @@ public class Elementalist extends SkillLayout {
                 public boolean release(Hero hero, Monster monster, MainGameActivity context, Skill skill) {
                     long harm = hero.getAttackValue();
                     if (hero.getElement().restriction(monster.getElement())) {
-                        iskill.addMessage(hero.getFormatName() + "");
+                        final String msg = hero.getFormatName() + "使用了技能" + iskill.getName() + "提升了攻击伤害";
+                        iskill.addMessage(msg);
+                        monster.addBattleDesc(msg);
                         harm += monster.getAtk();
                     }
-                    context.addMessage(hero.getFormatName() + "" + monster.getFormatName() + "" + harm + "");
+                    final String s = hero.getFormatName() + "攻击了" + monster.getFormatName() + "造成" + harm + "点伤害";
+                    context.addMessage(s);
+                    monster.addBattleDesc(s);
                     monster.addHp(-harm);
                     return false;
                 }

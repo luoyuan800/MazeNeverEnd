@@ -49,19 +49,18 @@ public class MonsterBook {
                     if (monster.getCatchCount() > 0) {
                         monsterName.setText(monster.getType());
                         monsterDesc.setText(monster.getDesc());
-                        monsterImg.setImageResource(monster.getImageId());
                         baseAtk.setText("基础攻击：" + StringUtils.formatNumber(monster.getBaseAtk()));
                         basehp.setText("基础HP：" + StringUtils.formatNumber(monster.getBaseHp()));
                         baseEggRate.setText("生蛋率：" + monster.getBaseEggRate());
                         basePetRate.setText("捕获率：" + monster.getBasePetRate());
                     } else {
                         monsterDesc.setText("???");
-                        monsterImg.setImageResource(R.drawable.wenhao);
                         baseAtk.setText("基础攻击：???");
                         basehp.setText("基础HP：???");
                         baseEggRate.setText("生蛋率：??");
                         basePetRate.setText("捕获率：??");
                     }
+                    monsterImg.setImageResource(monster.getImageId());
                     if (monster.getMeet_lev() > 0) {
                         monsterName.setText(monster.getType());
                     } else {

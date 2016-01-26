@@ -129,7 +129,7 @@ public class NPCBattleController {
     }
 
     private static StringBuilder battleMsg;
-    public static String getLastBattle(){
+    public synchronized static String getLastBattle(){
         String result = "";
         if (battleMsg != null) {
                 result = battleMsg.toString();
@@ -208,8 +208,11 @@ public class NPCBattleController {
 
 
     public synchronized static boolean battle(Hero hero, NPC monster, Random random, Maze maze, BaseContext context) {
+        if(battleMsg!=null){
+            battleMsg = new StringBuilder();
+        }
         int count = 0;
-        String msg = hero.getFormatName() + "遇到了" + monster.getFormatName();
+        String msg = hero.getFormatName() + "在第" +maze.getLev() +"层遇到了" + monster.getFormatName();
         addMessage(context, msg);
         addBattleMsg(msg);
 

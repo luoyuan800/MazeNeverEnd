@@ -196,7 +196,7 @@ public class Maze {
                         step += 21;
                         NPC boss = NPC.build(level);
                         if(boss!=null){
-                            boss.setMaterial(random.nextLong(boss.getHp()) + level/100);
+                            boss.setMaterial(random.nextLong(boss.getHp()/10000) + level/2);
                             if(!NPCBattleController.battle(hero,boss,random,this,context) && hero.getHp() <= 0){
                                 Monster asMonster = boss.formatAsMonster();
                                 asMonster.setBattleMsg(NPCBattleController.getLastBattle());

@@ -441,6 +441,18 @@ public enum GoodsType {
             }
             return null;
         }
+    }, false),
+    HPML("大血瓶", "生命值低于10%的时候会自动使用立即恢复80%的生命值。", new GoodScript() {
+        @Override
+        public Object use() {
+            if (HPML.count > 0) {
+                GoodsType.HPML.count--;
+                GoodsType.HPML.save();
+                MazeContents.hero.addHp((long)(MazeContents.hero.getUpperHp() * 0.8));
+                MainGameActivity.context.addMessage("使用了大血瓶恢复了80%的生命值。");
+            }
+            return null;
+        }
     }, false);
     private String name;
     private String desc;

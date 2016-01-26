@@ -540,6 +540,13 @@ public class Pet extends Base {
           String[] names = StringUtils.split(getName(), "的");
             if(names.length > 1){
                 Cursor cursor = DBHelper.getDbHelper().excuseSOL("select id, name from monster");
+                while(!cursor.isAfterLast()){
+                    if(names[1].contains(cursor.getString(cursor.getColumnIndex("name")))){
+                        index = cursor.getInt(cursor.getColumnIndex("id"));
+                        break;
+                    }
+                }
+                cursor.close();
             }
         }
         return index;
