@@ -193,7 +193,7 @@ public class FuseItems {
             item.save(null);
             return item;
         } catch (Exception e) {
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
             e.printStackTrace();
         }
         return null;

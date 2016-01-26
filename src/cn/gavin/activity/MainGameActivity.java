@@ -575,7 +575,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 refresh();
                 super.handleMessage(msg);
             } catch (Exception exp) {
-                LogHelper.logException(exp);
+                LogHelper.logException(exp, false);
             }
         }
 
@@ -635,14 +635,14 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             break;
                     }
                 } catch (Exception e) {
-                    LogHelper.logException(e);
+                    LogHelper.logException(e, false);
                 }
             }
         });
         try {
             BmobUpdateAgent.update(this);
         } catch (Exception e) {
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
         }
         gameThreadRunning = true;
         service.setPackage(getPackageName());
@@ -1426,7 +1426,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    LogHelper.logException(e);
+                    LogHelper.logException(e, false);
                     e.printStackTrace();
                 }
                 while (updatePalace && count < 100000) {
@@ -1869,7 +1869,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 }
             } catch (Exception exp) {
                 Log.e(TAG, "MainGameActivity.GameThread", exp);
-                LogHelper.logException(exp);
+                LogHelper.logException(exp, false);
             }
         }
     }
@@ -1889,7 +1889,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 maze.move(context);
             } catch (Exception e) {
                 Log.e(TAG, "MainGameActivity.GameThread", e);
-                LogHelper.logException(e);
+                LogHelper.logException(e, true);
                 throw new RuntimeException(e);
             }
         }
@@ -2041,7 +2041,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 try {
                     new SwapPetMainDialog();
                 } catch (Exception e) {
-                    LogHelper.logException(e);
+                    LogHelper.logException(e, false);
                 }
                 break;
             case R.id.net_button:
@@ -2103,7 +2103,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                                     break;
                             }
                         } catch (Exception e) {
-                            LogHelper.logException(e);
+                            LogHelper.logException(e, false);
                         }
                     }
                 });
@@ -2330,7 +2330,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 break;
         }
         }catch (Exception e){
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
         }
     }
 

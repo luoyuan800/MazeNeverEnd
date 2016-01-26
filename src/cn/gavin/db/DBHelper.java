@@ -5,13 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.util.EnumMap;
-
 import cn.gavin.activity.MainGameActivity;
-import cn.gavin.forge.Accessory;
 import cn.gavin.forge.ForgeDB;
-import cn.gavin.forge.Item;
-import cn.gavin.forge.effect.Effect;
 import cn.gavin.good.GoodManager;
 import cn.gavin.log.LogHelper;
 import cn.gavin.monster.MonsterDB;
@@ -56,7 +51,7 @@ public class DBHelper {
         try {
             getDB().execSQL(sql);
         } catch (Exception e) {
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
         }
     }
 
@@ -109,7 +104,7 @@ public class DBHelper {
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "CreateTable", e);
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
         }
     }
 

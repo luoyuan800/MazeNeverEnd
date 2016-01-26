@@ -191,7 +191,7 @@ public class NPC extends Hero {
         npc.setUuid(cursor.getString(cursor.getColumnIndex("uuid")));
         return npc;
         }catch (Exception e){
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
         }
         return null;
     }

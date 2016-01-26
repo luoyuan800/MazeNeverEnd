@@ -288,7 +288,7 @@ public class Accessory extends Equipment {
                 cursor.close();
             }
         } catch (Exception e) {
-            LogHelper.logException(new Exception("Access error", e));
+            LogHelper.logException(new Exception("Access error", e), false);
             DBHelper.getDbHelper().excuseSQLWithoutResult("DELETE FROM accessory WHERE id = '" + id + "'");
         }
         return result;

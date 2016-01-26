@@ -1160,7 +1160,7 @@ public class Hero implements BaseObject {
             }
         } catch (Exception e) {
             Toast.makeText(MainGameActivity.context, "数据异常！！转生失败！", Toast.LENGTH_SHORT).show();
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
         }
     }
 

@@ -296,7 +296,7 @@ public class Monster {
                 items.add(ItemName.valueOf(itemName));
             }
             }catch (Exception e){
-                LogHelper.logException(e);
+                LogHelper.logException(e, false);
             }
             cursor.close();
         } else {

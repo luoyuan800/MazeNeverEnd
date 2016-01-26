@@ -225,7 +225,7 @@ public class SwapDialog implements LoadMoreListView.OnRefreshLoadingMoreListener
                 }
             }
         } catch (Exception e) {
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
         }
     }
 }

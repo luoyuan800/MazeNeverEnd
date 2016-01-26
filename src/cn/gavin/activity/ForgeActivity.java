@@ -416,7 +416,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                 }
             }catch (Exception e){
                 e.printStackTrace();
-                LogHelper.logException(e);
+                LogHelper.logException(e, false);
             }
             super.handleMessage(msg);
         }

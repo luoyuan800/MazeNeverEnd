@@ -6,11 +6,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 import cn.gavin.Achievement;
-import cn.gavin.activity.MainGameActivity;
 import cn.gavin.log.LogHelper;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.ui.LoadMoreListView;
@@ -92,7 +89,7 @@ public class ShopDialog {
                         handler.sendEmptyMessage(0);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        LogHelper.logException(e);
+                        LogHelper.logException(e, false);
                     }
                 }
             }).start();

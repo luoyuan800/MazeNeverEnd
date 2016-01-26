@@ -47,7 +47,7 @@ public class Recipe extends BmobObject {
                 }
             }
         }catch (Exception e){
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
             e.printStackTrace();
         }
     }

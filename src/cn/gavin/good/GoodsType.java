@@ -93,7 +93,7 @@ public enum GoodsType {
                             alertDialog.show();
                         }
                     } catch (Exception e) {
-                        LogHelper.logException(e);
+                        LogHelper.logException(e, false);
                     }
                     return null;
                 }
@@ -436,7 +436,7 @@ public enum GoodsType {
             if (HPM.count > 0) {
                 GoodsType.HPM.count--;
                 GoodsType.HPM.save();
-                MazeContents.hero.addHp((long)(MazeContents.hero.getUpperHp() * 0.3));
+                MazeContents.hero.addHp((long) (MazeContents.hero.getUpperHp() * 0.3));
                 MainGameActivity.context.addMessage("使用了小红药恢复了30%的生命值。");
             }
             return null;
@@ -528,7 +528,7 @@ public enum GoodsType {
                     goodsType.setCount(cursor.getInt(cursor.getColumnIndex("count")));
                     list.add(goodsType);
                 } catch (Exception e) {
-                    LogHelper.logException(e);
+                    LogHelper.logException(e, false);
                     e.printStackTrace();
                 }
                 cursor.moveToNext();
@@ -568,7 +568,7 @@ public enum GoodsType {
 
             return list;
         } catch (Exception e) {
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
             e.printStackTrace();
         }
         return Collections.emptyList();

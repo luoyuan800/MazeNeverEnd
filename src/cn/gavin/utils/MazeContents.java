@@ -10,7 +10,6 @@ import android.os.Environment;
 
 import java.io.File;
 
-import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.db.DBHelper;
@@ -112,7 +111,7 @@ public class MazeContents {
                     }
             }
         } catch (Exception e) {
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
         }
         return value;
     }

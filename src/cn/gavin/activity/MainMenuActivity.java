@@ -1,8 +1,6 @@
 package cn.gavin.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,7 +20,6 @@ import cn.gavin.R;
 import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;
 import cn.gavin.save.LoadHelper;
-import cn.gavin.skill.SkillFactory;
 import cn.gavin.utils.MazeContents;
 
 public class MainMenuActivity extends Activity implements OnClickListener {
@@ -86,7 +83,7 @@ public class MainMenuActivity extends Activity implements OnClickListener {
                     handler.sendEmptyMessage(0);
                 } catch (Exception exp) {
                     Log.e(MainGameActivity.TAG, "Init", exp);
-                    LogHelper.logException(exp);
+                    LogHelper.logException(exp, false);
                     throw new RuntimeException(exp);
                 }
             }

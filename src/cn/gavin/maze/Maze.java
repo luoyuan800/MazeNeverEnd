@@ -110,7 +110,7 @@ public class Maze {
                                 cursor.close();
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                LogHelper.logException(e);
+                                LogHelper.logException(e, false);
                             }
                             int index = pet.getIndex();
                             Cursor cursor = DBHelper.getDbHelper().excuseSOL("select type from monster where id = '" + index + "'");

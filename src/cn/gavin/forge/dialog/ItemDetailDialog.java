@@ -98,7 +98,7 @@ public class ItemDetailDialog {
                     itemDialog.hide();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    LogHelper.logException(e);
+                    LogHelper.logException(e, false);
                 }
             }
         });
@@ -152,7 +152,7 @@ public class ItemDetailDialog {
                                 adapter.refresh();
                             }
                         } catch (Exception e) {
-                            LogHelper.logException(e);
+                            LogHelper.logException(e, false);
                         }
                     }
                 });

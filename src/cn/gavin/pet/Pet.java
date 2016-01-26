@@ -542,7 +542,7 @@ public class Pet extends Base {
             if(names.length > 1){
                 Cursor cursor = DBHelper.getDbHelper().excuseSOL("select id, type from monster");
                 while(!cursor.isAfterLast()){
-                    if(names[1].contains(cursor.getString(cursor.getColumnIndex("name")))){
+                    if(names[1].contains(cursor.getString(cursor.getColumnIndex("type")))){
                         index = cursor.getInt(cursor.getColumnIndex("id"));
                         break;
                     }
@@ -551,7 +551,7 @@ public class Pet extends Base {
             }
         }
         }catch (Exception e){
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
         }
         return index;
     }
@@ -561,6 +561,9 @@ public class Pet extends Base {
     }
 
     public int getImage() {
+        Cursor cursor = DBHelper.getDbHelper().excuseSOL("select img from monster where id = '" + getIndex() + "'");
+        image = cursor.getInt(cursor.getColumnIndex("img"));
+        cursor.close();
         return image;
     }
 
@@ -585,7 +588,7 @@ public class Pet extends Base {
             }
             cursor.close();
         }catch (Exception e){
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
         }
         }
 }

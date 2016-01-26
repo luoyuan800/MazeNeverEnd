@@ -153,7 +153,7 @@ public class Item implements Comparator<Item> {
         try {
             return DBHelper.getDbHelper().excuseSOL("SELECT count(*) FROM item").getInt(0);
         } catch (Exception e) {
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
             return 0;
         }
     }
@@ -211,7 +211,7 @@ public class Item implements Comparator<Item> {
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(MainGameActivity.TAG, "loadItems", e);
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
         }
         return items;
     }
@@ -243,7 +243,7 @@ public class Item implements Comparator<Item> {
                 db.execSQL(sql);
             } catch (Exception e) {
                 e.printStackTrace();
-                LogHelper.logException(e);
+                LogHelper.logException(e, false);
             }
         }
         id = value;
@@ -258,7 +258,7 @@ public class Item implements Comparator<Item> {
             try {
                 db.execSQL(sql);
             } catch (Exception e) {
-                LogHelper.logException(e);
+                LogHelper.logException(e, false);
             }
         }
     }

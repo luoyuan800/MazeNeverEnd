@@ -74,7 +74,7 @@ public class Upload {
                                 .getPackageInfo(pkName, 0).versionCode;
                         object.setVersion(versionCode);
                     } catch (Exception e) {
-                        LogHelper.logException(e);
+                        LogHelper.logException(e, false);
                     }
                     object.save(context, new SaveListener() {
                         @Override

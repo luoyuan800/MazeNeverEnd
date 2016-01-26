@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -123,7 +122,7 @@ public class SwapPetMainDialog {
                 }
             }catch (Exception e){
                 e.printStackTrace();
-                LogHelper.logException(e);
+                LogHelper.logException(e, false);
             }
         }
     };
@@ -141,7 +140,7 @@ public class SwapPetMainDialog {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    LogHelper.logException(e);
+                    LogHelper.logException(e, false);
                     e.printStackTrace();
                 }
                 while (!swapManager.isFinished()) ;

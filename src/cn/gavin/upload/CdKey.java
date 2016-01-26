@@ -174,7 +174,7 @@ public class CdKey extends BmobObject {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                LogHelper.logException(e);
+                LogHelper.logException(e, false);
             }
             accessory.save();
         } else {
@@ -258,7 +258,7 @@ public class CdKey extends BmobObject {
                         succDialog.setView(view);
                     }
                 }catch (Exception e){
-                    LogHelper.logException(e);
+                    LogHelper.logException(e, false);
                     view.setText(e.getMessage());
                     succDialog.setView(view);
                 }

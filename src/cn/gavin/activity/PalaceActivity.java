@@ -187,7 +187,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
                 super.handleMessage(msg);
             } catch (Exception exp) {
                 Log.e(TAG, "MainGameActivity.Handler", exp);
-                LogHelper.logException(exp);
+                LogHelper.logException(exp, false);
             }
         }
 
@@ -423,7 +423,7 @@ public class PalaceActivity extends Activity implements OnClickListener, BaseCon
                 maze.move(context);
             } catch (Exception e) {
                 Log.e(TAG, "MainGameActivity.GameThread", e);
-                LogHelper.logException(e);
+                LogHelper.logException(e, false);
                 throw new RuntimeException(e);
             }
 

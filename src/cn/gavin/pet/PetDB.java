@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -212,7 +211,7 @@ public class PetDB {
                 }
                 cursor.close();
             } catch (Exception e) {
-                LogHelper.logException(e);
+                LogHelper.logException(e, false);
             }
             return pets;
         }

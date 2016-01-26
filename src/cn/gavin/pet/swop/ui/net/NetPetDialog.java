@@ -105,7 +105,7 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                 }
                 super.handleMessage(msg);
             } catch (Exception e) {
-                LogHelper.logException(e);
+                LogHelper.logException(e, false);
                 e.printStackTrace();
             }
         }
@@ -138,13 +138,13 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        LogHelper.logException(e);
+                        LogHelper.logException(e, false);
                     }
                 }
             }).start();
         } catch (Exception e) {
             e.printStackTrace();
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
         }
     }
 
@@ -239,13 +239,13 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                         while (!swapManager.isFinished()) ;
                         handler.sendEmptyMessage(4);
                     } catch (Exception e) {
-                        LogHelper.logException(e);
+                        LogHelper.logException(e, false);
                     }
                 }
             }).start();
         } catch (Exception e) {
             e.printStackTrace();
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
         }
     }
 
@@ -309,7 +309,7 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                         handler.sendEmptyMessage(1);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        LogHelper.logException(e);
+                        LogHelper.logException(e, false);
                     }
                     break;
                 default:
@@ -400,14 +400,14 @@ public class NetPetDialog implements LoadMoreListView.OnRefreshLoadingMoreListen
                                     handler.sendMessage(message);
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    LogHelper.logException(e);
+                                    LogHelper.logException(e, false);
                                 }
                             }
                         }).start();
                     }
             }
         } catch (Exception e) {
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
             e.printStackTrace();
         }
     }

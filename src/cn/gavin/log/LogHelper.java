@@ -1,17 +1,16 @@
 package cn.gavin.log;
 
-import android.os.Environment;
+import cn.bmob.v3.datatype.BmobFile;
+import cn.gavin.activity.MainGameActivity;
+import cn.gavin.utils.MazeContents;
+import com.bmob.BTPFileResponse;
+import com.bmob.BmobProFile;
+import com.bmob.btp.callback.UploadListener;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-
-import cn.gavin.activity.MainGameActivity;
-import cn.gavin.utils.MazeContents;
 
 /**
  * Created by luoyuan on 9/20/15.
@@ -51,7 +50,7 @@ public class LogHelper {
 //                }).start();
     }
 
-    public static void logException(final Exception e) {
+    public static void logException(final Exception e, boolean upload) {
         e.printStackTrace();
         try {
             File path = new File(MazeContents.SD_PATH + "/log/");
@@ -67,7 +66,29 @@ public class LogHelper {
             e.printStackTrace(new PrintWriter(writer));
             writer.flush();
             writer.close();
-        } catch (IOException e1) {
+            if (upload) {
+                BTPFileResponse response = BmobProFile.getInstance(MainGameActivity.context).upload(file.getPath(), new UploadListener() {
+
+                    @Override
+                    public void onSuccess(String fileName, String url, BmobFile file) {
+                        // TODO Auto-generated method stub
+                        // fileName ：文件名（带后缀），这个文件名是唯一的，开发者需要记录下该文件名，方便后续下载或者进行缩略图的处理
+                        // url        ：文件地址
+                        // file        :BmobFile文件类型，`V3.4.1版本`开始提供，用于兼容新旧文件服务。
+                    }
+
+                    @Override
+                    public void onProgress(int progress) {
+                        // TODO Auto-generated method stub
+                    }
+
+                    @Override
+                    public void onError(int statuscode, String errormsg) {
+                        // TODO Auto-generated method stub
+                    }
+                });
+            }
+        } catch (Exception e1) {
             e1.printStackTrace();
         }
     }

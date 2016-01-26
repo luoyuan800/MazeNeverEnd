@@ -15,7 +15,6 @@ import cn.bmob.v3.listener.UpdateListener;
 import cn.gavin.Achievement;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.log.LogHelper;
-import cn.gavin.monster.Monster;
 import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetDB;
 import cn.gavin.utils.MazeContents;
@@ -121,7 +120,7 @@ public class SwapManager {
                 }
             });
         } catch (Exception e) {
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
         }
     }
 

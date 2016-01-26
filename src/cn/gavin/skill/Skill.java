@@ -4,8 +4,6 @@ import android.database.Cursor;
 import android.util.Log;
 import android.widget.Button;
 
-import java.lang.reflect.Method;
-
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
@@ -209,7 +207,7 @@ public abstract class Skill {
         addCount();
         return release.release(hero, monster, MainGameActivity.context, this);
         }catch (Exception e){
-            LogHelper.logException(e);
+            LogHelper.logException(e, false);
         }
         return false;
     }
