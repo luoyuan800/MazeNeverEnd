@@ -128,7 +128,7 @@ public class MazeContents {
     }
     public static boolean checkPetUpload(Pet myPet) {
         boolean check = checkPet(myPet);
-        check &= (myPet.getUHp() + myPet.getMaxAtk() + myPet.getMaxDef() < (hero.getUpperAtk() + hero.getUpperDef() + hero.getUpperHp()) * 10);
+        check &= (myPet.getUHp() + myPet.getMaxAtk() + myPet.getMaxDef() < (hero.getUpperAtk() + hero.getUpperDef() + hero.getUpperHp()) * 80);
         return check;
     }
 

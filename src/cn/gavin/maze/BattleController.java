@@ -202,7 +202,7 @@ public class BattleController {
 
     public static boolean battle(Hero hero, Monster monster, Random random, Maze maze, BaseContext context) {
         int count = 0;
-        String msg = hero.getFormatName() + "遇到了" + monster.getFormatName();
+        String msg = hero.getFormatName() + "在第" + maze.getLev() + "层遇到了" + monster.getFormatName();
         addMessage(context, msg);
         monster.addBattleDesc(msg);
 
