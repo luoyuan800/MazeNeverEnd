@@ -31,7 +31,8 @@ public class DBHelper {
     private static int DB_VERSION_1_7 = 17;
     private static int DB_VERSION_1_8 = 18;
     private static int DB_VERSION_2_0 = 20;
-    private static int DB_VERSION = 21;
+    private static int DB_VERSION_2_1 = 21;
+    public static int DB_VERSION = 22;
 
     private Context context;
     private SQLiteDatabase database;
@@ -112,8 +113,9 @@ public class DBHelper {
         if(newVersion < oldVersion){
             throw new RuntimeException("反向安装了低版本：" + oldVersion + "-->" + newVersion);
         }
-        new ForgeDB().upgradeTo1_8(db);
-        NPC.insertNPC(db);
+        MonsterDB.updateMonsterImg(db);
+        //new ForgeDB().upgradeTo1_8(db);
+        //NPC.insertNPC(db);
     }
 
     private static DBHelper dbHelper;

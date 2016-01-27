@@ -80,6 +80,56 @@ public class MonsterDB {
         addMonster(sqLiteDatabase);
     }
 
+    public static void updateMonsterImg(SQLiteDatabase database){
+        String sql = "update monster set img = %s where id = %s";
+        database.execSQL(String.format(sql ,R.drawable.zl,1));
+        database.execSQL(String.format(sql,R.drawable.qy,2));
+        database.execSQL(String.format(sql,R.drawable.pc,3));
+        database.execSQL(String.format(sql,R.drawable.feie,4));
+        database.execSQL(String.format(sql,R.drawable.zz,5));
+        database.execSQL(String.format(sql,R.drawable.laoshu,6));
+        database.execSQL(String.format(sql,R.drawable.mayi,7));
+        database.execSQL(String.format(sql,R.drawable.mayi_red,8));
+        database.execSQL(String.format(sql,R.drawable.laohu,9));
+        database.execSQL(String.format(sql,R.drawable.laohu_red,10));
+        database.execSQL(String.format(sql,R.drawable.jiao,11));
+        database.execSQL(String.format(sql,R.drawable.xiezi,12));
+        database.execSQL(String.format(sql,R.drawable.xiezi_red,13));
+        database.execSQL(String.format(sql,R.drawable.srn, 14));
+        database.execSQL(String.format(sql,R.drawable.bianfu, 15));
+        database.execSQL(String.format(sql,R.drawable.bianfu_red, 16));
+        database.execSQL(String.format(sql,R.drawable.se, 17));
+        database.execSQL(String.format(sql,R.drawable.se_lv, 18));
+        database.execSQL(String.format(sql,R.drawable.hou, 19));
+        database.execSQL(String.format(sql,R.drawable.niu, 20));
+        database.execSQL(String.format(sql,R.drawable.wugui, 21));
+        database.execSQL(String.format(sql,R.drawable.santoushe, 22));
+        database.execSQL(String.format(sql,R.drawable.ciwei, 23));
+        database.execSQL(String.format(sql,R.drawable.lan, 24));
+        database.execSQL(String.format(sql,R.drawable.jingling, 25));
+        database.execSQL(String.format(sql,R.drawable.jingling_lv, 26));
+        database.execSQL(String.format(sql,R.drawable.jiangshi, 27));
+        database.execSQL(String.format(sql,R.drawable.jiangshi_red, 28));
+        database.execSQL(String.format(sql,R.drawable.fengh, 29));
+        database.execSQL(String.format(sql,R.drawable.long_pet, 30));
+        database.execSQL(String.format(sql,R.drawable.long_pet_red, 31));
+        database.execSQL(String.format(sql,R.drawable.kulou, 32));
+        database.execSQL(String.format(sql,R.drawable.wenhao, 33));
+        database.execSQL(String.format(sql,R.drawable.xion, 34));
+        database.execSQL(String.format(sql,R.drawable.zhuyan, 35));
+        database.execSQL(String.format(sql,R.drawable.luwu, 36));
+        database.execSQL(String.format(sql,R.drawable.shankui, 37));
+        database.execSQL(String.format(sql,R.drawable.qiongqi, 38));
+        database.execSQL(String.format(sql,R.drawable.qiongqi_red, 39));
+        database.execSQL(String.format(sql,R.drawable.jiuweihu, 40));
+        database.execSQL(String.format(sql,R.drawable.jiuweihu_red, 41));
+        database.execSQL(String.format(sql,R.drawable.fudi, 42));
+        database.execSQL(String.format(sql,R.drawable.zheng, 43));
+        database.execSQL(String.format(sql,R.drawable.zhuru, 44));
+        database.execSQL(String.format(sql,R.drawable.taowu, 45));
+
+    }
+
     public static void addMonster(SQLiteDatabase database) {
         String sql = "replace into monster (" +
                 "id, type, atk, hp, pet_rate, drop_item, drop_good, " +
