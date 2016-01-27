@@ -214,6 +214,12 @@ public class Hero implements BaseObject {
             }
             if (this.hp > upperHp) this.hp = upperHp;
         }
+        if (getHp() < getUpperHp() / 10) {
+            GoodsType hpml = GoodsType.HPML;
+            hpml.load();
+            if (hpml.getCount() > 0)
+                hpml.use();
+        }
         if (getHp() < getUpperHp() / 2) {
             GoodsType hpm = GoodsType.HPM;
             hpm.load();
