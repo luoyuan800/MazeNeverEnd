@@ -691,14 +691,14 @@ public class BaseSkill extends SkillLayout {
                 }
             });
             if (!skill.load()) {
-                skill.setProbability(80f);
+                skill.setProbability(280f);
             }
             skill.setLevelUp(new EnableExpression() {
                 @Override
                 public boolean isEnable(Hero hero, Maze maze, MainGameActivity context, Skill skill) {
                     if (skill.getProbability() < 400) {
                         skill.setProbability(skill.getProbability() + 30f);
-                        MazeContents.getMaze().setCsmgl(MazeContents.getMaze().getCsmgl() - 50);
+                        MazeContents.getMaze().setCsmgl(MazeContents.getMaze().getCsmgl() - 10);
                         return true;
                     }
                     return false;

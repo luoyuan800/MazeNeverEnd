@@ -26,7 +26,7 @@ import java.util.List;
  * Created by gluo on 8/26/2015.
  */
 public class Maze {
-    private int csmgl = 9987;
+    private int csmgl = 9997;
     private Hero hero;
     protected long level;
     private boolean moving;
@@ -154,7 +154,7 @@ public class Maze {
                 addMessage(context, hero.getFormatName() + "休息了一会，恢复了<font color=\"#556B2F\">" + hel + "</font>点HP");
                 hero.addHp(hel);
                 addMessage(context, sque);
-            } else if (random.nextLong(9000) > csmgl) {
+            } else if (random.nextLong(10000) > csmgl) {
                 step = 0;
                 long levJ = random.nextLong(hero.getMaxMazeLev() + 15) + 1;
                 addMessage(context, hero.getFormatName() + "踩到了传送门，被传送到了迷宫第" + levJ + "层");
