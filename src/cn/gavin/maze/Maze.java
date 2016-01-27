@@ -20,6 +20,7 @@ import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -89,7 +90,7 @@ public class Maze {
                     point = 60 + random.nextInt(70);
                 }
                 String msg = hero.getFormatName() + "进入了" + level + "层迷宫， 获得了<font color=\"#FF8C00\">" + point + "</font>点数奖励";
-                for (Pet pet : hero.getPets()) {
+                for (Pet pet : new ArrayList<Pet>(hero.getPets())) {
                     pet.click();
                     if (pet.getType().equals("蛋")) {
                         pet.setDeathCount(pet.getDeathCount() - hero.getEggStep());

@@ -109,6 +109,7 @@ public class PetDB {
     }
 
     private static void buildPet(Pet pet, Cursor cursor) {
+        try{
         pet.setIndex(cursor.getInt(cursor.getColumnIndex("monster_index")));
         pet.setEggRate(StringUtils.toFloat(cursor.getString(cursor.getColumnIndex("egg_rate"))));
         pet.setName(cursor.getString(cursor.getColumnIndex("name")));
@@ -127,7 +128,7 @@ public class PetDB {
         pet.setAtk_rise(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk_rise"))));
         pet.setDef_rise(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("def_rise"))));
         pet.setHp_rise(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp_rise"))));
-        int image = cursor.getInt(cursor.getColumnIndex("image"));
+        /*int image = cursor.getInt(cursor.getColumnIndex("image"));
         if(image == 0){
             if(DBHelper.getDbHelper()!=null){
                 Cursor cursor1 = DBHelper.getDbHelper().excuseSOL("select img from monster where id = '" + pet.getIndex() + "'");
@@ -136,8 +137,8 @@ public class PetDB {
                 }
                 cursor1.close();
             }
-        }
-        pet.setImage(image);
+        }*/
+        //pet.setImage(image);
         pet.setOwner(cursor.getString(cursor.getColumnIndex("owner")));
         String ownerId = cursor.getString(cursor.getColumnIndex("owner_id"));
         if(StringUtils.isNotEmpty(ownerId)) {
@@ -181,6 +182,9 @@ public class PetDB {
         }
         if("蟑螂".equals(pet.getType()) ){
             Achievement.XiaoQian.enable(MazeContents.hero);
+        }
+        }catch (Exception e){
+            LogHelper.logException(e, false);
         }
     }
 

@@ -546,6 +546,7 @@ public class Pet extends Base {
                         index = cursor.getInt(cursor.getColumnIndex("id"));
                         break;
                     }
+                    cursor.moveToNext();
                 }
                 cursor.close();
             }
