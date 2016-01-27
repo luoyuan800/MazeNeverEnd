@@ -142,8 +142,8 @@ public class DBHelper {
     }
 
     public void close() {
-        if (database != null && database.isOpen())
-            database.close();
+        if (database != null && database.isOpen());
+            //database.close();
     }
 
     public SQLiteDatabase getDatabase() {

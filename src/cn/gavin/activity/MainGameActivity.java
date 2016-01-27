@@ -1890,7 +1890,16 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             } catch (Exception e) {
                 Log.e(TAG, "MainGameActivity.GameThread", e);
                 LogHelper.logException(e, true);
-                throw new RuntimeException(e);
+                AlertDialog dialog = new Builder(context).create();
+                dialog.setMessage("对您造成不便万分抱歉。游戏发送了无法预期的异常，请加入群332406332联系管理员。您的意见非常宝贵，谢谢您的支持。");
+                dialog.setButton(DialogInterface.BUTTON_NEGATIVE,"确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        exist();
+                    }
+                });
+                dialog.show();
             }
         }
     }
