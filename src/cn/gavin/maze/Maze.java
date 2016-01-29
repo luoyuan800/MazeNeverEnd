@@ -156,19 +156,25 @@ public class Maze {
                 hero.addHp(hel);
                 addMessage(context, sque);
             } else if (random.nextLong(10000) > csmgl) {
-                step = 0;
-                long levJ = random.nextLong(hero.getMaxMazeLev() + 15) + 1;
-                addMessage(context, hero.getFormatName() + "踩到了传送门，被传送到了迷宫第" + levJ + "层");
-                level = levJ;
-                if (level > hero.getMaxMazeLev()) {
-                    hero.setMaxMazeLev(level);
+                GoodsType closeP = GoodsType.ClosePortal;
+                closeP.load();
+                if (closeP.getCount() > 0) {
+                    closeP.use();
+                } else {
+                    step = 0;
+                    long levJ = random.nextLong(hero.getMaxMazeLev() + hero.getMaxMazeLev() / 10 + 15) + 1;
+                    addMessage(context, hero.getFormatName() + "踩到了传送门，被传送到了迷宫第" + levJ + "层");
+                    level = levJ;
+                    if (level > hero.getMaxMazeLev()) {
+                        hero.setMaxMazeLev(level);
+                    }
+                    mazeLevelDetect();
+                    addMessage(context, sque);
                 }
-                mazeLevelDetect();
-                addMessage(context, sque);
             } else if (random.nextBoolean()) {
                 int maxMonsterCount = 2;
-                maxMonsterCount += 2 *(level/300);
-                if(maxMonsterCount > 15){
+                maxMonsterCount += 2 * (level / 300);
+                if (maxMonsterCount > 15) {
                     maxMonsterCount = 15;
                 }
                 maxMonsterCount = 1 + random.nextInt(maxMonsterCount);
@@ -196,17 +202,17 @@ public class Maze {
                     if (monster == null && random.nextLong(1000) > 909) {
                         step += 21;
                         NPC boss = NPC.build(level);
-                        if(boss!=null){
-                            boss.setMaterial(random.nextLong(boss.getHp()/10000) + level/2);
-                            if(!NPCBattleController.battle(hero,boss,random,this,context) && hero.getHp() <= 0){
+                        if (boss != null) {
+                            boss.setMaterial(random.nextLong(boss.getHp() / 10000) + level / 2);
+                            if (!NPCBattleController.battle(hero, boss, random, this, context) && hero.getHp() <= 0) {
                                 Monster asMonster = boss.formatAsMonster();
                                 asMonster.setBattleMsg(NPCBattleController.getLastBattle());
                                 beatJudge(context, asMonster, true);
-                            }else{
+                            } else {
                                 addMessage(context, sque);
                             }
                             break;
-                        }else {
+                        } else {
                             monster = Monster.getBoss(this, hero);
                             isBoss = true;
                         }
@@ -243,7 +249,7 @@ public class Maze {
                     }
                     MonsterDB.updateMonster(monster);
                     addMessage(context, sque);
-                    if(isBoss) break;
+                    if (isBoss) break;
                 }
             } else {
                 switch (random.nextInt(5)) {
@@ -275,6 +281,17 @@ public class Maze {
                         }
                         break;
                     case 4:
+                        addMessage(context, hero.getFormatName() + "正在发呆...");
+                        break;
+                    case 5:
+                        GoodsType mirrori = GoodsType.Mirror;
+                        mirrori.load();
+                        if (mirrori.getCount() > 0) {
+                            addMessage(context, hero.getFormatName() + "拿出镜子照了一下，觉得自己很帅帅哒/亮亮哒！");
+                            addMessage(context, hero.getFormatName() + "敏捷加  1");
+                            hero.addAgility(1);
+                            mirrori.use();
+                        }
                         addMessage(context, hero.getFormatName() + "正在发呆...");
                         break;
                 }
@@ -310,7 +327,7 @@ public class Maze {
                 safetyRope.getScript().use();
                 long slev = level / 10 + 1;
                 String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
-                        "打败了。<br>" + hero.getFormatName() + "因为" + safetyRope.getName() + "护体掉到了" + slev+ "层";
+                        "打败了。<br>" + hero.getFormatName() + "因为" + safetyRope.getName() + "护体掉到了" + slev + "层";
                 addMessage(context, notDie);
                 monster.addBattleDesc(notDie);
                 hero.restoreHalf();
@@ -324,7 +341,7 @@ public class Maze {
                     halfSail.getScript().use();
                     long slev = level / 2 + 1;
                     String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
-                            "打败了。<br>" + hero.getFormatName() + "因为" + halfSail.getName() + "护体掉到了" + slev+ "层"                       ;
+                            "打败了。<br>" + hero.getFormatName() + "因为" + halfSail.getName() + "护体掉到了" + slev + "层";
                     addMessage(context, notDie);
                     monster.addBattleDesc(notDie);
                     hero.restoreHalf();

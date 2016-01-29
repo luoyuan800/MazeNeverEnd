@@ -453,6 +453,24 @@ public enum GoodsType {
             }
             return null;
         }
+    }, false),
+    ClosePortal("力场抗拒器", "踩到传送门的时候自动使用，不会被传送走。只会在爬楼过程中踩到随机传送门的时候生效。", new GoodScript() {
+        @Override
+        public Object use() {
+            if (ClosePortal.count > 0) {
+                GoodsType.ClosePortal.count--;
+                GoodsType.ClosePortal.save();
+                MazeContents.hero.addHp((long)(MazeContents.hero.getUpperHp() * 0.8));
+                MainGameActivity.context.addMessage(MazeContents.hero.getFormatName() + "踩到了传送门，但是因为" + ClosePortal.getName() + "没有被传送走。");
+            }
+            return null;
+        }
+    }, false),
+    Mirror("镜子", "爱美人士必备，爬楼再辛苦也要保持形象哦。", new GoodScript() {
+        @Override
+        public Object use() {
+            return null;
+        }
     }, false);
     private String name;
     private String desc;

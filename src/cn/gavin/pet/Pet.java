@@ -6,6 +6,7 @@ import android.database.Cursor;
 import cn.gavin.Achievement;
 import cn.gavin.Element;
 import cn.gavin.Hero;
+import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;
@@ -562,9 +563,13 @@ public class Pet extends Base {
     }
 
     public int getImage() {
+        if(!"egg".equals(type)){
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("select img from monster where id = '" + getIndex() + "'");
         image = cursor.getInt(cursor.getColumnIndex("img"));
         cursor.close();
+        }else{
+            image = R.drawable.egg;
+        }
         return image;
     }
 
