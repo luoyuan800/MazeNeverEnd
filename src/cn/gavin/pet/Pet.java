@@ -563,12 +563,14 @@ public class Pet extends Base {
     }
 
     public int getImage() {
-        if(!"egg".equals(type)){
-        Cursor cursor = DBHelper.getDbHelper().excuseSOL("select img from monster where id = '" + getIndex() + "'");
-        image = cursor.getInt(cursor.getColumnIndex("img"));
-        cursor.close();
+        if(!"蛋".equals(type)){
+            if(image <= 0) {
+                Cursor cursor = DBHelper.getDbHelper().excuseSOL("select img from monster where id = '" + getIndex() + "'");
+                image = cursor.getInt(cursor.getColumnIndex("img"));
+                cursor.close();
+            }
         }else{
-            image = R.drawable.egg;
+            return R.drawable.egg;
         }
         return image;
     }

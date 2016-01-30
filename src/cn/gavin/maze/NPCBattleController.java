@@ -1,5 +1,6 @@
 package cn.gavin.maze;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class NPCBattleController {
             boolean isJump = false;
             if (!monster.isHold()) {
                 if(!(hero instanceof NPC)) {
-                    List<Pet> pets = hero.getPets();
+                    List<Pet> pets = new ArrayList<Pet>(hero.getPets());
                     for (Pet pet : pets) {
                         if (pet != null && pet.getHp() > 0 && !pet.getType().equals("蛋") && pet.dan()) {
                             pet.setContext(context);
@@ -150,7 +151,7 @@ public class NPCBattleController {
         boolean isJump;
         skill = hero.useAtkSkill();
         isJump = false;
-        List<Pet> pets = hero instanceof NPC ? Collections.<Pet>emptyList() : hero.getPets();
+        List<Pet> pets = hero instanceof NPC ? Collections.<Pet>emptyList() : new ArrayList<Pet>(hero.getPets());
         for (Pet pet : pets) {
             if (pet != null && pet.getHp() > 0 && !"蛋".equals(pet.getType())) {
                 if (pet.gon()) {

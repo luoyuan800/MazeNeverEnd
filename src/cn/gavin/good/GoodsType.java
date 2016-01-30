@@ -36,7 +36,7 @@ public enum GoodsType {
                         if (Aphrodisiac.count > 0) {
                             AlertDialog alertDialog = new AlertDialog.Builder(MainGameActivity.context).create();
                             alertDialog.setTitle("你获得了一个蛋");
-                            List<Pet> pets = MazeContents.hero.getPets();
+                            List<Pet> pets = new ArrayList<Pet>(MazeContents.hero.getPets());
                             Random random = MazeContents.hero.getRandom();
                             Pet f = null;
                             Pet m = null;
@@ -448,7 +448,7 @@ public enum GoodsType {
             if (HPML.count > 0) {
                 GoodsType.HPML.count--;
                 GoodsType.HPML.save();
-                MazeContents.hero.addHp((long)(MazeContents.hero.getUpperHp() * 0.8));
+                MazeContents.hero.addHp((long) (MazeContents.hero.getUpperHp() * 0.8));
                 MainGameActivity.context.addMessage("使用了大血瓶恢复了80%的生命值。");
             }
             return null;
@@ -460,7 +460,7 @@ public enum GoodsType {
             if (ClosePortal.count > 0) {
                 GoodsType.ClosePortal.count--;
                 GoodsType.ClosePortal.save();
-                MazeContents.hero.addHp((long)(MazeContents.hero.getUpperHp() * 0.8));
+                MazeContents.hero.addHp((long) (MazeContents.hero.getUpperHp() * 0.8));
                 MainGameActivity.context.addMessage(MazeContents.hero.getFormatName() + "踩到了传送门，但是因为" + ClosePortal.getName() + "没有被传送走。");
             }
             return null;
@@ -483,6 +483,7 @@ public enum GoodsType {
         this.desc = desc;
         this.script = script;
         this.usable = usable;
+        load();
     }
 
     public String getName() {

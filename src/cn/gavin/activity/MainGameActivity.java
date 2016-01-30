@@ -1767,7 +1767,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         }
 
         StringBuilder pets = new StringBuilder();
-        for (Pet pet : heroN.getPets()) {
+        for (Pet pet : new ArrayList<Pet>(heroN.getPets())) {
             pets.append(pet.getFormatName()).append("<br>");
         }
         onUsedPetLists.setText(Html.fromHtml(pets.toString()));

@@ -216,13 +216,11 @@ public class Hero implements BaseObject {
         }
         if (getHp() < getUpperHp() / 10) {
             GoodsType hpml = GoodsType.HPML;
-            hpml.load();
             if (hpml.getCount() > 0)
                 hpml.use();
         }
         if (getHp() < getUpperHp() / 2) {
             GoodsType hpm = GoodsType.HPM;
-            hpm.load();
             if (hpm.getCount() > 0)
                 hpm.use();
         }
@@ -496,7 +494,7 @@ public class Hero implements BaseObject {
         onChange = false;
         onSkill = false;
         this.hp = getUpperHp();
-        for (Pet pet : getPets()) {
+        for (Pet pet : new ArrayList<Pet>(getPets())) {
             pet.restore();
         }
     }
@@ -1478,7 +1476,7 @@ public class Hero implements BaseObject {
         onChange = false;
         onSkill = false;
         this.hp = getUpperHp() / 2;
-        for (Pet pet : getPets()) {
+        for (Pet pet : new ArrayList<Pet>(getPets())) {
             pet.restoreHalf();
         }
     }
@@ -1495,7 +1493,7 @@ public class Hero implements BaseObject {
     }
 
     public boolean petOnUsed(Pet pet) {
-        for (Pet p : getPets()) {
+        for (Pet p : new ArrayList<Pet>(getPets())) {
             if (p.getId().equalsIgnoreCase(pet.getId())) {
                 return true;
             }

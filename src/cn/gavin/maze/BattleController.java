@@ -1,5 +1,6 @@
 package cn.gavin.maze;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.gavin.Element;
@@ -33,7 +34,7 @@ public class BattleController {
             Skill skill = hero.useDefendSkill(monster);
             boolean isJump = false;
             if (!monster.isHold()) {
-                List<Pet> pets = hero.getPets();
+                List<Pet> pets = new ArrayList<Pet>(hero.getPets());
                 for (Pet pet : pets) {
                     if (pet != null && pet.getHp() > 0 && !pet.getType().equals("蛋") && pet.dan()) {
                         pet.setContext(context);
@@ -122,7 +123,7 @@ public class BattleController {
         boolean isJump;
         skill = hero.useAttackSkill(monster);
         isJump = false;
-        List<Pet> pets = hero.getPets();
+        List<Pet> pets = new ArrayList<Pet>(hero.getPets());
         for (Pet pet : pets) {
             if (pet != null && pet.getHp() > 0 && !"蛋".equals(pet.getType())) {
                 if (pet.gon()) {

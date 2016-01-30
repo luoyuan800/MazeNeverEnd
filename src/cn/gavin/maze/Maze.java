@@ -157,12 +157,11 @@ public class Maze {
                 addMessage(context, sque);
             } else if (random.nextLong(10000) > csmgl) {
                 GoodsType closeP = GoodsType.ClosePortal;
-                closeP.load();
                 if (closeP.getCount() > 0) {
                     closeP.use();
                 } else {
                     step = 0;
-                    long levJ = random.nextLong(hero.getMaxMazeLev() + hero.getMaxMazeLev() / 10 + 15) + 1;
+                    long levJ = random.nextLong(hero.getMaxMazeLev() + 115) + 1;
                     addMessage(context, hero.getFormatName() + "踩到了传送门，被传送到了迷宫第" + levJ + "层");
                     level = levJ;
                     if (level > hero.getMaxMazeLev()) {
@@ -285,7 +284,6 @@ public class Maze {
                         break;
                     case 5:
                         GoodsType mirrori = GoodsType.Mirror;
-                        mirrori.load();
                         if (mirrori.getCount() > 0) {
                             addMessage(context, hero.getFormatName() + "拿出镜子照了一下，觉得自己很帅帅哒/亮亮哒！");
                             addMessage(context, hero.getFormatName() + "敏捷加  1");

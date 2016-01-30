@@ -4,6 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import java.util.ArrayList;
+
 import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.R;
@@ -370,7 +373,7 @@ public class PetSkill extends SkillLayout {
                     skill.addMessage(skillMsg);
                     monster.addBattleSkillDesc(skillMsg);
                     if (hero.getPets().size() > 0) {
-                        for (Pet pet : hero.getPets()) {
+                        for (Pet pet : new ArrayList<Pet>(hero.getPets())) {
                             if (pet != null && pet.getHp() > 0 && !"蛋".equals(pet.getType())) {
                                 NSkill petSkill = pet.getAtkSkill();
                                 long petHarm = 0;
@@ -448,7 +451,7 @@ public class PetSkill extends SkillLayout {
                     skill.addMessage(skillMsg);
                     monster.addBattleSkillDesc(skillMsg);
                     if (hero.getPets().size() > 0) {
-                        for (Pet pet : hero.getPets()) {
+                        for (Pet pet : new ArrayList<Pet>(hero.getPets())) {
                             if (pet != null && pet.getHp() > 0 && !"蛋".equals(pet.getType())) {
                                 NSkill petSkill = pet.getAtkSkill();
                                 long petHarm = 0;

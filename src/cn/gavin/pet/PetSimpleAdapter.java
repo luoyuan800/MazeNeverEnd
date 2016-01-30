@@ -6,7 +6,21 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CheckedTextView;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
@@ -14,11 +28,6 @@ import cn.gavin.palace.nskill.NSkill;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.StringUtils;
 import cn.gavin.utils.ui.AddPointDialog;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Copyright 2015 gluo.
@@ -47,7 +56,7 @@ public class PetSimpleAdapter extends BaseAdapter {
 
     public PetSimpleAdapter(Hero hero) {
         adapterData = PetDB.loadPet(null);
-        List<Pet> pets = hero.getPets();
+        List<Pet> pets = new ArrayList<Pet>(hero.getPets());
         onUsedPetIds = new HashSet<String>(pets.size());
         for (Pet pet : pets) {
             onUsedPetIds.add(pet.getId());
@@ -57,9 +66,14 @@ public class PetSimpleAdapter extends BaseAdapter {
         detailDialog = new PetDetailDialog(MainGameActivity.context);
     }
 
-    private List<Pet> adapterData;
+     List<Pet> adapterData;
     private final Set<String> onUsedPetIds;
     private Hero hero;
+    private Set<Pet> checkes = new HashSet<Pet>();
+
+    public Set<Pet> getCheckes() {
+        return checkes;
+    }
 
     public void setToHero() {
         List<Pet> pets = new ArrayList<Pet>(onUsedPetIds.size());
@@ -90,7 +104,7 @@ public class PetSimpleAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         PetViewHolder holder;
         if (convertView == null) {
-            holder = new PetViewHolder();
+            holder = new PetViewHolder(checkes);
             convertView = holder.view;
             convertView.setTag(holder);
         } else {
@@ -103,14 +117,33 @@ public class PetSimpleAdapter extends BaseAdapter {
     }
 
     static class PetViewHolder {
-        private TextView view = new TextView(MainGameActivity.context);
+        private TextView view;
         private Pet pet;
+        private Set<Pet> checked;
+
+        public PetViewHolder(final Set<Pet> checkes) {
+            /*view = new CheckedTextView(MainGameActivity.context) {
+                public void setChecked(boolean checked) {
+                    if (pet!=null&&!pet.isOnUsed()) {
+                        super.setChecked(checked);
+                        if (checked) {
+                            checkes.add(pet);
+                        } else {
+                            checkes.remove(pet);
+                        }
+                    }
+                }
+            };*/
+            view = new TextView(MainGameActivity.context);
+            view.setPadding(10,10,10,10);
+            this.checked = checkes;
+        }
 
         public void updatePet(final Pet pet, final Set<String> onUsedPetIds) {
             this.pet = pet;
             if (pet != null) {
                 if (view == null) {
-                    view = new TextView(MainGameActivity.context);
+                    view = new CheckedTextView(MainGameActivity.context);
                 }
                 view.setTextSize(20);
                 view.setText(Html.fromHtml(pet.getFormatName() + (pet.isOnUsed() ? "  √ " : "")));

@@ -4,8 +4,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.utils.MazeContents;
 
 /**
  * Copyright 2015 gluo.
@@ -41,6 +44,21 @@ public class PetDialog {
                         dismiss();
                         adapter.saveToDB();
                         adapter.setToHero();
+                    }
+
+                });
+        alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "一键丢蛋",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for (Pet pet : new ArrayList<Pet>(adapter.adapterData)) {
+                            if ("蛋".equals(pet.getType())) {
+                                pet.releasePet(MazeContents.hero, MainGameActivity.context);
+                                adapter.adapterData.remove(pet);
+                            }
+                        }
+                        adapter.refresh();
                     }
 
                 });

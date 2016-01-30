@@ -61,6 +61,10 @@ public class MathUtils {
                     randomValue/=2;
                     break;
             }
+        }else{
+            if(lev > 10000){
+                randomValue *= (lev/10000);
+            }
         }
         if (randomValue > 0) {
             return randomValue;
@@ -111,6 +115,10 @@ public class MathUtils {
                 case 10:
                     randomValue/=5;
                     break;
+            }
+        }else{
+            if(lev > 50000){
+                randomValue *= (lev/10000);
             }
         }
         if (randomValue > 0) {
