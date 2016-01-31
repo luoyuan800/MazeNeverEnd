@@ -1,6 +1,10 @@
 package cn.gavin.maze;
 
 import android.database.Cursor;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
@@ -19,9 +23,6 @@ import cn.gavin.story.StoryHelper;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by gluo on 8/26/2015.
@@ -367,124 +368,126 @@ public class Maze {
     }
 
     private void mazeLevelDetect() {
-        if (hero != null) {
-            if (level > Integer.MAX_VALUE) {
-                if (level > Long.MAX_VALUE - 100) {
-                    level--;
-                }
-            } else {
-                switch ((int) level) {
-                    case 50:
-                        Achievement.maze50.enable(hero);
-                        break;
-                    case 100:
-                        Achievement.maze100.enable(hero);
-                        break;
-                    case 500:
-                        if (hero.getArmorLev() == 0 && hero.getSwordLev() == 0) {
-                            Achievement.speculator.enable(hero);
-                        }
-                        Achievement.maze500.enable(hero);
-                        break;
-                    case 1000:
-                        Achievement.maze1000.enable(hero);
-                        break;
-                    case 10000:
-                        if (Achievement.maze100.isEnable()) {
-                            Achievement.maze10000.enable(hero);
-                        } else {
-                            Achievement.cribber.enable(hero);
-                        }
-                        break;
-                    case 50000:
-                        if (Achievement.maze10000.isEnable()) {
-                            if (!Achievement.maze50000.isEnable()) {
-                                GoodsType.RenameAcc.load();
-                                GoodsType.RenameAcc.setCount(GoodsType.RenameAcc.getCount() + 1);
-                                GoodsType.RenameAcc.save();
-                                addMessage(MainGameActivity.context, "恭喜你进入了50000层，系统奖励了自定义一件装备名称的物品。");
+        try {
+            if (hero != null) {
+                if (level > Integer.MAX_VALUE) {
+                    if (level > Long.MAX_VALUE - 100) {
+                        level--;
+                    }
+                } else {
+                    switch ((int) level) {
+                        case 50:
+                            Achievement.maze50.enable(hero);
+                            break;
+                        case 100:
+                            Achievement.maze100.enable(hero);
+                            break;
+                        case 500:
+                            if (hero.getArmorLev() == 0 && hero.getSwordLev() == 0) {
+                                Achievement.speculator.enable(hero);
                             }
-                            Achievement.maze50000.enable(hero);
-
-                        } else {
-                            Achievement.cribber.enable(hero);
-                        }
-                        break;
-                    case 100000:
-                        GoodsType.RenamePet.load();
-                        GoodsType.RenamePet.setCount(GoodsType.RenamePet.getCount() + 1);
-                        GoodsType.RenamePet.save();
-                        addMessage(MainGameActivity.context, "恭喜你进入了100000层，系统奖励了自定义宠物名称的物品。");
-                        GoodsType.RenameAcc.load();
-                        GoodsType.RenameAcc.setCount(GoodsType.RenameAcc.getCount() + 1);
-                        GoodsType.RenameAcc.save();
-                        addMessage(MainGameActivity.context, "恭喜你进入了100000层，系统奖励了自定义一件装备名称的物品。");
-                        break;
-                }
-            }
-            if (level > 50000) {
-                if (!Achievement.richer.isEnable()) {
-                    addMessage(MainGameActivity.context, "您进入了奇怪的区域！");
-//                    level--;
-                }
-            }
-            if (PetDB.getPetCount(null) < hero.getPetSize() + 20) {
-                Pet f = null;
-                Pet m = null;
-                List<Pet> pets = hero.getPets();
-                for (Pet pet : pets) {
-                    if (!pet.getType().equals("蛋")) {
-                        for (Pet p : pets) {
-                            if (!p.equals(pet) && !p.getType().equals("蛋") && pet.getSex() != p.getSex() && (pet.getElement().isReinforce(p.getElement()) || p.getElement().isReinforce(pet.getElement()))) {
-                                if (p.getSex() == 0) {
-                                    f = p;
-                                    m = pet;
-                                } else {
-                                    f = pet;
-                                    m = p;
+                            Achievement.maze500.enable(hero);
+                            break;
+                        case 1000:
+                            Achievement.maze1000.enable(hero);
+                            break;
+                        case 10000:
+                            if (Achievement.maze100.isEnable()) {
+                                Achievement.maze10000.enable(hero);
+                            } else {
+                                Achievement.cribber.enable(hero);
+                            }
+                            break;
+                        case 50000:
+                            if (Achievement.maze10000.isEnable()) {
+                                if (!Achievement.maze50000.isEnable()) {
+                                    GoodsType.RenameAcc.setCount(GoodsType.RenameAcc.getCount() + 1);
+                                    GoodsType.RenameAcc.save();
+                                    addMessage(MainGameActivity.context, "恭喜你进入了50000层，系统奖励了自定义一件装备名称的物品。");
                                 }
-                                break;
+                                Achievement.maze50000.enable(hero);
+
+                            } else {
+                                Achievement.cribber.enable(hero);
                             }
+                            break;
+                        case 100000:
+                            GoodsType.RenamePet.load();
+                            GoodsType.RenamePet.setCount(GoodsType.RenamePet.getCount() + 1);
+                            GoodsType.RenamePet.save();
+                            addMessage(MainGameActivity.context, "恭喜你进入了100000层，系统奖励了自定义宠物名称的物品。");
+                            GoodsType.RenameAcc.load();
+                            GoodsType.RenameAcc.setCount(GoodsType.RenameAcc.getCount() + 1);
+                            GoodsType.RenameAcc.save();
+                            addMessage(MainGameActivity.context, "恭喜你进入了100000层，系统奖励了自定义一件装备名称的物品。");
+                            break;
+                    }
+                }
+                if (level > 50000) {
+                    if (!Achievement.richer.isEnable()) {
+                        addMessage(MainGameActivity.context, "您进入了奇怪的区域！");
+//                    level--;
+                    }
+                }
+                if (PetDB.getPetCount(null) < hero.getPetSize() + 20) {
+                    Pet f = null;
+                    Pet m = null;
+                    List<Pet> pets = new ArrayList<Pet>(hero.getPets());
+                    for (Pet pet : pets) {
+                        if (!pet.getType().equals("蛋")) {
+                            for (Pet p : pets) {
+                                if (!p.equals(pet) && !p.getType().equals("蛋") && pet.getSex() != p.getSex() && (pet.getElement().isReinforce(p.getElement()) || p.getElement().isReinforce(pet.getElement()))) {
+                                    if (p.getSex() == 0) {
+                                        f = p;
+                                        m = pet;
+                                    } else {
+                                        f = pet;
+                                        m = p;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        if (f != null && m != null) {
+                            break;
                         }
                     }
                     if (f != null && m != null) {
-                        break;
-                    }
-                }
-                if (f != null && m != null) {
-                    Pet egg = Pet.egg(f, m, level, hero);
-                    if (egg != null) {
-                        GoodsType barrier = GoodsType.Barrier;
-                        barrier.load();
-                        if (barrier.getCount() > 0) {
-                            barrier.getScript().use();
-                            addMessage(MainGameActivity.context, f.getFormatName() + "和" + m.getFormatName() + "想生蛋。但是被" + hero.getFormatName() + "阻止了！");
-                        } else {
-                            PetDB.save(egg);
-                            addMessage(MainGameActivity.context, f.getFormatName() + "和" + m.getFormatName() + "生了一个蛋。");
-                            if (hero.getPets().size() < hero.getPetSize()) {
-                                hero.getPets().add(egg);
+                        Pet egg = Pet.egg(f, m, level, hero);
+                        if (egg != null) {
+                            GoodsType barrier = GoodsType.Barrier;
+                            if (barrier.getCount() > 0) {
+                                barrier.getScript().use();
+                                addMessage(MainGameActivity.context, f.getFormatName() + "和" + m.getFormatName() + "想生蛋。但是被" + hero.getFormatName() + "阻止了！");
+                            } else {
+                                PetDB.save(egg);
+                                addMessage(MainGameActivity.context, f.getFormatName() + "和" + m.getFormatName() + "生了一个蛋。");
+                                if (hero.getPets().size() < hero.getPetSize()) {
+                                    hero.getPets().add(egg);
+                                }
                             }
                         }
                     }
-                }
 
-            }
-            if (level != 0 && level % 100 == 0) {
-                Skill fSkill = SkillFactory.getSkill("浮生百刃", hero);
-                Skill xSkill = SkillFactory.getSkill("虚无吞噬", hero);
-                boolean qzs = SkillFactory.getSkill("欺诈师", hero).isActive();
-                if (qzs && (random.nextLong(hero.getMaxMazeLev() + 1000) > 1100)) {
-                    fSkill.setActive(true);
                 }
-                if (qzs && (random.nextLong(hero.getMaxMazeLev() + 1000) > 1150)) {
-                    xSkill.setActive(true);
+                if (level != 0 && level % 100 == 0) {
+                    Skill fSkill = SkillFactory.getSkill("浮生百刃", hero);
+                    Skill xSkill = SkillFactory.getSkill("虚无吞噬", hero);
+                    boolean qzs = SkillFactory.getSkill("欺诈师", hero).isActive();
+                    if (qzs && (random.nextLong(hero.getMaxMazeLev() + 1000) > 1100)) {
+                        fSkill.setActive(true);
+                    }
+                    if (qzs && (random.nextLong(hero.getMaxMazeLev() + 1000) > 1150)) {
+                        xSkill.setActive(true);
+                    }
+                }
+                if (!isSailed() && (random.nextLong(hero.getAgility() / 5000) > random.nextLong(3000) || (hero.getMaxMazeLev() < 200 && hero.getMaterial() < 10000000))) {
+                    setSailed(true);
+                    addMessage(MainGameActivity.context, "有商人入驻商店了，你可以去选购物品。");
                 }
             }
-            if (!isSailed() && (random.nextLong(hero.getAgility() / 5000) > random.nextLong(3000) || (hero.getMaxMazeLev() < 200 && hero.getMaterial() < 10000000))) {
-                setSailed(true);
-                addMessage(MainGameActivity.context, "有商人入驻商店了，你可以去选购物品。");
-            }
+        } catch (Exception e) {
+            LogHelper.logException(e, false);
         }
     }
 
