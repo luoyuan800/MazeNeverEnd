@@ -1141,14 +1141,13 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
 
     private void showAwardPet(String title) {
         final Pet pet = new Pet();
-        int[] indexs = {37, 42, 24, 26, 27, 29, 30, 39, 98};
+        int[] indexs = {37, 42, 24, 26, 27, 29, 30, 39, 40,43,44,45,32};
         int i = heroN.getRandom().nextInt(indexs.length);
         int index = indexs[i];
         Cursor cursor = dbHelper.excuseSOL("select atk, hp, type, egg_rate, img, catch from monster where id = '" + index + "'");
         pet.setType(cursor.getString(cursor.getColumnIndex("type")));
         pet.setAtk(StringUtils.toLong(cursor.getString(cursor.getColumnIndex("atk"))) + heroN.getBaseAttackValue() / 200 + 20);
         long hp = StringUtils.toLong(cursor.getString(cursor.getColumnIndex("hp"))) / 2;
-        cursor.close();
         pet.setDef(hp + heroN.getBaseDefense() / 200 + 10);
         pet.setHp(hp + heroN.getRealHP() / 500 + 10);
         pet.setAtk_rise(heroN.ATR_RISE);
@@ -1186,6 +1185,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 });
         dialog.setTitle(title);
         dialog.show();
+        cursor.close();
     }
 
     private void showAccessory() {

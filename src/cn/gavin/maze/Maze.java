@@ -162,7 +162,7 @@ public class Maze {
                     closeP.use();
                 } else {
                     step = 0;
-                    long levJ = random.nextLong(hero.getMaxMazeLev() + 115) + 1;
+                    long levJ = random.nextLong(hero.getMaxMazeLev() + 100 + hero.getReincaCount()) + 1;
                     addMessage(context, hero.getFormatName() + "踩到了传送门，被传送到了迷宫第" + levJ + "层");
                     level = levJ;
                     if (level > hero.getMaxMazeLev()) {
@@ -252,7 +252,7 @@ public class Maze {
                     if (isBoss) break;
                 }
             } else {
-                switch (random.nextInt(5)) {
+                switch (random.nextInt(6)) {
                     case 0:
                         addMessage(context, hero.getFormatName() + "思考了一下人生...");
                         if (hero.getReincaCount() > 0) {
@@ -311,7 +311,6 @@ public class Maze {
         }
         monster.setBeatCount(monster.getBeatCount() + 1);
         GoodsType medallion = GoodsType.Medallion;
-        medallion.load();
         if (medallion.getCount() > 0) {
             medallion.getScript().use();
             String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
@@ -321,7 +320,6 @@ public class Maze {
             hero.restoreHalf();
         } else {
             GoodsType safetyRope = GoodsType.SafetyRope;
-            safetyRope.load();
             if (safetyRope.getCount() > 0) {
                 safetyRope.getScript().use();
                 long slev = level / 10 + 1;
@@ -335,7 +333,6 @@ public class Maze {
                 this.level = slev;
             } else {
                 GoodsType halfSail = GoodsType.HalfSafe;
-                halfSail.load();
                 if (halfSail.getCount() > 0) {
                     halfSail.getScript().use();
                     long slev = level / 2 + 1;
@@ -412,11 +409,9 @@ public class Maze {
                             }
                             break;
                         case 100000:
-                            GoodsType.RenamePet.load();
                             GoodsType.RenamePet.setCount(GoodsType.RenamePet.getCount() + 1);
                             GoodsType.RenamePet.save();
                             addMessage(MainGameActivity.context, "恭喜你进入了100000层，系统奖励了自定义宠物名称的物品。");
-                            GoodsType.RenameAcc.load();
                             GoodsType.RenameAcc.setCount(GoodsType.RenameAcc.getCount() + 1);
                             GoodsType.RenameAcc.save();
                             addMessage(MainGameActivity.context, "恭喜你进入了100000层，系统奖励了自定义一件装备名称的物品。");

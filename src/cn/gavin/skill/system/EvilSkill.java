@@ -753,7 +753,7 @@ public class EvilSkill extends SkillLayout {
                     String msg = hero.getFormatName() + "使用了技能" + skill.getName() + "，吸收了" + monster.getFormatName() + "的" + StringUtils.formatNumber((long) harm) + "点生命值。";
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
-                    if (skill.getCount() == 10000) {
+                    if (skill.getCount() >= 10000) {
                         Achievement.doctor.enable(hero);
                     }
                     return false;

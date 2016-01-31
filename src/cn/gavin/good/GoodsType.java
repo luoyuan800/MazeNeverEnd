@@ -460,7 +460,6 @@ public enum GoodsType {
             if (ClosePortal.count > 0) {
                 GoodsType.ClosePortal.count--;
                 GoodsType.ClosePortal.save();
-                MazeContents.hero.addHp((long) (MazeContents.hero.getUpperHp() * 0.8));
                 MainGameActivity.context.addMessage(MazeContents.hero.getFormatName() + "踩到了传送门，但是因为" + ClosePortal.getName() + "没有被传送走。");
             }
             return null;
@@ -471,7 +470,19 @@ public enum GoodsType {
         public Object use() {
             return null;
         }
-    }, false);
+    }, false),
+    Omelet("煎蛋", "传说中的煎蛋。吃下去之后立即恢复60%的生命值。", new GoodScript() {
+        @Override
+        public Object use() {
+            if (Omelet.count > 0) {
+                GoodsType.Omelet.count--;
+                GoodsType.Omelet.save();
+                MazeContents.hero.addHp((long) (MazeContents.hero.getUpperHp() * 0.6));
+                MainGameActivity.context.addMessage("使用煎蛋恢复了60%的生命值。");
+            }
+            return null;
+        }
+    }, true);
     private String name;
     private String desc;
     private GoodScript script;

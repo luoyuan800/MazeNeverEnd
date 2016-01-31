@@ -30,6 +30,7 @@ public class Hero implements BaseObject {
     private static final String TAG = "Hero";
 
     public static Long MAX_GOODS_COUNT = 50l;
+    private long halfPHP ;
 
     // 血上限成长(每点生命点数增加）
     public Long MAX_HP_RISE = 5l;
@@ -110,6 +111,7 @@ public class Hero implements BaseObject {
     private Gift gift;
     private Element rejectElement;
     private int hold;
+    private long tenPUHP;
 
     public void setHold(int hold) {
         this.hold = hold;
@@ -214,12 +216,12 @@ public class Hero implements BaseObject {
             }
             if (this.hp > upperHp) this.hp = upperHp;
         }
-        if (getHp() < getUpperHp() / 10) {
+        if (getHp() < tenPUHP) {
             GoodsType hpml = GoodsType.HPML;
             if (hpml.getCount() > 0)
                 hpml.use();
         }
-        if (getHp() < getUpperHp() / 2) {
+        if (getHp() < halfPHP) {
             GoodsType hpm = GoodsType.HPM;
             if (hpm.getCount() > 0)
                 hpm.use();
@@ -654,6 +656,8 @@ public class Hero implements BaseObject {
 
     public void setUpperHp(long upperHp) {
         this.upperHp = upperHp;
+        halfPHP = upperHp / 2;
+        tenPUHP = upperHp/10;
     }
 
     public void addUpperHp(long hp) {
@@ -1475,7 +1479,7 @@ public class Hero implements BaseObject {
     public void restoreHalf() {
         onChange = false;
         onSkill = false;
-        this.hp = getUpperHp() / 2;
+        this.hp = halfPHP;
         for (Pet pet : new ArrayList<Pet>(getPets())) {
             pet.restoreHalf();
         }
