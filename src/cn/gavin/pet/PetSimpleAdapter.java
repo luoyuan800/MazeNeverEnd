@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import cn.gavin.Hero;
 import cn.gavin.R;
@@ -81,7 +82,7 @@ public class PetSimpleAdapter extends BaseAdapter {
             Pet pet = PetDB.load(id);
             pets.add(pet);
         }
-        hero.setPets(pets);
+        hero.setPets(new ConcurrentLinkedQueue<Pet>(pets));
     }
 
     @Override

@@ -183,6 +183,39 @@ public class GiftDialog {
                 }
             }));
         }
+        giftButton = (Button) mainDialog.findViewById(R.id.Epicure);
+        if (giftButton != null) {
+            giftButton.setOnClickListener(buildDetailAction(Gift.Epicure, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    mainDialog.dismiss();
+                    MazeContents.hero.setGift(Gift.Epicure);
+                }
+            }));
+        }
+        giftButton = (Button) mainDialog.findViewById(R.id.Daddy);
+        if (giftButton != null) {
+            giftButton.setOnClickListener(buildDetailAction(Gift.Daddy, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    mainDialog.dismiss();
+                    MazeContents.hero.setGift(Gift.Daddy);
+                }
+            }));
+        }
+        giftButton = (Button) mainDialog.findViewById(R.id.ChildrenKing);
+        if (giftButton != null) {
+            giftButton.setOnClickListener(buildDetailAction(Gift.ChildrenKing, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    mainDialog.dismiss();
+                    MazeContents.hero.setGift(Gift.ChildrenKing);
+                }
+            }));
+        }
     }
 
     private View.OnClickListener buildDetailAction(final Gift gift, final DialogInterface.OnClickListener activeAction) {

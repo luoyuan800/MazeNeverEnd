@@ -187,7 +187,9 @@ public class Pet extends Base {
                     pet.addSkill(petS);
                 }
             } else if (random.nextInt(1000) == 1) {
-                pet.setSkill(new HealthSkill());
+                final HealthSkill healthSkill = new HealthSkill();
+                healthSkill.setMe(pet);
+                pet.setSkill(healthSkill);
             }
             if (SkillFactory.getSkill("霸气", MazeContents.hero).isActive()) {
                 pet.setAtk_rise(pet.getAtk_rise() * 3);
@@ -433,7 +435,9 @@ public class Pet extends Base {
             }
         }else {
             if (random.nextInt(1000) < 10) {
-                egg.setSkill(new HealthSkill());
+                final HealthSkill healthSkill = new HealthSkill();
+                healthSkill.setMe(egg);
+                egg.setSkill(healthSkill);
             }
         }
         NSkill pSkill = egg.getAllSkill();

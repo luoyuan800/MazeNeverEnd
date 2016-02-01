@@ -52,4 +52,14 @@
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="匠心"
                 android:id="@+id/Maker" android:layout_gravity="center_horizontal|top" android:layout_weight="1"/>
     </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_weight="1">
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="美食家"
+                android:id="@+id/Epicure" android:layout_gravity="center_horizontal|top" android:layout_weight="1"/>
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="孩子王"
+                android:id="@+id/ChildrenKing" android:layout_gravity="center_horizontal|top" android:layout_weight="1"/>
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="奶爸"
+                android:id="@+id/Daddy" android:layout_gravity="center_horizontal|top" android:layout_weight="1"/>
+    </LinearLayout>
 </LinearLayout>

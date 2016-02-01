@@ -3,12 +3,13 @@ package cn.gavin.pet;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.ListView;
-
-import java.util.ArrayList;
-
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.gift.Gift;
+import cn.gavin.good.GoodsType;
 import cn.gavin.utils.MazeContents;
+
+import java.util.ArrayList;
 
 /**
  * Copyright 2015 gluo.
@@ -47,16 +48,25 @@ public class PetDialog {
                     }
 
                 });
-        alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "一键丢蛋",
+        final boolean isEpicure = MazeContents.hero.getGift() == Gift.Epicure;
+        final String text = isEpicure ? "一键煎蛋" : "一键丢蛋";
+        alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, text,
                 new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         for (Pet pet : new ArrayList<Pet>(adapter.adapterData)) {
                             if ("蛋".equals(pet.getType())) {
+                                if (isEpicure) {
+                                    GoodsType.Omelet.setCount(GoodsType.Omelet.getCount() + 1);
+                                }
                                 pet.releasePet(MazeContents.hero, MainGameActivity.context);
                                 adapter.adapterData.remove(pet);
+
                             }
+                        }
+                        if (isEpicure) {
+                            GoodsType.Omelet.save();
                         }
                         adapter.refresh();
                     }

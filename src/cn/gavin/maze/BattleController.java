@@ -215,6 +215,12 @@ public class BattleController {
             monster.addBattleDesc(msg);
             monster.addHp(-monster.getHp());
         }
+        if(hero.getGift() == Gift.ChildrenKing && monster.getName().contains("守护者")){
+            String king = hero.getFormatName() + "因为是" + Gift.ChildrenKing.getName() + "的天赋者，秒杀了" + monster.getFormatName();
+            monster.addBattleDesc(king);
+            addMessage(context,king);
+            monster.addHp(-monster.getHp());
+        }
         while (!isJump && monster.getHp() > 0 && hero.getHp() > 0) {
             if (context.isPause()) {
                 continue;

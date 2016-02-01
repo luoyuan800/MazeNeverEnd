@@ -53,11 +53,15 @@ public class LogHelper {
     public static void logException(final Exception e, boolean upload) {
         e.printStackTrace();
         try {
+            final MainGameActivity context = MainGameActivity.context;
+                String pkName = MainGameActivity.context.getPackageName();
+                int versionCode = MainGameActivity.context.getPackageManager()
+                        .getPackageInfo(pkName, 0).versionCode;
             File path = new File(MazeContents.SD_PATH + "/log/");
             if (!path.exists()) {
                 path.mkdirs();
             }
-            File file = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze/log/" + e.getClass().getSimpleName());
+            File file = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/maze/log/" + e.getClass().getSimpleName() + "." + versionCode);
             if (!file.exists()) {
                 file.createNewFile();
 
@@ -67,7 +71,7 @@ public class LogHelper {
             writer.flush();
             writer.close();
             if (upload) {
-                BTPFileResponse response = BmobProFile.getInstance(MainGameActivity.context).upload(file.getPath(), new UploadListener() {
+                BTPFileResponse response = BmobProFile.getInstance(context).upload(file.getPath(), new UploadListener() {
 
                     @Override
                     public void onSuccess(String fileName, String url, BmobFile file) {

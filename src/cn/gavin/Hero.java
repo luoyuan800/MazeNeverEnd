@@ -30,7 +30,7 @@ public class Hero implements BaseObject {
     private static final String TAG = "Hero";
 
     public static Long MAX_GOODS_COUNT = 50l;
-    private long halfPHP ;
+    private long halfPHP;
 
     // 血上限成长(每点生命点数增加）
     public Long MAX_HP_RISE = 5l;
@@ -94,7 +94,7 @@ public class Hero implements BaseObject {
     private Float dodgeRate = 0f;
     private Long clickPointAward = 0l;
     private Element element = Element.无;
-    private List<Pet> pets;
+    private ConcurrentLinkedQueue<Pet> pets;
     private int petSize = 3;
     private float petRate = 0.7f;
     private float eggRate = 300;
@@ -225,6 +225,10 @@ public class Hero implements BaseObject {
             GoodsType hpm = GoodsType.HPM;
             if (hpm.getCount() > 0)
                 hpm.use();
+        }
+        if(getHp() < 0 && gift!=null && gift == Gift.Daddy){
+            MainGameActivity.context.addMessage(getFormatName() + "因为天赋" + gift.getName() + "恢复了生命值！");
+            this.hp += (long)(upperHp * 0.1);
         }
     }
 
@@ -657,7 +661,7 @@ public class Hero implements BaseObject {
     public void setUpperHp(long upperHp) {
         this.upperHp = upperHp;
         halfPHP = upperHp / 2;
-        tenPUHP = upperHp/10;
+        tenPUHP = upperHp / 10;
     }
 
     public void addUpperHp(long hp) {
@@ -1388,14 +1392,14 @@ public class Hero implements BaseObject {
         }
     }
 
-    public List<Pet> getPets() {
+    public Collection<Pet> getPets() {
         if (pets == null) {
-            pets = new ArrayList<Pet>();
+            pets = new ConcurrentLinkedQueue<Pet>();
         }
         return pets;
     }
 
-    public void setPets(List<Pet> pets) {
+    public void setPets(ConcurrentLinkedQueue<Pet> pets) {
         this.pets = pets;
     }
 
@@ -1435,11 +1439,13 @@ public class Hero implements BaseObject {
     }
 
     public void removePet(Pet pet) {
-        List<Pet> petList = getPets();
-        for (int i = 0; i < petList.size(); i++) {
-            if (petList.get(i).getId().equals(pet.getId())) {
-                petList.remove(i);
-                return;
+        if (pets != null) {
+            ArrayList<Pet> petList = new ArrayList<Pet>(pets);
+            for (Pet aPetList : petList) {
+                if (aPetList.getId().equals(pet.getId())) {
+                    this.pets.remove(aPetList);
+                    return;
+                }
             }
         }
     }

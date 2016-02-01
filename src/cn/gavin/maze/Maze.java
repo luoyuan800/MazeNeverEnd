@@ -9,6 +9,7 @@ import cn.gavin.Achievement;
 import cn.gavin.Hero;
 import cn.gavin.activity.MainGameActivity;
 import cn.gavin.db.DBHelper;
+import cn.gavin.gift.Gift;
 import cn.gavin.good.GoodsType;
 import cn.gavin.log.LogHelper;
 import cn.gavin.monster.Monster;
@@ -269,6 +270,10 @@ public class Maze {
                         break;
                     case 2:
                         addMessage(context, hero.getFormatName() + "感觉到肚子饿了！");
+                        if(hero.getGift() == Gift.ChildrenKing){
+                            addMessage(context, hero.getFormatName() + "因为" +  Gift.ChildrenKing.getName() + "天赋，可以在肚子饿的时候哭闹一下，就会有人上前服侍。增加 2 点力量。");
+                            hero.addStrength(2);
+                        }
                         break;
                     case 3:
                         if (hero.getPets().size() > 0) {
@@ -282,6 +287,10 @@ public class Maze {
                         break;
                     case 4:
                         addMessage(context, hero.getFormatName() + "正在发呆...");
+                        if(hero.getGift() == Gift.ChildrenKing){
+                            addMessage(context, hero.getFormatName() + "因为" +  Gift.ChildrenKing.getName() + "天赋，发呆的时候咬咬手指头就可以恢复10%的生命值。");
+                            hero.addHp((long)(hero.getUpperHp() * 0.1));
+                        }
                         break;
                     case 5:
                         GoodsType mirrori = GoodsType.Mirror;
