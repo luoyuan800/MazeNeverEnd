@@ -21,6 +21,11 @@ import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.utils.MazeContents;
+import com.tencent.connect.common.Constants;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
+import org.json.JSONObject;
 
 public class MainMenuActivity extends Activity implements OnClickListener {
     public MainMenuActivity context;
@@ -48,6 +53,7 @@ public class MainMenuActivity extends Activity implements OnClickListener {
         }
     };
     private Shimmer shimmer;
+    private Tencent mTencent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,7 @@ public class MainMenuActivity extends Activity implements OnClickListener {
         }
         context = this;
         setContentView(R.layout.activity_main_menu);
+        mTencent = Tencent.createInstance("1104849170", this.getApplicationContext());
         ShimmerTextView titleText = (ShimmerTextView) findViewById(R.id.menu_title_tv);
         shimmer = new Shimmer();
         shimmer.start(titleText);
@@ -95,6 +102,36 @@ public class MainMenuActivity extends Activity implements OnClickListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_menu, menu);
         return true;
+    }
+
+    private void doLogin() {
+        IUiListener listener = new IUiListener() {
+
+            @Override
+            public void onComplete(Object o) {
+
+            }
+
+            @Override
+            public void onError(UiError uiError) {
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        };
+        mTencent.login(this, "", listener);
+    }
+
+    private IUiListener loginListener;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == Constants.REQUEST_API) {
+            mTencent.handleLoginData(data, loginListener);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

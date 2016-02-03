@@ -87,6 +87,9 @@ import cn.gavin.utils.ScreenUtils;
 import cn.gavin.utils.StringUtils;
 import cn.gavin.utils.ui.AddPointDialog;
 import cn.gavin.utils.ui.CircleMenu;
+import com.tencent.connect.common.Constants;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
 
 @SuppressWarnings("ALL")
 public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener, OnItemClickListener, BaseContext {
@@ -167,6 +170,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private TextView mainContriAgi;
     private TextView mainContriStr;
     private TextView mainContriLife;
+    private Tencent mTencent;
 
 
     //Get Function

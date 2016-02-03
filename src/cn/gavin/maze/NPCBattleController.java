@@ -1,14 +1,8 @@
 package cn.gavin.maze;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import cn.gavin.Element;
 import cn.gavin.Hero;
 import cn.gavin.activity.BaseContext;
-import cn.gavin.forge.Item;
-import cn.gavin.forge.list.ItemName;
 import cn.gavin.gift.Gift;
 import cn.gavin.monster.Monster;
 import cn.gavin.palace.Base;
@@ -19,6 +13,10 @@ import cn.gavin.skill.SkillFactory;
 import cn.gavin.story.NPC;
 import cn.gavin.utils.Random;
 import cn.gavin.utils.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Copyright 2015 gluo.
@@ -37,7 +35,7 @@ public class NPCBattleController {
             Skill skill = hero.useDefSkill();
             boolean isJump = false;
             if (!monster.isHold()) {
-                if(!(hero instanceof NPC)) {
+                if (!(hero instanceof NPC)) {
                     List<Pet> pets = new ArrayList<Pet>(hero.getPets());
                     for (Pet pet : pets) {
                         if (pet != null && pet.getHp() > 0 && !pet.getType().equals("蛋") && pet.dan()) {
@@ -70,7 +68,7 @@ public class NPCBattleController {
                     Monster monster1 = monster.formatAsMonster();
                     isJump = skill.release(monster1);
                     monster.setHp(monster1.getHp());
-                    monster.setHold((int)monster1.getHoldTurn());
+                    monster.setHold((int) monster1.getHoldTurn());
                 } else if (!(hero instanceof NPC) && monster.getName().contains("龙") && SkillFactory.getSkill("龙裔", hero).isActive()) {
                     addMessage(context, hero.getFormatName() + "激发龙裔效果，免疫龙系怪物的伤害！");
                 } else {
@@ -93,13 +91,13 @@ public class NPCBattleController {
                         addBattleMsg(s);
                     }
 
-                    if (!(hero instanceof  NPC) && harm >= hero.getHp()) {
+                    if (!(hero instanceof NPC) && harm >= hero.getHp()) {
                         Skill sy = SkillFactory.getSkill("瞬间移动", hero);
                         if (sy.isActive() && sy.perform()) {
                             return sy.release(new Monster());
                         } else {
                             sy = hero.getPropertySkill("反杀");
-                            if (sy !=null && sy.isActive() && sy.perform()) {
+                            if (sy != null && sy.isActive() && sy.perform()) {
                                 monster.setHp(0);
                                 return sy.release(new Monster());
 
@@ -130,10 +128,11 @@ public class NPCBattleController {
     }
 
     private static StringBuilder battleMsg;
-    public synchronized static String getLastBattle(){
+
+    public synchronized static String getLastBattle() {
         String result = "";
         if (battleMsg != null) {
-                result = battleMsg.toString();
+            result = battleMsg.toString();
         }
         battleMsg = null;
         return result;
@@ -196,7 +195,7 @@ public class NPCBattleController {
                 addMessage(context, target.getFormatName() + "打断了" + hero.getFormatName() + "的技能");
             }
         } else {
-           isJump = heroDef(context,target,hero);
+            isJump = heroDef(context, target, hero);
         }
         return isJump;
     }
@@ -209,11 +208,11 @@ public class NPCBattleController {
 
 
     public synchronized static boolean battle(Hero hero, NPC monster, Random random, Maze maze, BaseContext context) {
-        if(battleMsg!=null){
+        if (battleMsg != null) {
             battleMsg = new StringBuilder();
         }
         int count = 0;
-        String msg = hero.getFormatName() + "在第" +maze.getLev() +"层遇到了" + monster.getFormatName();
+        String msg = hero.getFormatName() + "在第" + maze.getLev() + "层遇到了" + monster.getFormatName();
         addMessage(context, msg);
         addBattleMsg(msg);
 
@@ -222,7 +221,7 @@ public class NPCBattleController {
         if (hero.getGift() == Gift.ElementReject && hero.getElement() == Element.无 && hero.getRejectElement() == monster.getElement() && random.nextInt(100) < 55) {
             String rejectString = hero.getFormatName() + "因为元素抗拒天赋秒杀了" + monster.getFormatName();
             addMessage(context, rejectString);
-           addBattleMsg(rejectString);
+            addBattleMsg(rejectString);
             monster.addHp(-monster.getHp());
         }
         while (!isJump && monster.getHp() > 0 && hero.getHp() > 0) {
@@ -282,7 +281,7 @@ public class NPCBattleController {
         if (monster.getHp() <= 0) {
             if (monster.getElement() == hero.getElement()) {
                 Skill ysxs = hero.getPropertySkill("元素吸收");
-                if (ysxs!=null && (hero instanceof NPC || ysxs.isActive())) {
+                if (ysxs != null && (hero instanceof NPC || ysxs.isActive())) {
                     String skillMsg = hero.getFormatName() + "因为技能<元素吸收>恢复了生命。";
                     context.addMessage(skillMsg);
                     addBattleMsg(skillMsg);
@@ -298,7 +297,7 @@ public class NPCBattleController {
             monster.defeat();
             return true;
         } else if (hero.getHp() <= 0) {
-            if (!atk) {//如果是在自己的攻击回合挂掉的（莫名其妙挂掉的补充)
+            if (!atk && !isJump) {//如果是在自己的攻击回合挂掉的（莫名其妙挂掉的补充)
                 String unknownDie = hero.getFormatName() + "在攻击的时候用力过头，摔到楼下去了……";
                 addMessage(context, unknownDie);
                 addBattleMsg(unknownDie);
@@ -311,10 +310,10 @@ public class NPCBattleController {
                 monster.defeat();
                 return false;
             }
-        }else if(hero.getHp() > 0 && monster.getHp() > 0){
-            String nmsg = hero.getFormatName() + "用魅力征服了" +  monster.getFormatName() + "。两人握手言和，不进行你死我活的战斗了。";
+        } else if (hero.getHp() > 0 && monster.getHp() > 0) {
+            String nmsg = hero.getFormatName() + "用魅力征服了" + monster.getFormatName() + "。两人握手言和，不进行你死我活的战斗了。";
             addBattleMsg(nmsg);
-            addMessage(context,nmsg);
+            addMessage(context, nmsg);
         }
         return true;
     }
