@@ -11,6 +11,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -231,7 +232,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                 itemDialog.show(view.getId());
                 break;
             case R.id.forge_dismantle_button:
-                AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
                 final AccessoryAdapter adapter = new AccessoryAdapter(1, alertDialog);
                 alertDialog.setTitle("点击装备进行拆解");
                 alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
@@ -240,18 +241,93 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                         dialogInterface.dismiss();
                     }
                 });
-                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "一键拆解黑装/10w", new DialogInterface.OnClickListener() {
+                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "一键拆解", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        for (Accessory accessory : Accessory.loadAccessories(null)) {
-                            if ("#000000".equals(accessory.getColor()) && MazeContents.hero != null && !MazeContents.hero.isOn(accessory)) {
-                                accessory.dismantle();
+                        final AlertDialog disDialog = new AlertDialog.Builder(alertDialog.getContext()).create();
+                        disDialog.setTitle("选择拆解的装备颜色");
+                        disDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "退出", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                disDialog.dismiss();
                             }
-                        }
-                        if (MazeContents.hero != null) {
-                            MazeContents.hero.addMaterial(-100000);
-                        }
-                        adapter.refresh();
+                        });
+                        LinearLayout linearLayout = new LinearLayout(alertDialog.getContext());
+                        linearLayout.setOrientation(LinearLayout.VERTICAL);
+                        Button black = new Button(alertDialog.getContext());
+                        black.setText("一件拆解黑装/50w");
+                        black.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                for (Accessory accessory : Accessory.loadAccessories(null)) {
+                                    if ("#000000".equals(accessory.getColor()) && MazeContents.hero != null && !MazeContents.hero.isOn(accessory)) {
+                                        accessory.dismantle();
+                                    }
+                                }
+                                if (MazeContents.hero != null) {
+                                    MazeContents.hero.addMaterial(-500000);
+                                }
+                                adapter.refresh();
+                                disDialog.dismiss();
+                            }
+                        });
+                        linearLayout.addView(black);
+                        Button blue = new Button(alertDialog.getContext());
+                        blue.setText(Html.fromHtml("<font color=\"#556B2F\">一件拆解绿装/90w</font>"));
+                        blue.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                for (Accessory accessory : Accessory.loadAccessories(null)) {
+                                    if ("#556B2F".equals(accessory.getColor()) && MazeContents.hero != null && !MazeContents.hero.isOn(accessory)) {
+                                        accessory.dismantle();
+                                    }
+                                }
+                                if (MazeContents.hero != null) {
+                                    MazeContents.hero.addMaterial(-900000);
+                                }
+                                adapter.refresh();
+                                disDialog.dismiss();
+                            }
+                        });
+                        linearLayout.addView(blue);
+                        Button zhise = new Button(alertDialog.getContext());
+                        zhise.setText(Html.fromHtml("<font color=\"#9932CC\">一件拆解紫装/150w</font>"));
+                        zhise.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                for (Accessory accessory : Accessory.loadAccessories(null)) {
+                                    if ("#9932CC".equals(accessory.getColor()) && MazeContents.hero != null && !MazeContents.hero.isOn(accessory)) {
+                                        accessory.dismantle();
+                                    }
+                                }
+                                if (MazeContents.hero != null) {
+                                    MazeContents.hero.addMaterial(-1500000);
+                                }
+                                adapter.refresh();
+                                disDialog.dismiss();
+                            }
+                        });
+                        linearLayout.addView(zhise);
+                        Button cheng = new Button(alertDialog.getContext());
+                        cheng.setText(Html.fromHtml("<font color=\"#FF8C00\">一件拆解橙装/200w</font>"));
+                        cheng.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                for (Accessory accessory : Accessory.loadAccessories(null)) {
+                                    if ("#FF8C00".equals(accessory.getColor()) && MazeContents.hero != null && !MazeContents.hero.isOn(accessory)) {
+                                        accessory.dismantle();
+                                    }
+                                }
+                                if (MazeContents.hero != null) {
+                                    MazeContents.hero.addMaterial(-2000000);
+                                }
+                                adapter.refresh();
+                                disDialog.dismiss();
+                            }
+                        });
+                        linearLayout.addView(cheng);
+                        disDialog.setView(linearLayout);
+                        disDialog.show();
                     }
                 });
                 ListView listView = new ListView(this);

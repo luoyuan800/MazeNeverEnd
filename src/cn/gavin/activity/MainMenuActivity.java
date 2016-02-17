@@ -66,7 +66,7 @@ public class MainMenuActivity extends Activity implements OnClickListener {
         }
         context = this;
         setContentView(R.layout.activity_main_menu);
-        mTencent = Tencent.createInstance("1104849170", this.getApplicationContext());
+//        mTencent = Tencent.createInstance("1104849170", this.getApplicationContext());
         ShimmerTextView titleText = (ShimmerTextView) findViewById(R.id.menu_title_tv);
         shimmer = new Shimmer();
         shimmer.start(titleText);
@@ -128,9 +128,9 @@ public class MainMenuActivity extends Activity implements OnClickListener {
     private IUiListener loginListener;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == Constants.REQUEST_API) {
+       /* if(requestCode == Constants.REQUEST_API) {
             mTencent.handleLoginData(data, loginListener);
-        }
+        }*/
         super.onActivityResult(requestCode, resultCode, data);
     }
 

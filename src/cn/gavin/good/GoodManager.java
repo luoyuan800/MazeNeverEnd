@@ -65,9 +65,14 @@ public class GoodManager {
         String createTable = "CREATE TABLE if not exists goods(" +
                 "name TEXT NOT NULL PRIMARY KEY," +
                 "count TEXT," +
+                "lock INTEGER DEFAULT 0," +
                 "class TEXT" +
                 ")";
         sqLiteDatabase.execSQL(createTable);
         sqLiteDatabase.execSQL("CREATE UNIQUE INDEX goods_index ON goods (name)");
+    }
+
+    public static void upgradeGoodsDB(SQLiteDatabase db){
+        db.execSQL("ALTER TABLE goods ADD COLUMN lock INTEGER DEFAULT 0");
     }
 }

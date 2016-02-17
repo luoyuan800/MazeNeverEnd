@@ -218,12 +218,12 @@ public class Hero implements BaseObject {
         }
         if (getHp() < tenPUHP) {
             GoodsType hpml = GoodsType.HPML;
-            if (hpml.getCount() > 0)
+            if (hpml.getCount() > 0 && !hpml.isLock())
                 hpml.use();
         }
         if (getHp() < halfPHP) {
             GoodsType hpm = GoodsType.HPM;
-            if (hpm.getCount() > 0)
+            if (hpm.getCount() > 0 && !hpm.isLock())
                 hpm.use();
         }
         if(getHp() < 0 && gift!=null && gift == Gift.Daddy){

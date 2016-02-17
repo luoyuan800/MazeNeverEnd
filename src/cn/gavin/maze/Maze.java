@@ -159,7 +159,7 @@ public class Maze {
                 addMessage(context, sque);
             } else if (random.nextLong(10000) > csmgl) {
                 GoodsType closeP = GoodsType.ClosePortal;
-                if (closeP.getCount() > 0) {
+                if (closeP.getCount() > 0 && !closeP.isLock()) {
                     closeP.use();
                 } else {
                     step = 0;
@@ -294,7 +294,7 @@ public class Maze {
                         break;
                     case 5:
                         GoodsType mirrori = GoodsType.Mirror;
-                        if (mirrori.getCount() > 0) {
+                        if (mirrori.getCount() > 0 && !mirrori.isLock()) {
                             addMessage(context, hero.getFormatName() + "拿出镜子照了一下，觉得自己很帅帅哒/亮亮哒！");
                             addMessage(context, hero.getFormatName() + "敏捷加  1");
                             hero.addAgility(1);
@@ -320,7 +320,7 @@ public class Maze {
         }
         monster.setBeatCount(monster.getBeatCount() + 1);
         GoodsType medallion = GoodsType.Medallion;
-        if (medallion.getCount() > 0) {
+        if (medallion.getCount() > 0 && !medallion.isLock()) {
             medallion.getScript().use();
             String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
                     "打败了。<br>" + hero.getFormatName() + "掏出金晃晃的" + medallion.getName() + "晃瞎了大家的双眼。<br>" + hero.getFormatName() + "和他的宠物们原地复活了。";
@@ -329,7 +329,7 @@ public class Maze {
             hero.restoreHalf();
         } else {
             GoodsType safetyRope = GoodsType.SafetyRope;
-            if (safetyRope.getCount() > 0) {
+            if (safetyRope.getCount() > 0 && !safetyRope.isLock()) {
                 safetyRope.getScript().use();
                 long slev = level / 10 + 1;
                 String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
@@ -342,7 +342,7 @@ public class Maze {
                 this.level = slev;
             } else {
                 GoodsType halfSail = GoodsType.HalfSafe;
-                if (halfSail.getCount() > 0) {
+                if (halfSail.getCount() > 0 && !halfSail.isLock()) {
                     halfSail.getScript().use();
                     long slev = level / 2 + 1;
                     String notDie = hero.getFormatName() + "被" + monster.getFormatName() +
@@ -460,7 +460,7 @@ public class Maze {
                         Pet egg = Pet.egg(f, m, level, hero);
                         if (egg != null) {
                             GoodsType barrier = GoodsType.Barrier;
-                            if (barrier.getCount() > 0) {
+                            if (barrier.getCount() > 0 && !barrier.isLock()) {
                                 barrier.getScript().use();
                                 addMessage(MainGameActivity.context, f.getFormatName() + "和" + m.getFormatName() + "想生蛋。但是被" + hero.getFormatName() + "阻止了！");
                             } else {

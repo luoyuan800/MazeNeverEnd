@@ -137,8 +137,8 @@ public class Monster {
             atk/=5;
         }
 
-        if (hp > hero.getUpperAtk() * 40) {
-            hp = hero.getAttackValue() * 40;
+        if (hp > hero.getUpperAtk() * 50) {
+            hp = hero.getAttackValue() * 50;
         }
         if (atk < hero.getDefenseValue()) {
             atk += random.nextLong(hero.getDefenseValue() * 2);

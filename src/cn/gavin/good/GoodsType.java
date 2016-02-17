@@ -16,8 +16,10 @@ import cn.gavin.forge.list.ItemName;
 import cn.gavin.log.LogHelper;
 import cn.gavin.pet.Pet;
 import cn.gavin.pet.PetAdapter;
+import cn.gavin.pet.PetDB;
 import cn.gavin.utils.MazeContents;
 import cn.gavin.utils.Random;
+import cn.gavin.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -433,7 +435,7 @@ public enum GoodsType {
     HPM("小红药", "生命值低于50%的时候会自动使用立即恢复30%的生命值。", new GoodScript() {
         @Override
         public Object use() {
-            if (HPM.count > 0) {
+            if (HPM.count > 0 && !HPM.isLock()) {
                 GoodsType.HPM.count--;
                 GoodsType.HPM.save();
                 MazeContents.hero.addHp((long) (MazeContents.hero.getUpperHp() * 0.3));
@@ -445,7 +447,7 @@ public enum GoodsType {
     HPML("大血瓶", "生命值低于10%的时候会自动使用立即恢复80%的生命值。", new GoodScript() {
         @Override
         public Object use() {
-            if (HPML.count > 0) {
+            if (HPML.count > 0 && !HPML.isLock()) {
                 GoodsType.HPML.count--;
                 GoodsType.HPML.save();
                 MazeContents.hero.addHp((long) (MazeContents.hero.getUpperHp() * 0.8));
@@ -471,23 +473,119 @@ public enum GoodsType {
             return null;
         }
     }, false),
-    Omelet("煎蛋", "传说中的煎蛋。吃下去之后立即恢复60%的生命值。", new GoodScript() {
+    Omelet("煎蛋", "传说中的煎蛋。吃下去之后发生随机事件。", new GoodScript() {
         @Override
         public Object use() {
             if (Omelet.count > 0) {
                 GoodsType.Omelet.count--;
                 GoodsType.Omelet.save();
-                MazeContents.hero.addHp((long) (MazeContents.hero.getUpperHp() * 0.6));
-                MainGameActivity.context.addMessage("使用煎蛋恢复了60%的生命值。");
+                int index = MazeContents.hero.getRandom().nextInt(6);
+                AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
+                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "知道了", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                String msg = "";
+                switch (index){
+                    case 0:
+                        MazeContents.hero.addHp((long) (MazeContents.hero.getUpperHp() * 0.6));
+                        msg = "使用煎蛋恢复了60%的生命值。";
+                        MainGameActivity.context.addMessage(msg);
+                        break;
+                    case 1:
+                        MazeContents.hero.restore();
+                         msg = "使用煎蛋恢复了全部的生命值并且复活了所有宠物。";
+                        MainGameActivity.context.addMessage(msg);
+                        break;
+                    case 2:
+                        msg = "使用煎蛋恢复了复活了所有宠物。";
+                        MainGameActivity.context.addMessage(msg);
+                        for (Pet pet : new ArrayList<Pet>(MazeContents.hero.getPets())) {
+                            pet.restore();
+                        }
+                        break;
+                    case 3:
+                        msg = "食用煎蛋肚子疼，导致生命值减少50%。";
+                        MainGameActivity.context.addMessage(msg);
+                        MazeContents.hero.addHp(-(long)(MazeContents.hero.getUpperHp() * 0.5));
+                        break;
+                    case 4:
+                        msg = "食用了一个黑乎乎的煎蛋，导致生命值变为1。";
+                        MainGameActivity.context.addMessage(msg);
+                        MazeContents.hero.setHp(1);
+                        break;
+                    case 5:
+                        msg = "使用煎蛋后掉进了一个洞";
+                        MainGameActivity.context.addMessage(msg);
+                        if(MazeContents.hero.getRandom().nextInt(100) > 3){
+                            MainGameActivity.context.addMessage("不知道怎么跑到最高层了");
+                            msg += "不知道怎么跑到最高层了";
+                            MazeContents.maze.setLevel(MazeContents.hero.getMaxMazeLev());
+                        }else{
+                            long leve = MazeContents.hero.getRandom().nextLong(MazeContents.hero.getMaxMazeLev() - 1000);
+                            MainGameActivity.context.addMessage("不知道怎么着就跑到" + leve + "层了");
+                            msg += "不知道怎么着就跑到" + leve + "层了";
+                            MazeContents.maze.setLevel(1000);
+                        }
+                }
+                dialog.setMessage(msg);
+                dialog.show();
             }
             return null;
         }
-    }, true);
+    }, true),
+    Incubator("蛋蛋袋", "自动孵蛋器，把你的蛋丢进去！按顺序自动选择没有带在身上的蛋孵化，孵化一个蛋之后消失。", new GoodScript() {
+        @Override
+        public Object use() {
+            if (Incubator.count > 0) {
+                for(Pet pet : PetDB.loadPet(null)){
+                    if("蛋".equals(pet.getType()) && !pet.isOnUsed()){
+                        pet.setDeathCount(pet.getDeathCount() -1);
+                        if(pet.getDeathCount() <= 0){
+                            MainGameActivity.context.addMessage(pet.getFormatName() + "出生了！");
+                            try {
+                                Cursor cursor = DBHelper.getDbHelper().excuseSOL("select catch meet_lev from monster where id = '" + pet.getIndex() + "'");
+                                if (!cursor.isAfterLast()) {
+                                    DBHelper.getDbHelper().excuseSQLWithoutResult("update monster set " +
+                                            "catch = '" + (StringUtils.toLong(cursor.getString(cursor.getColumnIndex("catch"))) + 1) +
+                                            " where id ='" + pet.getIndex() + "'");
+                                    if (StringUtils.toLong(cursor.getString(cursor.getColumnIndex("meet_lev"))) == 0) {
+                                        DBHelper.getDbHelper().excuseSQLWithoutResult("update monster set " +
+                                                "meet_lev = '" + MazeContents.maze.getLev() +
+                                                " where id ='" + pet.getIndex() + "'");
+                                    }
+                                }
+                                cursor.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                LogHelper.logException(e, false);
+                            }
+                            int index = pet.getIndex();
+                            Cursor cursor = DBHelper.getDbHelper().excuseSOL("select type from monster where id = '" + index + "'");
+                            if (cursor != null && !cursor.isAfterLast()) {
+                                pet.setType(cursor.getString(cursor.getColumnIndex("type")));
+                            }
+                            pet.setLev(MazeContents.maze.getLev());
+                            pet.setDeathCount(0);
+                            PetDB.save(pet);
+                            Incubator.count--;
+                            Incubator.save();
+                            break;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+    }, false);
     private String name;
     private String desc;
     private GoodScript script;
     private int count;
     private boolean usable;
+    private boolean isLock;
 
     private GoodsType(String name, String desc, GoodScript script, boolean usable) {
         this.name = name;
@@ -519,7 +617,7 @@ public enum GoodsType {
 
     public void save() {
         DBHelper.getDbHelper().excuseSQLWithoutResult(
-                String.format("REPLACE INTO goods (name,count) values ('%s',%s)", name(), count));
+                String.format("REPLACE INTO goods (name,count, lock) values ('%s',%s, %s)", name(), count, isLock() ? 1 : 0));
     }
 
     public int getCount() {
@@ -534,6 +632,12 @@ public enum GoodsType {
         Cursor cursor = DBHelper.getDbHelper().excuseSOL("SELECT * FROM goods where name = '" + name() + "'");
         if (!cursor.isAfterLast()) {
             setCount(cursor.getInt(cursor.getColumnIndex("count")));
+            Integer lock = cursor.getInt(cursor.getColumnIndex("lock"));
+            if(lock == 1){
+                setLock(true);
+            }else{
+                setLock(false);
+            }
         }
         cursor.close();
     }
@@ -606,5 +710,14 @@ public enum GoodsType {
 
     public boolean isUsable() {
         return usable;
+    }
+
+    public boolean isLock() {
+        return isLock;
+    }
+
+    public void setLock(boolean isLock) {
+        this.isLock = isLock;
+        save();
     }
 }
