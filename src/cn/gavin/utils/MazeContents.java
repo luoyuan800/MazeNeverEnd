@@ -49,6 +49,11 @@ public class MazeContents {
         long max = MathUtils.getMaxValueByRiseAndLev(hero.DEF_RISE, hero.getMaxMazeLev()) +
                 MathUtils.getMaxValueByRiseAndLev(hero.ATR_RISE, hero.getMaxMazeLev()) +
                 MathUtils.getMaxValueByRiseAndLev(hero.MAX_HP_RISE, hero.getMaxMazeLev());
+        if(hero.isOnSkill() || hero.isOnChange()){
+            max *= 30;
+        }else{
+            max *= 5;
+        }
         return (hero.getUpperHp() + hero.getUpperDef() + hero.getUpperAtk()) < max * 5;
     }
 

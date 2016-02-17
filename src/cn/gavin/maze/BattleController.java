@@ -206,7 +206,11 @@ public class BattleController {
         String msg = hero.getFormatName() + "在第" + maze.getLev() + "层遇到了" + monster.getFormatName();
         addMessage(context, msg);
         monster.addBattleDesc(msg);
-
+        if(hero.getHp() < 0){
+            String stup = hero.getFormatName() + "被" + monster.getFormatName() + "吓傻了！";
+            addMessage(context, stup);
+            monster.addBattleDesc(stup);
+        }
         boolean atk = random.nextLong(hero.getAgility() + 100) > monster.getHp() / 2 || random.nextBoolean();
         boolean isJump = false;
         if (hero.getGift() == Gift.ElementReject && hero.getElement() == Element.无 && hero.getRejectElement() == monster.getElement() && random.nextInt(100) < 55) {
