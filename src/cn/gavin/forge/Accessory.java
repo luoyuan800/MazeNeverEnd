@@ -177,12 +177,12 @@ public class Accessory extends Equipment {
         if (StringUtils.isNotEmpty(tag)) builder.append(tag).append("<br>");
         builder.append("属性: ").append(element.name()).append("<br>");
         for (Effect effect : effects.keySet()) {
-            builder.append("<br>").append(effect.getName()).append(":").append(effects.get(effect));
+            builder.append("<br>").append(effect.getName()).append(":").append(StringUtils.formatNumber(effects.get(effect).longValue()));
         }
         if (additionEffects != null) {
             builder.append("<font color=\"").append(isActive() ? "#B8860B" : "#D3D3D3").append("\">");
             for (Effect effect : additionEffects.keySet()) {
-                builder.append("<br>").append(effect.getName()).append(":").append(additionEffects.get(effect));
+                builder.append("<br>").append(effect.getName()).append(":").append(StringUtils.formatNumber(additionEffects.get(effect).longValue()));
             }
             builder.append("</font>");
         }

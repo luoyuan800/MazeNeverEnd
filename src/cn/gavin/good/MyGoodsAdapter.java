@@ -103,7 +103,7 @@ public class MyGoodsAdapter extends BaseAdapter {
 
         }
         ((TextView) view.findViewById(R.id.good_buy_name)).setText(type.getName());
-        ((TextView) view.findViewById(R.id.good_buy_desc)).setText(type.getDesc() + "锁定后不会自动使用.");
+        ((TextView) view.findViewById(R.id.good_buy_desc)).setText(type.getDesc() + (type.isUsable() ? "" : "锁定后不会自动使用."));
         ((TextView) view.findViewById(R.id.good_by_cost)).setText("个数：" + type.getCount());
         return view;
     }

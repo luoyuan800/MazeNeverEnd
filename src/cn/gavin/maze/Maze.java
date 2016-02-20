@@ -132,6 +132,9 @@ public class Maze {
                         }
                     }
                 }
+                if(!GoodsType.Incubator.isLock()){
+                    GoodsType.Incubator.use();
+                }
                 addMessage(context, msg);
                 if (level > hero.getMaxMazeLev()) {
                     hero.setMaxMazeLev(level);
@@ -296,8 +299,8 @@ public class Maze {
                         GoodsType mirrori = GoodsType.Mirror;
                         if (mirrori.getCount() > 0 && !mirrori.isLock()) {
                             addMessage(context, hero.getFormatName() + "拿出镜子照了一下，觉得自己很帅帅哒/亮亮哒！");
-                            addMessage(context, hero.getFormatName() + "敏捷加  1");
-                            hero.addAgility(1);
+                            addMessage(context, hero.getFormatName() + "敏捷加  " + mirrori.getCount());
+                            hero.addAgility(mirrori.getCount());
                             mirrori.use();
                         }
                         addMessage(context, hero.getFormatName() + "正在发呆...");

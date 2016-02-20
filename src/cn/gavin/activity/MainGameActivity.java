@@ -2165,7 +2165,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                 ArrayAdapter<Spanned> npcAdapter = new ArrayAdapter<Spanned>(context, android.R.layout.simple_list_item_1,npcdescs);
                 listView.setAdapter(npcAdapter);
                 npcDialog.setView(listView);
-                npcDialog.setTitle("NPC  " + (found*100/total) + "%");
+                int pre = found * 100 / total;
+                if(pre >= 50){
+                    Achievement.palace.enable(heroN);
+                }
+                npcDialog.setTitle("NPC  " + pre + "%");
                 npcDialog.setButton(DialogInterface.BUTTON_POSITIVE, "退出", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

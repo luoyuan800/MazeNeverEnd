@@ -28,6 +28,6 @@ public class Shaman extends PetSkill {
 
     @Override
     public String getName() {
-        return "祭师";
+        return "祭祀";
     }
 }
