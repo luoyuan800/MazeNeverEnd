@@ -70,7 +70,7 @@ public abstract class NSkill {
             skill = new QuickGrow();
         } else if (name.equals("自动收集锻造点数")) {
             skill = new GoldenSearcher();
-        } else if (name.equals("祭祀")) {
+        } else if (name.equals("祭师")) {
             skill = new Shaman();
         }else if (name.equals("温暖")) {
             skill = new Warmth();

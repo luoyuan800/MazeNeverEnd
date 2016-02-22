@@ -49,12 +49,14 @@ public class MazeContents {
         long max = MathUtils.getMaxValueByRiseAndLev(hero.DEF_RISE, hero.getMaxMazeLev()) +
                 MathUtils.getMaxValueByRiseAndLev(hero.ATR_RISE, hero.getMaxMazeLev()) +
                 MathUtils.getMaxValueByRiseAndLev(hero.MAX_HP_RISE, hero.getMaxMazeLev());
+        long he = hero.getUpperHp() + hero.getUpperDef() + hero.getUpperAtk();
+        boolean min = he < (max / 3000);
         if(hero.isOnSkill() || hero.isOnChange()){
             max *= 30;
         }else{
             max *= 5;
         }
-        return (hero.getUpperHp() + hero.getUpperDef() + hero.getUpperAtk()) < max * 5;
+        return he < max * 5 && !min;
     }
 
     public static Long reduceLegacyEffect(Effect effect, Long value) {

@@ -6,9 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import cn.gavin.Achievement;
 import cn.gavin.Element;
 import cn.gavin.R;
 import cn.gavin.activity.MainGameActivity;
+import cn.gavin.good.GoodsType;
 import cn.gavin.skill.SkillFactory;
 import cn.gavin.utils.MazeContents;
 
@@ -213,6 +215,24 @@ public class GiftDialog {
                     dialogInterface.dismiss();
                     mainDialog.dismiss();
                     MazeContents.hero.setGift(Gift.ChildrenKing);
+                    boolean allGood = true;
+                    for(GoodsType goods : GoodsType.values()){
+                        if(goods.getCount() <= 0){
+                            allGood = false;
+                            break;
+                        }
+                    }
+                    if(allGood){
+                        Achievement.GameEnd.enable(MazeContents.hero);
+                    }
+                    AlertDialog dialog = new AlertDialog.Builder(MainGameActivity.context).create();
+                    dialog.setTitle(Gift.ChildrenKing.getName());
+                    dialog.setMessage("这个天赋令你可以：\n" +
+                            "1. 当敌人是守护者的时候，秒杀他！\n" +
+                            "2. 不断的自动增加力量！\n" +
+                            "3. 不断的自动恢复生命！\n" +
+                            "4. 不断的自动获取能力点数！\n" +
+                            "5. 削弱所有的普通怪物！");
                 }
             }));
         }

@@ -346,6 +346,10 @@ public class Monster {
             hp *= addi;
             atk *= addi;
         }
+        if(hero.getGift() == Gift.ChildrenKing){
+            hp/=10;
+            atk/=10;
+        }
         formatName(hero);
     }
 

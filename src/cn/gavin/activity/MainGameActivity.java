@@ -2088,7 +2088,13 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         showUpload();
                     } else {
                         AlertDialog uploadAlert = new Builder(context).create();
-                        uploadAlert.setMessage("还差" + (100 - heroN.getMaxMazeLev() + MazeContents.lastUpload) + "层");
+                        long minus = 0;
+                        if(heroN.getMaxMazeLev() < MazeContents.lastUpload){
+                            minus = MazeContents.lastUpload + 100 - heroN.getMaxMazeLev();
+                        }else{
+                            minus = 100 - (heroN.getMaxMazeLev() - MazeContents.lastUpload);
+                        }
+                        uploadAlert.setMessage("还差" + minus + "层");
                         uploadAlert.setButton(DialogInterface.BUTTON_NEGATIVE, "继续努力", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

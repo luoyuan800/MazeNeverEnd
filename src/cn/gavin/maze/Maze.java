@@ -270,12 +270,16 @@ public class Maze {
                         break;
                     case 1:
                         addMessage(context, hero.getFormatName() + "犹豫了一下不知道做什么好。");
+                        if(hero.getGift() == Gift.ChildrenKing){
+                            addMessage(context, hero.getFormatName() + "因为" +  Gift.ChildrenKing.getName() + "天赋，你虽然会因为无知犯错，但是大人们宽容你的错误。增加100点能力点");
+                            hero.addPoint(100);
+                        }
                         break;
                     case 2:
                         addMessage(context, hero.getFormatName() + "感觉到肚子饿了！");
                         if(hero.getGift() == Gift.ChildrenKing){
-                            addMessage(context, hero.getFormatName() + "因为" +  Gift.ChildrenKing.getName() + "天赋，可以在肚子饿的时候哭闹一下，就会有人上前服侍。增加 2 点力量。");
-                            hero.addStrength(2);
+                            addMessage(context, hero.getFormatName() + "因为" +  Gift.ChildrenKing.getName() + "天赋，可以在肚子饿的时候哭闹一下，就会有人上前服侍。增加 20 点力量。");
+                            hero.addStrength(20);
                         }
                         break;
                     case 3:
@@ -291,8 +295,8 @@ public class Maze {
                     case 4:
                         addMessage(context, hero.getFormatName() + "正在发呆...");
                         if(hero.getGift() == Gift.ChildrenKing){
-                            addMessage(context, hero.getFormatName() + "因为" +  Gift.ChildrenKing.getName() + "天赋，发呆的时候咬咬手指头就可以恢复10%的生命值。");
-                            hero.addHp((long)(hero.getUpperHp() * 0.1));
+                            addMessage(context, hero.getFormatName() + "因为" +  Gift.ChildrenKing.getName() + "天赋，发呆的时候咬咬手指头就可以恢复20%的生命值。");
+                            hero.addHp((long)(hero.getUpperHp() * 0.3));
                         }
                         break;
                     case 5:
