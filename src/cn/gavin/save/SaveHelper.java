@@ -118,7 +118,11 @@ public class SaveHelper {
         }
         editor.putString("achievement", sb.toString());
         editor.putLong("currentMazeLev", maze.getLev());
-        editor.putLong("payTime", context.getAlipay().getPayTime());
+        long payTime = context.getAlipay().getPayTime();
+        if(payTime < MazeContents.payTime){
+            payTime = MazeContents.payTime;
+        }
+        editor.putLong("payTime", payTime);
         editor.putLong("death", heroN.getDeathCount());
         editor.putLong("lastUploadLev", context.getLastUploadLev());
         editor.putLong("skillPoint", heroN.getSkillPoint());

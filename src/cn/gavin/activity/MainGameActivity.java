@@ -34,6 +34,9 @@ import android.view.WindowManager;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.dgsdk.cp.QMCPConnect;
+import com.dgsdk.cp.QMExitListener;
+
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -235,7 +238,25 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                                 return d;
                             }
                         };
-                        String name = "<img src=\""+ 0 +"\">" + heroN.getName() + (heroN.getReincaCount() != 0 ? ("(" + heroN.getReincaCount() + ")") : "");
+                        String element = "";
+                        switch(heroN.getElement()){
+                            case 金:
+                                element = "<img src=\""+ R.drawable.jing +"\"><br>";
+                                break;
+                            case 木:
+                                element = "<img src=\""+ R.drawable.mu +"\"><br>";
+                                break;
+                            case 水:
+                                element = "<img src=\""+ R.drawable.shui +"\"><br>";
+                                break;
+                            case 火:
+                                element = "<img src=\""+ R.drawable.huo +"\"><br>";
+                                break;
+                            case 土:
+                                element = "<img src=\""+ R.drawable.tu +"\"><br>";
+                                break;
+                        }
+                        String name = element + heroN.getName() + (heroN.getReincaCount() != 0 ? ("(" + heroN.getReincaCount() + ")") : "");
                         characterName.setText(Html.fromHtml(vip + gift +
                                 name, imageGetter, null));
                         break;
@@ -926,10 +947,17 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     }
 
     private void exist() {
-        save();
-        this.finish();
-        this.stopService(service);
-        System.exit(0);
+        QMCPConnect.getQumiConnectInstance(this)
+                .showQuMiExitAd(this, new QMExitListener() {
+                    @Override
+                    public void onExit() {
+                        // 开发者自己的退出操作,可以根据需要改写
+                        save();
+                        stopService(service);
+                        finish();
+                        System.exit(0);
+                    }
+                });
     }
 
     private TextView achievementDesc;
@@ -1105,6 +1133,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             Achievement.dragon.enable(heroN);
                             SkillFactory.getSkill("虚无吞噬", heroN).setActive(true);
                             DBHelper.getDbHelper().excuseSQLWithoutResult("UPDATE recipe set found = 'true'");
+                            MazeContents.payTime = 100;
                         } else if (input.equals("201509181447ac")) {
                             for (Achievement achievement : Achievement.values()) {
                                 achievement.enable(heroN);

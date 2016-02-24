@@ -31,6 +31,7 @@ public class Alipay {
 
     public void addPayTime() {
         payTime++;
+        MazeContents.payTime ++;
     }
 
 

@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.bmob.pay.tool.BmobPay;
+import com.dgsdk.cp.QMCPConnect;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 
@@ -61,16 +62,22 @@ public class MainMenuActivity extends Activity implements OnClickListener {
         }*/
         context = this;
         setContentView(R.layout.activity_main_menu);
-//        mTencent = Tencent.createInstance("1104849170", this.getApplicationContext());
         ShimmerTextView titleText = (ShimmerTextView) findViewById(R.id.menu_title_tv);
         shimmer = new Shimmer();
         shimmer.start(titleText);
         Bmob.initialize(this, "4de7673ec85955af7568cfa1494c6498");
         BmobPay.init(MainMenuActivity.this, "4de7673ec85955af7568cfa1494c6498");
+        QMCPConnect.ConnectQuMi(this, "4571c5e7528ba4d7", "458742eb0b203fac");
+        QMCPConnect.getQumiConnectInstance(this).initPopAd(this);
         menuStart = (Button) findViewById(R.id.menu_start);
         menuStart.setOnClickListener(this);
         menuStart.setEnabled(false);
         menuStart.setText("加载数据");
+        try {
+            QMCPConnect.getQumiConnectInstance(this).showPopUpAd(this);
+        }catch (Exception e){
+            LogHelper.logException(e, false);
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.gavin"
-    android:versionCode="219"
-    android:versionName="2.1.10">
+    android:versionCode="220"
+    android:versionName="2.2.0">
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -30,6 +30,11 @@
             android:theme="@android:style/Theme.NoTitleBar"
             android:alwaysRetainTaskState="true"
             android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".activity.MainGameActivity"/>
         <activity android:name=".activity.ForgeActivity" />
@@ -56,18 +61,9 @@
             android:name="cn.bmob.v3.update.UpdateDialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
-        <service android:name="com.qq.e.comm.DownloadService" android:exported="false"></service>
-        <activity android:name="com.qq.e.ads.ADActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
-        </activity>
         <activity
-            android:name=".activity.SplashActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:name="com.dgsdk.cp.QuMiActivity"
+            android:configChanges="keyboardHidden|orientation" />
     </application>
 
 </manifest>
