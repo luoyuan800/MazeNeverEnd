@@ -923,7 +923,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
      * 弹出退出程序提示框
      */
     private void showExitDialog() {
-        AlertDialog dialog = new Builder(this).create();
+        /*AlertDialog dialog = new Builder(this).create();
         dialog.setTitle("是否退出游戏");
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener() {
@@ -943,7 +943,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                     }
 
                 });
-        dialog.show();
+        dialog.show();*/
+        exist();
     }
 
     private void exist() {
