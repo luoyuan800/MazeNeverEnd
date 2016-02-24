@@ -42,7 +42,7 @@ public class ShopDialog {
                     break;
                 case 1:
                     TextView textView = new TextView(activity);
-                    textView.setText("爬楼的过程中会有商人随机进驻商店，目前还未有商人进驻你的商店，请继续爬楼。");
+                    textView.setText("爬楼的过程中会有商人随机进驻商店，目前还未有商人进驻你的商店，请继续爬楼。提高敏捷可以提升商人入驻的几率。");
                     shopDialog.setView(textView);
                     shopDialog.show();
                     break;

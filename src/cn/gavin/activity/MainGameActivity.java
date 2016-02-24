@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -87,9 +88,6 @@ import cn.gavin.utils.ScreenUtils;
 import cn.gavin.utils.StringUtils;
 import cn.gavin.utils.ui.AddPointDialog;
 import cn.gavin.utils.ui.CircleMenu;
-import com.tencent.connect.common.Constants;
-import com.tencent.tauth.IUiListener;
-import com.tencent.tauth.Tencent;
 
 @SuppressWarnings("ALL")
 public class MainGameActivity extends Activity implements OnClickListener, View.OnLongClickListener, OnItemClickListener, BaseContext {
@@ -170,8 +168,6 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
     private TextView mainContriAgi;
     private TextView mainContriStr;
     private TextView mainContriLife;
-    private Tencent mTencent;
-
 
     //Get Function
     public long getRefreshInfoSpeed() {
@@ -220,12 +216,28 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
             try {
                 switch (msg.what) {
                     case 123:
+                        String vip = "";
+                        if(MazeContents.payTime > 0) {
+                            vip = "<font color=\"#FFD700\">VIP<b>" + MazeContents.payTime + "</b></font><br>";
+                        }
                         String gift = "";
                         if (heroN.getGift() != null) {
-                            gift = "<" + heroN.getGift().getName() + ">\n";
+                            gift = "&lt;" + heroN.getGift().getName() + "&gt;<br>";
                         }
-                        characterName.setText(gift +
-                                heroN.getName() + (heroN.getReincaCount() != 0 ? ("(" + heroN.getReincaCount() + ")") : ""));
+                        Html.ImageGetter imageGetter = new Html.ImageGetter() {
+                            @Override
+                            public Drawable getDrawable(String source) {
+                                int id = Integer.parseInt(source);
+
+                                //根据id从资源文件中获取图片对象
+                                Drawable d = getResources().getDrawable(id);
+                                d.setBounds(0, 0, d.getIntrinsicWidth(),d.getIntrinsicHeight());
+                                return d;
+                            }
+                        };
+                        String name = "<img src=\""+ 0 +"\">" + heroN.getName() + (heroN.getReincaCount() != 0 ? ("(" + heroN.getReincaCount() + ")") : "");
+                        characterName.setText(Html.fromHtml(vip + gift +
+                                name, imageGetter, null));
                         break;
                     case 122:
                         if (shopTipView != null) {
@@ -531,6 +543,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         }
                         Achievement.richer.enable(heroN);
                         showAwardPet("感谢您的支持");
+                        handler.sendEmptyMessage(123);
                         break;
                     case 1:
                         if (pause) {
@@ -542,7 +555,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         }
                     case 4:
                         clickCount.setText("点击\n" + heroN.getClick());
-                        heroPic.setBackgroundDrawable(MazeContents.getHeroPic(1, context));
+                        heroPic.setBackgroundDrawable(MazeContents.getHeroPic(2, context));
                         break;
                     case 5:
                         clickCount.setText("点击\n" + heroN.getClick());
@@ -557,7 +570,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                                     if (str.matches(".*遇到了.*")) {
                                         heroPic.setBackgroundDrawable(MazeContents.getHeroPic(3, context));
                                     } else if (str.matches(".*击败了.*")) {
-                                        heroPic.setBackgroundDrawable(MazeContents.getHeroPic(2, context));
+                                        heroPic.setBackgroundDrawable(MazeContents.getHeroPic(3, context));
                                     } else if (str.matches(".*被.*打败了.*")) {
                                         heroPic.setBackgroundDrawable(MazeContents.getHeroPic(1, context));
                                     }
@@ -1114,7 +1127,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             heroN.setKeyCount(heroN.getKeyCount() + 10);
                             heroN.setAwardCount(heroN.getAwardCount() + 6);
                         } else if (StringUtils.isNotEmpty(input)) {
-                            String name = input.replaceAll("_", " ");
+                            String name = input.replaceAll("_|\\*|#", " ");
                             name = name.replaceAll("'", "`");
                             heroN.setName(name);
                             refreshCharacterName();

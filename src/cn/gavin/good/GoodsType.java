@@ -589,7 +589,7 @@ public enum GoodsType {
             return null;
         }
     }, true),
-    ResetGift("洗髓丹", "使用后可以重现选择天赋", new GoodScript() {
+    ResetGift("洗髓丹", "使用后可以重新选择天赋", new GoodScript() {
         @Override
         public Object use() {
             if (HadeMPoint.count > 0) {

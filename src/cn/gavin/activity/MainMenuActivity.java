@@ -16,16 +16,12 @@ import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobInstallation;
 import cn.gavin.R;
 import cn.gavin.db.DBHelper;
 import cn.gavin.log.LogHelper;
 import cn.gavin.save.LoadHelper;
 import cn.gavin.utils.MazeContents;
-import com.tencent.connect.common.Constants;
-import com.tencent.tauth.IUiListener;
-import com.tencent.tauth.Tencent;
-import com.tencent.tauth.UiError;
-import org.json.JSONObject;
 
 public class MainMenuActivity extends Activity implements OnClickListener {
     public MainMenuActivity context;
@@ -53,17 +49,16 @@ public class MainMenuActivity extends Activity implements OnClickListener {
         }
     };
     private Shimmer shimmer;
-    private Tencent mTencent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //这是为了应用程序安装完后直接打开，按home键退出后，再次打开程序出现的BUG
-        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+        /*if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             //结束你的activity
             this.finish();
             return;
-        }
+        }*/
         context = this;
         setContentView(R.layout.activity_main_menu);
 //        mTencent = Tencent.createInstance("1104849170", this.getApplicationContext());
@@ -104,33 +99,9 @@ public class MainMenuActivity extends Activity implements OnClickListener {
         return true;
     }
 
-    private void doLogin() {
-        IUiListener listener = new IUiListener() {
-
-            @Override
-            public void onComplete(Object o) {
-
-            }
-
-            @Override
-            public void onError(UiError uiError) {
-
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-        };
-        mTencent.login(this, "", listener);
-    }
-
-    private IUiListener loginListener;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-       /* if(requestCode == Constants.REQUEST_API) {
-            mTencent.handleLoginData(data, loginListener);
-        }*/
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -139,6 +110,7 @@ public class MainMenuActivity extends Activity implements OnClickListener {
         Intent intent;
         switch (v.getId()) {
             case R.id.menu_start:
+                BmobInstallation.getCurrentInstallation(this).save();
                 intent = new Intent(MainMenuActivity.this, MainGameActivity.class);
                 startActivity(intent);
                 shimmer.cancel();

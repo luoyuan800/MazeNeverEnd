@@ -379,10 +379,12 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                                 resultText.setText(Html.fromHtml("获得了<br>" + item.toString()));
                                 if(item.equals(item1)){
                                     resultText.setText("材料属性达到了上限不能再进行融合了！");
+                                    return;
                                 }
                             }
                         } else {
                             resultText.setText("需要五个材料才可以进行融合");
+                            return;
                         }
                     } else {
                         items.clear();
@@ -412,6 +414,7 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                             }
                         } else {
                             resultText.setText("选择的打造材料不足，请继续添加!");
+                            return;
                         }
                     }
                     MazeContents.hero.addMaterial(-mate);

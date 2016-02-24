@@ -41,7 +41,11 @@ public class Upload {
                     object.setDef(hero.getUpperDef().toString());
                     object.setHitRate(hero.getHitRate().toString());
                     object.setHp(hero.getUpperHp().toString());
-                    object.setName(hero.getName());
+                    String name = hero.getName();
+                    if(MazeContents.payTime>0){
+                        name = "*VIP" + MazeContents.payTime + "*" + name;
+                    }
+                    object.setName(name);
                     object.setParry(hero.getParry().toString());
                     StringBuilder skill = new StringBuilder();
                     if(hero.getFirstSkill()!=null){
