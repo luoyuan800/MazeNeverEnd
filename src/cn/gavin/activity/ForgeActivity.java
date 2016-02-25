@@ -309,12 +309,12 @@ public class ForgeActivity extends Activity implements View.OnClickListener, Vie
                         });
                         linearLayout.addView(zhise);
                         Button cheng = new Button(alertDialog.getContext());
-                        cheng.setText(Html.fromHtml("<font color=\"#FF8C00\">一件拆解橙装/200w</font>"));
+                        cheng.setText(Html.fromHtml("<font color=\"#B8860B\">一件拆解橙装/200w</font>"));
                         cheng.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 for (Accessory accessory : Accessory.loadAccessories(null)) {
-                                    if ("#FF8C00".equals(accessory.getColor()) && MazeContents.hero != null && !MazeContents.hero.isOn(accessory)) {
+                                    if ("#B8860B".equals(accessory.getColor()) && MazeContents.hero != null && !MazeContents.hero.isOn(accessory)) {
                                         accessory.dismantle();
                                     }
                                 }

@@ -144,6 +144,7 @@ public class Elementalist extends SkillLayout {
                     String msg = hero.getFormatName() + "使用技能" + skill.getName() + "将自己的属性转换成了" + element.name();
                     skill.addMessage(msg);
                     monster.addBattleSkillDesc(msg);
+                    MainGameActivity.context.getHandler().sendEmptyMessage(123);
                     return false;
                 }
             });

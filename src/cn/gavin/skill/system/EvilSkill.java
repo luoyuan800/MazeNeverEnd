@@ -681,6 +681,7 @@ public class EvilSkill extends SkillLayout {
                                 monster.getFormatName();
                         skill.addMessage(msg);
                         monster.addBattleSkillDesc(msg);
+                        MainGameActivity.context.getHandler().sendEmptyMessage(123);
                         new Thread(new Runnable() {
                             @Override
                             public void run() {

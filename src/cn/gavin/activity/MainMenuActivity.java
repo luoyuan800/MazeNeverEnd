@@ -117,7 +117,9 @@ public class MainMenuActivity extends Activity implements OnClickListener {
         Intent intent;
         switch (v.getId()) {
             case R.id.menu_start:
-                BmobInstallation.getCurrentInstallation(this).save();
+                if(MazeContents.hero!=null && MazeContents.hero.getGift()==null){
+                    BmobInstallation.getCurrentInstallation(this).save();
+                }
                 intent = new Intent(MainMenuActivity.this, MainGameActivity.class);
                 startActivity(intent);
                 shimmer.cancel();

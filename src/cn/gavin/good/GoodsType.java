@@ -412,6 +412,7 @@ public enum GoodsType {
                     public void onClick(DialogInterface dialog, int which) {
                         MazeContents.hero.setPElement(Element.values()[spinner.getSelectedItemPosition()]);
                         dialog.dismiss();
+                        MainGameActivity.context.getHandler().sendEmptyMessage(123);
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -422,6 +423,7 @@ public enum GoodsType {
                                 }
                                 MazeContents.hero.setPElement(null);
                                 MainGameActivity.context.addMessage("伪装的效果消失了");
+                                MainGameActivity.context.getHandler().sendEmptyMessage(123);
                             }
                         }).start();
                     }

@@ -203,7 +203,7 @@ public abstract class Builder {
                     if (l > 100000) {
                         color = "#9932CC";
                     }
-                    if (l > 500000) {
+                    if (l > 50000000) {
                         color = "#B8860B";
 
                         save = true;
@@ -249,7 +249,7 @@ public abstract class Builder {
             }
         }
         accessory.setColor(color);
-        if (!color.equalsIgnoreCase("#000000") && detectSave && save) {
+        if (color.equalsIgnoreCase("#B8860B") && detectSave && save) {
             accessory.setSave(true);
         }
     }

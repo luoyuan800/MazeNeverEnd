@@ -241,19 +241,19 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         String element = "";
                         switch(heroN.getElement()){
                             case 金:
-                                element = "<img src=\""+ R.drawable.jing +"\"><br>";
+                                element = "<img src=\""+ R.drawable.jing +"\">";
                                 break;
                             case 木:
-                                element = "<img src=\""+ R.drawable.mu +"\"><br>";
+                                element = "<img src=\""+ R.drawable.mu +"\">";
                                 break;
                             case 水:
-                                element = "<img src=\""+ R.drawable.shui +"\"><br>";
+                                element = "<img src=\""+ R.drawable.shui +"\">";
                                 break;
                             case 火:
-                                element = "<img src=\""+ R.drawable.huo +"\"><br>";
+                                element = "<img src=\""+ R.drawable.huo +"\">";
                                 break;
                             case 土:
-                                element = "<img src=\""+ R.drawable.tu +"\"><br>";
+                                element = "<img src=\""+ R.drawable.tu +"\">";
                                 break;
                         }
                         String name = element + heroN.getName() + (heroN.getReincaCount() != 0 ? ("(" + heroN.getReincaCount() + ")") : "");
@@ -594,6 +594,8 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                                         heroPic.setBackgroundDrawable(MazeContents.getHeroPic(3, context));
                                     } else if (str.matches(".*被.*打败了.*")) {
                                         heroPic.setBackgroundDrawable(MazeContents.getHeroPic(1, context));
+                                    } else if (str.matches(".*(发呆|玩耍|镜子).*")){
+                                        heroPic.setBackgroundDrawable(MazeContents.getHeroPic(2, context));
                                     }
                                     TextView oneKickInfo = new TextView(MainGameActivity.this);
                                     // 将一次信息数据显示到页面中

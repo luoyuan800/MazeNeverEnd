@@ -229,6 +229,7 @@ public class LongSkill extends SkillLayout {
                             hero.setElement(Element.values()[hero.getRandom().nextInt(Element.values().length -2)]);
                         }
                         hero.addPoint(-6000);
+                        MainGameActivity.context.getHandler().sendEmptyMessage(123);
                     }
                     super.setOnUsed(use, isLoad);
                 }

@@ -277,7 +277,7 @@ public class Item implements Comparator<Item> {
     }
 
     public static List<Item> loadByLimit(int start, int size, String query){
-        String sql = "select * from item " + query + " order by name limit " + size + " offset " +  start;
+        String sql = "select * from item " + query + " limit " + size + " offset " +  start;
         Cursor cursor = DBHelper.getDbHelper().excuseSOL(sql);
         List<Item> items = new ArrayList<Item>(cursor.getCount());
         while (!cursor.isAfterLast()) {

@@ -1113,7 +1113,6 @@ public class Hero implements BaseObject {
                 } else {
                     ATR_RISE = atkRISE;
                 }
-                material -= mate;
                 long attackValue = random.nextLong(20) + 10;
                 long defenseValue = random.nextLong(20) + 10;
                 long upperHp = random.nextLong(20) + 25;
@@ -1169,9 +1168,10 @@ public class Hero implements BaseObject {
                 gift = null;
                 MainGameActivity.context.showGiftChoose();
                 MainGameActivity.context.save();
+                material -= mate;
             }
         } catch (Exception e) {
-            Toast.makeText(MainGameActivity.context, "数据异常！！转生失败！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainGameActivity.context, "数据异常！！转生失败！稍后再重试！", Toast.LENGTH_SHORT).show();
             LogHelper.logException(e, false);
         }
     }
