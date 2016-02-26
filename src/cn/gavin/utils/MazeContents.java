@@ -50,7 +50,7 @@ public class MazeContents {
                 MathUtils.getMaxValueByRiseAndLev(hero.ATR_RISE, hero.getMaxMazeLev()) +
                 MathUtils.getMaxValueByRiseAndLev(hero.MAX_HP_RISE, hero.getMaxMazeLev());
         long he = hero.getUpperHp() + hero.getUpperDef() + hero.getUpperAtk();
-        boolean min = he < (max / 3000);
+        boolean min = hero.getMaxMazeLev() > 60000 && he < (max / 9000);
         if(hero.isOnSkill() || hero.isOnChange()){
             max *= 30;
         }else{
