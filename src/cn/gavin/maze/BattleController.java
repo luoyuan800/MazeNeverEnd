@@ -166,30 +166,24 @@ public class BattleController {
                 addMessage(context, monster.getFormatName() + "打断了" + hero.getFormatName() + "的技能");
             }
         } else {
-            if (hero.getHp() < hero.getUpperHp()) {
-                skill = hero.useRestoreSkill();
+
+            Long attackValue = hero.getAttackValue();
+            //被克，伤害1.5倍
+            if (hero.getElement().restriction(monster.getElement())) {
+                attackValue += attackValue / 2;
+            } else if (monster.getElement().restriction(hero.getElement())) {
+                //相克，伤害减低一半
+                attackValue -= attackValue / 2;
             }
-            if (skill != null) {
-                isJump = skill.release(monster);
-            } else {
-                Long attackValue = hero.getAttackValue();
-                //被克，伤害1.5倍
-                if (hero.getElement().restriction(monster.getElement())) {
-                    attackValue += attackValue / 2;
-                } else if (monster.getElement().restriction(hero.getElement())) {
-                    //相克，伤害减低一半
-                    attackValue -= attackValue / 2;
-                }
-                monster.addHp(-attackValue);
-                if (hero.isHit()) {
-                    String hitMsg = hero.getFormatName() + "使出了暴击，攻击伤害提高了。";
-                    addMessage(context, hitMsg);
-                    monster.addBattleDesc(hitMsg);
-                }
-                String atkmsg = hero.getFormatName() + "攻击了" + monster.getFormatName() + "，造成了<font color=\"#000080\">" + StringUtils.formatNumber(attackValue) + "</font>点伤害。";
-                addMessage(context, atkmsg);
-                monster.addBattleDesc(atkmsg);
+            monster.addHp(-attackValue);
+            if (hero.isHit()) {
+                String hitMsg = hero.getFormatName() + "使出了暴击，攻击伤害提高了。";
+                addMessage(context, hitMsg);
+                monster.addBattleDesc(hitMsg);
             }
+            String atkmsg = hero.getFormatName() + "攻击了" + monster.getFormatName() + "，造成了<font color=\"#000080\">" + StringUtils.formatNumber(attackValue) + "</font>点伤害。";
+            addMessage(context, atkmsg);
+            monster.addBattleDesc(atkmsg);
         }
         return isJump;
     }
@@ -206,7 +200,7 @@ public class BattleController {
         String msg = hero.getFormatName() + "在第" + maze.getLev() + "层遇到了" + monster.getFormatName();
         addMessage(context, msg);
         monster.addBattleDesc(msg);
-        if(hero.getHp() < 0){
+        if (hero.getHp() < 0) {
             String stup = hero.getFormatName() + "被" + monster.getFormatName() + "吓傻了！";
             addMessage(context, stup);
             monster.addBattleDesc(stup);
@@ -219,10 +213,10 @@ public class BattleController {
             monster.addBattleDesc(msg);
             monster.addHp(-monster.getHp());
         }
-        if(hero.getGift() == Gift.ChildrenKing && monster.getName().contains("守护者")){
+        if (hero.getGift() == Gift.ChildrenKing && monster.getName().contains("守护者")) {
             String king = hero.getFormatName() + "因为是" + Gift.ChildrenKing.getName() + "的天赋者，秒杀了" + monster.getFormatName();
             monster.addBattleDesc(king);
-            addMessage(context,king);
+            addMessage(context, king);
             monster.addHp(-monster.getHp());
         }
         while (!isJump && monster.getHp() > 0 && hero.getHp() > 0) {
