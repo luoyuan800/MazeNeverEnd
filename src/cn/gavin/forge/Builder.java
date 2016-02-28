@@ -206,7 +206,6 @@ public abstract class Builder {
                     if (l > 50000000) {
                         color = "#B8860B";
 
-                        save = true;
                     }
                     if (l > MazeContents.hero.getBaseDefense()) {
                         color = "#9932CC";
@@ -225,7 +224,6 @@ public abstract class Builder {
                     }
                     if (sml > 8000) {
                         color = "#9932CC";
-                        save = true;
                     }
 
                     break;
@@ -249,7 +247,7 @@ public abstract class Builder {
             }
         }
         accessory.setColor(color);
-        if (color.equalsIgnoreCase("#B8860B") && detectSave && save) {
+        if (detectSave && save) {
             accessory.setSave(true);
         }
     }

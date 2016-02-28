@@ -38,8 +38,8 @@ public class Item implements Comparator<Item> {
         StringBuilder builder = new StringBuilder(name.name());
         builder.append("<br>");
         if (effect != null)
-            builder.append(effect.getName()).append(":").append(effectValue).append("<br>");
-        if (effect1 != null) builder.append(effect1.getName()).append(":").append(effect1Value);
+            builder.append(effect.getName()).append(":").append(StringUtils.formatNumber(effectValue.longValue())).append("<br>");
+        if (effect1 != null) builder.append(effect1.getName()).append(":").append(StringUtils.formatNumber(effect1Value.longValue()));
         return builder.toString();
     }
 

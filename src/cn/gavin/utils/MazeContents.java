@@ -14,6 +14,7 @@ import cn.gavin.Hero;
 import cn.gavin.R;
 import cn.gavin.db.DBHelper;
 import cn.gavin.forge.effect.Effect;
+import cn.gavin.gift.Gift;
 import cn.gavin.log.LogHelper;
 import cn.gavin.maze.Maze;
 import cn.gavin.pet.Pet;
@@ -46,15 +47,18 @@ public class MazeContents {
 
 
     public static boolean checkCheat(Hero hero) {
+        if(hero.getGift() == Gift.ChildrenKing){
+            return true;
+        }
         long max = MathUtils.getMaxValueByRiseAndLev(hero.DEF_RISE, hero.getMaxMazeLev()) +
                 MathUtils.getMaxValueByRiseAndLev(hero.ATR_RISE, hero.getMaxMazeLev()) +
                 MathUtils.getMaxValueByRiseAndLev(hero.MAX_HP_RISE, hero.getMaxMazeLev());
         long he = hero.getUpperHp() + hero.getUpperDef() + hero.getUpperAtk();
         boolean min = hero.getMaxMazeLev() > 60000 && he < (max / 9000);
         if(hero.isOnSkill() || hero.isOnChange()){
-            max *= 30;
+            max *= 50;
         }else{
-            max *= 5;
+            max *= 7;
         }
         return he < max * 5 && !min;
     }
