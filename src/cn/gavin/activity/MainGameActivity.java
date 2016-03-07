@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -594,11 +595,11 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                         }
                     case 4:
                         clickCount.setText("点击\n" + heroN.getClick());
-                        heroPic.setBackgroundDrawable(MazeContents.getHeroPic(2, context));
+                        //heroPic.setBackgroundDrawable(MazeContents.getHeroPic(2, context));
                         break;
                     case 5:
                         clickCount.setText("点击\n" + heroN.getClick());
-                        heroPic.setBackgroundDrawable(MazeContents.getHeroPic(4, context));
+                        //heroPic.setBackgroundDrawable(MazeContents.getHeroPic(4, context));
                         break;
                     case 10:
                         if (!isHidBattle) {
@@ -606,7 +607,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                             if (bundle != null && !bundle.isEmpty()) {
                                 String[] messages = bundle.getStringArray("msg");
                                 for (String str : messages) {
-                                    if (str.matches(".*遇到了.*")) {
+                                    /*if (str.matches(".*遇到了.*")) {
                                         heroPic.setBackgroundDrawable(MazeContents.getHeroPic(3, context));
                                     } else if (str.matches(".*击败了.*")) {
                                         heroPic.setBackgroundDrawable(MazeContents.getHeroPic(3, context));
@@ -614,7 +615,7 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
                                         heroPic.setBackgroundDrawable(MazeContents.getHeroPic(1, context));
                                     } else if (str.matches(".*(发呆|玩耍|镜子).*")) {
                                         heroPic.setBackgroundDrawable(MazeContents.getHeroPic(2, context));
-                                    }
+                                    }*/
                                     TextView oneKickInfo = new TextView(MainGameActivity.this);
                                     // 将一次信息数据显示到页面中
                                     oneKickInfo.setText(Html.fromHtml(str));
@@ -1663,6 +1664,9 @@ public class MainGameActivity extends Activity implements OnClickListener, View.
         mainContriCurMaterial = (TextView) findViewById(R.id.hero_material_count);
         heroPic = (Button) findViewById(R.id.hero_pic);
         heroPic.setOnClickListener(this);
+        heroPic.setBackgroundResource(R.anim.normal_atk);
+        AnimationDrawable anim = (AnimationDrawable)heroPic.getBackground();
+        anim.start();
         pauseButton = (Button) findViewById(R.id.push_button);
         pauseButton.setOnClickListener(this);
         clickCount = (TextView) findViewById(R.id.hero_pic_click_count);

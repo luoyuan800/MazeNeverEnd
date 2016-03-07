@@ -29,7 +29,7 @@ import cn.gavin.utils.StringUtils;
  * Created by gluo on 8/26/2015.
  */
 public class Maze {
-    private int csmgl = 9997;
+    private int csmgl = 9987;
     private Hero hero;
     protected long level;
     private boolean moving;

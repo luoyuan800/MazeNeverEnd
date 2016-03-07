@@ -691,7 +691,7 @@ public class BaseSkill extends SkillLayout {
                 }
             });
             if (!skill.load()) {
-                skill.setProbability(280f);
+                skill.setProbability(380f);
             }
             skill.setLevelUp(new EnableExpression() {
                 @Override
